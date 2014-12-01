@@ -3,7 +3,7 @@
 	[
 		{
 			"strAction": "launch",
-			"strTagName": "ie",
+			"strTagName": "chrome",
 			"strAttributeNames": "",
 			"strAtributeValues": "",
 			"strInputValue": "http://newtours.demoaut.com/",

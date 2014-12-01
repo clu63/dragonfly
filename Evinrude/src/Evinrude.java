@@ -32,6 +32,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -48,15 +49,17 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.interactions.HasInputDevices;
+//import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.interactions.Mouse;
+import org.openqa.selenium.remote.RemoteWebDriver;
+//import org.openqa.selenium.interactions.Mouse;
 //import com.steadystate.css.parser.Locatable;
+
 
 //import java.awt.Point;
 //import java.awt.Dimension;
@@ -83,6 +86,7 @@ import java.lang.reflect.Method;
 
 import org.openqa.selenium.safari.SafariDriver;
 //import  com.google.gwt.user.client.Window;
+
 
 import com.opera.core.systems.*;
 
@@ -121,7 +125,22 @@ public class Evinrude {
 		strURL = objEnvironments.get(strApplication_Environment).toString();
 		return strURL;
 	}// the end of data_EnvironmentURL
-
+	
+	public static String OSType () {
+		String os = System.getProperty("os.name").toLowerCase();
+		if (os.contains("win")) {
+			return "Windows";
+		}else if (os.contains("nux") || os.contains("nix")) {
+			return "Linux";
+		}else if (os.contains("mac")) {
+			return "Mac";
+		}else if (os.contains("sunos")) {
+			return "Solaris";
+		}else {
+			return "Other";
+		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
 		WebDriver objWebDriver = null;
@@ -134,14 +153,29 @@ public class Evinrude {
 		int intStep = 0;
 		int intMillisecondsToWaitDefault = 20000;
 		String strCurrentWindowHandle = "";
-		String strResultsPath = "c:\\temp\\Results\\" + dateTimestamp();
+		String strResultsPath = "";
+
+//		strResultsPath = "Results/" + dateTimestamp();
+
+		switch(OSType()){
+		case "Windows":
+			strResultsPath = "c:\\temp\\Results\\" + dateTimestamp();
+			break;
+		case "Mac":
+			strResultsPath = "/Volumes/blah/" + dateTimestamp();
+			break;
+		default:
+			//need to raise an error and log
+			break;
+		}
+		
 		new File(strResultsPath).mkdirs();
 
 		System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
-			String strTestPath = "Data/KAW _AlertPopups.json";
+//			String strTestPath = "Data/KAW _AlertPopups.json";
 			// String strTestPath = "Data/MDX.json";
-			// String strTestPath = "Data/Mercury_Tours.json";
+			 String strTestPath = "Data/Mercury_Tours.json";
 			// String strTestPath = "Data/LiloQuickBook.json";
 			// String strTestPath = "Data/DVC_Book.json";
 			// String strTestPath = "Data/RestartMachinesDVC.json";
@@ -317,15 +351,38 @@ public class Evinrude {
 		} finally {
 			if (intStep == objTestSteps.size() || blnPass == false || objStep.get("strAction").toString().toLowerCase().equals("break")) {
 				try {
-					writeJsonToHtml(objTestSteps, strResultsPath + "\\StepsWithDefaults.html");
-					writeReportToHtml(objTestSteps, strResultsPath + "\\Report.html");
-					File file = new File("C:\\Temp\\screenshots\\UpdatedJson.json");
+					
+					String strUpdatedJSONPath = "";
+					
+					switch(OSType()){
+					case "Windows":
+						writeJsonToHtml(objTestSteps, strResultsPath + "\\StepsWithDefaults.html");
+						writeReportToHtml(objTestSteps, strResultsPath + "\\Report.html");
+						strUpdatedJSONPath = "C:\\Temp\\screenshots\\UpdatedJson.json";
+						break;
+					case "Mac":
+						writeJsonToHtml(objTestSteps, strResultsPath + "/StepsWithDefaults.html");
+						writeReportToHtml(objTestSteps, strResultsPath + "/Report.html");
+						strUpdatedJSONPath = "/screenshots/UpdatedJson.json";
+						break;
+					default:
+						//need to raise an error and log
+						break;
+					}
+					
+					File file = new File(strUpdatedJSONPath);
+
 					// writeJsonKeysToHtml(JSONObject objTestStep, file);
 					BufferedWriter out;
 					out = new BufferedWriter(new FileWriter(file));
 					out.write(objJsonFile.toString());
 					out.close();
-					Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
+					// if browser is IE then kill IEDriverServer process (this allows user to interact with browser after test ends)
+					Capabilities capabilities = ((RemoteWebDriver) objWebDriver).getCapabilities();
+					String browsername = capabilities.getBrowserName();
+					if ("internet explorer".equalsIgnoreCase(browsername)) {
+						Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");						
+					}
 				} catch (IOException e) {
 					System.out.println("main final " + e.toString());
 					// // // TODO Auto-generated catch block
@@ -1013,7 +1070,6 @@ public class Evinrude {
 			case "ie":
 				desiredCapabilities = DesiredCapabilities.internetExplorer();
 				desiredCapabilities.setJavascriptEnabled(true);
-
 				System.setProperty("webdriver.ie.driver", "C:\\Selenium\\IEDriverServer.exe");
 				objWebDriver = new InternetExplorerDriver(desiredCapabilities);
 				objWebDriver.navigate().to(objStep.get("strInputValue").toString());
@@ -1024,7 +1080,17 @@ public class Evinrude {
 				objWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.MILLISECONDS);
 				return objWebDriver;
 			case "chrome":
-				System.setProperty("webdriver.chrome.driver", "C:\\Selenium\\ChromeDriver\\chromedriver_win32\\chromedriver.exe");
+				switch(OSType()){
+				case "Windows":
+					System.setProperty("webdriver.chrome.driver", "C:\\Selenium\\ChromeDriver\\chromedriver_win32\\chromedriver.exe");
+					break;
+				case "Mac":
+					System.setProperty("webdriver.chrome.driver", "");
+					break;
+				default:
+					//need to raise an error and log
+					break;
+				}
 				objWebDriver = new ChromeDriver();
 				objWebDriver.get(objStep.get("strInputValue").toString());
 				objWebDriver.manage().window().maximize();
