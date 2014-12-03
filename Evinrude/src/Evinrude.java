@@ -1,25 +1,25 @@
 import java.io.BufferedWriter;
 
-import com.thoughtworks.selenium.DefaultSelenium;
-import com.thoughtworks.selenium.Selenium;
-import com.thoughtworks.selenium.webdriven.SeleneseCommand;
-import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
+//import com.thoughtworks.selenium.DefaultSelenium;
+//import com.thoughtworks.selenium.Selenium;
+//import com.thoughtworks.selenium.webdriven.SeleneseCommand;
+//import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
+//import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+//import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -33,7 +33,7 @@ import org.json.simple.parser.ParseException;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.ElementNotVisibleException;
+//import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoAlertPresentException;
@@ -42,7 +42,7 @@ import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
+//import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -55,7 +55,7 @@ import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
+//import org.openqa.selenium.Point;
 import org.openqa.selenium.remote.RemoteWebDriver;
 //import org.openqa.selenium.interactions.Mouse;
 //import com.steadystate.css.parser.Locatable;
@@ -66,22 +66,22 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import java.awt.image.BufferedImage;
 import java.awt.AWTException;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.MouseInfo;
+//import java.awt.Component;
+//import java.awt.MouseInfo;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+//import java.awt.Window;
+//import java.awt.image.BufferedImage;
+//import java.io.File;
+//import java.text.SimpleDateFormat;
+//import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import javax.imageio.ImageIO;
+//import javax.imageio.ImageIO;
 
 import java.lang.Object;
-import java.lang.reflect.InvocationTargetException;
+//import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.openqa.selenium.safari.SafariDriver;
@@ -91,10 +91,10 @@ import org.openqa.selenium.safari.SafariDriver;
 import com.opera.core.systems.*;
 
 import java.awt.HeadlessException;
-import java.awt.Toolkit;
+//import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.io.IOException;
+//import java.io.IOException;
 // a test comment
 
 // StaleElementReferenceException 
@@ -158,12 +158,16 @@ public class Evinrude {
 
 //		strResultsPath = "Results/" + dateTimestamp();
 
+		System.out.println("Working Directory = " +
+	              System.getProperty("user.dir"));
+		
 		switch(OSType()){
 		case "Windows":
-			strResultsPath = "c:\\temp\\Results\\" + dateTimestamp();
+			strResultsPath = System.getProperty("user.dir") + "\\Results\\" + dateTimestamp();
+//			strResultsPath = "c:\\temp\\Results\\" + dateTimestamp();
 			break;
 		case "Mac":
-			strResultsPath = "/Volumes/blah/" + dateTimestamp();
+			strResultsPath = System.getProperty("user.dir") + "/Results/" + dateTimestamp();
 			break;
 		default:
 			//need to raise an error and log
@@ -359,12 +363,13 @@ public class Evinrude {
 					case "Windows":
 						writeJsonToHtml(objTestSteps, strResultsPath + "\\StepsWithDefaults.html");
 						writeReportToHtml(objTestSteps, strResultsPath + "\\Report.html");
-						strUpdatedJSONPath = "C:\\Temp\\screenshots\\UpdatedJson.json";
+						strUpdatedJSONPath = strResultsPath + "\\screenshots\\UpdatedJson.json";
+//						strUpdatedJSONPath = "C:\\Temp\\screenshots\\UpdatedJson.json";
 						break;
 					case "Mac":
 						writeJsonToHtml(objTestSteps, strResultsPath + "/StepsWithDefaults.html");
 						writeReportToHtml(objTestSteps, strResultsPath + "/Report.html");
-						strUpdatedJSONPath = "/screenshots/UpdatedJson.json";
+						strUpdatedJSONPath = strResultsPath + "/screenshots/UpdatedJson.json";
 						break;
 					default:
 						//need to raise an error and log
@@ -1386,7 +1391,7 @@ public class Evinrude {
 				try {
 					// objWebDriver.switchTo().alert();
 					objStep.put("strTagType", "alert");
-					Alert alert = objWebDriver.switchTo().alert();
+//					Alert alert = objWebDriver.switchTo().alert();
 					System.out.println("this is the alert switch to which did not fail");
 					// System.out.println(objWebDriver.manage().window().getPosition());
 					// System.out.println(objWebDriver.manage().window().getSize());
@@ -1485,7 +1490,7 @@ public class Evinrude {
 			// objWebDriver.switchTo().defaultContent();
 			Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
 			System.out.println("arrHandles.length = " + arrHandles.length);
-			for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0; intHandlesEach--) {
+			for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0;) {
 				String winHandle = arrHandles[intHandlesEach].toString();
 				System.out.println("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
 				System.out.println("elementFind winHandle = " + winHandle);
@@ -2299,7 +2304,7 @@ public class Evinrude {
 		try {
 			if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
 				try {
-					Alert alert = objWebDriver.switchTo().alert();
+//					Alert alert = objWebDriver.switchTo().alert();
 
 					System.out.println("elementVisible alert passed");
 
@@ -2498,7 +2503,7 @@ public class Evinrude {
 
 			if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
 				try {
-					Alert alert = objWebDriver.switchTo().alert();
+//					Alert alert = objWebDriver.switchTo().alert();
 
 					// System.out.println(objWebDriver.manage().window().getPosition());
 					// System.out.println(objWebDriver.manage().window().getSize());
