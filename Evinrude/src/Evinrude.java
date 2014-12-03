@@ -1,3 +1,25 @@
+//TODO Highlight based on webelement null or json coordinates
+//TODO Alert handling get and verify
+//TODO Store in github
+//TODO Create new folder for each run
+//TODO Assert finish set method
+//TODO Create an array json for link values from output link name
+//TODO Pass json not variables
+//TODO Update json with results status timing step details
+//TODO Webtable for json file
+//TODO Highlight based on status: pass, fail, info, warning, optional
+//TODO Remove json variables assignment
+//TODO Confirm all browsers work
+//TODO Json Element properties combine , using json format for key and value
+//TODO Switchto frames and iframes
+//TODO Reporting add step details
+//TODO Remove type from input
+//TODO Sync state methods
+//TODO Encryption
+//TODO Add comment to file for changes
+//TODO Check changes to library files and save backup.
+//TODO Copy library files to local drive.
+
 import java.io.BufferedWriter;
 
 //import com.thoughtworks.selenium.DefaultSelenium;
@@ -32,34 +54,33 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Capabilities;
 //import org.openqa.selenium.ElementNotVisibleException;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
-//import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.interactions.Action;
+//import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 //import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.Select;
+//import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.Dimension;
 //import org.openqa.selenium.Point;
-import org.openqa.selenium.remote.RemoteWebDriver;
 //import org.openqa.selenium.interactions.Mouse;
 //import com.steadystate.css.parser.Locatable;
-
 
 //import java.awt.Point;
 //import java.awt.Dimension;
@@ -77,6 +98,8 @@ import java.awt.Toolkit;
 //import java.text.SimpleDateFormat;
 //import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 //import javax.imageio.ImageIO;
 
@@ -87,15 +110,16 @@ import java.lang.reflect.Method;
 import org.openqa.selenium.safari.SafariDriver;
 //import  com.google.gwt.user.client.Window;
 
-
 import com.opera.core.systems.*;
 
 import java.awt.HeadlessException;
 //import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.Capabilities;
 //import java.io.IOException;
-// a test comment
 
 // StaleElementReferenceException 
 
@@ -105,7 +129,8 @@ public class Evinrude {
 		SimpleDateFormat FormattedDATE = new SimpleDateFormat("MM/dd/yyyy");
 		Calendar objCalendar = Calendar.getInstance();
 		objCalendar.add(Calendar.DATE, intDaysOut);
-		String strNewDate = (String) (FormattedDATE.format(objCalendar.getTime()));
+		String strNewDate = (String) (FormattedDATE.format(objCalendar
+				.getTime()));
 		return strNewDate;
 	}// the end of data_DateDaysOut
 
@@ -117,32 +142,33 @@ public class Evinrude {
 		try {
 			objJsonParsedFile = objJsonParser.parse(new FileReader(testPath));
 		} catch (IOException | ParseException e) {
-			// TODO Auto-generated catch block
+			// TODO add meaningful error handling and reporting
 			e.printStackTrace();
 		}
 		JSONObject objJsonFile = (JSONObject) objJsonParsedFile;
-		JSONArray objEnvironmentArray = (JSONArray) objJsonFile.get("environment");
+		JSONArray objEnvironmentArray = (JSONArray) objJsonFile
+				.get("environment");
 		JSONObject objEnvironments = (JSONObject) objEnvironmentArray.get(0);
 		strURL = objEnvironments.get(strApplication_Environment).toString();
 		return strURL;
 	}// the end of data_EnvironmentURL
-	
-	public static String OSType () {
+
+	public static String OSType() {
 		String os = System.getProperty("os.name").toLowerCase();
 		if (os.contains("win")) {
 			return "Windows";
-		}else if (os.contains("nux") || os.contains("nix")) {
+		} else if (os.contains("nux") || os.contains("nix")) {
 			return "Linux";
-		}else if (os.contains("mac")) {
+		} else if (os.contains("mac")) {
 			return "Mac";
-		}else if (os.contains("sunos")) {
+		} else if (os.contains("sunos")) {
 			return "Solaris";
-		}else {
+		} else {
 			return "Other";
 		}
-	}
-	
-	@SuppressWarnings("unchecked")
+	}// the end of OSType
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
 		WebDriver objWebDriver = null;
 		WebElement objWebElement;
@@ -154,46 +180,49 @@ public class Evinrude {
 		int intStep = 0;
 		int intMillisecondsToWaitDefault = 20000;
 		String strCurrentWindowHandle = "";
+		// String strResultsPath = "c:\\temp\\Results\\" + dateTimestamp();
 		String strResultsPath = "";
-
-//		strResultsPath = "Results/" + dateTimestamp();
-
-		System.out.println("Working Directory = " +
-	              System.getProperty("user.dir"));
-		
-		switch(OSType()){
+		// strResultsPath = "Results/" + dateTimestamp();
+		System.out.println("Working Directory = "
+				+ System.getProperty("user.dir"));
+		switch (OSType()) {
 		case "Windows":
-			strResultsPath = System.getProperty("user.dir") + "\\Results\\" + dateTimestamp() + "\\";
-//			strResultsPath = "c:\\temp\\Results\\" + dateTimestamp();
+			strResultsPath = System.getProperty("user.dir") + "\\Results\\"
+					+ dateTimestamp() + "\\";
+			// strResultsPath = "c:\\temp\\Results\\" + dateTimestamp();
 			break;
 		case "Mac":
-			strResultsPath = System.getProperty("user.dir") + "/Results/" + dateTimestamp() + "/";
+			strResultsPath = System.getProperty("user.dir") + "/Results/"
+					+ dateTimestamp() + "/";
 			break;
 		default:
-			//need to raise an error and log
+			// //TODO switch (OSType()) need to raise an error and log
 			break;
 		}
-
 		new File(strResultsPath).mkdirs();
-
 		System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
-//			String strTestPath = "Data/KAW _AlertPopups.json";
+			// String strTestPath = "Data/KAW _AlertPopups.json";
 			// String strTestPath = "Data/MDX.json";
-			 String strTestPath = "Data/Mercury_Tours.json";
-			// String strTestPath = "Data/LiloQuickBook.json";
+			String strTestPath = "Data/Mercury_Tours.json";
+			//String strTestPath = "Data/LiloQuickBook.json";
 			// String strTestPath = "Data/DVC_Book.json";
 			// String strTestPath = "Data/RestartMachinesDVC.json";
 			// String strTestPath = "Data/RestartMachinesLilo.json";
 			// String strTestPath = "Data/KAW.json";
 			// String strTestPath = "Data/DME_Demo.json";
+			// String strTestPath = "Data/Common_Door_Demo.json";
+			// String strTestPath = "Data/AngularJS_Demo.json";
+			// String strTestPath = "Data/drms_book.json";
+			// String strTestPath = "Data/KAW_frames.json";
+			// String strTestPath = "Data/w3c_fireevents.json";
 			Object objParser = parser.parse(new FileReader(strTestPath));
 			objJsonFile = (JSONObject) objParser;
 			objTestSteps = (JSONArray) objJsonFile.get("test steps");
-
 			JSONArray objLinkArray = (JSONArray) objJsonFile.get("link");
 			JSONObject objLinks = (JSONObject) objLinkArray.get(0);
-
+			// writeJsonToHtml(objTestSteps, strResultsPath +
+			// "\\StepsOriginal.html");
 			writeJsonToHtml(objTestSteps, strResultsPath + "StepsOriginal.html");
 			for (intStep = 0; intStep < objTestSteps.size(); intStep++) {
 				objWebElement = null;
@@ -201,11 +230,14 @@ public class Evinrude {
 				objStep = (JSONObject) objTestSteps.get(intStep);
 				String strInputValue = objStep.get("strInputValue").toString();
 				if (strInputValue.toLowerCase().startsWith("<link>") == true) {
-					strInputValue = objLinks.get(strInputValue.replace("<link>", "")).toString();
+					strInputValue = objLinks.get(
+							strInputValue.replace("<link>", "")).toString();
 					objStep.put("strInputValue", strInputValue);
 				}
-				if (objStep.get("intMillisecondsToWait").toString().trim().length() == 0) {
-					objStep.put("intMillisecondsToWait", intMillisecondsToWaitDefault);
+				if (objStep.get("intMillisecondsToWait").toString().trim()
+						.length() == 0) {
+					objStep.put("intMillisecondsToWait",
+							intMillisecondsToWaitDefault);
 				}
 				if (objStep.get("blnOptional").toString().trim().length() == 0) {
 					objStep.put("blnOptional", false);
@@ -223,42 +255,66 @@ public class Evinrude {
 				objStep.put("strType", "");
 				objStep.put("strScreenshotFilePath", strResultsPath);
 				objStep.put("strStatus", "info");
-
-				System.out.println("main strCurrentWindowHandle = " + strCurrentWindowHandle);
+				// TODO consider moving the step println to a method and call
+				// passing in objStep
+				System.out.println("main strCurrentWindowHandle = "
+						+ strCurrentWindowHandle);
 				// print step details
-				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
-				System.out.println("main strAction = " + objStep.get("strAction").toString());
-				System.out.println("main strTagName = " + objStep.get("strTagName").toString());
-				System.out.println("main strAttributeNames = " + objStep.get("strAttributeNames").toString());
-				System.out.println("main strAtributeValues = " + objStep.get("strAtributeValues").toString());
-				System.out.println("main strInputValue = " + objStep.get("strInputValue").toString());
-				System.out.println("main strLogicalName = " + objStep.get("strLogicalName").toString());
-				System.out.println("main intMillisecondsToWait = " + objStep.get("intMillisecondsToWait").toString());
-				System.out.println("main blnOptional = " + objStep.get("blnOptional").toString());
-				System.out.println("main strAssert = " + objStep.get("strAssert").toString());
-				System.out.println("main blnPleaseWait = " + objStep.get("blnPleaseWait").toString());
-				System.out.println("main blnHighlight = " + objStep.get("blnHighlight").toString());
-				System.out.println("main blnScreenshot = " + objStep.get("blnScreenshot").toString());
-				System.out.println("main strFunction = " + objStep.get("strFunction").toString());
-				System.out.println("main strAssistiveProperties = " + objStep.get("strAssistiveProperties").toString());
-				System.out.println("main blnExitOnFail = " + objStep.get("blnExitOnFail").toString());
-				System.out.println("main strOutputLinkName = " + objStep.get("strOutputLinkName").toString());
-				System.out.println("main strOutputValue = " + objStep.get("strOutputValue").toString());
-				System.out.println("main intLoop = " + objStep.get("intLoop").toString());
-				System.out.println("main strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
-
+				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step "
+						+ intStep);
+				System.out.println("main strAction = "
+						+ objStep.get("strAction").toString());
+				System.out.println("main strTagName = "
+						+ objStep.get("strTagName").toString());
+				System.out.println("main strAttributeNames = "
+						+ objStep.get("strAttributeNames").toString());
+				System.out.println("main strAtributeValues = "
+						+ objStep.get("strAtributeValues").toString());
+				System.out.println("main strInputValue = "
+						+ objStep.get("strInputValue").toString());
+				System.out.println("main strLogicalName = "
+						+ objStep.get("strLogicalName").toString());
+				System.out.println("main intMillisecondsToWait = "
+						+ objStep.get("intMillisecondsToWait").toString());
+				System.out.println("main blnOptional = "
+						+ objStep.get("blnOptional").toString());
+				System.out.println("main strAssert = "
+						+ objStep.get("strAssert").toString());
+				System.out.println("main blnPleaseWait = "
+						+ objStep.get("blnPleaseWait").toString());
+				System.out.println("main blnHighlight = "
+						+ objStep.get("blnHighlight").toString());
+				System.out.println("main blnScreenshot = "
+						+ objStep.get("blnScreenshot").toString());
+				System.out.println("main strFunction = "
+						+ objStep.get("strFunction").toString());
+				System.out.println("main strAssistiveProperties = "
+						+ objStep.get("strAssistiveProperties").toString());
+				System.out.println("main blnExitOnFail = "
+						+ objStep.get("blnExitOnFail").toString());
+				System.out.println("main strOutputLinkName = "
+						+ objStep.get("strOutputLinkName").toString());
+				System.out.println("main strOutputValue = "
+						+ objStep.get("strOutputValue").toString());
+				System.out.println("main intLoop = "
+						+ objStep.get("intLoop").toString());
+				System.out.println("main strCurrentWindowHandle = "
+						+ objStep.get("strCurrentWindowHandle").toString());
 				if (!objStep.get("strFunction").toString().trim().equals("")) {
-					String strMethodName = objStep.get("strFunction").toString();
+					String strMethodName = objStep.get("strFunction")
+							.toString();
 					String arg1 = strInputValue;
 					try {
 						Class objClass = Class.forName("Evinrude");
 						Class objParameterTypes[] = new Class[1];
 						objParameterTypes[0] = String.class;
-						Method objMethod = objClass.getMethod(strMethodName, objParameterTypes);
+						Method objMethod = objClass.getMethod(strMethodName,
+								objParameterTypes);
 						Evinrude objEvinrude = new Evinrude();
 						Object arrArgumentList[] = new Object[1];
 						arrArgumentList[0] = new String(arg1);
-						Object objReturn = objMethod.invoke(objEvinrude, arrArgumentList);
+						Object objReturn = objMethod.invoke(objEvinrude,
+								arrArgumentList);
 						String strReturnValue = (String) objReturn;
 						strInputValue = strReturnValue;
 						objStep.put("strInputValue", strInputValue);
@@ -266,27 +322,40 @@ public class Evinrude {
 					} catch (Throwable e) {
 						System.err.println(e);
 					}
-				}// the end of (!objStep.get("strFunction").toString().equals(""))
-
+				}// the end of
+					// (!objStep.get("strFunction").toString().equals(""))
 				if (!strInputValue.equals("<skip>")) {
 					switch (objStep.get("strAction").toString().toLowerCase()) {
 					case "launch":
 						objWebDriver = browserLaunch(objStep);
-						blnPass = Boolean.parseBoolean(objStep.get("blnStatus").toString());
-
-						long lngStartTimedocumenttitle = System.currentTimeMillis();
+						blnPass = Boolean.parseBoolean(objStep.get("blnStatus")
+								.toString());
+						long lngStartTimedocumenttitle = System
+								.currentTimeMillis();
 						JavascriptExecutor js = (JavascriptExecutor) objWebDriver;
-						String strTitle = (String) js.executeScript("return document.title");
+						String strTitle = (String) js
+								.executeScript("return document.title");
 						// System.out.println(js.executeScript("return document.title"));
-						System.out.println("main JavascriptExecutor strTitle  = " + strTitle + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
-
+						System.out
+								.println("main JavascriptExecutor strTitle  = "
+										+ strTitle
+										+ " intMillisecondsWaited = "
+										+ (System.currentTimeMillis() - lngStartTimedocumenttitle));
 						long lngStartTimetitle = System.currentTimeMillis();
-						System.out.println("main objWebDriver.getTitle = " + objWebDriver.getTitle() + " " + (System.currentTimeMillis() - lngStartTimetitle));
-
-						long lngStartTimegetElementsByTagName = System.currentTimeMillis();
-						List<WebElement> objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
-						System.out.println("main objFrameCollection = " + objFrameCollection.size() + " " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName));
-
+						System.out
+								.println("main objWebDriver.getTitle = "
+										+ objWebDriver.getTitle()
+										+ " "
+										+ (System.currentTimeMillis() - lngStartTimetitle));
+						long lngStartTimegetElementsByTagName = System
+								.currentTimeMillis();
+						List<WebElement> objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver)
+								.executeScript("return document.getElementsByTagName('frame');");
+						System.out
+								.println("main objFrameCollection = "
+										+ objFrameCollection.size()
+										+ " "
+										+ (System.currentTimeMillis() - lngStartTimegetElementsByTagName));
 						break;
 					case "close":
 						objWebDriver.close();
@@ -294,56 +363,73 @@ public class Evinrude {
 						blnPass = true;
 						break;
 					case "get":
-						blnPass = elementGetSync(objStep, objWebDriver, objWebElement);
+						blnPass = elementGetSync(objStep, objWebDriver,
+								objWebElement);
 						break;
 					case "set":
-						blnPass = elementSetSync(objStep, objWebDriver, objWebElement);
+						blnPass = elementSetSync(objStep, objWebDriver,
+								objWebElement);
 						break;
 					case "verify":
-						blnPass = elementVerifyValueSync(objStep, objWebDriver, objWebElement);
+						blnPass = elementVerifyValueSync(objStep, objWebDriver,
+								objWebElement);
 						break;
 					case "sync_visible":
-						blnPass = elementVisibleSync(objStep, objWebDriver, objWebElement);
+						blnPass = elementVisibleSync(objStep, objWebDriver,
+								objWebElement);
 						break;
 					case "sync_hidden":
-						blnPass = elementHiddenSync(objStep, objWebDriver, objWebElement);
+						blnPass = elementHiddenSync(objStep, objWebDriver,
+								objWebElement);
 						break;
 					case "sync_enabled":
-						blnPass = elementEnabledSync(objStep, objWebDriver, objWebElement);
+						blnPass = elementEnabledSync(objStep, objWebDriver,
+								objWebElement);
 						break;
 					case "sync_disabled":
-						blnPass = elementDisabledSync(objStep, objWebDriver, objWebElement);
+						blnPass = elementDisabledSync(objStep, objWebDriver,
+								objWebElement);
 						break;
 					case "break":
 						break;
 					default:
-						// action not supported
+						// TODO action not supported add exit test and reporting
 						break;
 					}// the end of switch (strAction.toLowerCase())
-					if (objStep.get("strAction").toString().toLowerCase().equals("break")) {
-						// Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
+					if (objStep.get("strAction").toString().toLowerCase()
+							.equals("break")) {
 						break;
 					}// the end of if (strAction.toLowerCase().equals("break"))
-					strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
-
+					strCurrentWindowHandle = objStep.get(
+							"strCurrentWindowHandle").toString();
 					if (blnPass == true) {
-
-						System.out.println("main strCurrentWindowHandle = " + strCurrentWindowHandle);
+						System.out.println("main strCurrentWindowHandle = "
+								+ strCurrentWindowHandle);
 					} else {
-						if (Boolean.parseBoolean(objStep.get("blnExitOnFail").toString()) == true) {
-							webElementCollectionTable(objStep.get("strTagName").toString(), objWebDriver);
+						// TODO call webElementCollectionTable cover all cases
+						// of fails
+						if (Boolean.parseBoolean(objStep.get("blnExitOnFail")
+								.toString()) == true) {
+							webElementCollectionTable(objStep.get("strTagName")
+									.toString(), objWebDriver);
 							break;
 						}
 					}// the end of if (blnPass = true)
 				}// the end of if (strInputValue != "<skip>")
-
 				if (objStep.get("strOutputLinkName").toString().trim().length() != 0) {
-					objLinks.put(objStep.get("strOutputLinkName").toString(), objStep.get("strOutputValue").toString());
-					System.out.println(objStep.get("strOutputLinkName").toString());
-					System.out.println(objLinks.get(objStep.get("strOutputLinkName").toString()).toString());
-					System.out.println(objStep.get("strOutputValue").toString());
+					objLinks.put(objStep.get("strOutputLinkName").toString(),
+							objStep.get("strOutputValue").toString());
+					System.out.println(objStep.get("strOutputLinkName")
+							.toString());
+					System.out.println(objLinks.get(
+							objStep.get("strOutputLinkName").toString())
+							.toString());
+					System.out
+							.println(objStep.get("strOutputValue").toString());
 				}
 			}// for intStep
+				// TODO confirm the exceptions to catch in main some may need to
+				// move to individual sync method
 		} catch (FileNotFoundException e) {
 			System.out.println("main FileNotFoundException");
 		} catch (IOException e) {
@@ -354,124 +440,138 @@ public class Evinrude {
 			System.out.println("main BrowserDriverNotSupportedException");
 			e1.printStackTrace();
 		} finally {
-			if (intStep == objTestSteps.size() || blnPass == false || objStep.get("strAction").toString().toLowerCase().equals("break")) {
+			// TODO review how end of run is determined for reporting and
+			// cleanup
+			if (intStep == objTestSteps.size()
+					|| blnPass == false
+					|| objStep.get("strAction").toString().toLowerCase()
+							.equals("break")) {
 				try {
-					
+					// writeJsonToHtml(objTestSteps, strResultsPath +
+					// "\\StepsWithDefaults.html");
+					// writeReportToHtml(objTestSteps, strResultsPath +
+					// "\\Report.html");
+					// File file = new File(strResultsPath +
+					// "\\UpdatedJson.json");
 					String strUpdatedJSONPath = "";
-					
-					switch(OSType()){
+					switch (OSType()) {
 					case "Windows":
-						strUpdatedJSONPath = strResultsPath + "UpdatedJson.json";
-//						strUpdatedJSONPath = strResultsPath + "screenshots\\UpdatedJson.json";
-//						strUpdatedJSONPath = "C:\\Temp\\screenshots\\UpdatedJson.json";
+						strUpdatedJSONPath = strResultsPath
+								+ "UpdatedJson.json";
+						// strUpdatedJSONPath = strResultsPath +
+						// "screenshots\\UpdatedJson.json";
+						// strUpdatedJSONPath =
+						// "C:\\Temp\\screenshots\\UpdatedJson.json";
 						break;
 					case "Mac":
-						strUpdatedJSONPath = strResultsPath + "UpdatedJson.json";
-//						strUpdatedJSONPath = strResultsPath + "screenshots/UpdatedJson.json";
+						strUpdatedJSONPath = strResultsPath
+								+ "UpdatedJson.json";
+						// strUpdatedJSONPath = strResultsPath +
+						// "screenshots/UpdatedJson.json";
 						break;
 					default:
-						//need to raise an error and log
+						// TODO switch (OSType()) need to raise an error and log
 						break;
 					}
-					
-					writeJsonToHtml(objTestSteps, strResultsPath + "StepsWithDefaults.html");
-					writeReportToHtml(objTestSteps, strResultsPath + "Report.html");
-
+					writeJsonToHtml(objTestSteps, strResultsPath
+							+ "StepsWithDefaults.html");
+					writeReportToHtml(objTestSteps, strResultsPath
+							+ "Report.html");
 					File file = new File(strUpdatedJSONPath);
-
 					// writeJsonKeysToHtml(JSONObject objTestStep, file);
 					BufferedWriter out;
 					out = new BufferedWriter(new FileWriter(file));
 					out.write(objJsonFile.toString());
 					out.close();
-					// if browser is IE then kill IEDriverServer process (this allows user to interact with browser after test ends)
-					Capabilities capabilities = ((RemoteWebDriver) objWebDriver).getCapabilities();
+					// if browser is IE then kill IEDriverServer process (this
+					// allows user to interact with browser after test ends)
+					Capabilities capabilities = ((RemoteWebDriver) objWebDriver)
+							.getCapabilities();
 					String browsername = capabilities.getBrowserName();
 					if ("internet explorer".equalsIgnoreCase(browsername)) {
-						Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");						
+						Runtime.getRuntime().exec(
+								"taskkill /F /IM IEDriverServer.exe");
 					}
 				} catch (IOException e) {
 					System.out.println("main final " + e.toString());
-					// // // TODO Auto-generated catch block
-					// // e.printStackTrace();
 				}
 			}
-
 		}// the end of try
 			// objWebDriver.manage().logs().getAvailableLogTypes().
-	}// the End of Main
+	}// the end of Main
 
 	@SuppressWarnings("serial")
 	public static class NoElementFoundException extends Exception {
 		public NoElementFoundException(String message) {
 			super(message);
 		}
-	}
+	}// the end of NoElementFoundException
 
 	@SuppressWarnings("serial")
 	public static class MultipleElementsFoundException extends Exception {
 		public MultipleElementsFoundException(String message) {
 			super(message);
 		}
-	}
+	}// the end of MultipleElementsFoundException
 
 	@SuppressWarnings("serial")
 	public static class ElementNotVisibleException extends Exception {
 		public ElementNotVisibleException(String message) {
 			super(message);
 		}
-	}
+	}// the end of ElementNotVisibleException
 
 	@SuppressWarnings("serial")
 	public static class ElementNotHiddenException extends Exception {
 		public ElementNotHiddenException(String message) {
 			super(message);
 		}
-	}
+	}// the end of ElementNotHiddenException
 
 	@SuppressWarnings("serial")
 	public static class ElementNotEnabledException extends Exception {
 		public ElementNotEnabledException(String message) {
 			super(message);
 		}
-	}
+	}// the end of ElementNotEnabledException
 
 	@SuppressWarnings("serial")
 	public static class ElementNotDisabledException extends Exception {
 		public ElementNotDisabledException(String message) {
 			super(message);
 		}
-	}
+	}// the end of ElementNotDisabledException
 
 	@SuppressWarnings("serial")
 	public static class ValueNotMatchedException extends Exception {
 		public ValueNotMatchedException(String message) {
 			super(message);
 		}
-	}
+	}// the end of ValueNotMatchedException
 
 	@SuppressWarnings("serial")
 	public static class ElementValueNotVerifiedException extends Exception {
 		public ElementValueNotVerifiedException(String message) {
 			super(message);
 		}
-	}
+	}// the end of ElementValueNotVerifiedException
 
 	@SuppressWarnings("serial")
 	public static class ElementTagNameNotSupportedException extends Exception {
 		public ElementTagNameNotSupportedException(String message) {
 			super(message);
 		}
-	}
+	}// the end of ElementTagNameNotSupportedException
 
 	@SuppressWarnings("serial")
 	public static class BrowserDriverNotSupportedException extends Exception {
 		public BrowserDriverNotSupportedException(String message) {
 			super(message);
 		}
-	}
+	}// the end of BrowserDriverNotSupportedException
 
-	public static Boolean elementGetSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
+	public static Boolean elementGetSync(JSONObject objStep,
+			WebDriver objWebDriver, WebElement objWebElement) {
 		Long lngStartTimeGetSync = System.currentTimeMillis();
 		Integer intMillisecondsWaited = null;
 		Boolean blnFound = false;
@@ -491,74 +591,99 @@ public class Evinrude {
 					blnVisible = true;
 				}
 				if (blnGet == false) {
-					strGetValue = elementGet(objStep, objWebDriver, objWebElement);
+					strGetValue = elementGet(objStep, objWebDriver,
+							objWebElement);
 					objStep.put("strOutputValue", strGetValue);
 					blnGet = true;
 				}
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | NoElementFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException
+					| NoSuchElementException | NullPointerException
+					| NoElementFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
-				System.out.println("elementGetSync - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeGetSync));
+				System.out.println("elementGetSync - " + e.toString()
+						+ "  lngStartTimeHiddenSync = "
+						+ (System.currentTimeMillis() - lngStartTimeGetSync));
 			} catch (ElementNotVisibleException e) {
 				blnVisible = false;
-				System.out.println("elementGetSync - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeGetSync));
+				System.out.println("elementGetSync - " + e.toString()
+						+ "  lngStartTimeHiddenSync = "
+						+ (System.currentTimeMillis() - lngStartTimeGetSync));
 			} catch (ElementTagNameNotSupportedException e) {
-				System.out.println("elementGetSync - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeGetSync));
+				System.out.println("elementGetSync - " + e.toString()
+						+ "  lngStartTimeHiddenSync = "
+						+ (System.currentTimeMillis() - lngStartTimeGetSync));
 				blnExit = true;
 			} finally {
 				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeGetSync);
-				System.out.println("elementGetSync finally intMillisecondsWaited = " + intMillisecondsWaited);
+				System.out
+						.println("elementGetSync finally intMillisecondsWaited = "
+								+ intMillisecondsWaited);
 				if (blnExit == true) {
 					System.out.println("elementGetSync finally blnExit = true");
 					objStep.put("strStatus", "fail");
-
-					// if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-					// coordinateHighlightScreenshot(objStep, "screen", Color.GREEN, "screen", objWebDriver, null, objStep);
+					// if
+					// (objStep.get("strTagName").toString().toLowerCase().equals("alert"))
+					// {
+					// coordinateHighlightScreenshot(objStep, "screen",
+					// Color.GREEN, "screen", objWebDriver, null, objStep);
 					//
 					// } else {
-					// coordinateHighlightScreenshot(objStep, "element", Color.GREEN, "screen", objWebDriver, objWebElement, objStep);
+					// coordinateHighlightScreenshot(objStep, "element",
+					// Color.GREEN, "screen", objWebDriver, objWebElement,
+					// objStep);
 					// }
-					coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
-
+					coordinateHighlightScreenshot(objStep, "element", "screen",
+							objWebDriver, objWebElement, objStep);
 					return false;
 				}
 				if (blnStatus == true) {
-					System.out.println("elementGetSync finally blnStatus = " + blnStatus);
+					System.out.println("elementGetSync finally blnStatus = "
+							+ blnStatus);
 					objStep.put("strStatus", "pass");
-					if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-						coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, null, objStep);
-
+					if (objStep.get("strTagName").toString().toLowerCase()
+							.equals("alert")) {
+						coordinateHighlightScreenshot(objStep, "screen",
+								"screen", objWebDriver, null, objStep);
 					} else {
-						coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
+						coordinateHighlightScreenshot(objStep, "element",
+								"screen", objWebDriver, objWebElement, objStep);
 					}
-					// coordinateHighlightScreenshot(objStep, "element", Color.GREEN, "screen", objWebDriver, objWebElement, objStep);
-
+					// coordinateHighlightScreenshot(objStep, "element",
+					// Color.GREEN, "screen", objWebDriver, objWebElement,
+					// objStep);
 					return true;
 				} else if (blnStatus == false) {
-					if (intMillisecondsWaited <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
+					if (intMillisecondsWaited <= Integer.parseInt(objStep.get(
+							"intMillisecondsToWait").toString())) {
 						if (blnFound == false) {
 							blnVisible = false;
 							blnGet = false;
 						}
 					} else {
-						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
+						if (Boolean.parseBoolean(objStep.get("blnOptional")
+								.toString()) == true) {
 							objStep.put("strStatus", "warning");
-							coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, objWebElement, objStep);
-
+							coordinateHighlightScreenshot(objStep, "screen",
+									"screen", objWebDriver, objWebElement,
+									objStep);
 							return true;
 						} else {
 							objStep.put("strStatus", "fail");
-							coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, objWebElement, objStep);
-
+							coordinateHighlightScreenshot(objStep, "screen",
+									"screen", objWebDriver, objWebElement,
+									objStep);
 							return false;
 						}
-					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
+					}// the end of if (intMillisecondsWaited <=
+						// intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
-			}// the End of try
-		}// the End of While
+			}// the end of try
+		}// the end of While
 	}// the end of elementGetSync
 
-	public static Boolean elementSetSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
+	public static Boolean elementSetSync(JSONObject objStep,
+			WebDriver objWebDriver, WebElement objWebElement) {
 		Long lngStartTimeSetSync = System.currentTimeMillis();
 		Integer intMillisecondsWaited = null;
 		Boolean blnFound = false;
@@ -569,7 +694,8 @@ public class Evinrude {
 		Boolean blnExit = false;
 		Boolean blnHidden = false;
 		Boolean blnAssert = false;
-		// String strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
+		// String strCurrentWindowHandle =
+		// objStep.get("strCurrentWindowHandle").toString();
 		// String strInputValue = objStep.get("strInputValue").toString();
 		// objStep.put("strCurrentWindowHandle", strCurrentWindowHandle);
 		objStep.put("strOutputValue", objStep.get("strInputValue").toString());
@@ -590,17 +716,17 @@ public class Evinrude {
 					System.out.println("elementSetSync - elementEnabled");
 					blnEnabled = true;
 				}
-
 				switch (objStep.get("strAssert").toString().toLowerCase()) {
 				case "off":
 					objStep.put("strStatus", "pass");
-					if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-						coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, null, objStep);
-
+					if (objStep.get("strTagName").toString().toLowerCase()
+							.equals("alert")) {
+						coordinateHighlightScreenshot(objStep, "screen",
+								"screen", objWebDriver, null, objStep);
 					} else {
-						coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
+						coordinateHighlightScreenshot(objStep, "element",
+								"screen", objWebDriver, objWebElement, objStep);
 					}
-
 					if (blnSet == false) {
 						elementSet(objStep, objWebDriver, objWebElement);
 						blnSet = true;
@@ -609,7 +735,8 @@ public class Evinrude {
 					break;
 				case "hidden":
 					objStep.put("strStatus", "pass");
-					coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
+					coordinateHighlightScreenshot(objStep, "element", "screen",
+							objWebDriver, objWebElement, objStep);
 					if (blnSet == false) {
 						elementSet(objStep, objWebDriver, objWebElement);
 						blnSet = true;
@@ -625,59 +752,80 @@ public class Evinrude {
 						elementSet(objStep, objWebDriver, objWebElement);
 						blnSet = true;
 					}
-					coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
+					coordinateHighlightScreenshot(objStep, "element", "screen",
+							objWebDriver, objWebElement, objStep);
 					break;
 				case "visible":
 					if (blnSet == false) {
 						elementSet(objStep, objWebDriver, objWebElement);
 						blnSet = true;
 					}
-					coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
+					coordinateHighlightScreenshot(objStep, "element", "screen",
+							objWebDriver, objWebElement, objStep);
 					break;
 				case "enabled":
 					if (blnSet == false) {
 						elementSet(objStep, objWebDriver, objWebElement);
 						blnSet = true;
 					}
-					coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
+					coordinateHighlightScreenshot(objStep, "element", "screen",
+							objWebDriver, objWebElement, objStep);
 					break;
 				case "disabled":
 					if (blnSet == false) {
 						elementSet(objStep, objWebDriver, objWebElement);
 						blnSet = true;
 					}
-					coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
+					// TODO assert add call to elementDisabled
+					coordinateHighlightScreenshot(objStep, "element", "screen",
+							objWebDriver, objWebElement, objStep);
 					break;
-
 				}// the end of switch (strAssert.toLowerCase())
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | NoElementFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException
+					| NoSuchElementException | NullPointerException
+					| NoElementFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
-				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+				System.out.println("elementSetSync - " + e.toString()
+						+ "  lngStartTimeSetSync = "
+						+ (System.currentTimeMillis() - lngStartTimeSetSync));
 			} catch (ElementNotVisibleException e) {
 				blnVisible = false;
-				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+				System.out.println("elementSetSync - " + e.toString()
+						+ "  lngStartTimeSetSync = "
+						+ (System.currentTimeMillis() - lngStartTimeSetSync));
 			} catch (ElementNotEnabledException e) {
 				blnEnabled = false;
-				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+				System.out.println("elementSetSync - " + e.toString()
+						+ "  lngStartTimeSetSync = "
+						+ (System.currentTimeMillis() - lngStartTimeSetSync));
 			} catch (ElementTagNameNotSupportedException e) {
-				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+				System.out.println("elementSetSync - " + e.toString()
+						+ "  lngStartTimeSetSync = "
+						+ (System.currentTimeMillis() - lngStartTimeSetSync));
 				blnExit = true;
 			} catch (ElementNotHiddenException e) {
-				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+				System.out.println("elementSetSync - " + e.toString()
+						+ "  lngStartTimeSetSync = "
+						+ (System.currentTimeMillis() - lngStartTimeSetSync));
 				// blnSet = true;
 				// blnHidden = false;
 				blnAssert = false;
 			} finally {
 				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeSetSync);
-				System.out.println("elementSetSync finally intMillisecondsWaited = " + intMillisecondsWaited);
+				System.out
+						.println("elementSetSync finally intMillisecondsWaited = "
+								+ intMillisecondsWaited);
 				if (blnExit == true) {
 					System.out.println("elementSetSync finally blnExit = true");
 					return false;
 				}
-				if (intMillisecondsWaited <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
+				if (intMillisecondsWaited <= Integer.parseInt(objStep.get(
+						"intMillisecondsToWait").toString())) {
 					if (blnStatus == true) {
-						System.out.println("elementSetSync finally blnStatus = " + blnStatus);
+						System.out
+								.println("elementSetSync finally blnStatus = "
+										+ blnStatus);
 						objStep.put("strStatus", "pass");
 						return true;
 					} else if (blnStatus == false) {
@@ -691,12 +839,14 @@ public class Evinrude {
 						}
 					}
 				} else {
-					System.out.println("elementSetSync finally blnStatus = " + blnStatus);
+					System.out.println("elementSetSync finally blnStatus = "
+							+ blnStatus);
 					if (blnStatus == true) {
 						objStep.put("strStatus", "pass");
 						return true;
 					} else if (blnStatus == false) {
-						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
+						if (Boolean.parseBoolean(objStep.get("blnOptional")
+								.toString()) == true) {
 							objStep.put("strStatus", "warning");
 							return true;
 						} else {
@@ -705,12 +855,14 @@ public class Evinrude {
 						}
 					}
 				}
-			}// the End of try
-		}// the End of While
-			// return blnFound;
+			}// the end of try
+		}// the end of While
 	}// the end of elementSetSync
 
-	public static String elementVerifyValue(JSONObject objStep, String strValueExpected, WebDriver objWebDriver, WebElement objWebElement) throws ValueNotMatchedException, ElementTagNameNotSupportedException {
+	public static String elementVerifyValue(JSONObject objStep,
+			String strValueExpected, WebDriver objWebDriver,
+			WebElement objWebElement) throws ValueNotMatchedException,
+			ElementTagNameNotSupportedException {
 		long lngStartTimeElementVerify = System.currentTimeMillis();
 		String strGetValue = "";
 		String strActualValue = "";
@@ -718,12 +870,19 @@ public class Evinrude {
 			strGetValue = elementGet(objStep, objWebDriver, objWebElement);
 			strActualValue = verifyMatch(strGetValue, strValueExpected);
 		} finally {
-			System.out.println("elementVerifyValue finally strValueActual = " + strActualValue + " elementVerifyValue strValueExpected = " + strValueExpected + " intMillisecondsWaited = " + (int) (System.currentTimeMillis() - lngStartTimeElementVerify));
+			System.out
+					.println("elementVerifyValue finally strValueActual = "
+							+ strActualValue
+							+ " elementVerifyValue strValueExpected = "
+							+ strValueExpected
+							+ " intMillisecondsWaited = "
+							+ (int) (System.currentTimeMillis() - lngStartTimeElementVerify));
 		}
 		return strActualValue;
-	}
+	}// the end of elementVerifyValue
 
-	public static Boolean elementVerifyValueSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
+	public static Boolean elementVerifyValueSync(JSONObject objStep,
+			WebDriver objWebDriver, WebElement objWebElement) {
 		Long lngStartTimeVerifyValueSync = System.currentTimeMillis();
 		Integer intMillisecondsWaited = null;
 		Boolean blnFound = false;
@@ -744,79 +903,111 @@ public class Evinrude {
 					blnVisible = true;
 				}
 				if (blnVerified == false) {
-					strActualValue = elementVerifyValue(objStep, strValueExpected, objWebDriver, objWebElement);
+					strActualValue = elementVerifyValue(objStep,
+							strValueExpected, objWebDriver, objWebElement);
 					blnVerified = true;
 				}
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | NoElementFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException
+					| NoSuchElementException | NullPointerException
+					| NoElementFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
 				blnVisible = false;
 				blnStatus = false;
 				blnExit = false;
 				blnVerified = false;
-				System.out.println("elementVerifyValueSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeVerifyValueSync));
+				System.out
+						.println("elementVerifyValueSync - "
+								+ e.toString()
+								+ "  lngMillisecondsWaitedAll = "
+								+ (System.currentTimeMillis() - lngStartTimeVerifyValueSync));
 			} catch (ElementNotVisibleException e) {
 				blnVisible = false;
-				System.out.println("elementVerifyValueSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeVerifyValueSync));
+				System.out
+						.println("elementVerifyValueSync - "
+								+ e.toString()
+								+ "  lngMillisecondsWaitedAll = "
+								+ (System.currentTimeMillis() - lngStartTimeVerifyValueSync));
 			} catch (ElementTagNameNotSupportedException e) {
-				System.out.println("elementVerifyValueSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeVerifyValueSync));
+				System.out
+						.println("elementVerifyValueSync - "
+								+ e.toString()
+								+ "  lngMillisecondsWaitedAll = "
+								+ (System.currentTimeMillis() - lngStartTimeVerifyValueSync));
 				blnExit = true;
 			} catch (ValueNotMatchedException e) {
-				System.out.println("elementVerifyValueSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeVerifyValueSync));
+				System.out
+						.println("elementVerifyValueSync - "
+								+ e.toString()
+								+ "  lngMillisecondsWaitedAll = "
+								+ (System.currentTimeMillis() - lngStartTimeVerifyValueSync));
 				blnVerified = false;
 			} finally {
-
-				// System.out.println("elementVerifyValueSync strValueActual = " + strGetValue + " elementVerifyValue strValueExpected = " + strValueExpected);
+				// System.out.println("elementVerifyValueSync strValueActual = "
+				// + strGetValue + " elementVerifyValue strValueExpected = " +
+				// strValueExpected);
 				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeVerifyValueSync);
-				System.out.println("elementVerifyValueSync finally intMillisecondsWaited = " + (int) (System.currentTimeMillis() - lngStartTimeVerifyValueSync));
+				System.out
+						.println("elementVerifyValueSync finally intMillisecondsWaited = "
+								+ (int) (System.currentTimeMillis() - lngStartTimeVerifyValueSync));
 				if (blnExit == true) {
-					System.out.println("elementVerifyValueSync finally blnExit = true");
+					System.out
+							.println("elementVerifyValueSync finally blnExit = true");
 					objStep.put("strStatus", "fail");
-					coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
-
+					coordinateHighlightScreenshot(objStep, "element", "screen",
+							objWebDriver, objWebElement, objStep);
 					return false;
 				}
 				if (blnStatus == true) {
-					System.out.println("elementVerifyValueSync finally blnStatus = " + blnStatus);
+					System.out
+							.println("elementVerifyValueSync finally blnStatus = "
+									+ blnStatus);
 					objStep.put("strOutputValue", strActualValue);
 					objStep.put("strStatus", "pass");
-					if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-						coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, null, objStep);
-
+					if (objStep.get("strTagName").toString().toLowerCase()
+							.equals("alert")) {
+						coordinateHighlightScreenshot(objStep, "screen",
+								"screen", objWebDriver, null, objStep);
 					} else {
-						coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
+						coordinateHighlightScreenshot(objStep, "element",
+								"screen", objWebDriver, objWebElement, objStep);
 					}
-					//coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
-
+					// coordinateHighlightScreenshot(objStep, "element",
+					// "screen", objWebDriver, objWebElement, objStep);
 					return true;
 				} else if (blnStatus == false) {
-					if (intMillisecondsWaited <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
+					if (intMillisecondsWaited <= Integer.parseInt(objStep.get(
+							"intMillisecondsToWait").toString())) {
 						if (blnFound == false) {
 							blnVisible = false;
 							blnVerified = false;
 						}
 					} else {
-						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
+						if (Boolean.parseBoolean(objStep.get("blnOptional")
+								.toString()) == true) {
 							objStep.put("strOutputValue", strActualValue);
 							objStep.put("strStatus", "warning");
-							coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, objWebElement, objStep);
-
+							coordinateHighlightScreenshot(objStep, "screen",
+									"screen", objWebDriver, objWebElement,
+									objStep);
 							return true;
 						} else {
 							objStep.put("strOutputValue", strActualValue);
 							objStep.put("strStatus", "fail");
-							coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, objWebElement, objStep);
-
+							coordinateHighlightScreenshot(objStep, "screen",
+									"screen", objWebDriver, objWebElement,
+									objStep);
 							return false;
 						}
-					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
+					}// the end of if (intMillisecondsWaited <=
+						// intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
-			}// the End of try
-		}// the End of While
-			// return blnFound;
+			}// the end of try
+		}// the end of While
 	}// the end of elementVerifyValueSync
 
-	public static Boolean elementVisibleSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
+	public static Boolean elementVisibleSync(JSONObject objStep,
+			WebDriver objWebDriver, WebElement objWebElement) {
 		Long lngStartTimeVisibleSync = System.currentTimeMillis();
 		Integer intMillisecondsWaited = null;
 		Boolean blnFound = false;
@@ -832,46 +1023,63 @@ public class Evinrude {
 					elementVisible(objStep, objWebDriver, objWebElement);
 					blnVisible = true;
 				}
-				// objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-				// coordinateHighlightScreenshot(objStep, "element", Color.GREEN, "screen", objWebDriver, null, objStep);
+				// objStep.put("strCurrentWindowHandle",
+				// objWebDriver.getWindowHandle());
+				// coordinateHighlightScreenshot(objStep, "element",
+				// Color.GREEN, "screen", objWebDriver, null, objStep);
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | NoElementFoundException | MultipleElementsFoundException | ElementNotVisibleException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException
+					| NoSuchElementException | NullPointerException
+					| NoElementFoundException | MultipleElementsFoundException
+					| ElementNotVisibleException e) {
 				blnFound = false;
 				blnVisible = false;
-				System.out.println("elementVisibleSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeVisibleSync));
+				System.out
+						.println("elementVisibleSync - "
+								+ e.toString()
+								+ "  lngMillisecondsWaitedAll = "
+								+ (System.currentTimeMillis() - lngStartTimeVisibleSync));
 			} finally {
 				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeVisibleSync);
-				System.out.println("elementVisibleSync finally intMillisecondsWaited = " + intMillisecondsWaited);
+				System.out
+						.println("elementVisibleSync finally intMillisecondsWaited = "
+								+ intMillisecondsWaited);
 				if (blnStatus == true) {
-					System.out.println("elementVisibleSync finally blnStatus = " + blnStatus);
+					System.out
+							.println("elementVisibleSync finally blnStatus = "
+									+ blnStatus);
 					objStep.put("strStatus", "pass");
-					coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, null, objStep);
-
+					coordinateHighlightScreenshot(objStep, "element", "screen",
+							objWebDriver, null, objStep);
 					return true;
 				} else if (blnStatus == false) {
-					if (intMillisecondsWaited <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
+					if (intMillisecondsWaited <= Integer.parseInt(objStep.get(
+							"intMillisecondsToWait").toString())) {
 						if (blnFound == false) {
 							blnVisible = false;
 						}
 					} else {
-						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
+						if (Boolean.parseBoolean(objStep.get("blnOptional")
+								.toString()) == true) {
 							objStep.put("strStatus", "warning");
-							coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, null, objStep);
-
+							coordinateHighlightScreenshot(objStep, "screen",
+									"screen", objWebDriver, null, objStep);
 							return true;
 						} else {
 							objStep.put("strStatus", "fail");
-							coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, null, objStep);
-
+							coordinateHighlightScreenshot(objStep, "screen",
+									"screen", objWebDriver, null, objStep);
 							return false;
 						}
-					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
+					}// the end of if (intMillisecondsWaited <=
+						// intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
-			}// the End of try
-		}// the End of While
+			}// the end of try
+		}// the end of While
 	}// the end of elementVisibleSync
 
-	public static Boolean elementHiddenSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
+	public static Boolean elementHiddenSync(JSONObject objStep,
+			WebDriver objWebDriver, WebElement objWebElement) {
 		Long lngStartTimeHiddenSync = System.currentTimeMillis();
 		Integer intMillisecondsWaited = null;
 		Boolean blnFound = false;
@@ -887,48 +1095,72 @@ public class Evinrude {
 					elementHidden(objWebElement);
 					blnHidden = true;
 				}
-				// objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-				// coordinateHighlightScreenshot(Boolean.parseBoolean(objStep.get("blnHighlight").toString()), Boolean.parseBoolean(objStep.get("blnScreenshot").toString()), "screen", Color.GREEN, "screen", objWebDriver, null);
+				// objStep.put("strCurrentWindowHandle",
+				// objWebDriver.getWindowHandle());
+				// coordinateHighlightScreenshot(Boolean.parseBoolean(objStep.get("blnHighlight").toString()),
+				// Boolean.parseBoolean(objStep.get("blnScreenshot").toString()),
+				// "screen", Color.GREEN, "screen", objWebDriver, null);
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException | NoElementFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException
+					| NullPointerException | NoSuchElementException
+					| NoElementFoundException e) {
 				blnFound = true;
 				blnHidden = true;
-				System.out.println("elementHiddenSync - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeHiddenSync));
+				System.out
+						.println("elementHiddenSync - "
+								+ e.toString()
+								+ "  lngStartTimeHiddenSync = "
+								+ (System.currentTimeMillis() - lngStartTimeHiddenSync));
 			} catch (MultipleElementsFoundException | ElementNotHiddenException e) {
 				blnFound = false;
 				blnHidden = false;
-				System.out.println("elementHiddenSync - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeHiddenSync));
+				System.out
+						.println("elementHiddenSync - "
+								+ e.toString()
+								+ "  lngStartTimeHiddenSync = "
+								+ (System.currentTimeMillis() - lngStartTimeHiddenSync));
 			} finally {
 				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeHiddenSync);
-				System.out.println("elementHiddenSync finally intMillisecondsWaited = " + intMillisecondsWaited);
+				System.out
+						.println("elementHiddenSync finally intMillisecondsWaited = "
+								+ intMillisecondsWaited);
 				if (blnStatus == true) {
-					System.out.println("elementHiddenSync finally blnStatus = " + blnStatus);
+					System.out.println("elementHiddenSync finally blnStatus = "
+							+ blnStatus);
 					objStep.put("strStatus", "pass");
-					coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, null, objStep);
+					coordinateHighlightScreenshot(objStep, "screen", "screen",
+							objWebDriver, null, objStep);
 					return true;
 				} else if (blnStatus == false) {
-					if (intMillisecondsWaited <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
+					if (intMillisecondsWaited <= Integer.parseInt(objStep.get(
+							"intMillisecondsToWait").toString())) {
 						if (blnFound == false) {
 							blnHidden = false;
 						}
 					} else {
-						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
+						if (Boolean.parseBoolean(objStep.get("blnOptional")
+								.toString()) == true) {
 							objStep.put("strStatus", "warning");
-							coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, objWebElement, objStep);
+							coordinateHighlightScreenshot(objStep, "screen",
+									"screen", objWebDriver, objWebElement,
+									objStep);
 							return true;
 						} else {
 							objStep.put("strStatus", "fail");
-							coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, objWebElement, objStep);
-
+							coordinateHighlightScreenshot(objStep, "screen",
+									"screen", objWebDriver, objWebElement,
+									objStep);
 							return false;
 						}
-					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
+					}// the end of if (intMillisecondsWaited <=
+						// intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
-			}// the End of try
-		}// the End of While
+			}// the end of try
+		}// the end of While
 	}// the end of elementGetSync
 
-	public static Boolean elementEnabledSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
+	public static Boolean elementEnabledSync(JSONObject objStep,
+			WebDriver objWebDriver, WebElement objWebElement) {
 		Long lngStartTimeEnabledSync = System.currentTimeMillis();
 		Integer intMillisecondsWaited = null;
 		Boolean blnFound = false;
@@ -944,52 +1176,73 @@ public class Evinrude {
 					elementEnabled(objStep, objWebDriver, objWebElement);
 					blnEnabled = true;
 				}
-				// objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-				// coordinateHighlightScreenshot(objStep, "element", Color.GREEN, "screen", objWebDriver, null, objStep);
+				// objStep.put("strCurrentWindowHandle",
+				// objWebDriver.getWindowHandle());
+				// coordinateHighlightScreenshot(objStep, "element",
+				// Color.GREEN, "screen", objWebDriver, null, objStep);
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | NoElementFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException
+					| NoSuchElementException | NullPointerException
+					| NoElementFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
 				blnEnabled = false;
-				System.out.println("elementEnabledSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeEnabledSync));
+				System.out
+						.println("elementEnabledSync - "
+								+ e.toString()
+								+ "  lngMillisecondsWaitedAll = "
+								+ (System.currentTimeMillis() - lngStartTimeEnabledSync));
 			} catch (ElementNotEnabledException e) {
 				blnEnabled = false;
-				System.out.println("elementEnabledSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeEnabledSync));
+				System.out
+						.println("elementEnabledSync - "
+								+ e.toString()
+								+ "  lngMillisecondsWaitedAll = "
+								+ (System.currentTimeMillis() - lngStartTimeEnabledSync));
 			} finally {
 				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeEnabledSync);
-				System.out.println("elementVisibleSync finally intMillisecondsWaited = " + intMillisecondsWaited);
+				System.out
+						.println("elementVisibleSync finally intMillisecondsWaited = "
+								+ intMillisecondsWaited);
 				if (blnStatus == true) {
-					System.out.println("elementEnabledSync finally blnStatus = " + blnStatus);
+					System.out
+							.println("elementEnabledSync finally blnStatus = "
+									+ blnStatus);
 					objStep.put("strStatus", "pass");
-					coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, null, objStep);
-
+					coordinateHighlightScreenshot(objStep, "element", "screen",
+							objWebDriver, null, objStep);
 					return true;
 				} else if (blnStatus == false) {
-					if (intMillisecondsWaited <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
+					if (intMillisecondsWaited <= Integer.parseInt(objStep.get(
+							"intMillisecondsToWait").toString())) {
 						if (blnFound == false) {
 							blnEnabled = false;
 						}
 					} else {
-						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
+						if (Boolean.parseBoolean(objStep.get("blnOptional")
+								.toString()) == true) {
 							objStep.put("strStatus", "warning");
-							coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, null, objStep);
-
+							coordinateHighlightScreenshot(objStep, "screen",
+									"screen", objWebDriver, null, objStep);
 							return true;
 						} else {
 							objStep.put("strStatus", "fail");
-							coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, null, objStep);
-
+							coordinateHighlightScreenshot(objStep, "screen",
+									"screen", objWebDriver, null, objStep);
 							return false;
 						}
-					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
+					}// the end of if (intMillisecondsWaited <=
+						// intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
-			}// the End of try
-		}// the End of While
+			}// the end of try
+		}// the end of While
 	}// the end of elementEnabledSync
 
 	@SuppressWarnings("unchecked")
-	public static Boolean elementDisabledSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
+	public static Boolean elementDisabledSync(JSONObject objStep,
+			WebDriver objWebDriver, WebElement objWebElement) {
 		Long lngStartTimeDisabledSync = System.currentTimeMillis();
-		objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngStartTimeDisabledSync));
+		objStep.put("strStartTimestamp",
+				currentTimeMillisToDateTimestamp(lngStartTimeDisabledSync));
 		objStep.put("strStatus", "");
 		Integer intMillisecondsWaited = null;
 		Boolean blnFound = false;
@@ -1005,41 +1258,62 @@ public class Evinrude {
 					elementDisabled(objWebElement);
 					blnDisabled = true;
 				}
-				// coordinateHighlightScreenshot(objStep, "element", Color.GREEN, "screen", objWebDriver, null, objStep);
+				// coordinateHighlightScreenshot(objStep, "element",
+				// Color.GREEN, "screen", objWebDriver, null, objStep);
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | NoElementFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException
+					| NoSuchElementException | NullPointerException
+					| NoElementFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
 				blnDisabled = false;
-				System.out.println("elementDisabledSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeDisabledSync));
+				System.out
+						.println("elementDisabledSync - "
+								+ e.toString()
+								+ "  lngMillisecondsWaitedAll = "
+								+ (System.currentTimeMillis() - lngStartTimeDisabledSync));
 			} catch (ElementNotDisabledException e) {
 				blnDisabled = false;
-				System.out.println("elementDisabledSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeDisabledSync));
+				System.out
+						.println("elementDisabledSync - "
+								+ e.toString()
+								+ "  lngMillisecondsWaitedAll = "
+								+ (System.currentTimeMillis() - lngStartTimeDisabledSync));
 			} finally {
 				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeDisabledSync);
 				if (blnStatus == true) {
 					objStep.put("strStatus", "pass");
-					coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, null, objStep);
-
+					coordinateHighlightScreenshot(objStep, "element", "screen",
+							objWebDriver, null, objStep);
 				}
 				if (blnStatus == true) {
-					if (intMillisecondsWaited > Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
-						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
+					if (intMillisecondsWaited > Integer.parseInt(objStep.get(
+							"intMillisecondsToWait").toString())) {
+						if (Boolean.parseBoolean(objStep.get("blnOptional")
+								.toString()) == true) {
 							objStep.put("strStatus", "warning");
-							coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, null, objStep);
-
+							coordinateHighlightScreenshot(objStep, "screen",
+									"screen", objWebDriver, null, objStep);
 						} else {
 							objStep.put("strStatus", "fail");
-							coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, null, objStep);
-
+							coordinateHighlightScreenshot(objStep, "screen",
+									"screen", objWebDriver, null, objStep);
 						}
-					}// the end of if (intMillisecondsWaited > intMillisecondsToWait)
+					}// the end of if (intMillisecondsWaited >
+						// intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
 				if (objStep.get("strStatus").toString() != "") {
 					Long lngMillisecondsWaited = System.currentTimeMillis();
-					objStep.put("strStepDuration", (lngMillisecondsWaited - lngStartTimeDisabledSync));
-					System.out.println("browserLaunch finally intMillisecondsWaited = " + objStep.get("strStepDuration").toString());
-					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngMillisecondsWaited));
-					System.out.println("elementDisabledSync finally blnStatus = " + blnStatus);
+					objStep.put("strStepDuration",
+							(lngMillisecondsWaited - lngStartTimeDisabledSync));
+					System.out
+							.println("browserLaunch finally intMillisecondsWaited = "
+									+ objStep.get("strStepDuration").toString());
+					objStep.put(
+							"strEndTimestamp",
+							currentTimeMillisToDateTimestamp(lngMillisecondsWaited));
+					System.out
+							.println("elementDisabledSync finally blnStatus = "
+									+ blnStatus);
 				}
 				if (objStep.get("strStatus").toString().equals("pass")) {
 					return true;
@@ -1047,17 +1321,22 @@ public class Evinrude {
 				if (objStep.get("strStatus").toString().equals("fail")) {
 					return false;
 				}
-				System.out.println("elementDisabledSync finally intMillisecondsWaited = " + intMillisecondsWaited);
-			}// the End of try
-		}// the End of While
+				System.out
+						.println("elementDisabledSync finally intMillisecondsWaited = "
+								+ intMillisecondsWaited);
+			}// the end of try
+		}// the end of While
 	}// the end of elementDisabledSync
 
+	// TODO add desiredCapabilities.setJavascriptEnabled(true); to all browsers
 	@SuppressWarnings("unchecked")
-	public static WebDriver browserLaunch(JSONObject objStep) throws BrowserDriverNotSupportedException {
+	public static WebDriver browserLaunch(JSONObject objStep)
+			throws BrowserDriverNotSupportedException {
 		WebDriver objWebDriver = null;
 		DesiredCapabilities desiredCapabilities = null;
 		long lngStartTimeBrowserLaunch = System.currentTimeMillis();
-		objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngStartTimeBrowserLaunch));
+		objStep.put("strStartTimestamp",
+				currentTimeMillisToDateTimestamp(lngStartTimeBrowserLaunch));
 		try {
 			objStep.put("strStatus", "pass");
 			switch (objStep.get("strTagName").toString()) {
@@ -1065,108 +1344,130 @@ public class Evinrude {
 				objWebDriver = new FirefoxDriver();
 				objWebDriver.get(objStep.get("strInputValue").toString());
 				objWebDriver.manage().window().maximize();
-
 				// objWebDriver.switchTo().defaultContent();
 				Actions myAction = new Actions(objWebDriver);
-				myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL).build().perform();
-
-				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-				coordinateHighlightScreenshot(objStep, "window", "screen", objWebDriver, null, objStep);
+				myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL)
+						.build().perform();
+				objStep.put("strCurrentWindowHandle",
+						objWebDriver.getWindowHandle());
+				coordinateHighlightScreenshot(objStep, "window", "screen",
+						objWebDriver, null, objStep);
 				objStep.put("blnStatus", true);
 				return objWebDriver;
 			case "ie":
 				desiredCapabilities = DesiredCapabilities.internetExplorer();
 				desiredCapabilities.setJavascriptEnabled(true);
-				System.setProperty("webdriver.ie.driver", "C:\\Selenium\\IEDriverServer.exe");
+				System.setProperty("webdriver.ie.driver",
+						"C:\\Selenium\\IEDriverServer.exe");
 				objWebDriver = new InternetExplorerDriver(desiredCapabilities);
-				objWebDriver.navigate().to(objStep.get("strInputValue").toString());
+				objWebDriver.navigate().to(
+						objStep.get("strInputValue").toString());
 				// objWebDriver.manage().window().maximize();
-				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-				coordinateHighlightScreenshot(objStep, "window", "screen", objWebDriver, null, objStep);
+				objStep.put("strCurrentWindowHandle",
+						objWebDriver.getWindowHandle());
+				coordinateHighlightScreenshot(objStep, "window", "screen",
+						objWebDriver, null, objStep);
 				objStep.put("blnStatus", "true");
-				objWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.MILLISECONDS);
+				objWebDriver.manage().timeouts()
+						.implicitlyWait(0, TimeUnit.MILLISECONDS);
 				return objWebDriver;
 			case "chrome":
-				switch(OSType()){
+				switch (OSType()) {
 				case "Windows":
-					System.setProperty("webdriver.chrome.driver", "C:\\Selenium\\ChromeDriver\\chromedriver_win32\\chromedriver.exe");
+					System.setProperty("webdriver.chrome.driver",
+							"C:\\Selenium\\ChromeDriver\\chromedriver_win32\\chromedriver.exe");
 					break;
 				case "Mac":
-					System.setProperty("webdriver.chrome.driver", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome");
+					System.setProperty("webdriver.chrome.driver",
+							"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome");
 					break;
 				default:
-					//need to raise an error and log
+					// need to raise an error and log
 					break;
 				}
 				objWebDriver = new ChromeDriver();
 				objWebDriver.get(objStep.get("strInputValue").toString());
 				objWebDriver.manage().window().maximize();
-				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-				coordinateHighlightScreenshot(objStep, "window", "screen", objWebDriver, null, objStep);
+				objStep.put("strCurrentWindowHandle",
+						objWebDriver.getWindowHandle());
+				coordinateHighlightScreenshot(objStep, "window", "screen",
+						objWebDriver, null, objStep);
 				objStep.put("blnStatus", true);
 				return objWebDriver;
 			case "safari":
 				objWebDriver = new SafariDriver();
 				objWebDriver.get(objStep.get("strInputValue").toString());
 				objWebDriver.manage().window().maximize();
-				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-				coordinateHighlightScreenshot(objStep, "window", "screen", objWebDriver, null, objStep);
+				objStep.put("strCurrentWindowHandle",
+						objWebDriver.getWindowHandle());
+				coordinateHighlightScreenshot(objStep, "window", "screen",
+						objWebDriver, null, objStep);
 				objStep.put("blnStatus", true);
 				return objWebDriver;
 			case "opera":
+				// TODO OperaDriver setup latest driver and test
 				// desiredCapabilities = DesiredCapabilities.internetExplorer();
 				// desiredCapabilities.setJavascriptEnabled(true);
-
-				// System.setProperty("webdriver.opera.driver", "C:\\Selenium\\ChromeDriver\\chromedriver_win32\\chromedriver.exe");
+				// System.setProperty("webdriver.opera.driver",
+				// "C:\\Selenium\\ChromeDriver\\chromedriver_win32\\chromedriver.exe");
 				objWebDriver = new OperaDriver();
 				objWebDriver.get(objStep.get("strInputValue").toString());
 				// objWebDriver.manage().window().maximize();
-
-				objWebDriver.manage().window().setPosition(new Point(0, 0));
-				Dimension dim = new Dimension(1382, 754);
-				objWebDriver.manage().window().setSize(dim);
-
-				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-				coordinateHighlightScreenshot(objStep, "window", "screen", objWebDriver, null, objStep);
+				// objWebDriver.manage().window().setPosition(new Point(0, 0));
+				// Dimension dim = new Dimension(1382, 754);
+				// objWebDriver.manage().window().setSize(dim);
+				objStep.put("strCurrentWindowHandle",
+						objWebDriver.getWindowHandle());
+				coordinateHighlightScreenshot(objStep, "window", "screen",
+						objWebDriver, null, objStep);
 				objStep.put("blnStatus", true);
 				return objWebDriver;
-
 				// // WebDriver objWebDriver;
 				// Selenium selenium;
 				// objWebDriver = new OperaDriver();
-				// selenium = new WebDriverBackedSelenium(objWebDriver, "https://www.google.com/");
+				// selenium = new WebDriverBackedSelenium(objWebDriver,
+				// "https://www.google.com/");
 				// return objWebDriver;
 			default:
-				throw new BrowserDriverNotSupportedException("Browser '" + objStep.get("strTagName").toString() + "' not supported");
-
+				throw new BrowserDriverNotSupportedException("Browser '"
+						+ objStep.get("strTagName").toString()
+						+ "' not supported");
 			}
 		} finally {
-			jsExecute(objWebDriver);
-
+			windowFocus(objWebDriver);
 			Long lngEndTimeBrowserLaunch = System.currentTimeMillis();
-			objStep.put("strStepDuration", (lngEndTimeBrowserLaunch - lngStartTimeBrowserLaunch));
-			System.out.println("browserLaunch finally intMillisecondsWaited = " + objStep.get("strStepDuration").toString());
-			objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngEndTimeBrowserLaunch));
+			objStep.put("strStepDuration",
+					(lngEndTimeBrowserLaunch - lngStartTimeBrowserLaunch));
+			System.out.println("browserLaunch finally intMillisecondsWaited = "
+					+ objStep.get("strStepDuration").toString());
+			objStep.put("strEndTimestamp",
+					currentTimeMillisToDateTimestamp(lngEndTimeBrowserLaunch));
 		}
-
-	} // the End of browserLaunch
+	} // the end of browserLaunch
 
 	public static String ClipboardGet() {
 		String data = "";
 		try {
-			data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+			data = (String) Toolkit.getDefaultToolkit().getSystemClipboard()
+					.getData(DataFlavor.stringFlavor);
 		} catch (HeadlessException | UnsupportedFlavorException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return data;
-	}
+	}// the end of ClipboardGet
 
-	public static void elementSet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementTagNameNotSupportedException {
+	public static void elementSet(JSONObject objStep, WebDriver objWebDriver,
+			WebElement objWebElement)
+			throws ElementTagNameNotSupportedException {
 		long lngStartTimeElementSet = System.currentTimeMillis();
-
+		JavascriptExecutor objJavascriptExecutor = null;
+		if (objWebElement != null) {
+			objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
+		}
 		try {
-			System.out.println(objStep.get("strTagType").toString().toLowerCase());
+			System.out.println(objStep.get("strTagType").toString()
+					.toLowerCase());
 			long lngStartTimeSwitchSet = System.currentTimeMillis();
 			switch (objStep.get("strTagType").toString().toLowerCase()) {
 			case "input_button":
@@ -1180,109 +1481,239 @@ public class Evinrude {
 			case "img":
 			case "button":
 			case "a":
+			case "h1":
 				objWebElement.click();
-				// executor.executeScript("arguments[0].click();", objWebElement);
+				// objJavascriptExecutor.executeScript("arguments[0].focus();",
+				// objWebElement);
+				// objJavascriptExecutor.executeScript("arguments[0].click();",
+				// objWebElement);
+				// objJavascriptExecutor.executeScript("arguments[0].blur();",
+				// objWebElement);
 				break;
 			case "input_text":
 			case "input_password":
 			case "textarea":
 			case "input_email":
-				Actions builder = new Actions(objWebDriver);
-				// Action action1 = builder.click(objWebElement).sendKeys(Keys.CONTROL + "a").sendKeys(Keys.DELETE).sendKeys(strInputValue).moveToElement(objWebElement, -1, -1).click().build();
+				// Actions builder = new Actions(objWebDriver);
+				// // Action action1 =
+				// builder.click(objWebElement).sendKeys(Keys.CONTROL +
+				// "a").sendKeys(Keys.DELETE).sendKeys(strInputValue).moveToElement(objWebElement,
+				// -1, -1).click().build();
+				// // action1.perform();
+				// if (objWebElement.getAttribute("value").trim().isEmpty() ==
+				// false) {
+				// Action action1 =
+				// builder.click(objWebElement).sendKeys(Keys.CONTROL +
+				// "a").sendKeys(Keys.DELETE).build();
 				// action1.perform();
-				if (objWebElement.getAttribute("value").trim().isEmpty() == false) {
-					Action action1 = builder.click(objWebElement).sendKeys(Keys.CONTROL + "a").sendKeys(Keys.DELETE).build();
-					action1.perform();
-					// objWebElement.click();
-					// objWebElement.sendKeys(Keys.CONTROL + "a");
-					// objWebElement.sendKeys(Keys.DELETE);
-					// //objWebElement.clear();
+				// // objWebElement.click();
+				// // objWebElement.sendKeys(Keys.CONTROL + "a");
+				// // objWebElement.sendKeys(Keys.DELETE);
+				// // //objWebElement.clear();
+				// }
+				// objWebElement.sendKeys(objStep.get("strInputValue").toString());
+				// Action action = builder.moveToElement(objWebElement, -1,
+				// -1).click().build();
+				// action.perform();
+
+				// executor.executeScript("arguments[0].value = 'tegan';",
+				// objWebElement);
+				// JavascriptExecutor executor27 = (JavascriptExecutor)
+				// objWebDriver;
+				objJavascriptExecutor.executeScript("arguments[0].focus();",
+						objWebElement);
+				objJavascriptExecutor.executeScript("arguments[0].value = '';",
+						objWebElement);
+				objJavascriptExecutor.executeScript("arguments[0].value = '"
+						+ objStep.get("strInputValue").toString() + "';",
+						objWebElement);
+				objJavascriptExecutor.executeScript("arguments[0].blur();",
+						objWebElement);
+				try {
+					// ((JavascriptExecutor)
+					// objWebDriver).executeScript("arguments[0].onchange();",
+					// objWebElement);
+					objJavascriptExecutor.executeScript(
+							"arguments[0].onchange();", objWebElement);
+				} catch (WebDriverException e) {
+					System.out.println("elementSet = " + e.toString());
 				}
-				objWebElement.sendKeys(objStep.get("strInputValue").toString());
-				// executor.executeScript("arguments[0].value = 'tegan';", objWebElement);
-
-				// executor.executeScript("arguments[0].focus();", objWebElement);
-				// executor.executeScript("arguments[0].value = '';", objWebElement);
-				// executor.executeScript("arguments[0].value = '" + strInputValue + "';", objWebElement);
-				// executor.executeScript("arguments[0].blur();", objWebElement);
-				// executor.executeScript("$(arguments[0]).change();", objWebElement);
-
+				// executor.executeScript("$(arguments[0]).change();",
+				// objWebElement);
 				// SeleneseCommand Selenium = (SeleneseCommand) objWebDriver;
 				// Selenium.FireEvent(objWebElement.toString(),"onchange");
 				// Selenium.fireEvent(objWebElement, "onchange");
-
 				// // jQuery
 				// selenium.runScript("$('#MyInputElement').trigger('change')");
 				//
 				// // Vanilla JavaScript
 				// document.getElementById('MyInputElement').onchange();
-
 				// objWebElement.sendKeys(Keys.TAB);
 				// Actions builder = new Actions(objWebDriver);
-				Action action = builder.moveToElement(objWebElement, -1, -1).click().build();
-				action.perform();
-
 				// Point imageCoordinates =new Point(0, 0);
 				// Mouse mouse = ((HasInputDevices) objWebDriver).getMouse();
 				// mouse.mouseMove(imageCoordinates);
 				// mouse.click(imageCoordinates);
-
 				break;
-
-			// /simulate(document.getElementById("btn"), "click", { pointerX: 123, pointerY: 321 })
-
+			// /simulate(document.getElementById("btn"), "click", { pointerX:
+			// 123, pointerY: 321 })
 			case "input_radio":
 				// objWebElement.click();
-				JavascriptExecutor executor = (JavascriptExecutor) objWebDriver;
-				executor.executeScript("arguments[0].click();", objWebElement);
+				objJavascriptExecutor.executeScript("arguments[0].focus();",
+						objWebElement);
+				objJavascriptExecutor.executeScript("arguments[0].click();",
+						objWebElement);
+				objJavascriptExecutor.executeScript("arguments[0].blur();",
+						objWebElement);
+				try {
+					// ((JavascriptExecutor)
+					// objWebDriver).executeScript("arguments[0].onchange();",
+					// objWebElement);
+					objJavascriptExecutor.executeScript(
+							"arguments[0].onchange();", objWebElement);
+				} catch (WebDriverException e) {
+					System.out.println("elementSet = " + e.toString());
+				}
 				break;
 			case "input_checkbox":
-				System.out.println("elementSet IT'S A input_checkbox" + (System.currentTimeMillis() - lngStartTimeSwitchSet));
-				// System.out.println("objWebElement.isSelected() = " + objWebElement.isSelected());
+				System.out.println("elementSet IT'S A input_checkbox"
+						+ (System.currentTimeMillis() - lngStartTimeSwitchSet));
+				// System.out.println("objWebElement.isSelected() = " +
+				// objWebElement.isSelected());
 				switch (objStep.get("strInputValue").toString().toLowerCase()) {
 				case "<on>":
 					long lngStartTimeisSelected = System.currentTimeMillis();
 					if (objWebElement.isSelected() == false) {
-						System.out.println("elementSet objWebElement.isSelected()" + (System.currentTimeMillis() - lngStartTimeisSelected));
+						System.out
+								.println("elementSet objWebElement.isSelected()"
+										+ (System.currentTimeMillis() - lngStartTimeisSelected));
 						long lngStartTimeclick = System.currentTimeMillis();
-
 						// Actions builder1 = new Actions(objWebDriver);
-						// // Action action1 = builder1.click(objWebElement).build();
+						// // Action action1 =
+						// builder1.click(objWebElement).build();
 						// // action1.perform();
 						//
-						// Action action1 = builder1.moveToElement(objWebElement).click().build();
+						// Action action1 =
+						// builder1.moveToElement(objWebElement).click().build();
 						// action1.perform();
 						// // objWebElement.click();
-						// System.out.println("elementSet objWebElement.click()" + (System.currentTimeMillis() - lngStartTimeclick));
-
-						// ((JavascriptExecutor) objWebDriver).executeScript("arguments[0].scrollIntoView(true);", objWebElement);
-
-						// JavascriptExecutor executor = (JavascriptExecutor) objWebDriver;
+						// System.out.println("elementSet objWebElement.click()"
+						// + (System.currentTimeMillis() - lngStartTimeclick));
+						// ((JavascriptExecutor)
+						// objWebDriver).executeScript("arguments[0].scrollIntoView(true);",
+						// objWebElement);
+						// JavascriptExecutor executor = (JavascriptExecutor)
+						// objWebDriver;
 						// executor.executeScript("window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
 						// ( function x() { //do something & return value } )()
-						// executor.executeScript("arguments[0].scrollIntoView(false);", objWebElement);
-						JavascriptExecutor executor2 = (JavascriptExecutor) objWebDriver;
-						executor2.executeScript("arguments[0].click();", objWebElement);
-						System.out.println("elementSet JavascriptExecutor" + (System.currentTimeMillis() - lngStartTimeclick));
+						// executor.executeScript("arguments[0].scrollIntoView(false);",
+						// objWebElement);
+						// JavascriptExecutor executor2 = (JavascriptExecutor)
+						// objWebDriver;
+						// executor2.executeScript("arguments[0].click();",
+						// objWebElement);
+						objJavascriptExecutor.executeScript(
+								"arguments[0].focus();", objWebElement);
+						objJavascriptExecutor.executeScript(
+								"arguments[0].click();", objWebElement);
+						objJavascriptExecutor.executeScript(
+								"arguments[0].blur();", objWebElement);
+						try {
+							// ((JavascriptExecutor)
+							// objWebDriver).executeScript("arguments[0].onchange();",
+							// objWebElement);
+							objJavascriptExecutor.executeScript(
+									"arguments[0].onchange();", objWebElement);
+						} catch (WebDriverException e) {
+							System.out.println("elementSet = " + e.toString());
+						}
+						System.out
+								.println("elementSet JavascriptExecutor"
+										+ (System.currentTimeMillis() - lngStartTimeclick));
 					}
 					break;
 				case "<off>":
 					if (objWebElement.isSelected() == true) {
-						objWebElement.click();
+						// objWebElement.click();
+						objJavascriptExecutor.executeScript(
+								"arguments[0].focus();", objWebElement);
+						objJavascriptExecutor.executeScript(
+								"arguments[0].click();", objWebElement);
+						objJavascriptExecutor.executeScript(
+								"arguments[0].blur();", objWebElement);
+						try {
+							// ((JavascriptExecutor)
+							// objWebDriver).executeScript("arguments[0].onchange();",
+							// objWebElement);
+							objJavascriptExecutor.executeScript(
+									"arguments[0].onchange();", objWebElement);
+						} catch (WebDriverException e) {
+							System.out.println("elementSet = " + e.toString());
+						}
 					}
 					break;
 				}// the end of switch (strInputValue.toLowerCase())
 				break;
 			case "select":
+				// objWebElement.click();
 				int intOptionsEach;
-
-				// //this works use it
-				// String lngOptionCount = (String) executor.executeScript("var txt;var x = arguments[0];var i;for (i = 01; i < x.length; i++)" + "{txt = txt + '|' + x.options[i].text;}" + "return txt;", objWebElement);
-				// System.out.println("lngOptionCount = " + lngOptionCount + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementOptionCount));
-
+				// JavascriptExecutor executor3 = (JavascriptExecutor)
+				// objWebDriver;
+				// this works use it
+				long lngStartTimeElementOptionCount = System
+						.currentTimeMillis();
+				String strOptions = (String) objJavascriptExecutor
+						.executeScript(
+								"var txt = '';var x = arguments[0];var i;for (i = 0; i < x.length; i++)"
+										+ "{txt = txt + '|' + x.options[i].text;}"
+										+ "return txt;", objWebElement);
+				// System.out.println("strOptions = " + strOptions +
+				// " intMillisecondsWaited = " + (System.currentTimeMillis() -
+				// lngStartTimeElementOptionCount));
+				strOptions = strOptions.substring(1);
+				// System.out.println("strOptions = " + strOptions +
+				// " intMillisecondsWaited = " + (System.currentTimeMillis() -
+				// lngStartTimeElementOptionCount));
+				String[] arrOptions;
+				arrOptions = strOptions.split("\\|");
+				// arrOptions = strOptions.split("|");
+				// System.out.println("arrOptions.length = " +
+				// arrOptions.length);
 				// blnFound = False
-				System.out.println("elementSet IT'S A SELECT");
-				Select objSelect = new Select((WebElement) objWebElement);
+				// System.out.println("elementSet IT'S A SELECT");
+				// Select objSelect = new Select((WebElement) objWebElement);
+				// JavascriptExecutor js = (JavascriptExecutor)driver();
+				// js.executeScript("document.getElementById("actionTypeList").selectedIndex=1");
+				// selenium.fireEvent("actionTypeList","change");
+				for (intOptionsEach = 0; intOptionsEach < arrOptions.length; intOptionsEach++) {
+					// System.out.println("elementSet dropdown.getOptions() " +
+					// intOptionsEach + " =  " +
+					// arrOptions[intOptionsEach].toString());
+					if (arrOptions[intOptionsEach].toString().equals(
+							objStep.get("strInputValue").toString())) {
+						// objSelect.selectByIndex(intOptionsEach);
+						// executor3.executeScript("arguments[0].options.index="
+						// + intOptionsEach + ";", objWebElement);
+						objJavascriptExecutor.executeScript(
+								"arguments[0].selectedIndex=" + intOptionsEach
+										+ ";", objWebElement);
+						try {
+							objJavascriptExecutor.executeScript(
+									"arguments[0].onchange();", objWebElement);
+						} catch (WebDriverException e) {
+							System.out.println("elementSet = " + e.toString());
+						}
+						// element.onchange();
+						// if ("createEvent" in document) {
+						// var evt = document.createEvent("HTMLEvents");
+						// evt.initEvent("change", false, true);
+						// element.dispatchEvent(evt);
+						// }
+						// else
+						// element.fireEvent("onchange");
+						break;
+					}
+				}
 				// // objSelect.selectByVisibleText("DVC Pay With Cash");
 				// List<WebElement> options = objSelect.getOptions();
 				//
@@ -1290,14 +1721,20 @@ public class Evinrude {
 				// System.out.println(el.getText());
 				// }
 				// .options[3].text;
-				// System.out.println("elementSet dropdown.getOptions().size() = " + objSelect.getOptions().size());
-				for (intOptionsEach = 0; intOptionsEach < objSelect.getOptions().size(); intOptionsEach++) {
-					System.out.println("elementSet dropdown.getOptions() " + intOptionsEach + " =  " + objSelect.getOptions().get(intOptionsEach).getText());
-					if (objSelect.getOptions().get(intOptionsEach).getText().equals(objStep.get("strInputValue").toString())) {
-						objSelect.selectByIndex(intOptionsEach);
-						break;
-					}
-				}
+				// System.out.println("elementSet dropdown.getOptions().size() = "
+				// + objSelect.getOptions().size());
+				// for (intOptionsEach = 0; intOptionsEach <
+				// objSelect.getOptions().size(); intOptionsEach++) {
+				// System.out.println("elementSet dropdown.getOptions() " +
+				// intOptionsEach + " =  " +
+				// objSelect.getOptions().get(intOptionsEach).getText());
+				// if
+				// (objSelect.getOptions().get(intOptionsEach).getText().equals(objStep.get("strInputValue").toString()))
+				// {
+				// objSelect.selectByIndex(intOptionsEach);
+				// break;
+				// }
+				// }
 				break;
 			case "table":
 				// Set objWebElement = gobjWebElement.AsTable
@@ -1305,8 +1742,10 @@ public class Evinrude {
 			case "alert":
 				Alert alert = objWebDriver.switchTo().alert();
 				System.out.println(alert.getText()); // Print Alert popup
-				System.out.println(objStep.get("strAtributeValues").toString().toLowerCase());
-				switch (objStep.get("strAtributeValues").toString().toLowerCase()) {
+				System.out.println(objStep.get("strAtributeValues").toString()
+						.toLowerCase());
+				switch (objStep.get("strAtributeValues").toString()
+						.toLowerCase()) {
 				case "text":
 					alert.sendKeys("tegan");
 					break;
@@ -1319,14 +1758,18 @@ public class Evinrude {
 				}
 				break;
 			default:
-				throw new ElementTagNameNotSupportedException("Element tag not supported");
+				throw new ElementTagNameNotSupportedException(
+						"Element tag not supported");
 			}// the end of switch (strTagName.toLowerCase())
 		} finally {
-			System.out.println("elementSet finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet));
+			System.out.println("elementSet finally intMillisecondsWaited = "
+					+ (System.currentTimeMillis() - lngStartTimeElementSet));
 		}
-	}// the End of elementSet
+	}// the end of elementSet
 
-	// public static Boolean elementVerifyValue(String strTagName, WebElement objWebElement, String strValueExpected) throws ElementValueNotVerifiedException {
+	// public static Boolean elementVerifyValue(String strTagName, WebElement
+	// objWebElement, String strValueExpected) throws
+	// ElementValueNotVerifiedException {
 	// String strValueActual = "";
 	// try {
 	// strValueActual = elementGet(objWebElement);
@@ -1334,18 +1777,21 @@ public class Evinrude {
 	// // TODO Auto-generated catch block
 	// e.printStackTrace();
 	// }
-	// System.out.println("elementVerifyValue strValueActual = " + strValueActual);
+	// System.out.println("elementVerifyValue strValueActual = " +
+	// strValueActual);
 	// if (strValueActual == null) {
 	// throw new ElementValueNotVerifiedException("Element value not verified");
 	// } else {
-	// System.out.println("elementVerifyValue strValueActual = " + strValueActual + " elementVerifyValue strValueExpected = " + strValueExpected);
+	// System.out.println("elementVerifyValue strValueActual = " +
+	// strValueActual + " elementVerifyValue strValueExpected = " +
+	// strValueExpected);
 	// if (verifyMatch(strValueActual, strValueExpected) != null) {
 	// return true;
 	// } else {
 	// throw new ElementValueNotVerifiedException("Element value not verified");
 	// }
 	// }
-	// } // the End of elementVerifyValue
+	// } // the end of elementVerifyValue
 
 	public boolean isAlertPresent(WebDriver driver) {
 		try {
@@ -1355,10 +1801,12 @@ public class Evinrude {
 		catch (NoAlertPresentException Ex) {
 			return false;
 		} // catch
-	} // isAlertPresent()
+	}// the end of isAlertPresent()
 
 	@SuppressWarnings("unchecked")
-	public static WebElement elementFind(JSONObject objStep, WebDriver objWebDriver) throws NoElementFoundException, MultipleElementsFoundException {
+	public static WebElement elementFind(JSONObject objStep,
+			WebDriver objWebDriver) throws NoElementFoundException,
+			MultipleElementsFoundException {
 		long lngStartTimeElementFind = System.currentTimeMillis();
 		try {
 			String strXpath = "";
@@ -1369,13 +1817,15 @@ public class Evinrude {
 			WebElement objWebElement = null;
 			List<WebElement> objWebElementCollection = null;
 			List<WebElement> objFrameCollection = null;
-			String strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
+			String strCurrentWindowHandle = objStep.get(
+					"strCurrentWindowHandle").toString();
 			strTag = objStep.get("strTagName").toString().toLowerCase();
-			String arrAttributeNames[] = objStep.get("strAttributeNames").toString().split("\\|", -1);
-			String arrAttributeValues[] = objStep.get("strAtributeValues").toString().split("\\|", -1);
+			String arrAttributeNames[] = objStep.get("strAttributeNames")
+					.toString().split("\\|", -1);
+			String arrAttributeValues[] = objStep.get("strAtributeValues")
+					.toString().split("\\|", -1);
 			String strXpathAttributesTemp = "";
 			String strXpathAttributes = "";
-
 			if (strTag.toLowerCase().equals("alert")) {
 				// try {
 				// Alert alert = objWebDriver.switchTo().alert();
@@ -1388,26 +1838,27 @@ public class Evinrude {
 				// } catch (Exception e) {
 				// System.out.println(e.toString());
 				// }
-
+				// TODO elementFind finish alert handling
 				try {
 					// objWebDriver.switchTo().alert();
 					objStep.put("strTagType", "alert");
-//					Alert alert = objWebDriver.switchTo().alert();
-					System.out.println("this is the alert switch to which did not fail");
+					@SuppressWarnings("unused")
+					Alert alert = objWebDriver.switchTo().alert();
+					System.out
+							.println("this is the alert switch to which did not fail");
 					// System.out.println(objWebDriver.manage().window().getPosition());
 					// System.out.println(objWebDriver.manage().window().getSize());
 					return null;
 				} // try
 				catch (NoAlertPresentException e) {
 					// return false;
-					System.out.println("this is the alert switch to which did fail");
+					System.out
+							.println("this is the alert switch to which did fail");
 					System.out.println(e.toString());
-					throw new NoElementFoundException("Alert popup was not found.");
-
+					throw new NoElementFoundException(
+							"Alert popup was not found.");
 				} // catch
-
 			}
-
 			for (int intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
 				strXpathAttributesTemp = "";
 				switch (arrAttributeNames[intAttributeEach].toLowerCase()) {
@@ -1415,33 +1866,46 @@ public class Evinrude {
 					strIndex = "[" + arrAttributeValues[intAttributeEach] + "]";
 					break;
 				case "text":
-					if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("re:")) {
-						strXpathAttributesTemp = "contains(text()" + ", '" + arrAttributeValues[intAttributeEach].substring(3) + "')";
+					if (arrAttributeValues[intAttributeEach].toLowerCase()
+							.startsWith("re:")) {
+						strXpathAttributesTemp = "contains(text()"
+								+ ", '"
+								+ arrAttributeValues[intAttributeEach]
+										.substring(3) + "')";
 					} else {
-						strXpathAttributesTemp = "text()='" + arrAttributeValues[intAttributeEach] + "' ";
+						strXpathAttributesTemp = "text()='"
+								+ arrAttributeValues[intAttributeEach] + "' ";
 					}
 					break;
 				default:
-					if (arrAttributeNames[intAttributeEach].toLowerCase().equals("type")) {
-						objStep.put("strType", arrAttributeValues[intAttributeEach]);
+					if (arrAttributeNames[intAttributeEach].toLowerCase()
+							.equals("type")) {
+						objStep.put("strType",
+								arrAttributeValues[intAttributeEach]);
 					}
-					if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("re:")) {
-						strXpathAttributesTemp = "contains(@" + arrAttributeNames[intAttributeEach] + ", '" + arrAttributeValues[intAttributeEach].substring(3) + "')";
+					if (arrAttributeValues[intAttributeEach].toLowerCase()
+							.startsWith("re:")) {
+						strXpathAttributesTemp = "contains(@"
+								+ arrAttributeNames[intAttributeEach]
+								+ ", '"
+								+ arrAttributeValues[intAttributeEach]
+										.substring(3) + "')";
 					} else {
-						strXpathAttributesTemp = "@" + arrAttributeNames[intAttributeEach] + "='" + arrAttributeValues[intAttributeEach] + "'";
+						strXpathAttributesTemp = "@"
+								+ arrAttributeNames[intAttributeEach] + "='"
+								+ arrAttributeValues[intAttributeEach] + "'";
 					}
 					break;
 				}
-
 				if (strXpathAttributesTemp.trim().length() != 0) {
 					if (strXpathAttributes.trim().length() == 0) {
 						strXpathAttributes = strXpathAttributesTemp;
 					} else {
-						strXpathAttributes = strXpathAttributes + " and " + strXpathAttributesTemp;
+						strXpathAttributes = strXpathAttributes + " and "
+								+ strXpathAttributesTemp;
 					}
 				}
 			}// for (int intAttributeEach
-
 			if (strXpathAttributes.trim().length() == 0) {
 				strXpathAttributes = "";
 			} else {
@@ -1449,97 +1913,121 @@ public class Evinrude {
 			}
 			strXpath = "(//" + strTag + strXpathAttributes + ")" + strIndex;
 			System.out.println("elementFind strXpath = " + strXpath);
-
-			// System.out.println("elementFind lngMillisecondsWaitedByCreateXpath = " + (System.currentTimeMillis() - lngStartTimeByCreateXpath));
-			// long lngStartTimeByCreateForGetWindowHandles = System.currentTimeMillis();
+			// System.out.println("elementFind lngMillisecondsWaitedByCreateXpath = "
+			// + (System.currentTimeMillis() - lngStartTimeByCreateXpath));
+			// long lngStartTimeByCreateForGetWindowHandles =
+			// System.currentTimeMillis();
 			// objWebDriver.getWindowHandles()
 			// Set<String> arrHandles = objWebDriver.getWindowHandles();
-
 			// <String> st =
 			// objWebDriver.getWindowHandles().iterator().hasNext();
-
 			// ArrayList<String> arrHandles = new ArrayList<String>();
 			// @SuppressWarnings("unchecked")
 			// ArrayList<String> arrHandles = (ArrayList<String>)
 			// objWebDriver.getWindowHandles();
-
 			// List<WebElement> objWebElementCollection =
 			// objWebDriver.findElements(By.tagName(strTagName));
 			// Iterator<String> arrHandlesEach = ((Collection<String>)
 			// arrHandles).iterator();
 			// objWebDriver.getWindowHandles().iterator().hasNext()
-
 			// Iterator<String> objWebElementEach = (Iterator<String>)
 			// ((Collection<String>) objWebDriver.getWindowHandles().iterator();
 			// Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
 			// for (int intHandlesEach = 0; intHandlesEach < arrHandles.length;
 			// intHandlesEach++)
-
 			// while (objWebDriver.getWindowHandles().iterator().hasNext()) {
 			// string winHandle = arrHandles[intHandlesEach].toString();
-
 			// //for (String winHandle ;arrHandles ;1++) {
-
 			// for (int intHandlesEach = 0; intHandlesEach <
 			// arrHandles.size(); intHandlesEach++)
-
 			// String strCurrentWindowHandle = objWebDriver.getWindowHandle();
-			System.out.println("elementFind before loop strCurrentWindowHandle = " + strCurrentWindowHandle);
-			// System.out.println("elementFind before defaultContent strCurrentWindowHandle = " + objWebDriver.getWindowHandles().size());
+			System.out
+					.println("elementFind before loop strCurrentWindowHandle = "
+							+ strCurrentWindowHandle);
+			// System.out.println("elementFind before defaultContent strCurrentWindowHandle = "
+			// + objWebDriver.getWindowHandles().size());
 			// objWebDriver.switchTo().defaultContent();
-			// System.out.println("elementFind after defaultContent strCurrentWindowHandle = " + objWebDriver.getWindowHandles().size());
+			// System.out.println("elementFind after defaultContent strCurrentWindowHandle = "
+			// + objWebDriver.getWindowHandles().size());
 			// objWebDriver.switchTo().defaultContent();
 			Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
 			System.out.println("arrHandles.length = " + arrHandles.length);
-			for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0;) {
+			for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0; intHandlesEach--) {
+				// objWebDriver.switchTo().defaultContent();
 				String winHandle = arrHandles[intHandlesEach].toString();
-				System.out.println("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
+				System.out.println("elementFind strCurrentWindowHandle = "
+						+ strCurrentWindowHandle);
 				System.out.println("elementFind winHandle = " + winHandle);
 				long lngStartTimeSwitchTo = System.currentTimeMillis();
-				if (strCurrentWindowHandle.equals(winHandle)) {
-				} else {
-					objWebDriver.switchTo().window(winHandle);
-					System.out.println("elementFind lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
-					blnSwitchWindow = true;
-				}
-				System.out.println("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
-
+				objWebDriver.switchTo().window(winHandle);
+				// if (strCurrentWindowHandle.equals(winHandle)) {
+				// } else {
+				// objWebDriver.switchTo().window(winHandle);
+				// System.out.println("elementFind lngStartTimeSwitchTo = " +
+				// (System.currentTimeMillis() - lngStartTimeSwitchTo));
+				// blnSwitchWindow = true;
+				// }
+				System.out.println("elementFind lngStartTimeSwitchTo = "
+						+ (System.currentTimeMillis() - lngStartTimeSwitchTo));
+				System.out.println("elementFind objWebDriver.getTitle = "
+						+ objWebDriver.getTitle());
 				long intBrowserInnerWidth = 0;
 				long intBrowserInnerHeight = 0;
 				try {
-					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
-					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
-					System.out.println("intBrowserInnerWidth = " + intBrowserInnerWidth);
-					System.out.println("intBrowserInnerHeight = " + intBrowserInnerHeight);
+					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver)
+							.executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
+					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver)
+							.executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
+					System.out.println("intBrowserInnerWidth = "
+							+ intBrowserInnerWidth);
+					System.out.println("intBrowserInnerHeight = "
+							+ intBrowserInnerHeight);
+				} catch (WebDriverException e) {
+					throw new NoElementFoundException(
+							"WebDriverException returned");
 				} catch (Exception e) {
 					System.out.println("BodyoffsetHeight = " + e.toString());
-					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetWidth;");
-					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetHeight;");
-					System.out.println("BodyoffsetWidth = " + intBrowserInnerWidth);
-					System.out.println("BodyoffsetHeight = " + intBrowserInnerHeight);
+					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver)
+							.executeScript("return document.body.offsetWidth;");
+					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver)
+							.executeScript("return document.body.offsetHeight;");
+					System.out.println("BodyoffsetWidth = "
+							+ intBrowserInnerWidth);
+					System.out.println("BodyoffsetHeight = "
+							+ intBrowserInnerHeight);
 				}
 				objStep.put("intBrowserInnerWidth", intBrowserInnerWidth);
 				objStep.put("intBrowserInnerHeight", intBrowserInnerHeight);
-
-				// int intWebElementBodyX = Integer.parseInt(objStep.get("intWebElementBodyX").toString());
-				// int intWebElementBodyY = Integer.parseInt(objStep.get("intWebElementBodyY").toString());
-				// int intWebElementBodyWidth = Integer.parseInt(objStep.get("intWebElementBodyWidth").toString());
-				// int intWebElementBodyHeight = Integer.parseInt(objStep.get("intWebElementBodyHeight").toString());
-
-				// if (blnSwitchWindow == true || intWebElementBodyX + intWebElementBodyY + intWebElementBodyWidth + intWebElementBodyHeight == 0) {
+				// TODO cleanup old code from get absolute coordinates attempts
+				// int intWebElementBodyX =
+				// Integer.parseInt(objStep.get("intWebElementBodyX").toString());
+				// int intWebElementBodyY =
+				// Integer.parseInt(objStep.get("intWebElementBodyY").toString());
+				// int intWebElementBodyWidth =
+				// Integer.parseInt(objStep.get("intWebElementBodyWidth").toString());
+				// int intWebElementBodyHeight =
+				// Integer.parseInt(objStep.get("intWebElementBodyHeight").toString());
+				// if (blnSwitchWindow == true || intWebElementBodyX +
+				// intWebElementBodyY + intWebElementBodyWidth +
+				// intWebElementBodyHeight == 0) {
 				// blnSwitchWindow = false;
-
 				// long lngStartTimeManageWindow = System.currentTimeMillis();
-				// Point objWebDriverPoint = objWebDriver.manage().window().getPosition();
+				// Point objWebDriverPoint =
+				// objWebDriver.manage().window().getPosition();
 				// int intBrowserOuterX = objWebDriverPoint.x;
 				// int intBrowserOuterY = objWebDriverPoint.y;
-				// Dimension objWebDriverDimension = objWebDriver.manage().window().getSize();
+				// Dimension objWebDriverDimension =
+				// objWebDriver.manage().window().getSize();
 				// int intBrowserOuterWidth = objWebDriverDimension.width;
 				// int intBrowserOuterHeight = objWebDriverDimension.height;
-				// System.out.println("elementAbsoluteCoordinates intBrowserOuterX, Y  intBrowserOuterWidth, Height = " + objWebDriverPoint + " " + objWebDriverDimension + " " + (System.currentTimeMillis() - lngStartTimeManageWindow));
+				// System.out.println("elementAbsoluteCoordinates intBrowserOuterX, Y  intBrowserOuterWidth, Height = "
+				// + objWebDriverPoint + " " + objWebDriverDimension + " " +
+				// (System.currentTimeMillis() - lngStartTimeManageWindow));
 				//
-				// long innerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
-				// long innerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
+				// long innerWidth = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
+				// long innerHeight = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
 				//
 				// objStep.put("intoffsetWidth", innerWidth);
 				// objStep.put("intoffsetHeight", innerHeight);
@@ -1548,33 +2036,50 @@ public class Evinrude {
 				// objStep.put("intBrowserOuterY", intBrowserOuterY);
 				// objStep.put("intBrowserOuterWidth", intBrowserOuterWidth);
 				// objStep.put("intBrowserOuterHeight", intBrowserOuterHeight);
-
-				// long lngWindowInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerHeight;");
-				// long lngDocumentElementClientHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.documentElement.clientHeight;");
-				// long lngBodyClientHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.clientHeight;");
+				// long lngWindowInnerHeight = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return window.innerHeight;");
+				// long lngDocumentElementClientHeight = (long)
+				// ((JavascriptExecutor)
+				// objWebDriver).executeScript("return document.documentElement.clientHeight;");
+				// long lngBodyClientHeight = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return document.body.clientHeight;");
 				//
-				// long offsetWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetWidth;");
-				// long offsetHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetHeight;");
-				// long offsetTop = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetTop;");
-				// long offsetLeft = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetLeft;");
+				// long offsetWidth = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return document.body.offsetWidth;");
+				// long offsetHeight = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return document.body.offsetHeight;");
+				// long offsetTop = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return document.body.offsetTop;");
+				// long offsetLeft = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return document.body.offsetLeft;");
 				//
-				// long clientWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.clientWidth;");
-				// long clientHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.clientHeight;");
+				// long clientWidth = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return document.body.clientWidth;");
+				// long clientHeight = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return document.body.clientHeight;");
 				//
-				// long htmlOffsetWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.documentElement.offsetWidth;");
-				// long htmlOffsetHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.documentElement.offsetHeight;");
-				// long htmlClientWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.documentElement.clientWidth;");
-				// long htmlClientHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.documentElement.clientHeight;");
+				// long htmlOffsetWidth = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return document.documentElement.offsetWidth;");
+				// long htmlOffsetHeight = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return document.documentElement.offsetHeight;");
+				// long htmlClientWidth = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return document.documentElement.clientWidth;");
+				// long htmlClientHeight = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return document.documentElement.clientHeight;");
 
 				// var body = document.body, html = document.documentElement;
-				// var height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+				// var height = Math.max(body.scrollHeight, body.offsetHeight,
+				// html.clientHeight, html.scrollHeight, html.offsetHeight);
 
 				// System.out.println("innerWidth = " + innerWidth);
 				// System.out.println("innerHeight = " + innerHeight);
 
-				// System.out.println("lngWindowInnerHeight = " + lngWindowInnerHeight);
-				// System.out.println("lngDocumentElementClientHeight = " + lngDocumentElementClientHeight);
-				// System.out.println("lngBodyClientHeight = " + lngBodyClientHeight);
+				// System.out.println("lngWindowInnerHeight = " +
+				// lngWindowInnerHeight);
+				// System.out.println("lngDocumentElementClientHeight = " +
+				// lngDocumentElementClientHeight);
+				// System.out.println("lngBodyClientHeight = " +
+				// lngBodyClientHeight);
 				//
 				// System.out.println("BodyoffsetWidth = " + offsetWidth);
 				// System.out.println("BodyoffsetHeight = " + offsetHeight);
@@ -1588,177 +2093,260 @@ public class Evinrude {
 				// System.out.println("htmlOffsetHeight = " + htmlOffsetHeight);
 				// System.out.println("htmlClientWidth = " + htmlClientWidth);
 				// System.out.println("htmlClientHeight = " + htmlClientHeight);
-
 				// objStep.put("intoffsetWidth", offsetWidth);
 				// objStep.put("intoffsetHeight", offsetHeight);
-
 				// objStep.put("intoffsetWidth", htmlOffsetWidth);
 				// objStep.put("intoffsetHeight", htmlOffsetHeight);
-
 				// long scrollBarWidth = offsetWidth - clientWidth;
 				// long scrollBarHeight = offsetHeight - clientHeight;
 				// System.out.println("scrollBarWidth = " + scrollBarWidth);
 				// System.out.println("scrollBarHeight = " + scrollBarHeight);
-
 				// window.screenX
 				// window.screenY
-
-				// long innerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerWidth;");
-				// long innerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerHeight;");
-				// System.out.println("elementFind innerWidth innerHeight  = " + innerWidth + " " + innerHeight);
-
+				// long innerWidth = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return window.innerWidth;");
+				// long innerHeight = (long) ((JavascriptExecutor)
+				// objWebDriver).executeScript("return window.innerHeight;");
+				// System.out.println("elementFind innerWidth innerHeight  = " +
+				// innerWidth + " " + innerHeight);
 				// long lngStartTimeHtmlXpath = System.currentTimeMillis();
-				// WebElement objWebElementHtml = objWebDriver.findElement(By.xpath("/html"));
-				// System.out.println("elementFind objWebElementHtml intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeHtmlXpath));
-				// long lngStartTimeHtmlCoordinates = System.currentTimeMillis();
-				// Coordinates objWebElementHtmlCoordinates = ((Locatable) objWebElementHtml).getCoordinates();
-				// Point objHtmlViewPortPoint = objWebElementHtmlCoordinates.inViewPort();
-				// System.out.println("elementFind objHtmlViewPortPoint.x = " + objHtmlViewPortPoint.x);
-				// System.out.println("elementFind objHtmlViewPortPoint.y = " + objHtmlViewPortPoint.y);
+				// WebElement objWebElementHtml =
+				// objWebDriver.findElement(By.xpath("/html"));
+				// System.out.println("elementFind objWebElementHtml intMillisecondsWaited = "
+				// + (System.currentTimeMillis() - lngStartTimeHtmlXpath));
+				// long lngStartTimeHtmlCoordinates =
+				// System.currentTimeMillis();
+				// Coordinates objWebElementHtmlCoordinates = ((Locatable)
+				// objWebElementHtml).getCoordinates();
+				// Point objHtmlViewPortPoint =
+				// objWebElementHtmlCoordinates.inViewPort();
+				// System.out.println("elementFind objHtmlViewPortPoint.x = " +
+				// objHtmlViewPortPoint.x);
+				// System.out.println("elementFind objHtmlViewPortPoint.y = " +
+				// objHtmlViewPortPoint.y);
 				// // objStep.put("intWebElementBodyX", objHtmlViewPortPoint.x);
 				// // objStep.put("intWebElementBodyY", objHtmlViewPortPoint.y);
-				// System.out.println("elementFind objBodyViewPortPoint X & Y intMillisecondsWaited = " + objWebElementHtmlCoordinates + " " + (System.currentTimeMillis() - lngStartTimeHtmlCoordinates));
+				// System.out.println("elementFind objBodyViewPortPoint X & Y intMillisecondsWaited = "
+				// + objWebElementHtmlCoordinates + " " +
+				// (System.currentTimeMillis() - lngStartTimeHtmlCoordinates));
 				// long lngStartTimeHtmlDimension = System.currentTimeMillis();
-				// Dimension objWebElementHtmlDimension = objWebElementHtml.getSize();
-				// System.out.println("elementFind objWebElementHtmlDimension.width = " + objWebElementHtmlDimension.width);
-				// System.out.println("elementFind objWebElementHtmlDimension.height = " + objWebElementHtmlDimension.height);
-
-				// objStep.put("intWebElementBodyWidth", objWebElementBodyDimension.width);
-				// objStep.put("intWebElementBodyHeight", objWebElementBodyDimension.height);
-
+				// Dimension objWebElementHtmlDimension =
+				// objWebElementHtml.getSize();
+				// System.out.println("elementFind objWebElementHtmlDimension.width = "
+				// + objWebElementHtmlDimension.width);
+				// System.out.println("elementFind objWebElementHtmlDimension.height = "
+				// + objWebElementHtmlDimension.height);
+				// objStep.put("intWebElementBodyWidth",
+				// objWebElementBodyDimension.width);
+				// objStep.put("intWebElementBodyHeight",
+				// objWebElementBodyDimension.height);
 				// long lngStartTimeBodyXpath = System.currentTimeMillis();
-				// WebElement objWebElementBody = objWebDriver.findElement(By.xpath("/html/body"));
-				// System.out.println("elementFind objWebElementBody intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeBodyXpath));
-				// long lngStartTimeBodyCoordinates = System.currentTimeMillis();
-				// Coordinates objWebElementBodyCoordinates = ((Locatable) objWebElementBody).getCoordinates();
-				// Point objBodyViewPortPoint = objWebElementBodyCoordinates.inViewPort();
+				// WebElement objWebElementBody =
+				// objWebDriver.findElement(By.xpath("/html/body"));
+				// System.out.println("elementFind objWebElementBody intMillisecondsWaited = "
+				// + (System.currentTimeMillis() - lngStartTimeBodyXpath));
+				// long lngStartTimeBodyCoordinates =
+				// System.currentTimeMillis();
+				// Coordinates objWebElementBodyCoordinates = ((Locatable)
+				// objWebElementBody).getCoordinates();
+				// Point objBodyViewPortPoint =
+				// objWebElementBodyCoordinates.inViewPort();
 				// objStep.put("intWebElementBodyX", objBodyViewPortPoint.x);
 				// objStep.put("intWebElementBodyY", objBodyViewPortPoint.y);
-				// System.out.println("elementFind objBodyViewPortPoint X & Y intMillisecondsWaited = " + objWebElementBodyCoordinates + " " + (System.currentTimeMillis() - lngStartTimeBodyCoordinates));
+				// System.out.println("elementFind objBodyViewPortPoint X & Y intMillisecondsWaited = "
+				// + objWebElementBodyCoordinates + " " +
+				// (System.currentTimeMillis() - lngStartTimeBodyCoordinates));
 				// long lngStartTimeBodyDimension = System.currentTimeMillis();
-				// Dimension objWebElementBodyDimension = objWebElementBody.getSize();
-				// System.out.println("elementFind objWebElementBodyDimension.width = " + objWebElementBodyDimension.width);
-				// System.out.println("elementFind objWebElementBodyDimension.height = " + objWebElementBodyDimension.height);
-
-				// objStep.put("intWebElementBodyWidth", objWebElementBodyDimension.width);
-				// objStep.put("intWebElementBodyHeight", objWebElementBodyDimension.height);
-
+				// Dimension objWebElementBodyDimension =
+				// objWebElementBody.getSize();
+				// System.out.println("elementFind objWebElementBodyDimension.width = "
+				// + objWebElementBodyDimension.width);
+				// System.out.println("elementFind objWebElementBodyDimension.height = "
+				// + objWebElementBodyDimension.height);
+				// objStep.put("intWebElementBodyWidth",
+				// objWebElementBodyDimension.width);
+				// objStep.put("intWebElementBodyHeight",
+				// objWebElementBodyDimension.height);
 				// objStep.put("intWebElementBodyWidth", innerWidth);
 				// objStep.put("intWebElementBodyHeight", innerHeight);
-
-				// System.out.println("elementFind objWebElementBodyDimension intMillisecondsWaited = " + objWebElementBodyDimension + " " + (System.currentTimeMillis() - lngStartTimeBodyDimension));
+				// System.out.println("elementFind objWebElementBodyDimension intMillisecondsWaited = "
+				// + objWebElementBodyDimension + " " +
+				// (System.currentTimeMillis() - lngStartTimeBodyDimension));
 				// } // if (blnSwitchWindow == true
-
-				// long lngStartTimeFrameCollection = System.currentTimeMillis();
-				// objFrameCollection = objWebDriver.findElements(By.xpath("//frame"));
-				// //objFrameCollection = objWebDriver.findElements(By.cssSelector("css=frame"));
+				// long lngStartTimeFrameCollection =
+				// System.currentTimeMillis();
+				// objFrameCollection =
+				// objWebDriver.findElements(By.xpath("//frame"));
+				// //objFrameCollection =
+				// objWebDriver.findElements(By.cssSelector("css=frame"));
 				// int intFramesCount = objFrameCollection.size();
-				// System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+				// System.out.println("elementFind objFrameCollection = " +
+				// intFramesCount + "  " + (System.currentTimeMillis() -
+				// lngStartTimeFrameCollection));
 				//
 				// if (intFramesCount >= 1) {
 				// intFramesCount = intFramesCount + 1;
-				// System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+				// System.out.println("elementFind objFrameCollection = " +
+				// intFramesCount + "  " + (System.currentTimeMillis() -
+				// lngStartTimeFrameCollection));
 				// }
 				int intFramesCount = 0;
 				long lngStartTimeFrameCollection = System.currentTimeMillis();
-
-				objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
-
-				// objFrameCollection = objWebDriver.findElements(By.xpath("//frame"));
-				// objFrameCollection = objWebDriver.findElements(By.cssSelector("css=frame"));
+				// objWebDriver.switchTo().defaultContent();
+				// TODO add iFrame handling, return a collection of both frame
+				// and iframe
+				objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver)
+						.executeScript("return document.getElementsByTagName('frame');");
+				// objFrameCollection =
+				// objWebDriver.findElements(By.xpath("//frame"));
+				// objFrameCollection =
+				// objWebDriver.findElements(By.cssSelector("css=frame"));
 				intFramesCount = objFrameCollection.size();
-				System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
-
+				System.out
+						.println("elementFind objFrameCollection = "
+								+ intFramesCount
+								+ "  "
+								+ (System.currentTimeMillis() - lngStartTimeFrameCollection));
 				if (intFramesCount >= 1) {
 					intFramesCount = intFramesCount + 1;
-					System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+					System.out
+							.println("elementFind objFrameCollection = "
+									+ intFramesCount
+									+ "  "
+									+ (System.currentTimeMillis() - lngStartTimeFrameCollection));
 				}
-
 				for (int intFramesEach = -1; intFramesEach < intFramesCount; intFramesEach++) {
-					System.out.println("elementFind intFramesEach = " + intFramesEach);
-					if (intFramesEach >= 1) {
+					System.out.println("elementFind intFramesEach = "
+							+ intFramesEach);
+					if (intFramesEach >= 0) {
+						System.out
+								.println("elementFind frames objWebDriver.getWindowHandle = "
+										+ objWebDriver.getWindowHandle());
 						objWebDriver.switchTo().defaultContent();
 						objWebDriver.switchTo().frame(intFramesEach);
-						// objWebDriver.switchTo().frame(2);
+						// objWebDriver.switchTo().frame(0);
 					}
-
-					// strXpath = "(//" + strTag + "[" + strXpathAttributes + "])" + strIndex;
+					// strXpath = "(//" + strTag + "[" + strXpathAttributes +
+					// "])" + strIndex;
 					// System.out.println("elementFind strXpath = " + strXpath);
 					long lngStartTimeByXpath = System.currentTimeMillis();
-					objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
-					System.out.println("elementFind lngMillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeByXpath));
-					System.out.println("elementFind objWebElementCollection.size = " + objWebElementCollection.size());
+					objWebElementCollection = objWebDriver.findElements(By
+							.xpath(strXpath));
+					System.out
+							.println("elementFind lngMillisecondsWaitedXpath = "
+									+ (System.currentTimeMillis() - lngStartTimeByXpath));
+					System.out
+							.println("elementFind objWebElementCollection.size = "
+									+ objWebElementCollection.size());
 					if (objWebElementCollection.size() == 1) {
 						blnFound = true;
 						break;
 					}
-					// long lngStartTimeFrameCollection = System.currentTimeMillis();
+					// long lngStartTimeFrameCollection =
+					// System.currentTimeMillis();
 					//
-					// objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
+					// objFrameCollection = (List<WebElement>)
+					// ((JavascriptExecutor)
+					// objWebDriver).executeScript("return document.getElementsByTagName('frame');");
 					//
-					// // objFrameCollection = objWebDriver.findElements(By.xpath("//frame"));
-					// // objFrameCollection = objWebDriver.findElements(By.cssSelector("css=frame"));
+					// // objFrameCollection =
+					// objWebDriver.findElements(By.xpath("//frame"));
+					// // objFrameCollection =
+					// objWebDriver.findElements(By.cssSelector("css=frame"));
 					// intFramesCount = objFrameCollection.size();
-					// System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+					// System.out.println("elementFind objFrameCollection = " +
+					// intFramesCount + "  " + (System.currentTimeMillis() -
+					// lngStartTimeFrameCollection));
 					//
 					// if (intFramesCount >= 1) {
 					// intFramesCount = intFramesCount + 1;
-					// System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+					// System.out.println("elementFind objFrameCollection = " +
+					// intFramesCount + "  " + (System.currentTimeMillis() -
+					// lngStartTimeFrameCollection));
 					// }
-
-					// long lngStartTimegetElementsByTagName = System.currentTimeMillis();
-					// List<WebElement> objFrameCollection2 = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
-					// System.out.println("elementFind objFrameCollection2 = " + objFrameCollection2.size() + " " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName));
-
+					// long lngStartTimegetElementsByTagName =
+					// System.currentTimeMillis();
+					// List<WebElement> objFrameCollection2 = (List<WebElement>)
+					// ((JavascriptExecutor)
+					// objWebDriver).executeScript("return document.getElementsByTagName('frame');");
+					// System.out.println("elementFind objFrameCollection2 = " +
+					// objFrameCollection2.size() + " " +
+					// (System.currentTimeMillis() -
+					// lngStartTimegetElementsByTagName));
 				}// the end of for (String intFramesEach
 				switch (objWebElementCollection.size()) {
 				case 0:
-					System.out.println("elementFind - Element properties did not return an element, try refining attributes.");
-					throw new NoElementFoundException("Element properties did not return an element, try refining attributes");
+					System.out
+							.println("elementFind - Element properties did not return an element, try refining attributes.");
+					throw new NoElementFoundException(
+							"Element properties did not return an element, try refining attributes");
 				case 1:
 					objWebElement = objWebElementCollection.get(0);
-					objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-
-					if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
-						if (objStep.get("strType").toString().toLowerCase().length() == 0) {
-							objStep.put("strType", objWebElement.getAttribute("type"));
+					objStep.put("strCurrentWindowHandle",
+							objWebDriver.getWindowHandle());
+					if (objStep.get("strTagName").toString().toLowerCase()
+							.equals("input")) {
+						if (objStep.get("strType").toString().toLowerCase()
+								.length() == 0) {
+							objStep.put("strType",
+									objWebElement.getAttribute("type"));
 						}
-						objStep.put("strTagType", "input_" + objStep.get("strType").toString());
+						objStep.put("strTagType",
+								"input_" + objStep.get("strType").toString());
 					} else {
-						objStep.put("strTagType", objStep.get("strTagName").toString());
+						objStep.put("strTagType", objStep.get("strTagName")
+								.toString());
 					}
-
-					// objWebElement = objWebDriver.findElement(By.xpath(strXpath));
+					// objWebElement =
+					// objWebDriver.findElement(By.xpath(strXpath));
 					// break;
-
-					// JavascriptExecutor executor = (JavascriptExecutor) objWebDriver;
-					// // executor.executeScript("window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
+					// JavascriptExecutor executor = (JavascriptExecutor)
+					// objWebDriver;
+					// //
+					// executor.executeScript("window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
 					// // ( function x() { //do something & return value } )()
-					// // executor.executeScript("arguments[0].scrollIntoView(false);", objWebElement);
-					// System.out.println("elementFind JavascriptExecutor clientHeight = " + executor.executeScript("arguments[0].clientHeight;", objWebElement));
-
-					// long lngStartTimeElementFindclientWidth = System.currentTimeMillis();
-					// System.out.println(((JavascriptExecutor) objWebDriver).executeScript("return document.documentElement.clientWidth") + " " + (System.currentTimeMillis() - lngStartTimeElementFindclientWidth));
-					// long lngStartTimeElementFindclientHeight = System.currentTimeMillis();
-					// System.out.println(((JavascriptExecutor) objWebDriver).executeScript("return document.documentElement.clientHeight") + " " + (System.currentTimeMillis() - lngStartTimeElementFindclientHeight));
-
-					// String strTitle = (String) js.executeScript("return document.title");
+					// //
+					// executor.executeScript("arguments[0].scrollIntoView(false);",
+					// objWebElement);
+					// System.out.println("elementFind JavascriptExecutor clientHeight = "
+					// + executor.executeScript("arguments[0].clientHeight;",
+					// objWebElement));
+					// long lngStartTimeElementFindclientWidth =
+					// System.currentTimeMillis();
+					// System.out.println(((JavascriptExecutor)
+					// objWebDriver).executeScript("return document.documentElement.clientWidth")
+					// + " " + (System.currentTimeMillis() -
+					// lngStartTimeElementFindclientWidth));
+					// long lngStartTimeElementFindclientHeight =
+					// System.currentTimeMillis();
+					// System.out.println(((JavascriptExecutor)
+					// objWebDriver).executeScript("return document.documentElement.clientHeight")
+					// + " " + (System.currentTimeMillis() -
+					// lngStartTimeElementFindclientHeight));
+					// String strTitle = (String)
+					// js.executeScript("return document.title");
 					return objWebElement;
 				default:
-					System.out.println("elementFind - Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
-					throw new MultipleElementsFoundException("Element properties did not return an element, try refining attributes");
+					System.out
+							.println("elementFind - Element properties did not return a unique element, try again with more attributes.  "
+									+ objWebElementCollection.size());
+					throw new MultipleElementsFoundException(
+							"Element properties did not return an element, try refining attributes");
 				}// the end of switch (objWebElementCollection.size())
-
 			}// the end of for win Handles
+		} catch (NoSuchFrameException e) {
+			throw new NoElementFoundException("elementFind " + e.toString());
 		} finally {
-			System.out.println("elementFind finally lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeElementFind));
+			System.out
+					.println("elementFind finally lngMillisecondsWaitedAll = "
+							+ (System.currentTimeMillis() - lngStartTimeElementFind));
 		}
-		// return null;
 		return null;
+	}// the end of elementFind
 
-	}// the End of elementFind
-
-	// public static WebElement elementFindOriginalWithCommentedCodeToUse(String strTagName, String strAttributeNames, String strAttributeValues, WebDriver objWebDriver, Boolean blnDebugMode) {
+	// public static WebElement elementFindOriginalWithCommentedCodeToUse(String
+	// strTagName, String strAttributeNames, String strAttributeValues,
+	// WebDriver objWebDriver, Boolean blnDebugMode) {
 	// String strTag;
 	// boolean blnFound = false;
 	// String strIndex = "";
@@ -1769,7 +2357,8 @@ public class Evinrude {
 	// ArrayList<WebElement> arrWebElements = new ArrayList<WebElement>();
 	// System.out.println("elementFind blnDebugMode = " + blnDebugMode);
 	// // System.out.println(objWebDriver.getWindowHandle());
-	// System.out.println("elementFind strTagName.toLowerCase().startsWith(input_) = " + strTagName.toLowerCase().startsWith("input_"));
+	// System.out.println("elementFind strTagName.toLowerCase().startsWith(input_) = "
+	// + strTagName.toLowerCase().startsWith("input_"));
 	// // String arrHandles[] = objWebDriver.getWindowHandles();
 	// // ArrayList <String> arrHandles
 	// // arrHandles = objWebDriver.getWindowHandles()
@@ -1780,8 +2369,10 @@ public class Evinrude {
 	// strAttributeValues = strType + "|" + strAttributeValues;
 	// System.out.println("elementFind strTag = " + strTag);
 	// System.out.println("elementFind strType = " + strType);
-	// System.out.println("elementFind strAttributeNames = " + strAttributeNames);
-	// System.out.println("elementFind strAttributeValues = " + strAttributeValues);
+	// System.out.println("elementFind strAttributeNames = " +
+	// strAttributeNames);
+	// System.out.println("elementFind strAttributeValues = " +
+	// strAttributeValues);
 	// } else {
 	// strTag = strTagName.toLowerCase();
 	// }
@@ -1829,26 +2420,32 @@ public class Evinrude {
 	// // ((Collection<WebElement>) objWebElementCollection)
 	// // .iterator();
 	// String arrAttributeNames[] = strAttributeNames.split("\\|", -1);
-	// System.out.println("elementFind arrAttributeNames.length = " + arrAttributeNames.length);
+	// System.out.println("elementFind arrAttributeNames.length = " +
+	// arrAttributeNames.length);
 	// String arrAttributeValues[] = strAttributeValues.split("\\|", -1);
 	// // String strXpath = "//" + strTag + "[@" + arrAttributeNames[0]
 	// // + "='" + arrAttributeValues[0] + "']";
 	// String strXpathAttributes = null;
-	// for (int intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
+	// for (int intAttributeEach = 0; intAttributeEach <
+	// arrAttributeNames.length; intAttributeEach++) {
 	// if (arrAttributeNames[intAttributeEach].toLowerCase().equals("index")) {
 	// strIndex = "[" + arrAttributeValues[intAttributeEach] + "]";
 	// } else {
 	//
 	// if (strXpathAttributes == null) {
-	// strXpathAttributes = "@" + arrAttributeNames[intAttributeEach] + "='" + arrAttributeValues[intAttributeEach] + "'";
+	// strXpathAttributes = "@" + arrAttributeNames[intAttributeEach] + "='" +
+	// arrAttributeValues[intAttributeEach] + "'";
 	// } else {
-	// strXpathAttributes = strXpathAttributes + " and @" + arrAttributeNames[intAttributeEach] + "='" + arrAttributeValues[intAttributeEach] + "'";
+	// strXpathAttributes = strXpathAttributes + " and @" +
+	// arrAttributeNames[intAttributeEach] + "='" +
+	// arrAttributeValues[intAttributeEach] + "'";
 	// }
 	// }
 	// // E[@foo="bar" and @foo1="bar1"]
 	// }// for (int intAttributeEach
 	// // workd but not case insensitive
-	// String strXpath = "(//" + strTag + "[" + strXpathAttributes + "])" + strIndex;
+	// String strXpath = "(//" + strTag + "[" + strXpathAttributes + "])" +
+	// strIndex;
 	// // String strXpath = "//" + strTag + "[" +
 	// // strXpathAttributes.toLowerCase()
 	// // + "]";
@@ -1880,7 +2477,8 @@ public class Evinrude {
 	// return null;
 	// case 1:
 	// objWebElement = objWebElementCollection.get(0);
-	// if (objWebElement.getSize().width == 0 || objWebElement.getSize().height == 0) {
+	// if (objWebElement.getSize().width == 0 || objWebElement.getSize().height
+	// == 0) {
 	// return null;
 	// } else {
 	// // int intX = objWebElement.getLocation().getX();
@@ -1923,7 +2521,8 @@ public class Evinrude {
 	// // return objWebElementCollection.get(0);
 	// }
 	// default:
-	// System.out.println("elementFind Element properties did not return a unique element, try again with more attributes.  " + arrWebElements.size());
+	// System.out.println("elementFind Element properties did not return a unique element, try again with more attributes.  "
+	// + arrWebElements.size());
 	// return null;
 	// }// the end of switch (objWebElementCollection.size())
 	//
@@ -1944,7 +2543,8 @@ public class Evinrude {
 	// // return arrWebElements.get(0);
 	// // }
 	// // } else {
-	// // System.out.println("elementFind Element properties did not return a unique element, try again with more attributes.  "
+	// //
+	// System.out.println("elementFind Element properties did not return a unique element, try again with more attributes.  "
 	// // + arrWebElements.size());
 	// // return null;
 	// // }
@@ -1962,8 +2562,8 @@ public class Evinrude {
 	// } catch (NoSuchElementException e) {
 	// System.out.println("elementFind NoSuchElementException ");
 	// return null;
-	// }// the End of try
-	// }// the End of elementFind
+	// }// the end of try
+	// }// the end of elementFind
 
 	// public static WebElement getParentElement(WebDriver objWebDriver,
 	// WebElement objWebElement) {
@@ -2023,8 +2623,8 @@ public class Evinrude {
 	// return null;
 	// }
 	// }// the end of getParentElement
-
-	// public static Rectangle elementAbsoluteCoordinates(WebDriver objWebDriver, WebElement objWebElement) {
+	// public static Rectangle elementAbsoluteCoordinates(WebDriver
+	// objWebDriver, WebElement objWebElement) {
 	// int intWebDriverX = objWebDriver.manage().window().getPosition().getX();
 	// int intWebDriverY = objWebDriver.manage().window().getPosition().getY();
 	// int intWebDriverWidth = objWebDriver.manage().window().getSize().width;
@@ -2101,13 +2701,19 @@ public class Evinrude {
 	// int intWebElementWidth = objWebElement.getSize().width;
 	// int intWebElementHeight = objWebElement.getSize().height;
 	//
-	// Rectangle area2 = new Rectangle(intWebDriverX + intWebElementX + (intWebDriverWidth - intWebElementParentWidth), intWebDriverY + intWebElementY + (intWebDriverHeight - intWebElementParentHeight), intWebElementWidth, intWebElementHeight);
+	// Rectangle area2 = new Rectangle(intWebDriverX + intWebElementX +
+	// (intWebDriverWidth - intWebElementParentWidth), intWebDriverY +
+	// intWebElementY + (intWebDriverHeight - intWebElementParentHeight),
+	// intWebElementWidth, intWebElementHeight);
 	// return area2;
 	// }// the end of elementAbsoluteCoordinates
 
-	// public static Rectangle elementAbsoluteCoordinatesAncestor2(WebDriver objWebDriver, WebElement objWebElement) {
-	// int intWebElementX = ((Locatable) objWebElement).getCoordinates().onScreen().x;
-	// int intWebElementY = ((Locatable) objWebElement).getCoordinates().onScreen().y;
+	// public static Rectangle elementAbsoluteCoordinatesAncestor2(WebDriver
+	// objWebDriver, WebElement objWebElement) {
+	// int intWebElementX = ((Locatable)
+	// objWebElement).getCoordinates().onScreen().x;
+	// int intWebElementY = ((Locatable)
+	// objWebElement).getCoordinates().onScreen().y;
 	// // int intWebElementX = ((Locatable)
 	// // objWebElement).getCoordinates().inViewPort().x;
 	// // int intWebElementY = ((Locatable)
@@ -2137,101 +2743,155 @@ public class Evinrude {
 	// return area2;
 	// }// the end of elementAbsoluteCoordinates
 
-	public static void elementAbsoluteCoordinates(JSONObject objStep, Integer intThickness, WebDriver objWebDriver, WebElement objWebElement, Rectangle objRectangleArea) {
-		long lngStartTimeElementAbsoluteCoordinatesAncestor = System.currentTimeMillis();
+	public static void elementAbsoluteCoordinates(JSONObject objStep,
+			Integer intThickness, WebDriver objWebDriver,
+			WebElement objWebElement, Rectangle objRectangleArea) {
+		long lngStartTimeElementAbsoluteCoordinatesAncestor = System
+				.currentTimeMillis();
 		try {
 			// int intBottomWindowAdjustment = 0;
 			// int intLeftWindowAdjustment = 0;
 			// int intScrollbar = 0;
-			// int intBrowserOuterX = Integer.parseInt(objStep.get("intBrowserOuterX").toString());
-			// int intBrowserOuterY = Integer.parseInt(objStep.get("intBrowserOuterY").toString());
-			// int intBrowserOuterWidth = Integer.parseInt(objStep.get("intBrowserOuterWidth").toString());
-			// int intBrowserOuterHeight = Integer.parseInt(objStep.get("intBrowserOuterHeight").toString());
+			// int intBrowserOuterX =
+			// Integer.parseInt(objStep.get("intBrowserOuterX").toString());
+			// int intBrowserOuterY =
+			// Integer.parseInt(objStep.get("intBrowserOuterY").toString());
+			// int intBrowserOuterWidth =
+			// Integer.parseInt(objStep.get("intBrowserOuterWidth").toString());
+			// int intBrowserOuterHeight =
+			// Integer.parseInt(objStep.get("intBrowserOuterHeight").toString());
 			//
-			// int intWebElementX = Integer.parseInt(objStep.get("intWebElementX").toString());
-			// int intWebElementY = Integer.parseInt(objStep.get("intWebElementY").toString());
-			// int intWebElementWidth = Integer.parseInt(objStep.get("intElementWidth").toString());
-			// int intWebElementHeight = Integer.parseInt(objStep.get("intElementHeight").toString());
+			// int intWebElementX =
+			// Integer.parseInt(objStep.get("intWebElementX").toString());
+			// int intWebElementY =
+			// Integer.parseInt(objStep.get("intWebElementY").toString());
+			// int intWebElementWidth =
+			// Integer.parseInt(objStep.get("intElementWidth").toString());
+			// int intWebElementHeight =
+			// Integer.parseInt(objStep.get("intElementHeight").toString());
 			//
-			// int intoffsetWidth = Integer.parseInt(objStep.get("intoffsetWidth").toString());
-			// int intoffsetHeight = Integer.parseInt(objStep.get("intoffsetHeight").toString());
+			// int intoffsetWidth =
+			// Integer.parseInt(objStep.get("intoffsetWidth").toString());
+			// int intoffsetHeight =
+			// Integer.parseInt(objStep.get("intoffsetHeight").toString());
 			//
-			// intLeftWindowAdjustment = ((intBrowserOuterWidth - intoffsetWidth - intScrollbar) / 2);
-			// intBottomWindowAdjustment = ((intBrowserOuterWidth - intoffsetWidth - intScrollbar) / 2);
-			// int intX = ((intBrowserOuterX + intWebElementX) + intLeftWindowAdjustment) - intThickness;
-			// int intY = ((intBrowserOuterY + intWebElementY) + (intBrowserOuterHeight - intoffsetHeight) - intBottomWindowAdjustment) - intThickness;
+			// intLeftWindowAdjustment = ((intBrowserOuterWidth - intoffsetWidth
+			// - intScrollbar) / 2);
+			// intBottomWindowAdjustment = ((intBrowserOuterWidth -
+			// intoffsetWidth - intScrollbar) / 2);
+			// int intX = ((intBrowserOuterX + intWebElementX) +
+			// intLeftWindowAdjustment) - intThickness;
+			// int intY = ((intBrowserOuterY + intWebElementY) +
+			// (intBrowserOuterHeight - intoffsetHeight) -
+			// intBottomWindowAdjustment) - intThickness;
 			// int intWidth = intWebElementWidth + (2 * intThickness);
 			// int intHeight = intWebElementHeight + (2 * intThickness);
-
-			int intX = Integer.parseInt(objStep.get("intElementScreenX").toString()) - intThickness;
-			int intY = Integer.parseInt(objStep.get("intElementScreenY").toString()) - intThickness;
-			int intWidth = Integer.parseInt(objStep.get("intElementWidth").toString()) + (2 * intThickness);
-			int intHeight = Integer.parseInt(objStep.get("intElementHeight").toString()) + (2 * intThickness);
-
-			System.out.println("elementAbsoluteCoordinates  = " + intX + " " + intY + " " + intWidth + " " + intHeight);
+			int intX = Integer.parseInt(objStep.get("intElementScreenX")
+					.toString()) - intThickness;
+			int intY = Integer.parseInt(objStep.get("intElementScreenY")
+					.toString()) - intThickness;
+			int intWidth = Integer.parseInt(objStep.get("intElementWidth")
+					.toString()) + (2 * intThickness);
+			int intHeight = Integer.parseInt(objStep.get("intElementHeight")
+					.toString()) + (2 * intThickness);
+			System.out.println("elementAbsoluteCoordinates  = " + intX + " "
+					+ intY + " " + intWidth + " " + intHeight);
 			objRectangleArea.setBounds(intX, intY, intWidth, intHeight);
 		} finally {
-			System.out.println("elementAbsoluteCoordinates finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementAbsoluteCoordinatesAncestor));
-			// System.out.println("intBrowserOuterWidth = " + intBrowserOuterWidth);
-			// System.out.println("intBrowserOuterHeight = " + intBrowserOuterHeight);
-			// System.out.println("elementAbsoluteCoordinates intThickness = " + intThickness);
+			System.out
+					.println("elementAbsoluteCoordinates finally intMillisecondsWaited = "
+							+ (System.currentTimeMillis() - lngStartTimeElementAbsoluteCoordinatesAncestor));
+			// System.out.println("intBrowserOuterWidth = " +
+			// intBrowserOuterWidth);
+			// System.out.println("intBrowserOuterHeight = " +
+			// intBrowserOuterHeight);
+			// System.out.println("elementAbsoluteCoordinates intThickness = " +
+			// intThickness);
 		}
 	}// the end of elementAbsoluteCoordinates
 
-	public static void elementCoordinates(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
-		long lngStartTimeElementAbsoluteCoordinatesAncestor = System.currentTimeMillis();
+	@SuppressWarnings("unchecked")
+	public static void elementCoordinates(JSONObject objStep,
+			WebDriver objWebDriver, WebElement objWebElement) {
+		long lngStartTimeElementAbsoluteCoordinatesAncestor = System
+				.currentTimeMillis();
 		try {
 			int intScrollbar = 0;
 			long lngStartTimeManageWindow = System.currentTimeMillis();
-			Point objWebDriverPoint = objWebDriver.manage().window().getPosition();
+			Point objWebDriverPoint = objWebDriver.manage().window()
+					.getPosition();
 			int intBrowserOuterX = objWebDriverPoint.x;
 			int intBrowserOuterY = objWebDriverPoint.y;
-			Dimension objWebDriverDimension = objWebDriver.manage().window().getSize();
+			Dimension objWebDriverDimension = objWebDriver.manage().window()
+					.getSize();
 			int intBrowserOuterWidth = objWebDriverDimension.width;
 			int intBrowserOuterHeight = objWebDriverDimension.height;
-			System.out.println("elementAbsoluteCoordinates intBrowserOuterX, Y  intBrowserOuterWidth, Height = " + objWebDriverPoint + " " + objWebDriverDimension + " " + (System.currentTimeMillis() - lngStartTimeManageWindow));
+			System.out
+					.println("elementAbsoluteCoordinates intBrowserOuterX, Y  intBrowserOuterWidth, Height = "
+							+ objWebDriverPoint
+							+ " "
+							+ objWebDriverDimension
+							+ " "
+							+ (System.currentTimeMillis() - lngStartTimeManageWindow));
 			objStep.put("intBrowserOuterX", intBrowserOuterX);
 			objStep.put("intBrowserOuterY", intBrowserOuterY);
 			objStep.put("intBrowserOuterWidth", intBrowserOuterWidth);
 			objStep.put("intBrowserOuterHeight", intBrowserOuterHeight);
 			System.out.println("intBrowserOuterX = " + intBrowserOuterX);
 			System.out.println("intBrowserOuterY = " + intBrowserOuterY);
-			System.out.println("intBrowserOuterWidth = " + intBrowserOuterWidth);
-			System.out.println("intBrowserOuterHeight = " + intBrowserOuterHeight);
+			System.out
+					.println("intBrowserOuterWidth = " + intBrowserOuterWidth);
+			System.out.println("intBrowserOuterHeight = "
+					+ intBrowserOuterHeight);
 
 			// long intBrowserInnerWidth = 0;
 			// long intBrowserInnerHeight = 0;
 			// try {
-			// intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
-			// intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
-			// System.out.println("intBrowserInnerWidth = " + intBrowserInnerWidth);
-			// System.out.println("intBrowserInnerHeight = " + intBrowserInnerHeight);
+			// intBrowserInnerWidth = (long) ((JavascriptExecutor)
+			// objWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
+			// intBrowserInnerHeight = (long) ((JavascriptExecutor)
+			// objWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
+			// System.out.println("intBrowserInnerWidth = " +
+			// intBrowserInnerWidth);
+			// System.out.println("intBrowserInnerHeight = " +
+			// intBrowserInnerHeight);
 			// } catch (Exception e) {
 			// System.out.println("BodyoffsetHeight = " + e.toString());
-			// intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetWidth;");
-			// intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetHeight;");
+			// intBrowserInnerWidth = (long) ((JavascriptExecutor)
+			// objWebDriver).executeScript("return document.body.offsetWidth;");
+			// intBrowserInnerHeight = (long) ((JavascriptExecutor)
+			// objWebDriver).executeScript("return document.body.offsetHeight;");
 			// System.out.println("BodyoffsetWidth = " + intBrowserInnerWidth);
-			// System.out.println("BodyoffsetHeight = " + intBrowserInnerHeight);
+			// System.out.println("BodyoffsetHeight = " +
+			// intBrowserInnerHeight);
 			// }
 			// objStep.put("intBrowserInnerWidth", intBrowserInnerWidth);
 			// objStep.put("intBrowserInnerHeight", intBrowserInnerHeight);
 
-			int intBrowserInnerWidth = Integer.parseInt(objStep.get("intBrowserInnerWidth").toString());
-			int intBrowserInnerHeight = Integer.parseInt(objStep.get("intBrowserInnerHeight").toString());
+			int intBrowserInnerWidth = Integer.parseInt(objStep.get(
+					"intBrowserInnerWidth").toString());
+			int intBrowserInnerHeight = Integer.parseInt(objStep.get(
+					"intBrowserInnerHeight").toString());
 
-			int intElementX = Integer.parseInt(objStep.get("intElementX").toString());
-			int intElementY = Integer.parseInt(objStep.get("intElementY").toString());
-			int intElementWidth = Integer.parseInt(objStep.get("intElementWidth").toString());
-			int intElementHeight = Integer.parseInt(objStep.get("intElementHeight").toString());
+			int intElementX = Integer.parseInt(objStep.get("intElementX")
+					.toString());
+			int intElementY = Integer.parseInt(objStep.get("intElementY")
+					.toString());
+			int intElementWidth = Integer.parseInt(objStep.get(
+					"intElementWidth").toString());
+			int intElementHeight = Integer.parseInt(objStep.get(
+					"intElementHeight").toString());
 			System.out.println("intElementX = " + intElementX);
 			System.out.println("intElementY = " + intElementY);
 			System.out.println("intElementWidth = " + intElementWidth);
 			System.out.println("intElementHeight = " + intElementHeight);
 
-			int intWindowBorder = (int) ((intBrowserOuterWidth - intBrowserInnerWidth - intScrollbar) / 2);
+			int intWindowBorder = (int) ((intBrowserOuterWidth
+					- intBrowserInnerWidth - intScrollbar) / 2);
 
 			int intElementScreenX = ((intBrowserOuterX + intElementX) + intWindowBorder);
-			int intElementScreenY = (int) ((intBrowserOuterY + intElementY) + (intBrowserOuterHeight - intBrowserInnerHeight) - intWindowBorder);
+			int intElementScreenY = (int) ((intBrowserOuterY + intElementY)
+					+ (intBrowserOuterHeight - intBrowserInnerHeight) - intWindowBorder);
 
 			objStep.put("intElementScreenX", intElementScreenX);
 			objStep.put("intElementScreenY", intElementScreenY);
@@ -2240,27 +2900,44 @@ public class Evinrude {
 			System.out.println("intElementScreenX = " + intElementScreenX);
 			System.out.println("intElementScreenY = " + intElementScreenY);
 
-			// intBottomWindowAdjustment = ((intBrowserOuterWidth - intoffsetWidth - intScrollbar) / 2);
-			// int intElementHighlightX = ((intBrowserOuterX + intElementX) + intWindowBorder) - intThickness;
-			// int intElementHighlightY = ((intBrowserOuterY + intElementY) + (intBrowserOuterHeight - intBrowserInnerHeight) - intWindowBorder) - intThickness;
-			// int intElementHighlightWidth = intElementWidth + (2 * intThickness);
-			// int intElementHighlightHeight = intElementHeight + (2 * intThickness);
+			// intBottomWindowAdjustment = ((intBrowserOuterWidth -
+			// intoffsetWidth - intScrollbar) / 2);
+			// int intElementHighlightX = ((intBrowserOuterX + intElementX) +
+			// intWindowBorder) - intThickness;
+			// int intElementHighlightY = ((intBrowserOuterY + intElementY) +
+			// (intBrowserOuterHeight - intBrowserInnerHeight) -
+			// intWindowBorder) - intThickness;
+			// int intElementHighlightWidth = intElementWidth + (2 *
+			// intThickness);
+			// int intElementHighlightHeight = intElementHeight + (2 *
+			// intThickness);
 
 			// objStep.put("intElementWidth", intElementWidth);
 			// objStep.put("intElementHeight", intElementHeight);
 
 			// objStep.put("intElementHighlightX", intElementHighlightX);
 			// objStep.put("intElementHighlightY", intElementHighlightY);
-			// objStep.put("intElementHighlightWidth", intElementHighlightWidth);
-			// objStep.put("intElementHighlightHeight", intElementHighlightHeight);
+			// objStep.put("intElementHighlightWidth",
+			// intElementHighlightWidth);
+			// objStep.put("intElementHighlightHeight",
+			// intElementHighlightHeight);
 			//
-			// System.out.println("elementAbsoluteCoordinates  = " + intElementHighlightX + " " + intElementHighlightY + " " + intElementHighlightWidth + " " + intElementHighlightHeight);
-			// objRectangleArea.setBounds(intElementHighlightX, intElementHighlightY, intElementHighlightWidth, intElementHighlightHeight);
+			// System.out.println("elementAbsoluteCoordinates  = " +
+			// intElementHighlightX + " " + intElementHighlightY + " " +
+			// intElementHighlightWidth + " " + intElementHighlightHeight);
+			// objRectangleArea.setBounds(intElementHighlightX,
+			// intElementHighlightY, intElementHighlightWidth,
+			// intElementHighlightHeight);
 		} finally {
-			System.out.println("elementAbsoluteCoordinates finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementAbsoluteCoordinatesAncestor));
-			// System.out.println("intBrowserOuterWidth = " + intBrowserOuterWidth);
-			// System.out.println("intBrowserOuterHeight = " + intBrowserOuterHeight);
-			// System.out.println("elementAbsoluteCoordinates intThickness = " + intThickness);
+			System.out
+					.println("elementAbsoluteCoordinates finally intMillisecondsWaited = "
+							+ (System.currentTimeMillis() - lngStartTimeElementAbsoluteCoordinatesAncestor));
+			// System.out.println("intBrowserOuterWidth = " +
+			// intBrowserOuterWidth);
+			// System.out.println("intBrowserOuterHeight = " +
+			// intBrowserOuterHeight);
+			// System.out.println("elementAbsoluteCoordinates intThickness = " +
+			// intThickness);
 		}
 	}// the end of elementAbsoluteCoordinates
 
@@ -2300,15 +2977,19 @@ public class Evinrude {
 	// }
 	// }
 
-	public static boolean elementVisible(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementNotVisibleException {
+	@SuppressWarnings("unchecked")
+	public static boolean elementVisible(JSONObject objStep,
+			WebDriver objWebDriver, WebElement objWebElement)
+			throws ElementNotVisibleException {
 		long lngStartTimeElementVisible = System.currentTimeMillis();
 		try {
-			if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
+			// TODO Alert complete
+			if (objStep.get("strTagName").toString().toLowerCase()
+					.equals("alert")) {
 				try {
-//					Alert alert = objWebDriver.switchTo().alert();
-
+					@SuppressWarnings("unused")
+					Alert alert = objWebDriver.switchTo().alert();
 					System.out.println("elementVisible alert passed");
-
 					// System.out.println(objWebDriver.manage().window().getPosition());
 					// System.out.println(objWebDriver.manage().window().getSize());
 					return true;
@@ -2316,10 +2997,9 @@ public class Evinrude {
 				catch (NoAlertPresentException e) {
 					// return false;
 					System.out.println(e.toString());
-					throw new ElementNotVisibleException("Alert popup was not found.");
-
+					throw new ElementNotVisibleException(
+							"Alert popup was not found.");
 				} // catch
-
 			}
 			String[] arrClassNameHidden;
 			String[] arrClassNameVisible;
@@ -2342,9 +3022,11 @@ public class Evinrude {
 			arrClassName = strClassName.split(" ");
 			arrClassNameHidden = strClassNameHidden.split("|");
 			arrClassNameVisible = strClassNameVisible.split("|");
-
+			// TODO elementVisible add check for class and css, commented code
+			// needs to be tested
 			if (objWebElement.isDisplayed()) {
-				// System.out.println("elementVisible objWebElement.isDisplayed() = " + objWebElement.isDisplayed());
+				// System.out.println("elementVisible objWebElement.isDisplayed() = "
+				// + objWebElement.isDisplayed());
 				// for (intClassNameEach = 0; intClassNameEach <
 				// arrClassName.length; intClassNameEach++) {
 				//
@@ -2378,7 +3060,8 @@ public class Evinrude {
 				// // arrClassName.length; intClassNameEach++)
 				// // check the objects visibility style, return false and exit
 				// function if value is hidden or collapse
-				// strObjectStyleVisibility = LCase(objWebObject.Style.visibility)
+				// strObjectStyleVisibility =
+				// LCase(objWebObject.Style.visibility)
 				// If strObjectStyleVisibility = "hidden" Or
 				// strObjectStyleVisibility = "collapse" Then
 				// elementVisible = False
@@ -2395,77 +3078,112 @@ public class Evinrude {
 				// On Error GoTo 0
 				// Exit Function
 				// End If
-				// checks if object has height and width (some objects are hidden by
+				// checks if object has height and width (some objects are
+				// hidden by
 				// settting either of these values to 0
 				// System.out.println("elementVisible getSize = " +
 				// objWebElement.getSize().width + "  " +
 				// objWebElement.getSize().height);
-
-				// this works and is needed but costs a couple of hundred ms to return
+				// this works and is needed but costs a couple of hundred ms to
+				// return
 				// long lngStartTimeElementWidth = System.currentTimeMillis();
 				// int intElementWidth = objWebElement.getSize().width;
-				// System.out.println("elementVisible intElementWidth  = " + intElementWidth + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementWidth));
+				// System.out.println("elementVisible intElementWidth  = " +
+				// intElementWidth + " intMillisecondsWaited = " +
+				// (System.currentTimeMillis() - lngStartTimeElementWidth));
 				//
 				// long lngStartTimeElementHeight = System.currentTimeMillis();
 				// int intElementHeight = objWebElement.getSize().height;
-				// System.out.println("elementVisible intElementHeight  = " + intElementHeight + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementHeight));
+				// System.out.println("elementVisible intElementHeight  = " +
+				// intElementHeight + " intMillisecondsWaited = " +
+				// (System.currentTimeMillis() - lngStartTimeElementHeight));
 
-				// WebElement element = driver.findElement(By.id("tabs")).findElement(By.className("youarehere"));
+				// WebElement element =
+				// driver.findElement(By.id("tabs")).findElement(By.className("youarehere"));
 				// Point p = element.getLocation();
-				// ((JavascriptExecutor) driver).executeScript("window.scroll(" + p.getX() + "," + (p.getY() + 200) + ");");
+				// ((JavascriptExecutor) driver).executeScript("window.scroll("
+				// + p.getX() + "," + (p.getY() + 200) + ");");
 
-				// long lngStartTimeWebElementinViewPort = System.currentTimeMillis();
-				// Coordinates objWebElementCoordinates = ((Locatable) objWebElement).getCoordinates();
-				// Point objWebElementPoint = objWebElementCoordinates.inViewPort();
-				// System.out.println("elementVisible objWebElementPoint  = " + objWebElementPoint + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeWebElementinViewPort));
+				// long lngStartTimeWebElementinViewPort =
+				// System.currentTimeMillis();
+				// Coordinates objWebElementCoordinates = ((Locatable)
+				// objWebElement).getCoordinates();
+				// Point objWebElementPoint =
+				// objWebElementCoordinates.inViewPort();
+				// System.out.println("elementVisible objWebElementPoint  = " +
+				// objWebElementPoint + " intMillisecondsWaited = " +
+				// (System.currentTimeMillis() -
+				// lngStartTimeWebElementinViewPort));
 				// int intElementX = objWebElementPoint.x;
 				// int intElementY = objWebElementPoint.y;
-				// System.out.println("elementVisible intWebElementinViewPortX  = " + intWebElementX + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeWebElementinViewPort));
-				// System.out.println("elementVisible intWebElementinViewPortY  = " + intWebElementY + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeWebElementinViewPort));
-
-				// long lngStartTimeElementDimension = System.currentTimeMillis();
+				// System.out.println("elementVisible intWebElementinViewPortX  = "
+				// + intWebElementX + " intMillisecondsWaited = " +
+				// (System.currentTimeMillis() -
+				// lngStartTimeWebElementinViewPort));
+				// System.out.println("elementVisible intWebElementinViewPortY  = "
+				// + intWebElementY + " intMillisecondsWaited = " +
+				// (System.currentTimeMillis() -
+				// lngStartTimeWebElementinViewPort));
+				// long lngStartTimeElementDimension =
+				// System.currentTimeMillis();
 				// Dimension objElementDimensions = objWebElement.getSize();
-				// System.out.println("elementVisible dimensions  = " + dimensions + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementDimension));
-
+				// System.out.println("elementVisible dimensions  = " +
+				// dimensions + " intMillisecondsWaited = " +
+				// (System.currentTimeMillis() - lngStartTimeElementDimension));
 				// long lngStartTimeElementWidth = System.currentTimeMillis();
 				// int intElementWidth = objElementDimensions.width;
-				// System.out.println("elementVisible intElementWidth  = " + intElementWidth + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementWidth));
-
+				// System.out.println("elementVisible intElementWidth  = " +
+				// intElementWidth + " intMillisecondsWaited = " +
+				// (System.currentTimeMillis() - lngStartTimeElementWidth));
 				// long lngStartTimeElementHeight = System.currentTimeMillis();
 				// int intElementHeight = objElementDimensions.height;
-				// System.out.println("elementVisible intElementHeight  = " + intElementHeight + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementHeight));
-
-				Coordinates objElementCoordinates = ((Locatable) objWebElement).getCoordinates();
+				// System.out.println("elementVisible intElementHeight  = " +
+				// intElementHeight + " intMillisecondsWaited = " +
+				// (System.currentTimeMillis() - lngStartTimeElementHeight));
+				Coordinates objElementCoordinates = ((Locatable) objWebElement)
+						.getCoordinates();
 				Point objElementPoint = objElementCoordinates.inViewPort();
 				Dimension objElementDimension = objWebElement.getSize();
 				objStep.put("intElementX", objElementPoint.x);
 				objStep.put("intElementY", objElementPoint.y);
 				objStep.put("intElementWidth", objElementDimension.width);
 				objStep.put("intElementHeight", objElementDimension.height);
-
-				if (objElementDimension.width == 0 || objElementDimension.height == 0) {
-					// System.out.println("elementVisible getSize = " + objWebElement.getSize().width + "  " + objWebElement.getSize().height);
-					// System.out.println("elementVisible intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementVisible));
+				if (objElementDimension.width == 0
+						|| objElementDimension.height == 0) {
+					// System.out.println("elementVisible getSize = " +
+					// objWebElement.getSize().width + "  " +
+					// objWebElement.getSize().height);
+					// System.out.println("elementVisible intMillisecondsWaited = "
+					// + (System.currentTimeMillis() -
+					// lngStartTimeElementVisible));
 					throw new ElementNotVisibleException("Element size failed");
 				} else {
 					elementCoordinates(objStep, objWebDriver, objWebElement);
-					// System.out.println("elementVisible getSize = " + objWebElement.getSize().width + "  " + objWebElement.getSize().height);
-					// System.out.println("elementVisible intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementVisible));
+					// System.out.println("elementVisible getSize = " +
+					// objWebElement.getSize().width + "  " +
+					// objWebElement.getSize().height);
+					// System.out.println("elementVisible intMillisecondsWaited = "
+					// + (System.currentTimeMillis() -
+					// lngStartTimeElementVisible));
 					return true;
 				}// the end of objWebElement.getSize
-
 			} else {
-				System.out.println("elementVisible objWebElement.isDisplayed() = return false");
-				// System.out.println("elementVisible intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementVisible));
-				throw new ElementNotVisibleException("Element isDisplayed failed");
+				System.out
+						.println("elementVisible objWebElement.isDisplayed() = return false");
+				// System.out.println("elementVisible intMillisecondsWaited = "
+				// + (System.currentTimeMillis() - lngStartTimeElementVisible));
+				throw new ElementNotVisibleException(
+						"Element isDisplayed failed");
 			}// the end of if (objWebElement.isDisplayed())
 		} finally {
-			System.out.println("elementVisible finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementVisible));
+			System.out
+					.println("elementVisible finally intMillisecondsWaited = "
+							+ (System.currentTimeMillis() - lngStartTimeElementVisible));
 		}
-		// return true;
 	}// the end of elementVisible
 
-	public static boolean elementHidden(WebElement objWebElement) throws ElementNotHiddenException {
+	public static boolean elementHidden(WebElement objWebElement)
+			throws ElementNotHiddenException {
 		long lngStartTimeElementHidden = System.currentTimeMillis();
 		Dimension objDimensions = null;
 		try {
@@ -2473,39 +3191,52 @@ public class Evinrude {
 				try {
 					objDimensions = objWebElement.getSize();
 				} catch (Exception e) {
-					System.out.println("elementHiddenSync - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
+					System.out
+							.println("elementHiddenSync - "
+									+ e.toString()
+									+ "  lngStartTimeHiddenSync = "
+									+ (System.currentTimeMillis() - lngStartTimeElementHidden));
 					return true;
 				}
 				if (objDimensions.width == 0 || objDimensions.height == 0) {
 					System.out.println("elementHidden size 0");
 					return true;
 				} else {
-					System.out.println("elementHidden size not 0 " + objDimensions);
-					throw new ElementNotHiddenException("Element size not 0 " + objDimensions);
+					System.out.println("elementHidden size not 0 "
+							+ objDimensions);
+					throw new ElementNotHiddenException("Element size not 0 "
+							+ objDimensions);
 				}// the end of objWebElement.getSize
 			} else {
-				System.out.println("elementHidden objWebElement.isDisplayed = false");
+				System.out
+						.println("elementHidden objWebElement.isDisplayed = false");
 				return true;
-				// throw new ElementNotHiddenException("Element isDisplayed failed");
+				// throw new
+				// ElementNotHiddenException("Element isDisplayed failed");
 			}// the end of if (objWebElement.isDisplayed())
 				// }catch(WebDriverException){
-
-		} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException e) {
-			System.out.println("elementHiddenSync - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
+		} catch (NoSuchWindowException | StaleElementReferenceException
+				| NullPointerException | NoSuchElementException e) {
+			System.out.println("elementHiddenSync - " + e.toString()
+					+ "  lngStartTimeHiddenSync = "
+					+ (System.currentTimeMillis() - lngStartTimeElementHidden));
 			return true;
 		} finally {
-			System.out.println("elementHidden finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
+			System.out.println("elementHidden finally intMillisecondsWaited = "
+					+ (System.currentTimeMillis() - lngStartTimeElementHidden));
 		}
 	}// the end of elementHidden
 
-	public static boolean elementEnabled(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementNotEnabledException {
+	public static boolean elementEnabled(JSONObject objStep,
+			WebDriver objWebDriver, WebElement objWebElement)
+			throws ElementNotEnabledException {
 		long lngStartTimeElementEnabled = System.currentTimeMillis();
 		try {
-
-			if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
+			// TODO Alert complete
+			if (objStep.get("strTagName").toString().toLowerCase()
+					.equals("alert")) {
 				try {
-//					Alert alert = objWebDriver.switchTo().alert();
-
+					Alert alert = objWebDriver.switchTo().alert();
 					// System.out.println(objWebDriver.manage().window().getPosition());
 					// System.out.println(objWebDriver.manage().window().getSize());
 					return true;
@@ -2513,35 +3244,42 @@ public class Evinrude {
 				catch (NoAlertPresentException e) {
 					// return false;
 					System.out.println(e.toString());
-					throw new ElementNotEnabledException("Alert popup was not found.");
-
+					throw new ElementNotEnabledException(
+							"Alert popup was not found.");
 				} // catch
-
 			}
-
 			if (objWebElement.isEnabled()) {
 				return true;
 			} else {
-				throw new ElementNotEnabledException("elementEnabled - Element is not enabled");
+				throw new ElementNotEnabledException(
+						"elementEnabled - Element is not enabled");
 			}// the end of if (objWebElement.isEnabled())
 		} finally {
-			System.out.println("elementEnabled finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementEnabled));
+			System.out
+					.println("elementEnabled finally intMillisecondsWaited = "
+							+ (System.currentTimeMillis() - lngStartTimeElementEnabled));
 		}
-	}
+	}// the end of elementEnabled
 
-	public static boolean elementDisabled(WebElement objWebElement) throws ElementNotDisabledException {
+	public static boolean elementDisabled(WebElement objWebElement)
+			throws ElementNotDisabledException {
 		long lngStartTimeElementDisabled = System.currentTimeMillis();
 		try {
 			if (objWebElement.isEnabled()) {
-				throw new ElementNotDisabledException("elementDisabled - Element is not disabled");
+				throw new ElementNotDisabledException(
+						"elementDisabled - Element is not disabled");
 			} else {
 				return true;
 			}// the end of if (objWebElement.isEnabled())
 		} finally {
-			System.out.println("elementDisabled finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementDisabled));
+			System.out
+					.println("elementDisabled finally intMillisecondsWaited = "
+							+ (System.currentTimeMillis() - lngStartTimeElementDisabled));
 		}
-	}
+	}// the end of elementDisabled
 
+	// TODO elementVisible add check for class and css, commented code needs to
+	// be tested
 	// Function WebObjectEnabled()
 	// On Error Resume Next
 	// '******************************************************************************
@@ -2630,28 +3368,42 @@ public class Evinrude {
 	// '******************************************************************************
 	// End Function '==> WebObjectEnabled
 
-	public static String verifyMatch(String strActual, String strExpected) throws ValueNotMatchedException {
+	public static String verifyMatch(String strActual, String strExpected)
+			throws ValueNotMatchedException {
 		long lngStartTimeVerifyMatch = System.currentTimeMillis();
 		try {
 			if (strExpected.toLowerCase().startsWith("re:")) {
 				String strPattern = strExpected.substring(3);
+				System.out.println("verifyMatch RegularExpressionMatch = "
+						+ RegularExpressionMatch(strPattern, strActual));
 				return RegularExpressionMatch(strPattern, strActual);
 			} else {
 				if (strExpected.equals(strActual)) {
-					System.out.println("verifyMatch matched strActual = " + strActual);
+					System.out.println("verifyMatch matched strActual = "
+							+ strActual);
 					return strActual;
 				} else {
-					System.out.println("verifyMatch strActual = {" + strActual + "} strExpected = {" + strExpected + "}");
-					throw new ValueNotMatchedException("verifyMatch did not match strActual = {" + strActual + "} strExpected = {" + strExpected + "}");
+					System.out.println("verifyMatch strActual = {" + strActual
+							+ "} strExpected = {" + strExpected + "}");
+					throw new ValueNotMatchedException(
+							"verifyMatch did not match strActual = {"
+									+ strActual + "} strExpected = {"
+									+ strExpected + "}");
 				}
 			}
 		} finally {
-			System.out.println("verifyMatch finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeVerifyMatch));
+			System.out.println("verifyMatch finally intMillisecondsWaited = "
+					+ (System.currentTimeMillis() - lngStartTimeVerifyMatch));
 		}
-	} // the End of VerifyMatch
+	}// the end of VerifyMatch
 
-	public static String RegularExpressionMatch(String strPattern, String strActualValue) {
-		return null;
+	public static String RegularExpressionMatch(String strPattern,
+			String strActualValue) {
+		Pattern pattern = Pattern.compile(strPattern);
+		Matcher matcher = pattern.matcher(strActualValue);
+		matcher.matches();
+		String whatYouNeed = matcher.group(0);
+		return whatYouNeed;
 		// On Error Resume Next
 		// '**********************************************************************
 		// 'Variable Declaration
@@ -2687,17 +3439,20 @@ public class Evinrude {
 		// MsgBox
 		// RegularExpressionMatch("re:specialRequestPage:specialRequestContinueButton_ID|specialRequestPage:submitButton_ID",
 		// "specialRequestPage:submitButton_ID")
-	}
+	} // the end of RegularExpressionMatch
 
-	public static String elementGet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementTagNameNotSupportedException {
+	public static String elementGet(JSONObject objStep, WebDriver objWebDriver,
+			WebElement objWebElement)
+			throws ElementTagNameNotSupportedException {
 		long lngStartTimeElementGet = System.currentTimeMillis();
 		try {
 			switch (objStep.get("strTagType").toString().toLowerCase()) {
+			case "img":
+				return objWebElement.getAttribute("src");
 			case "input_button":
 			case "input_submit":
 			case "input_reset":
 			case "input_image":
-			case "img":
 			case "button":
 				return objWebElement.getAttribute("value").trim();
 			case "a":
@@ -2706,6 +3461,8 @@ public class Evinrude {
 			case "td":
 			case "div":
 			case "span":
+			case "h1":
+			case "p":
 				// return objWebElement.getAttribute("innerText");
 				return objWebElement.getText();
 			case "input_text":
@@ -2722,23 +3479,37 @@ public class Evinrude {
 					return "<on>";
 				}
 			case "select":
-				long lngStartTimeElementOptionCount = System.currentTimeMillis();
+				long lngStartTimeElementOptionCount = System
+						.currentTimeMillis();
 				JavascriptExecutor executor = (JavascriptExecutor) objWebDriver;
-				// long lngOptionCount = (long) executor.executeScript("var x = arguments[0];return x.length;", objWebElement);
-				// String lngOptionCount = (String) executor.executeScript("var x = arguments[0];var i;for (i = 0; i < x.length; i++)" + "{txt = txt + x.options[i].text;}" + "return txt;", objWebElement);
-
+				// long lngOptionCount = (long)
+				// executor.executeScript("var x = arguments[0];return x.length;",
+				// objWebElement);
+				// String lngOptionCount = (String)
+				// executor.executeScript("var x = arguments[0];var i;for (i = 0; i < x.length; i++)"
+				// + "{txt = txt + x.options[i].text;}" + "return txt;",
+				// objWebElement);
 				// //this works use it
-				// String lngOptionCount = (String) executor.executeScript("var txt;var x = arguments[0];var i;for (i = 01; i < x.length; i++)" + "{txt = txt + '|' + x.options[i].text;}" + "return txt;", objWebElement);
-				// System.out.println("lngOptionCount = " + lngOptionCount + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementOptionCount));
-
-				String strOptionSelected = (String) executor.executeScript("var elt = arguments[0];var selection=elt.options[elt.selectedIndex].innerHTML;return selection;", objWebElement);
-				System.out.println("strOptionSelected = " + strOptionSelected + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementOptionCount));
+				// String lngOptionCount = (String)
+				// executor.executeScript("var txt;var x = arguments[0];var i;for (i = 01; i < x.length; i++)"
+				// + "{txt = txt + '|' + x.options[i].text;}" + "return txt;",
+				// objWebElement);
+				// System.out.println("lngOptionCount = " + lngOptionCount +
+				// " intMillisecondsWaited = " + (System.currentTimeMillis() -
+				// lngStartTimeElementOptionCount));
+				String strOptionSelected = (String) executor
+						.executeScript(
+								"var select = arguments[0];var selection=select.options[select.selectedIndex].innerHTML;return selection;",
+								objWebElement);
+				System.out
+						.println("strOptionSelected = "
+								+ strOptionSelected
+								+ " intMillisecondsWaited = "
+								+ (System.currentTimeMillis() - lngStartTimeElementOptionCount));
 				return strOptionSelected.trim();
-
 				// var elt = arguments[0];
 				// var selection=elt.options[elt.selectedIndex].innerHTML;
 				// return selection;
-
 				// function getSelectedText(elementId) {
 				// var elt = document.getElementById(elementId);
 				// if (elt.selectedIndex == -1)
@@ -2746,48 +3517,53 @@ public class Evinrude {
 				// return elt.options[elt.selectedIndex].text;
 				// }
 				// var text = getSelectedText('test');
-
 				// Select objSelect = new Select((WebElement) objWebElement);
 				// WebElement option = objSelect.getFirstSelectedOption();
 				// return option.getText();
-
 				// from selenium import webdriver
 				// b = webdriver.Firefox()
 				// #...some commands here
 				// b.find_element_by_xpath("//select/option[@value='The Options I am Looking for']").click()
 				// b.find_element_by_xpath("//select[@name='element_name']/option[text()='option_text']").click()
-
 			case "table":
 				return objWebElement.getText();
 			case "alert":
 				Alert alert = objWebDriver.switchTo().alert();
 				System.out.println(alert.getText()); // Print Alert popup
-				System.out.println(objStep.get("strAtributeValues").toString().toLowerCase());
+				System.out.println(objStep.get("strAtributeValues").toString()
+						.toLowerCase());
 				return alert.getText();
-
 			default:
 				System.out.println("elementGet tag not supported");
-				throw new ElementTagNameNotSupportedException("Element tag not supported");
+				throw new ElementTagNameNotSupportedException(
+						"Element tag not supported");
 			}
 		} finally {
-			System.out.println("elementEnabled finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementGet));
+			System.out.println("ElementGet finally intMillisecondsWaited = "
+					+ (System.currentTimeMillis() - lngStartTimeElementGet));
 		}
-	} // the End of ElementGet
+	} // the end of ElementGet
 
-	public static void webElementCollectionAttributes(String strTagName, WebDriver objWebDriver) {
+	public static void webElementCollectionAttributes(String strTagName,
+			WebDriver objWebDriver) {
 		int intCount = 0;
 		if (strTagName.toLowerCase().startsWith("input_")) {
 			strTagName = "input";
 		}
-		List<WebElement> objWebElementCollection = objWebDriver.findElements(By.tagName(strTagName));
-		Iterator<WebElement> objWebElementEach = ((Collection<WebElement>) objWebElementCollection).iterator();
+		List<WebElement> objWebElementCollection = objWebDriver.findElements(By
+				.tagName(strTagName));
+		Iterator<WebElement> objWebElementEach = ((Collection<WebElement>) objWebElementCollection)
+				.iterator();
 		while (objWebElementEach.hasNext()) {
 			WebElement row = objWebElementEach.next();
 			intCount = intCount + 1;
-			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementCollectionAttributes " + intCount);
+			System.out
+					.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementCollectionAttributes "
+							+ intCount);
 			// System.out.println("text:=  " + objWebElementEach.);
 			System.out.println("text:=  " + row.getTagName());
-			System.out.println("tag_type:=  " + row.getTagName() + "_" + row.getAttribute("type"));
+			System.out.println("tag_type:=  " + row.getTagName() + "_"
+					+ row.getAttribute("type"));
 			System.out.println("TagName:=  " + row.getAttribute("TagName"));
 			System.out.println("type:=  " + row.getAttribute("type"));
 			System.out.println("id:=  " + row.getAttribute("id"));
@@ -2811,41 +3587,58 @@ public class Evinrude {
 			System.out.println("getLocation().y:=  " + row.getSize().width);
 			System.out.println("src:=  " + row.getAttribute("src"));
 		}
-	} // the End of webElementCollectionAttributes
+	} // the end of webElementCollectionAttributes
 
-	public static void webElementCollectionTable(String strTagName, WebDriver objWebDriver) {
+	// TODO webElementCollectionTable send output to html file
+	public static void webElementCollectionTable(String strTagName,
+			WebDriver objWebDriver) {
 		int intCount = 0;
 		JSONObject objStepNew = null;
 		if (strTagName.toLowerCase().startsWith("input_")) {
 			strTagName = "input";
 		}
-		System.out.println("webElementCollectionTable lngStartTimeSwitchTo = " + objWebDriver.getTitle());
+		System.out.println("webElementCollectionTable lngStartTimeSwitchTo = "
+				+ objWebDriver.getTitle());
 		objWebDriver.switchTo().defaultContent();
 		for (String winHandle : objWebDriver.getWindowHandles()) {
 			intCount = 0;
-			// System.out.println("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
-			System.out.println("webElementCollectionTable winHandle = " + winHandle);
+			// System.out.println("elementFind strCurrentWindowHandle = " +
+			// strCurrentWindowHandle);
+			System.out.println("webElementCollectionTable winHandle = "
+					+ winHandle);
 			long lngStartTimeSwitchTo = System.currentTimeMillis();
 			// if (strCurrentWindowHandle.equals(winHandle)) {
 			// } else {
 			objWebDriver.switchTo().window(winHandle);
-			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			System.out.println("webElementCollectionTable lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
+			System.out
+					.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			System.out
+					.println("webElementCollectionTable lngStartTimeSwitchTo = "
+							+ (System.currentTimeMillis() - lngStartTimeSwitchTo));
 			// }
-			System.out.println("webElementCollectionTable lngStartTimeSwitchTo = " + objWebDriver.getTitle());
-			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			List<WebElement> objWebElementCollection = objWebDriver.findElements(By.tagName(strTagName));
-			Iterator<WebElement> objWebElementEach = ((Collection<WebElement>) objWebElementCollection).iterator();
+			System.out
+					.println("webElementCollectionTable lngStartTimeSwitchTo = "
+							+ objWebDriver.getTitle());
+			System.out
+					.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			List<WebElement> objWebElementCollection = objWebDriver
+					.findElements(By.tagName(strTagName));
+			Iterator<WebElement> objWebElementEach = ((Collection<WebElement>) objWebElementCollection)
+					.iterator();
 			while (objWebElementEach.hasNext()) {
 				WebElement row = objWebElementEach.next();
 				// try {
 				// elementVisible(objStepNew, row);
 				intCount = intCount + 1;
-				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementCollectionTable " + intCount);
+				System.out
+						.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementCollectionTable "
+								+ intCount);
 				// System.out.println("text:=  " + objWebElementEach.);
 				System.out.println("getTagName:= '" + row.getTagName() + "'");
-				System.out.println("tag_type:= '" + row.getTagName() + "_" + row.getAttribute("type") + "'");
-				System.out.println("TagName:= '" + row.getAttribute("TagName") + "'");
+				System.out.println("tag_type:= '" + row.getTagName() + "_"
+						+ row.getAttribute("type") + "'");
+				System.out.println("TagName:= '" + row.getAttribute("TagName")
+						+ "'");
 				System.out.println("type:= '" + row.getAttribute("type") + "'");
 				System.out.println("Type:= '" + row.getAttribute("Type") + "'");
 				System.out.println("TYPE:= '" + row.getAttribute("TYPE") + "'");
@@ -2853,20 +3646,31 @@ public class Evinrude {
 				System.out.println("name:= '" + row.getAttribute("name") + "'");
 				System.out.println("text:= '" + row.getAttribute("text") + "'");
 				System.out.println("getText:= '" + row.getText() + "'");
-				System.out.println("innerText:= '" + row.getAttribute("innerText") + "'");
-				System.out.println("outerText:= '" + row.getAttribute("outerText") + "'");
-				System.out.println("innerHTML:= '" + row.getAttribute("innerHTML") + "'");
-				System.out.println("outerHTML:= '" + row.getAttribute("outerHTML") + "'");
-				System.out.println("uniqueID:= '" + row.getAttribute("uniqueID") + "'");
-				System.out.println("class:= '" + row.getAttribute("class") + "'");
+				System.out.println("innerText:= '"
+						+ row.getAttribute("innerText") + "'");
+				System.out.println("outerText:= '"
+						+ row.getAttribute("outerText") + "'");
+				System.out.println("innerHTML:= '"
+						+ row.getAttribute("innerHTML") + "'");
+				System.out.println("outerHTML:= '"
+						+ row.getAttribute("outerHTML") + "'");
+				System.out.println("uniqueID:= '"
+						+ row.getAttribute("uniqueID") + "'");
+				System.out.println("class:= '" + row.getAttribute("class")
+						+ "'");
 				System.out.println("href:= '" + row.getAttribute("href") + "'");
-				System.out.println("NameProp:= '" + row.getAttribute("NameProp") + "'");
+				System.out.println("NameProp:= '"
+						+ row.getAttribute("NameProp") + "'");
 				System.out.println("isDisplayed:= '" + row.isDisplayed() + "'");
 				System.out.println("isEnabled:= '" + row.isEnabled() + "'");
-				System.out.println("getLocation().x:= '" + row.getLocation().x + "'");
-				System.out.println("getLocation().y:= '" + row.getLocation().y + "'");
-				System.out.println("getSize().height:= '" + row.getSize().height + "'");
-				System.out.println("getSize().width:= '" + row.getSize().width + "'");
+				System.out.println("getLocation().x:= '" + row.getLocation().x
+						+ "'");
+				System.out.println("getLocation().y:= '" + row.getLocation().y
+						+ "'");
+				System.out.println("getSize().height:= '"
+						+ row.getSize().height + "'");
+				System.out.println("getSize().width:= '" + row.getSize().width
+						+ "'");
 				System.out.println("src:= '" + row.getAttribute("src") + "'");
 				// } catch (ElementNotVisibleException e) {
 				// // TODO Auto-generated catch block
@@ -2874,36 +3678,49 @@ public class Evinrude {
 				// }
 			}
 		}
-	} // the End of webElementCollectionAttributes
+	} // the end of webElementCollectionAttributes
 
 	public static void webElementAttributes(WebElement objWebElement) {
-		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementAttributes ");
+		System.out
+				.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementAttributes ");
 		// System.out.println("text:=  " + objWebElementEach.);
 		System.out.println("text:=  " + objWebElement.getTagName());
-		System.out.println("tag_type:=  " + objWebElement.getTagName() + "_" + objWebElement.getAttribute("type"));
-		System.out.println("TagName:=  " + objWebElement.getAttribute("TagName"));
+		System.out.println("tag_type:=  " + objWebElement.getTagName() + "_"
+				+ objWebElement.getAttribute("type"));
+		System.out.println("TagName:=  "
+				+ objWebElement.getAttribute("TagName"));
 		System.out.println("type:=  " + objWebElement.getAttribute("type"));
 		System.out.println("id:=  " + objWebElement.getAttribute("id"));
 		System.out.println("name:=  " + objWebElement.getAttribute("name"));
 		System.out.println("text:=  " + objWebElement.getAttribute("text"));
-		System.out.println("innerText:=  " + objWebElement.getAttribute("innerText"));
-		System.out.println("outerText:=  " + objWebElement.getAttribute("outerText"));
-		System.out.println("innerHTML:=  " + objWebElement.getAttribute("innerHTML"));
-		System.out.println("outerHTML:=  " + objWebElement.getAttribute("outerHTML"));
-		System.out.println("uniqueID:=  " + objWebElement.getAttribute("uniqueID"));
+		System.out.println("innerText:=  "
+				+ objWebElement.getAttribute("innerText"));
+		System.out.println("outerText:=  "
+				+ objWebElement.getAttribute("outerText"));
+		System.out.println("innerHTML:=  "
+				+ objWebElement.getAttribute("innerHTML"));
+		System.out.println("outerHTML:=  "
+				+ objWebElement.getAttribute("outerHTML"));
+		System.out.println("uniqueID:=  "
+				+ objWebElement.getAttribute("uniqueID"));
 		System.out.println("class:=  " + objWebElement.getAttribute("class"));
 		System.out.println("type:=  " + objWebElement.getAttribute("type"));
 		System.out.println("TYPE:=  " + objWebElement.getAttribute("TYPE"));
 		System.out.println("href:=  " + objWebElement.getAttribute("href"));
-		System.out.println("NameProp:=  " + objWebElement.getAttribute("NameProp"));
+		System.out.println("NameProp:=  "
+				+ objWebElement.getAttribute("NameProp"));
 		System.out.println("isDisplayed:=  " + objWebElement.isDisplayed());
 		System.out.println("name:=  " + objWebElement.isEnabled());
-		System.out.println("getLocation().x:=  " + objWebElement.getLocation().x);
-		System.out.println("getLocation().y:=  " + objWebElement.getLocation().y);
-		System.out.println("getSize().height:=  " + objWebElement.getSize().height);
-		System.out.println("getLocation().y:=  " + objWebElement.getSize().width);
+		System.out.println("getLocation().x:=  "
+				+ objWebElement.getLocation().x);
+		System.out.println("getLocation().y:=  "
+				+ objWebElement.getLocation().y);
+		System.out.println("getSize().height:=  "
+				+ objWebElement.getSize().height);
+		System.out.println("getLocation().y:=  "
+				+ objWebElement.getSize().width);
 		System.out.println("src:=  " + objWebElement.getAttribute("src"));
-	} // the End of webElementAttributes
+	} // the end of webElementAttributes
 
 	public class syncTime {
 		public long startTime;
@@ -2920,19 +3737,28 @@ public class Evinrude {
 		public void stop() {
 			endTime = System.currentTimeMillis();
 		}
-	}
+	}// the end of syncTime
 
-	@SuppressWarnings("serial")
-	public static void coordinateHighlightScreenshot(final JSONObject objStepHighlightArea, final String strHighlightArea, String strScreenshotArea, final WebDriver objWebDriver, final WebElement objWebElement, JSONObject objStep) {
+	@SuppressWarnings({ "serial", "unchecked" })
+	public static void coordinateHighlightScreenshot(
+			final JSONObject objStepHighlightArea,
+			final String strHighlightArea, String strScreenshotArea,
+			final WebDriver objWebDriver, final WebElement objWebElement,
+			JSONObject objStep) {
 		JFrame objJFrame = new JFrame() {
 			{
 				Rectangle objHighlightArea = new Rectangle(0, 0, 0, 0);
-				if (Boolean.parseBoolean(objStepHighlightArea.get("blnHighlight").toString()) == true) {
+				if (Boolean.parseBoolean(objStepHighlightArea.get(
+						"blnHighlight").toString()) == true) {
 					int intThickness = 5;
 					Color objColor2 = null;
-					switch (objStepHighlightArea.get("strStatus").toString().toLowerCase()) {
+					switch (objStepHighlightArea.get("strStatus").toString()
+							.toLowerCase()) {
 					case "pass":
-						if (objStepHighlightArea.get("strAction").toString().toLowerCase().equals("set") && objStepHighlightArea.get("strAssert").toString().toLowerCase().equals("off")) {
+						if (objStepHighlightArea.get("strAction").toString()
+								.toLowerCase().equals("set")
+								&& objStepHighlightArea.get("strAssert")
+										.toString().toLowerCase().equals("off")) {
 							objColor2 = Color.BLUE;
 						} else {
 							objColor2 = Color.GREEN;
@@ -2948,13 +3774,20 @@ public class Evinrude {
 						objColor2 = Color.MAGENTA;
 						break;
 					}
-					System.out.println("coordinateHighlightScreenshot intThickness = " + intThickness);
+					System.out
+							.println("coordinateHighlightScreenshot intThickness = "
+									+ intThickness);
 					setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-					getRectangleAreaByName(objStepHighlightArea, intThickness, strHighlightArea, objHighlightArea, objWebDriver, objWebElement);
-					setBounds(objHighlightArea.x, objHighlightArea.y, objHighlightArea.width, objHighlightArea.height);
+					getRectangleAreaByName(objStepHighlightArea, intThickness,
+							strHighlightArea, objHighlightArea, objWebDriver,
+							objWebElement);
+					setBounds(objHighlightArea.x, objHighlightArea.y,
+							objHighlightArea.width, objHighlightArea.height);
 					setUndecorated(true);
 					setBackground(new Color(0, 0, 0, 0));
-					getRootPane().setBorder(BorderFactory.createLineBorder(objColor2, intThickness, false));
+					getRootPane().setBorder(
+							BorderFactory.createLineBorder(objColor2,
+									intThickness, false));
 					setVisible(true);
 				}// the end of if (blnHighlight == true)
 			}
@@ -2962,35 +3795,53 @@ public class Evinrude {
 		int intSleepMilliseconds = 0;
 		if (Boolean.parseBoolean(objStep.get("blnScreenshot").toString()) == true) {
 			Rectangle objHighlightArea = new Rectangle(0, 0, 0, 0);
+			String strScreenshotFilePath = "";
 			try {
 				long lngStartTimeScreenshotTrue = System.currentTimeMillis();
 				Robot robot = new Robot();
-				getRectangleAreaByName(objStep, 0, strScreenshotArea, objHighlightArea, objWebDriver, objWebElement);
-				BufferedImage screenShot = robot.createScreenCapture(objHighlightArea);
-				System.out.println("coordinateHighlightScreenshot robot.createScreenCapture intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeScreenshotTrue));
-
-				String strScreenshotFilePath = "";
-				switch(OSType()){
+				getRectangleAreaByName(objStep, 0, strScreenshotArea,
+						objHighlightArea, objWebDriver, objWebElement);
+				BufferedImage screenShot = robot
+						.createScreenCapture(objHighlightArea);
+				System.out
+						.println("coordinateHighlightScreenshot robot.createScreenCapture intMillisecondsWaited = "
+								+ (System.currentTimeMillis() - lngStartTimeScreenshotTrue));
+				// String strScreenshotFilePath =
+				// "c:\\temp\\screenshots\\screenShot" + dateTimestamp() +
+				// ".jpg";
+				// String strScreenshotFilePath =
+				// objStep.get("strScreenshotFilePath").toString() +
+				// "\\screenShot" + dateTimestamp() + ".jpg";
+				switch (OSType()) {
 				case "Windows":
-					strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "\\screenShot" + dateTimestamp() + ".jpg";
-					// strScreenshotFilePath = "c:\\temp\\screenshots\\screenShot" + dateTimestamp() + ".jpg";
+					strScreenshotFilePath = objStep
+							.get("strScreenshotFilePath").toString()
+							+ "\\screenShot" + dateTimestamp() + ".jpg";
+					// strScreenshotFilePath =
+					// "c:\\temp\\screenshots\\screenShot" + dateTimestamp() +
+					// ".jpg";
 					break;
 				case "Mac":
-					strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "/screenShot" + dateTimestamp() + ".jpg";
+					strScreenshotFilePath = objStep
+							.get("strScreenshotFilePath").toString()
+							+ "/screenShot" + dateTimestamp() + ".jpg";
 					break;
 				default:
-					//need to raise an error and log
+					// TODO need to raise an error and log
 					break;
-				}
-
+				}// the end of switch(OSType())
 				objStep.put("strScreenshotFilePath", strScreenshotFilePath);
 				// long lngStartTimeThread = System.currentTimeMillis();
-				Thread objThread = new Thread(new threadSaveImage(screenShot, "jpg", strScreenshotFilePath));
+				Thread objThread = new Thread(new threadSaveImage(screenShot,
+						"jpg", strScreenshotFilePath));
 				objThread.start();
-				// System.out.println("coordinateHighlightScreenshot threadSaveImage intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeThread));
-				// System.out.println("coordinateHighlightScreenshot blnScreenshot end total intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeScreenshotTrue));
+				// System.out.println("coordinateHighlightScreenshot threadSaveImage intMillisecondsWaited = "
+				// + (System.currentTimeMillis() - lngStartTimeThread));
+				// System.out.println("coordinateHighlightScreenshot blnScreenshot end total intMillisecondsWaited = "
+				// + (System.currentTimeMillis() - lngStartTimeScreenshotTrue));
 			} catch (AWTException e) {
-				System.out.println("coordinateHighlightScreenshot AWTException");
+				System.out
+						.println("coordinateHighlightScreenshot AWTException");
 			} catch (Exception e) {
 				System.out.println("coordinateHighlightScreenshot Exception");
 			}
@@ -2999,14 +3850,18 @@ public class Evinrude {
 			try {
 				Thread.sleep(intSleepMilliseconds);
 			} catch (InterruptedException e) {
-				System.out.println("coordinateHighlightScreenshot InterruptedException");
+				System.out
+						.println("coordinateHighlightScreenshot InterruptedException");
 			}
 			objJFrame.setVisible(false);
 			objJFrame.dispose();
 		}
 	}// the end of coordinateHighlightScreenshot
 
-	public static void getRectangleAreaByName(JSONObject objStep, Integer intThickness, String strAreaObjectName, Rectangle objRectangleArea, WebDriver objWebDriver, WebElement objWebElement) {
+	public static void getRectangleAreaByName(JSONObject objStep,
+			Integer intThickness, String strAreaObjectName,
+			Rectangle objRectangleArea, WebDriver objWebDriver,
+			WebElement objWebElement) {
 		long lngStartTimeGetRectangleAreaByName = System.currentTimeMillis();
 		try {
 			switch (strAreaObjectName.toLowerCase()) {
@@ -3026,21 +3881,29 @@ public class Evinrude {
 				System.out.println(intX + intY + intWidth + intHeight);
 				break;
 			case "page":
-				WebElement objWebElementPage = objWebDriver.findElement(By.xpath("//body"));
+				WebElement objWebElementPage = objWebDriver.findElement(By
+						.xpath("//body"));
 				intX = objWebElementPage.getLocation().getX() - intThickness;
 				intY = objWebElementPage.getLocation().getY() - intThickness;
-				intWidth = objWebElementPage.getSize().width + (2 * intThickness);
-				intHeight = objWebElementPage.getSize().height + (2 * intThickness);
+				intWidth = objWebElementPage.getSize().width
+						+ (2 * intThickness);
+				intHeight = objWebElementPage.getSize().height
+						+ (2 * intThickness);
 				objRectangleArea.setBounds(intX, intY, intWidth, intHeight);
 				break;
 			case "element":
-				elementAbsoluteCoordinates(objStep, intThickness, objWebDriver, objWebElement, objRectangleArea);
+				elementAbsoluteCoordinates(objStep, intThickness, objWebDriver,
+						objWebElement, objRectangleArea);
 				break;
 			default:
 				break;
 			}
 		} finally {
-			System.out.println("getRectangleAreaByName finally " + strAreaObjectName.toLowerCase() + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeGetRectangleAreaByName));
+			System.out
+					.println("getRectangleAreaByName finally "
+							+ strAreaObjectName.toLowerCase()
+							+ " intMillisecondsWaited = "
+							+ (System.currentTimeMillis() - lngStartTimeGetRectangleAreaByName));
 		}
 	}// the end of getRectangleAreaByName
 
@@ -3049,7 +3912,8 @@ public class Evinrude {
 		private String strImageType;
 		private String strPathFileName;
 
-		public threadSaveImage(BufferedImage objScreenShot, String strImageType, String strPathFileName) {
+		public threadSaveImage(BufferedImage objScreenShot,
+				String strImageType, String strPathFileName) {
 			this.objScreenShot = objScreenShot;
 			this.strImageType = strImageType;
 			this.strPathFileName = strPathFileName;
@@ -3058,41 +3922,50 @@ public class Evinrude {
 		public void run() {
 			// long lngStartTime = System.currentTimeMillis();
 			try {
-				ImageIO.write(objScreenShot, strImageType.toUpperCase(), new File(strPathFileName));
+				ImageIO.write(objScreenShot, strImageType.toUpperCase(),
+						new File(strPathFileName));
 			} catch (IOException e) {
 				System.out.println("threadSaveImage IOException = ");
 			}
-			// System.out.println("threadSaveImage intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTime));
+			// System.out.println("threadSaveImage intMillisecondsWaited = " +
+			// (System.currentTimeMillis() - lngStartTime));
 			// return null;
 		}
-	}
+	}// the end of threadSaveImage
 
 	@SuppressWarnings("serial")
-	public static void elementHighlightMultiple(final int intX, final int intY, final int intWidth, final int intHeight, final Color colorColor, final int intThickness, int intSleepMilliseconds) {
+	public static void elementHighlightMultiple(final int intX, final int intY,
+			final int intWidth, final int intHeight, final Color colorColor,
+			final int intThickness, int intSleepMilliseconds) {
 		JFrame objJFrame = new JFrame() {
 			{
 				setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				// setBounds(intX, intY, intWidth, intHeight);
 				setUndecorated(true);
 				setBackground(new Color(0, 0, 0, 0));
-
-				// getRootPane().setBorder(BorderFactory.createLineBorder(colorColor, intThickness, false));
+				// getRootPane().setBorder(BorderFactory.createLineBorder(colorColor,
+				// intThickness, false));
 				// getRootPane().setBorder(new CompoundBorder(
-				// BorderFactory.createLineBorder(colorColor, intThickness, false),
-				// BorderFactory.createLineBorder(colorColor, intThickness, false)));
-
-				getRootPane().setBorder(new CompoundBorder(BorderFactory.createMatteBorder(0, 0, 50, 75, Color.BLUE), BorderFactory.createMatteBorder(100, 100, 150, 175, Color.RED)));
-
+				// BorderFactory.createLineBorder(colorColor, intThickness,
+				// false),
+				// BorderFactory.createLineBorder(colorColor, intThickness,
+				// false)));
+				getRootPane().setBorder(
+						new CompoundBorder(BorderFactory.createMatteBorder(0,
+								0, 50, 75, Color.BLUE), BorderFactory
+								.createMatteBorder(100, 100, 150, 175,
+										Color.RED)));
 				setVisible(true);
-				// setBounds(intX + 100, intY + 100, intWidth + 100, intHeight + 100);
+				// setBounds(intX + 100, intY + 100, intWidth + 100, intHeight +
+				// 100);
 				// setUndecorated(true);
 				// setBackground(new Color(0, 0, 0, 0));
-				// getRootPane().setBorder(BorderFactory.createLineBorder(colorColor, intThickness, false));
+				// getRootPane().setBorder(BorderFactory.createLineBorder(colorColor,
+				// intThickness, false));
 				//
 				// setVisible(true);
 			}
 		};
-
 		try {
 			Thread.sleep(intSleepMilliseconds);
 		} catch (InterruptedException e) {
@@ -3104,7 +3977,10 @@ public class Evinrude {
 	}// elementHighlightMultiple
 
 	@SuppressWarnings("serial")
-	public static void elementHighlight(final int intX, final int intY, final int intWidth, final int intHeight, final Color colorColor, final int intThickness, int intSleepMilliseconds) throws InterruptedException {
+	public static void elementHighlight(final int intX, final int intY,
+			final int intWidth, final int intHeight, final Color colorColor,
+			final int intThickness, int intSleepMilliseconds)
+			throws InterruptedException {
 		JFrame objJFrame = new JFrame() {
 			{
 				setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -3117,12 +3993,13 @@ public class Evinrude {
 				setBounds(intX, intY, intWidth, intHeight);
 				setUndecorated(true);
 				setBackground(new Color(0, 0, 0, 0));
-				getRootPane().setBorder(BorderFactory.createLineBorder(colorColor, intThickness, false));
+				getRootPane().setBorder(
+						BorderFactory.createLineBorder(colorColor,
+								intThickness, false));
 				setVisible(true);
 			}
 		};
 		// INSERT CALL FOR SCREEN SHOT
-
 		// Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		// double areawidth = screenSize.getWidth();
 		// double areaheight = screenSize.getHeight();
@@ -3134,12 +4011,11 @@ public class Evinrude {
 		// int width = 1366;
 		// int height = 768;
 		// Rectangle area2 = new Rectangle(areax, areay, areawidth, areaheight);
-
 		// coordinateScreenshot();
 		Thread.sleep(intSleepMilliseconds);
 		objJFrame.setVisible(false);
 		objJFrame.dispose();
-	}// elementHighlight
+	}// the end of elementHighlight
 
 	// public static void coordinateScreenshot(String strAreaObjectName,
 	// WebDriver objWebDriver, WebElement objWebElement) {
@@ -3195,14 +4071,17 @@ public class Evinrude {
 	// }
 	// }// the end of coordinateScreenshot
 
-	// public static final void saveImage(BufferedImage objScreenShot, String strImageType, String strPathFileName) {
+	// public static final void saveImage(BufferedImage objScreenShot, String
+	// strImageType, String strPathFileName) {
 	// long lngStartTime = System.currentTimeMillis();
 	// try {
-	// ImageIO.write(objScreenShot, strImageType.toUpperCase(), new File(strPathFileName));
+	// ImageIO.write(objScreenShot, strImageType.toUpperCase(), new
+	// File(strPathFileName));
 	// } catch (IOException e) {
 	// System.out.println("saveImage IOException = ");
 	// }
-	// System.out.println("saveImage intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTime));
+	// System.out.println("saveImage intMillisecondsWaited = " +
+	// (System.currentTimeMillis() - lngStartTime));
 	// // return null;
 	// }
 
@@ -3213,29 +4092,35 @@ public class Evinrude {
 		return formattedDate;
 	}// the end of dateTimestamp
 
-	public static final String currentTimeMillisToDateTimestamp(Long lngStartTimeMillis) {
-		SimpleDateFormat objSimpleDateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss:SSS");
+	public static final String currentTimeMillisToDateTimestamp(
+			Long lngStartTimeMillis) {
+		SimpleDateFormat objSimpleDateFormat = new SimpleDateFormat(
+				"MMM dd, yyyy HH:mm:ss:SSS");
 		Date objFormattedDate = new Date(lngStartTimeMillis);
 		System.out.println(objSimpleDateFormat.format(objFormattedDate));
 		return objSimpleDateFormat.format(objFormattedDate);
-	}
+	}// the end of currentTimeMillisToDateTimestamp
 
 	public static String getMonth(int month) {
 		// return new DateFormatSymbols().setLocalPatternChars("es-MX");
 		return new DateFormatSymbols().getMonths()[month];
-	} // the End of getMonth
+	} // the end of getMonth
 
-	public static void jsExecute(WebDriver driver) {
-		// WebDriver driver = new AnyDriverYouWant();
-		if (driver instanceof JavascriptExecutor) {
-			((JavascriptExecutor) driver).executeScript("window.focus();");
+	public static void windowFocus(WebDriver objWebDriver) {
+		// TODO debug objWebDriver instanceof JavascriptExecutor, what does it
+		// do and is it needed and debug all browser types
+		if (objWebDriver instanceof JavascriptExecutor) {
+			((JavascriptExecutor) objWebDriver)
+					.executeScript("window.focus();");
 		}
-	}
+	}// the end of windowFocus
 
-	public static void javascriptExecutorScrollToBottom(WebDriver objWebDriver) {
+	public static void scrollToBottom(WebDriver objWebDriver) {
+		// TODO debug all browser types, should use instanceof from
+		// windowFocus???? should combine into 1 line?
 		JavascriptExecutor executor = (JavascriptExecutor) objWebDriver;
 		executor.executeScript("window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
-	}
+	}// the end of scrollToBottom
 
 	// var element = document.getElementById("some_id");
 	// var offsetTop = element.offsetTop;
@@ -3253,7 +4138,9 @@ public class Evinrude {
 	// On Error Resume Next
 	// ' strPath = ConstServerAttachmentPath
 	// ' strFile = "RUN_" & ConstRunID
-	// ' Set objRunList = QCUtil.QCConnection.RunFactory.NewList("SELECT * FROM RUN WHERE RN_RUN_ID = " & Chr(39) & ConstRunID & Chr(39))
+	// ' Set objRunList =
+	// QCUtil.QCConnection.RunFactory.NewList("SELECT * FROM RUN WHERE RN_RUN_ID = "
+	// & Chr(39) & ConstRunID & Chr(39))
 	// strText = "<ASX Version = " & Chr(34) & "3.0" & Chr(34) & ">" & vbCrLf
 	//
 	// If UBound(arrSlideShow) >= 0 Then
@@ -3262,8 +4149,10 @@ public class Evinrude {
 	// ' If objAttachmentList.Count >= 1 Then
 	// For intAttachmentListEach = 0 To UBound(arrSlideShow)
 	// strText = strText & "<ENTRY>" & vbCrLf
-	// strText = strText & "<Duration value = " & Chr(34) & "00:00:3.000" & Chr(34) & " />" & vbCrLf
-	// strText = strText & "  <REF HREF = " & Chr(34) & arrSlideShow(intAttachmentListEach) & Chr(34) & " />" & vbCrLf
+	// strText = strText & "<Duration value = " & Chr(34) & "00:00:3.000" &
+	// Chr(34) & " />" & vbCrLf
+	// strText = strText & "  <REF HREF = " & Chr(34) &
+	// arrSlideShow(intAttachmentListEach) & Chr(34) & " />" & vbCrLf
 	// strText = strText & "</ENTRY>" & vbCrLf
 	// Next
 	// End If
@@ -3277,13 +4166,16 @@ public class Evinrude {
 	// If Environment("TestExecutionSource") <> "QTP" Then
 	// ' strFile = "RUN_" & ConstRunID
 	// ' If Environment("TestExecutionSource") <> "QTP" Then
-	// strFullAttachPath = AttachmentSaveToRun(strFullPath, "Playlist of screen shots for this run")
+	// strFullAttachPath = AttachmentSaveToRun(strFullPath,
+	// "Playlist of screen shots for this run")
 	// CurrentTestInstanceFieldSet "Playlist", strFullAttachPath
 	// CurrentRunFieldSet "Playlist", strFullAttachPath
 	// ' End If
 	// End If
 	//
-	// ReporterModify micDone, "Slide Show Run " & ConstRunID, Joseph & " <a href=" & Chr(34) & strFullAttachPath & Chr(34) & " />" & strFullAttachPath & "</a><br /><br />" & EmbedVideo(strFullAttachPath)
+	// ReporterModify micDone, "Slide Show Run " & ConstRunID, Joseph &
+	// " <a href=" & Chr(34) & strFullAttachPath & Chr(34) & " />" &
+	// strFullAttachPath & "</a><br /><br />" & EmbedVideo(strFullAttachPath)
 	//
 	// ' Set objRunList = Nothing
 	// ' Set objAttachmentListItem = Nothing
@@ -3292,13 +4184,24 @@ public class Evinrude {
 	// End Function
 	//
 	// Function EmbedVideo(strFullPath)
-	// strText = strText & "<OBJECT id=" & Chr(34) & "VIDEO" & Chr(34) & " width=" & Chr(34) & ConstScreenWidth * 0.85 & Chr(34) & " height=" & Chr(34) & ConstScreenHeight * 0.85 & Chr(34) & " CLASSID=" & Chr(34) & "CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" & Chr(34) & " type=" & Chr(34) & "application/x-oleobject" & Chr(34) & ">"
-	// strText = strText & "<PARAM NAME=" & Chr(34) & "URL" & Chr(34) & " VALUE=" & Chr(34) & strFullPath & Chr(34) & ">"
-	// strText = strText & "<PARAM NAME=" & Chr(34) & "SendPlayStateChangeEvents" & Chr(34) & " VALUE=" & Chr(34) & "False" & Chr(34) & ">"
-	// strText = strText & "<PARAM NAME=" & Chr(34) & "AutoStart" & Chr(34) & " VALUE=" & Chr(34) & "True" & Chr(34) & ">"
-	// strText = strText & "<PARAM NAME=" & Chr(34) & "uiMode" & Chr(34) & " value=" & Chr(34) & "none" & Chr(34) & ">"
-	// strText = strText & "<PARAM NAME=" & Chr(34) & "PlayCount" & Chr(34) & " value=" & Chr(34) & "9999" & Chr(34) & ">"
-	// strText = strText & "<PARAM NAME=" & Chr(34) & "VideoBorderColor" & Chr(34) & " value=" & Chr(34) & "False" & Chr(34) & "></OBJECT>"
+	// strText = strText & "<OBJECT id=" & Chr(34) & "VIDEO" & Chr(34) &
+	// " width=" & Chr(34) & ConstScreenWidth * 0.85 & Chr(34) & " height=" &
+	// Chr(34) & ConstScreenHeight * 0.85 & Chr(34) & " CLASSID=" & Chr(34) &
+	// "CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" & Chr(34) & " type=" &
+	// Chr(34) & "application/x-oleobject" & Chr(34) & ">"
+	// strText = strText & "<PARAM NAME=" & Chr(34) & "URL" & Chr(34) &
+	// " VALUE=" & Chr(34) & strFullPath & Chr(34) & ">"
+	// strText = strText & "<PARAM NAME=" & Chr(34) &
+	// "SendPlayStateChangeEvents" & Chr(34) & " VALUE=" & Chr(34) & "False" &
+	// Chr(34) & ">"
+	// strText = strText & "<PARAM NAME=" & Chr(34) & "AutoStart" & Chr(34) &
+	// " VALUE=" & Chr(34) & "True" & Chr(34) & ">"
+	// strText = strText & "<PARAM NAME=" & Chr(34) & "uiMode" & Chr(34) &
+	// " value=" & Chr(34) & "none" & Chr(34) & ">"
+	// strText = strText & "<PARAM NAME=" & Chr(34) & "PlayCount" & Chr(34) &
+	// " value=" & Chr(34) & "9999" & Chr(34) & ">"
+	// strText = strText & "<PARAM NAME=" & Chr(34) & "VideoBorderColor" &
+	// Chr(34) & " value=" & Chr(34) & "False" & Chr(34) & "></OBJECT>"
 	// EmbedVideo = strText
 	// End Function
 
@@ -3318,20 +4221,26 @@ public class Evinrude {
 	// If strStepBuild <> "" Then
 	// strStepBuild = strStepBuild & " and "
 	// End If
-	// strStepBuild = strStepBuild & arrColumns(0, intColumnEach) & " value {" & arrColumns(1, intColumnEach) & "} "
+	// strStepBuild = strStepBuild & arrColumns(0, intColumnEach) & " value {" &
+	// arrColumns(1, intColumnEach) & "} "
 	// End If
 	// Next
-	// strStepName = strTableValue & " " & strStepBuild & " in " & strTableName & " table "
+	// strStepName = strTableValue & " " & strStepBuild & " in " & strTableName
+	// & " table "
 	// strText = strText & "</tr>"
 	// strText = strText & "<tr>"
 	// For intRowEach = intTableStartRow To intTableEndRow
-	// strActualValue = TerminalEmulatorGetText(strScreenText, intRowEach, arrColumns(5, 0), arrColumns(6, 0))
+	// strActualValue = TerminalEmulatorGetText(strScreenText, intRowEach,
+	// arrColumns(5, 0), arrColumns(6, 0))
 	// If strActualValue <> "" Then
 	// ReDim Preserve arrTable(intRSColCount + 1, intArrayRows)
 	// arrTable(0, intArrayRows) = intRowEach
 	// For intColumnsEach = 0 To intRSColCount
-	// arrTable(intColumnsEach + 1, intArrayRows) = TerminalEmulatorGetText(strScreenText, intRowEach, arrColumns(5, intColumnsEach), arrColumns(6, intColumnsEach))
-	// strText = strText & "<td>" & Replace(arrTable(intColumnsEach + 1, intArrayRows), " ", "&nbsp;") & "</td>"
+	// arrTable(intColumnsEach + 1, intArrayRows) =
+	// TerminalEmulatorGetText(strScreenText, intRowEach, arrColumns(5,
+	// intColumnsEach), arrColumns(6, intColumnsEach))
+	// strText = strText & "<td>" & Replace(arrTable(intColumnsEach + 1,
+	// intArrayRows), " ", "&nbsp;") & "</td>"
 	// Next
 	// strText = strText & "</tr>"
 	// intArrayRows = intArrayRows + 1
@@ -3343,9 +4252,10 @@ public class Evinrude {
 	// On Error GoTo 0
 	// End Function
 
-	public static void writeJsonToHtml(JSONArray objTestSteps, String file) throws IOException {
+	public static void writeJsonToHtml(JSONArray objTestSteps, String file)
+			throws IOException {
+		StringBuilder builder = new StringBuilder();
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file));) {
-			StringBuilder builder = new StringBuilder();
 			builder.append("<!DOCTYPE html>");
 			builder.append("<html lang=\"en\">");
 			builder.append("<head><title>Evinrude Test Steps</title></head>");
@@ -3374,27 +4284,48 @@ public class Evinrude {
 			builder.append("</tr>");
 			for (int intTestStepRow = 0; intTestStepRow < objTestSteps.size(); intTestStepRow++) {
 				// System.out.println(intTestStepRow);
-				JSONObject objStep = (JSONObject) objTestSteps.get(intTestStepRow);
+				JSONObject objStep = (JSONObject) objTestSteps
+						.get(intTestStepRow);
 				builder.append("</tr>");
 				builder.append("<td> " + (intTestStepRow + 1) + "</td>");
-				builder.append("<td> " + objStep.get("strAction").toString() + "</td>");
-				builder.append("<td> " + objStep.get("strTagName").toString() + "</td>");
-				builder.append("<td> " + objStep.get("strAttributeNames").toString() + "</td>");
-				builder.append("<td> " + objStep.get("strAtributeValues").toString() + "</td>");
-				builder.append("<td> " + objStep.get("strInputValue").toString() + "</td>");
-				builder.append("<td> " + objStep.get("strLogicalName").toString() + "</td>");
-				builder.append("<td> " + objStep.get("intMillisecondsToWait").toString() + "</td>");
-				builder.append("<td> " + objStep.get("blnOptional").toString() + "</td>");
-				builder.append("<td> " + objStep.get("strAssert").toString() + "</td>");
-				builder.append("<td> " + objStep.get("blnPleaseWait").toString() + "</td>");
-				builder.append("<td> " + objStep.get("blnHighlight").toString() + "</td>");
-				builder.append("<td> " + objStep.get("blnScreenshot").toString() + "</td>");
-				builder.append("<td> " + objStep.get("strFunction").toString() + "</td>");
-				builder.append("<td> " + objStep.get("strAssistiveProperties").toString() + "</td>");
-				builder.append("<td> " + objStep.get("blnExitOnFail").toString() + "</td>");
-				builder.append("<td> " + objStep.get("strOutputLinkName").toString() + "</td>");
-				builder.append("<td> " + objStep.get("strOutputValue").toString() + "</td>");
-				builder.append("<td> " + objStep.get("intLoop").toString() + "</td>");
+				builder.append("<td> " + objStep.get("strAction").toString()
+						+ "</td>");
+				builder.append("<td> " + objStep.get("strTagName").toString()
+						+ "</td>");
+				builder.append("<td> "
+						+ objStep.get("strAttributeNames").toString() + "</td>");
+				builder.append("<td> "
+						+ objStep.get("strAtributeValues").toString() + "</td>");
+				builder.append("<td> "
+						+ objStep.get("strInputValue").toString() + "</td>");
+				builder.append("<td> "
+						+ objStep.get("strLogicalName").toString() + "</td>");
+				builder.append("<td> "
+						+ objStep.get("intMillisecondsToWait").toString()
+						+ "</td>");
+				builder.append("<td> " + objStep.get("blnOptional").toString()
+						+ "</td>");
+				builder.append("<td> " + objStep.get("strAssert").toString()
+						+ "</td>");
+				builder.append("<td> "
+						+ objStep.get("blnPleaseWait").toString() + "</td>");
+				builder.append("<td> " + objStep.get("blnHighlight").toString()
+						+ "</td>");
+				builder.append("<td> "
+						+ objStep.get("blnScreenshot").toString() + "</td>");
+				builder.append("<td> " + objStep.get("strFunction").toString()
+						+ "</td>");
+				builder.append("<td> "
+						+ objStep.get("strAssistiveProperties").toString()
+						+ "</td>");
+				builder.append("<td> "
+						+ objStep.get("blnExitOnFail").toString() + "</td>");
+				builder.append("<td> "
+						+ objStep.get("strOutputLinkName").toString() + "</td>");
+				builder.append("<td> "
+						+ objStep.get("strOutputValue").toString() + "</td>");
+				builder.append("<td> " + objStep.get("intLoop").toString()
+						+ "</td>");
 				builder.append(" </tr>  ");
 			}
 			builder.append("</table>");
@@ -3404,10 +4335,14 @@ public class Evinrude {
 			// System.out.println(html);
 			System.out.println(file);
 			bw.write(html);
+		} catch (Exception e) {
+			System.out.println(builder.toString());
+			System.out.println(e.toString());
 		}
-	}// the End of writeJsonToHtml
+	}// the end of writeJsonToHtml
 
-	public static void writeReportToHtml(JSONArray objTestSteps, String file) throws IOException {
+	public static void writeReportToHtml(JSONArray objTestSteps, String file)
+			throws IOException {
 		String strScreenshotFilePath = "";
 		StringBuilder builder = new StringBuilder();
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file));) {
@@ -3416,29 +4351,37 @@ public class Evinrude {
 			builder.append("<head><title>Run Results</title></head>");
 			builder.append("<body>");
 			for (int intTestStepRow = 0; intTestStepRow < objTestSteps.size(); intTestStepRow++) {
-				JSONObject objStep = (JSONObject) objTestSteps.get(intTestStepRow);
+				JSONObject objStep = (JSONObject) objTestSteps
+						.get(intTestStepRow);
 				builder.append("<div id=step_" + intTestStepRow + ">");
 				builder.append("<TABLE border=1 width=100% height=10%>");
 				builder.append("<TR>");
 				builder.append("<TD align=center valign=middle>Expected</TD>");
-				builder.append("<TD align=left valign=middle>" + objStep.get("strAction").toString() + "</TD>");
+				builder.append("<TD align=left valign=middle>"
+						+ objStep.get("strAction").toString() + "</TD>");
 				builder.append("</TR>");
 				builder.append("<TR>");
 				builder.append("<TD align=center valign=middle>Actual</TD>");
-				builder.append("<TD align=left valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
-
+				builder.append("<TD align=left valign=middle>"
+						+ objStep.get("strStatus").toString() + "</TD>");
 				builder.append("</TR>");
 				builder.append("</TABLE> ");
-
-				if (objStep.get("strScreenshotFilePath").toString().trim().length() != 0) {
-					strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString().replaceAll("\\\\\\\\", "\\");
-					builder.append("<IMG alt=\"ReporterScreenShot_1\" src=\"" + strScreenshotFilePath + "\" width=1100 height=700> ");
+				if (objStep.get("strScreenshotFilePath").toString().trim()
+						.length() != 0) {
+					strScreenshotFilePath = objStep
+							.get("strScreenshotFilePath").toString()
+							.replaceAll("\\\\\\\\", "\\");
+					builder.append("<IMG alt=\"ReporterScreenShot_1\" src=\""
+							+ strScreenshotFilePath
+							+ "\" width=1100 height=700> ");
 				}
-				// System.out.println("writeReportToHtml strScreenshotFilePath = " + objStep.get("strScreenshotFilePath").toString());
+				// System.out.println("writeReportToHtml strScreenshotFilePath = "
+				// + objStep.get("strScreenshotFilePath").toString());
 				builder.append("</div>");
 				builder.append("<br>");
 				builder.append("<br>");
-				if (objStep.get("strAction").toString().toLowerCase().equals("break")) {
+				if (objStep.get("strAction").toString().toLowerCase()
+						.equals("break")) {
 					break;
 				}
 			}
@@ -3451,12 +4394,16 @@ public class Evinrude {
 			System.out.println("writeReportToHtml - " + e.toString());
 			System.out.println(builder.toString());
 		}
-	}// the End of writeReportToHtml
+	}// the end of writeReportToHtml
 
-	public static void writeJsonKeysToHtml(JSONObject objTestStep, String file) throws IOException {
-		for (Iterator iterator = objTestStep.keySet().iterator(); iterator.hasNext();) {
+	// TODO Learn how to iterate over jason keys
+	public static void writeJsonKeysToHtml(JSONObject objTestStep, String file)
+			throws IOException {
+		for (Iterator iterator = objTestStep.keySet().iterator(); iterator
+				.hasNext();) {
 			String key = (String) iterator.next();
 			System.out.println(key + " = " + objTestStep.get(key));
 		}
-	}
-} // the End of Evinrude
+	}// the end of writeJsonKeysToHtml
+
+} // the end of Evinrude
