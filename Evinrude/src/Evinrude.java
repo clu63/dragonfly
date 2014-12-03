@@ -361,11 +361,13 @@ public class Evinrude {
 					
 					switch(OSType()){
 					case "Windows":
-						strUpdatedJSONPath = strResultsPath + "screenshots\\UpdatedJson.json";
+						strUpdatedJSONPath = strResultsPath + "UpdatedJson.json";
+//						strUpdatedJSONPath = strResultsPath + "screenshots\\UpdatedJson.json";
 //						strUpdatedJSONPath = "C:\\Temp\\screenshots\\UpdatedJson.json";
 						break;
 					case "Mac":
-						strUpdatedJSONPath = strResultsPath + "screenshots/UpdatedJson.json";
+						strUpdatedJSONPath = strResultsPath + "UpdatedJson.json";
+//						strUpdatedJSONPath = strResultsPath + "screenshots/UpdatedJson.json";
 						break;
 					default:
 						//need to raise an error and log
