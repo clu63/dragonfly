@@ -202,10 +202,12 @@ public class Evinrude {
 		new File(strResultsPath).mkdirs();
 		System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
+			// String strTestPath = "Data/public_mercury_tours.json";
+			// String strTestPath = "Data/public_ranorex.json";
+			String strTestPath = "Data/public_w3c_fireevents.json";
 			// String strTestPath = "Data/KAW _AlertPopups.json";
 			// String strTestPath = "Data/MDX.json";
-			String strTestPath = "Data/Mercury_Tours.json";
-			//String strTestPath = "Data/LiloQuickBook.json";
+			// String strTestPath = "Data/LiloQuickBook.json";
 			// String strTestPath = "Data/DVC_Book.json";
 			// String strTestPath = "Data/RestartMachinesDVC.json";
 			// String strTestPath = "Data/RestartMachinesLilo.json";
@@ -216,6 +218,7 @@ public class Evinrude {
 			// String strTestPath = "Data/drms_book.json";
 			// String strTestPath = "Data/KAW_frames.json";
 			// String strTestPath = "Data/w3c_fireevents.json";
+			// "file:///D:/folder/abcd.html");
 			Object objParser = parser.parse(new FileReader(strTestPath));
 			objJsonFile = (JSONObject) objParser;
 			objTestSteps = (JSONArray) objJsonFile.get("test steps");
@@ -2196,7 +2199,7 @@ public class Evinrude {
 				// TODO add iFrame handling, return a collection of both frame
 				// and iframe
 				objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver)
-						.executeScript("return document.getElementsByTagName('frame');");
+						.executeScript("return document.getElementsByTagName('iframe');");
 				// objFrameCollection =
 				// objWebDriver.findElements(By.xpath("//frame"));
 				// objFrameCollection =
