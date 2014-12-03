@@ -163,17 +163,17 @@ public class Evinrude {
 		
 		switch(OSType()){
 		case "Windows":
-			strResultsPath = System.getProperty("user.dir") + "\\Results\\" + dateTimestamp();
+			strResultsPath = System.getProperty("user.dir") + "\\Results\\" + dateTimestamp() + "\\";
 //			strResultsPath = "c:\\temp\\Results\\" + dateTimestamp();
 			break;
 		case "Mac":
-			strResultsPath = System.getProperty("user.dir") + "/Results/" + dateTimestamp();
+			strResultsPath = System.getProperty("user.dir") + "/Results/" + dateTimestamp() + "/";
 			break;
 		default:
 			//need to raise an error and log
 			break;
 		}
-		
+
 		new File(strResultsPath).mkdirs();
 
 		System.out.println("ClipboardGet = " + ClipboardGet());
@@ -194,7 +194,7 @@ public class Evinrude {
 			JSONArray objLinkArray = (JSONArray) objJsonFile.get("link");
 			JSONObject objLinks = (JSONObject) objLinkArray.get(0);
 
-			writeJsonToHtml(objTestSteps, strResultsPath + "\\StepsOriginal.html");
+			writeJsonToHtml(objTestSteps, strResultsPath + "StepsOriginal.html");
 			for (intStep = 0; intStep < objTestSteps.size(); intStep++) {
 				objWebElement = null;
 				blnPass = false;
@@ -361,21 +361,20 @@ public class Evinrude {
 					
 					switch(OSType()){
 					case "Windows":
-						writeJsonToHtml(objTestSteps, strResultsPath + "\\StepsWithDefaults.html");
-						writeReportToHtml(objTestSteps, strResultsPath + "\\Report.html");
-						strUpdatedJSONPath = strResultsPath + "\\screenshots\\UpdatedJson.json";
+						strUpdatedJSONPath = strResultsPath + "screenshots\\UpdatedJson.json";
 //						strUpdatedJSONPath = "C:\\Temp\\screenshots\\UpdatedJson.json";
 						break;
 					case "Mac":
-						writeJsonToHtml(objTestSteps, strResultsPath + "/StepsWithDefaults.html");
-						writeReportToHtml(objTestSteps, strResultsPath + "/Report.html");
-						strUpdatedJSONPath = strResultsPath + "/screenshots/UpdatedJson.json";
+						strUpdatedJSONPath = strResultsPath + "screenshots/UpdatedJson.json";
 						break;
 					default:
 						//need to raise an error and log
 						break;
 					}
 					
+					writeJsonToHtml(objTestSteps, strResultsPath + "StepsWithDefaults.html");
+					writeReportToHtml(objTestSteps, strResultsPath + "Report.html");
+
 					File file = new File(strUpdatedJSONPath);
 
 					// writeJsonKeysToHtml(JSONObject objTestStep, file);
@@ -1091,7 +1090,7 @@ public class Evinrude {
 					System.setProperty("webdriver.chrome.driver", "C:\\Selenium\\ChromeDriver\\chromedriver_win32\\chromedriver.exe");
 					break;
 				case "Mac":
-					System.setProperty("webdriver.chrome.driver", "");
+					System.setProperty("webdriver.chrome.driver", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome");
 					break;
 				default:
 					//need to raise an error and log
@@ -2967,8 +2966,20 @@ public class Evinrude {
 				getRectangleAreaByName(objStep, 0, strScreenshotArea, objHighlightArea, objWebDriver, objWebElement);
 				BufferedImage screenShot = robot.createScreenCapture(objHighlightArea);
 				System.out.println("coordinateHighlightScreenshot robot.createScreenCapture intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeScreenshotTrue));
-				// String strScreenshotFilePath = "c:\\temp\\screenshots\\screenShot" + dateTimestamp() + ".jpg";
-				String strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "\\screenShot" + dateTimestamp() + ".jpg";
+
+				String strScreenshotFilePath = "";
+				switch(OSType()){
+				case "Windows":
+					strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "\\screenShot" + dateTimestamp() + ".jpg";
+					// strScreenshotFilePath = "c:\\temp\\screenshots\\screenShot" + dateTimestamp() + ".jpg";
+					break;
+				case "Mac":
+					strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "/screenShot" + dateTimestamp() + ".jpg";
+					break;
+				default:
+					//need to raise an error and log
+					break;
+				}
 
 				objStep.put("strScreenshotFilePath", strScreenshotFilePath);
 				// long lngStartTimeThread = System.currentTimeMillis();
