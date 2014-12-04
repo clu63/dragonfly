@@ -135,7 +135,7 @@ public class Evinrude {
 
 	public String data_EnvironmentURL(String strApplication_Environment) {
 		String strURL = "";
-		String testPath = "Data/Environment.json";
+		String testPath = "Data/internal/Environment.json";
 		JSONParser objJsonParser = new JSONParser();
 		Object objJsonParsedFile = null;
 		try {
@@ -178,17 +178,17 @@ public class Evinrude {
 		int intStep = 0;
 		int intMillisecondsToWaitDefault = 20000;
 		String strCurrentWindowHandle = "";
-		// String strResultsPath = "c:\\temp\\Results\\" + dateTimestamp();
 		String strResultsPath = "";
-		// strResultsPath = "Results/" + dateTimestamp();
+		String strImagesPath = "";
 		System.out.println("Working Directory = " + System.getProperty("user.dir"));
 		switch (OSType()) {
 		case "Windows":
 			strResultsPath = System.getProperty("user.dir") + "\\Results\\" + dateTimestamp() + "\\";
-			// strResultsPath = "c:\\temp\\Results\\" + dateTimestamp();
+			strImagesPath = "images\\";
 			break;
 		case "Mac":
 			strResultsPath = System.getProperty("user.dir") + "/Results/" + dateTimestamp() + "/";
+			strImagesPath = "images/";
 			break;
 		default:
 			// //TODO switch (OSType()) need to raise an error and log
@@ -197,30 +197,15 @@ public class Evinrude {
 		new File(strResultsPath).mkdirs();
 		System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
-			// String strTestPath = "Data/public_mercury_tours.json";
-			// String strTestPath = "Data/public_ranorex.json";
-			String strTestPath = "Data/public_w3c_fireevents.json";
-			// String strTestPath = "Data/KAW _AlertPopups.json";
-			// String strTestPath = "Data/MDX.json";
-			// String strTestPath = "Data/LiloQuickBook.json";
-			// String strTestPath = "Data/DVC_Book.json";
-			// String strTestPath = "Data/RestartMachinesDVC.json";
-			// String strTestPath = "Data/RestartMachinesLilo.json";
-			// String strTestPath = "Data/KAW.json";
-			// String strTestPath = "Data/DME_Demo.json";
-			// String strTestPath = "Data/Common_Door_Demo.json";
-			// String strTestPath = "Data/AngularJS_Demo.json";
-			// String strTestPath = "Data/drms_book.json";
-			// String strTestPath = "Data/KAW_frames.json";
-			// String strTestPath = "Data/w3c_fireevents.json";
-			// "file:///D:/folder/abcd.html");
+			String strTestPath = "Data/public/public_mercury_tours.json";
+			// String strTestPath = "Data/public/public_ranorex.json";
+			// String strTestPath = "Data/public/public_w3c_fireevents.json";
+			// String strTestPath = "Data/public/KAW _AlertPopups.json";
 			Object objParser = parser.parse(new FileReader(strTestPath));
 			objJsonFile = (JSONObject) objParser;
 			objTestSteps = (JSONArray) objJsonFile.get("test steps");
 			JSONArray objLinkArray = (JSONArray) objJsonFile.get("link");
 			JSONObject objLinks = (JSONObject) objLinkArray.get(0);
-			// writeJsonToHtml(objTestSteps, strResultsPath +
-			// "\\StepsOriginal.html");
 			writeJsonToHtml(objTestSteps, strResultsPath + "StepsOriginal.html");
 			for (intStep = 0; intStep < objTestSteps.size(); intStep++) {
 				objWebElement = null;
@@ -248,12 +233,9 @@ public class Evinrude {
 				}
 				objStep.put("strCurrentWindowHandle", strCurrentWindowHandle);
 				objStep.put("strType", "");
-				objStep.put("strScreenshotFilePath", strResultsPath);
+				objStep.put("strScreenshotFilePath", strResultsPath + strImagesPath);
 				objStep.put("strStatus", "info");
 				// TODO consider moving the step println to a method and call
-				// passing in objStep
-				System.out.println("main strCurrentWindowHandle = " + strCurrentWindowHandle);
-				// print step details
 				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
 				System.out.println("main strAction = " + objStep.get("strAction").toString());
 				System.out.println("main strTagName = " + objStep.get("strTagName").toString());
@@ -294,7 +276,6 @@ public class Evinrude {
 						System.err.println(e);
 					}
 				}// the end of
-					// (!objStep.get("strFunction").toString().equals(""))
 				if (!strInputValue.equals("<skip>")) {
 					switch (objStep.get("strAction").toString().toLowerCase()) {
 					case "launch":
@@ -303,7 +284,6 @@ public class Evinrude {
 						long lngStartTimedocumenttitle = System.currentTimeMillis();
 						JavascriptExecutor js = (JavascriptExecutor) objWebDriver;
 						String strTitle = (String) js.executeScript("return document.title");
-						// System.out.println(js.executeScript("return document.title"));
 						System.out.println("main JavascriptExecutor strTitle  = " + strTitle + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
 						long lngStartTimetitle = System.currentTimeMillis();
 						System.out.println("main objWebDriver.getTitle = " + objWebDriver.getTitle() + " " + (System.currentTimeMillis() - lngStartTimetitle));
@@ -315,6 +295,7 @@ public class Evinrude {
 						objWebDriver.close();
 						objWebDriver.quit();
 						blnPass = true;
+						coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, null, objStep);
 						break;
 					case "get":
 						blnPass = elementGetSync(objStep, objWebDriver, objWebElement);
@@ -366,7 +347,6 @@ public class Evinrude {
 				}
 			}// for intStep
 				// TODO confirm the exceptions to catch in main some may need to
-				// move to individual sync method
 		} catch (FileNotFoundException e) {
 			System.out.println("main FileNotFoundException");
 		} catch (IOException e) {
@@ -391,15 +371,9 @@ public class Evinrude {
 					switch (OSType()) {
 					case "Windows":
 						strUpdatedJSONPath = strResultsPath + "UpdatedJson.json";
-						// strUpdatedJSONPath = strResultsPath +
-						// "screenshots\\UpdatedJson.json";
-						// strUpdatedJSONPath =
-						// "C:\\Temp\\screenshots\\UpdatedJson.json";
 						break;
 					case "Mac":
 						strUpdatedJSONPath = strResultsPath + "UpdatedJson.json";
-						// strUpdatedJSONPath = strResultsPath +
-						// "screenshots/UpdatedJson.json";
 						break;
 					default:
 						// TODO switch (OSType()) need to raise an error and log
@@ -413,8 +387,7 @@ public class Evinrude {
 					out = new BufferedWriter(new FileWriter(file));
 					out.write(objJsonFile.toString());
 					out.close();
-					// if browser is IE then kill IEDriverServer process (this
-					// allows user to interact with browser after test ends)
+					// if browser is IE then kill IEDriverServer process (this allows user to interact with browser after test ends)
 					Capabilities capabilities = ((RemoteWebDriver) objWebDriver).getCapabilities();
 					String browsername = capabilities.getBrowserName();
 					if ("internet explorer".equalsIgnoreCase(browsername)) {
@@ -725,9 +698,11 @@ public class Evinrude {
 					} else if (blnStatus == false) {
 						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
 							objStep.put("strStatus", "warning");
+							coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, objWebElement, objStep);
 							return true;
 						} else {
 							objStep.put("strStatus", "fail");
+							coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, objWebElement, objStep);
 							return false;
 						}
 					}
@@ -1104,11 +1079,12 @@ public class Evinrude {
 				System.setProperty("webdriver.ie.driver", "C:\\Selenium\\IEDriverServer.exe");
 				objWebDriver = new InternetExplorerDriver(desiredCapabilities);
 				objWebDriver.navigate().to(objStep.get("strInputValue").toString());
-				// objWebDriver.manage().window().maximize();
+				objWebDriver.manage().window().maximize();
 				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
 				coordinateHighlightScreenshot(objStep, "window", "screen", objWebDriver, null, objStep);
 				objStep.put("blnStatus", "true");
-				objWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.MILLISECONDS);
+				objWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+				// objWebDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
 				return objWebDriver;
 			case "chrome":
 				switch (OSType()) {
@@ -1846,18 +1822,23 @@ public class Evinrude {
 				// objWebDriver.switchTo().defaultContent();
 				// TODO add iFrame handling, return a collection of both frame
 				// and iframe
-				//objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('iframe');");
-				
-				objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.querySelectorAll('frame,iframe');");
-				
-				
-				//var elems = document.querySelectorAll('frame,iframe')
-				
+				// objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('iframe');");
+				try {
+					objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.querySelectorAll('frame,iframe');");
+					intFramesCount = objFrameCollection.size();
+				} catch (WebDriverException e) {
+					// objFrameCollection = 0;
+					intFramesCount = 0;
+					System.out.println("elementFind objFrameCollection exception = " + e.toString());
+
+				}
+				// var elems = document.querySelectorAll('frame,iframe')
+
 				// objFrameCollection =
 				// objWebDriver.findElements(By.xpath("//frame"));
 				// objFrameCollection =
 				// objWebDriver.findElements(By.cssSelector("css=frame"));
-				intFramesCount = objFrameCollection.size();
+				// intFramesCount = objFrameCollection.size();
 				System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
 				if (intFramesCount >= 1) {
 					intFramesCount = intFramesCount + 1;
@@ -3281,21 +3262,12 @@ public class Evinrude {
 				getRectangleAreaByName(objStep, 0, strScreenshotArea, objHighlightArea, objWebDriver, objWebElement);
 				BufferedImage screenShot = robot.createScreenCapture(objHighlightArea);
 				System.out.println("coordinateHighlightScreenshot robot.createScreenCapture intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeScreenshotTrue));
-				// String strScreenshotFilePath =
-				// "c:\\temp\\screenshots\\screenShot" + dateTimestamp() +
-				// ".jpg";
-				// String strScreenshotFilePath =
-				// objStep.get("strScreenshotFilePath").toString() +
-				// "\\screenShot" + dateTimestamp() + ".jpg";
 				switch (OSType()) {
 				case "Windows":
-					strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "\\screenShot" + dateTimestamp() + ".jpg";
-					// strScreenshotFilePath =
-					// "c:\\temp\\screenshots\\screenShot" + dateTimestamp() +
-					// ".jpg";
+					strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "Screenshot_" + dateTimestamp() + ".jpg";
 					break;
 				case "Mac":
-					strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "/screenShot" + dateTimestamp() + ".jpg";
+					strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "Screenshot_" + dateTimestamp() + ".jpg";
 					break;
 				default:
 					// TODO need to raise an error and log
