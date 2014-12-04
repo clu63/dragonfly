@@ -1,0 +1,116 @@
+{
+	"test steps": 
+	[
+		{
+			"strAction": "launch",
+			"strTagName": "safari",
+			"strAttributeNames": "",
+			"strAtributeValues": "",
+			"strInputValue": "http://www.quackit.com/html/templates/frames/frames_example_6.html",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		},
+
+		{
+			"strAction": "sync_visible",
+			"strTagName": "body",
+			"strAttributeNames": "index",
+			"strAtributeValues": "1",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		},
+
+		{
+			"strAction": "set",
+			"strTagName": "input",
+			"strAttributeNames": "id",
+			"strAtributeValues": "FirstName",
+			"strInputValue": "Thom",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		},
+
+		{
+			"strAction": "set",
+			"strTagName": "input",
+			"strAttributeNames": "id",
+			"strAtributeValues": "LastName",
+			"strInputValue": "Morrow",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		},
+
+		{
+			"strAction": "set",
+			"strTagName": "input",
+			"strAttributeNames": "id|value",
+			"strAtributeValues": "Gender|female",
+			"strInputValue": "<on>",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		}
+	],
+
+	"link": 
+	[
+		{
+			
+		}
+	]
+}
