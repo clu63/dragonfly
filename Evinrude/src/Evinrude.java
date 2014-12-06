@@ -195,12 +195,12 @@ public class Evinrude {
 			break;
 		}
 		new File(strResultsPath).mkdirs();
+		new File(strResultsPath + strImagesPath).mkdirs();
 		System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
-			String strTestPath = "Data/public/public_mercury_tours.json";
-			// String strTestPath = "Data/public/public_ranorex.json";
+			// String strTestPath = "Data/public/public_mercury_tours.json";
+			String strTestPath = "Data/public/public_ranorex.json";
 			// String strTestPath = "Data/public/public_w3c_fireevents.json";
-			// String strTestPath = "Data/public/KAW _AlertPopups.json";
 			Object objParser = parser.parse(new FileReader(strTestPath));
 			objJsonFile = (JSONObject) objParser;
 			objTestSteps = (JSONArray) objJsonFile.get("test steps");
@@ -234,6 +234,7 @@ public class Evinrude {
 				objStep.put("strCurrentWindowHandle", strCurrentWindowHandle);
 				objStep.put("strType", "");
 				objStep.put("strScreenshotFilePath", strResultsPath + strImagesPath);
+				System.out.println("strScreenshotFilePath = " + objStep.get("strScreenshotFilePath").toString());
 				objStep.put("strStatus", "info");
 				// TODO consider moving the step println to a method and call
 				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
@@ -3262,17 +3263,21 @@ public class Evinrude {
 				getRectangleAreaByName(objStep, 0, strScreenshotArea, objHighlightArea, objWebDriver, objWebElement);
 				BufferedImage screenShot = robot.createScreenCapture(objHighlightArea);
 				System.out.println("coordinateHighlightScreenshot robot.createScreenCapture intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeScreenshotTrue));
-				switch (OSType()) {
-				case "Windows":
-					strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "Screenshot_" + dateTimestamp() + ".jpg";
-					break;
-				case "Mac":
-					strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "Screenshot_" + dateTimestamp() + ".jpg";
-					break;
-				default:
-					// TODO need to raise an error and log
-					break;
-				}// the end of switch(OSType())
+
+				strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "Screenshot_" + dateTimestamp() + ".jpg";
+				System.out.println("strScreenshotFilePath = " + strScreenshotFilePath);
+
+				// switch (OSType()) {
+				// case "Windows":
+				// strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "Screenshot_" + dateTimestamp() + ".jpg";
+				// break;
+				// case "Mac":
+				// strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "Screenshot_" + dateTimestamp() + ".jpg";
+				// break;
+				// default:
+				// // TODO need to raise an error and log
+				// break;
+				// }// the end of switch(OSType())
 				objStep.put("strScreenshotFilePath", strScreenshotFilePath);
 				// long lngStartTimeThread = System.currentTimeMillis();
 				Thread objThread = new Thread(new threadSaveImage(screenShot, "jpg", strScreenshotFilePath));
@@ -3503,7 +3508,7 @@ public class Evinrude {
 
 	public static final String dateTimestamp() {
 		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_hhmmssSSS");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmssSSS");
 		String formattedDate = sdf.format(date);
 		return formattedDate;
 	}// the end of dateTimestamp

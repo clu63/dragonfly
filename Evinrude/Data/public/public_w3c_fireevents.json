@@ -3,7 +3,7 @@
 	[
 		{
 			"strAction": "launch",
-			"strTagName": "ie",
+			"strTagName": "chrome",
 			"strAttributeNames": "",
 			"strAtributeValues": "",
 			"strInputValue": "http://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_onchange",

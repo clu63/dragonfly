@@ -1,0 +1,209 @@
+<HTML>
+<HEAD>
+<TITLE>Add/Remove Steps</TITLE>
+<SCRIPT language="javascript">
+	function saveFile() {
+		var ForAppending = 8;
+		var ForWriting = 2
+		var TriStateFalse = 0;
+		var fso = new ActiveXObject("Scripting.FileSystemObject");
+		var newFile = fso
+				.OpenTextFile(
+						"C:\\Users\\jxp30\\Documents\\GitHub\\Evinrude\\Evinrude\\Tools\\savefile.txt",
+						ForWriting, true, TriStateFalse);
+
+		newFile.Write("saving inside the stepbuilder");
+		newFile.Close();
+
+	}
+
+	function addRow(tableID) {
+		var table = document.getElementById(tableID);
+		var rowCount = table.rows.length;
+		var row = table.insertRow(rowCount);
+		var colCount = table.rows[0].cells.length;
+		for (var i = 0; i < colCount; i++) {
+			var newcell = row.insertCell(i);
+			newcell.innerHTML = table.rows[rowCount - 1].cells[i].innerHTML;
+			switch (newcell.childNodes[0].type) {
+			case "text":
+				newcell.childNodes[0].value = "";
+				break;
+			case "checkbox":
+				newcell.childNodes[0].checked = false;
+				break;
+			case "select-one":
+				newcell.childNodes[0].selectedIndex = 0;
+				break;
+			}
+		}
+	}
+
+	function insertRow(tableID) {
+		var table = document.getElementById(tableID);
+		var rowCount = table.rows.length;
+		for (var intRow = 0; intRow < rowCount; intRow++) {
+			var eachRow = table.rows[intRow];
+			var chkbox = eachRow.cells[0].childNodes[0];
+			if (null != chkbox && true == chkbox.checked) {
+				var newRow = table.insertRow(intRow);
+				var colCount = eachRow.cells.length;
+				for (var intCol = 0; intCol < colCount; intCol++) {
+					var newcell = newRow.insertCell(intCol);
+					newcell.innerHTML = eachRow.cells[intCol].innerHTML;
+					switch (newcell.childNodes[0].type) {
+					case "text":
+						newcell.childNodes[0].value = "";
+						break;
+					case "checkbox":
+						newcell.childNodes[0].checked = false;
+						break;
+					case "select-one":
+						newcell.childNodes[0].selectedIndex = 0;
+						break;
+					}
+				}
+				break;
+			}
+		}
+	}
+
+	function deleteRow(tableID) {
+		try {
+			var table = document.getElementById(tableID);
+			var rowCount = table.rows.length;
+			for (var i = 0; i < rowCount; i++) {
+				var row = table.rows[i];
+				var chkbox = row.cells[0].childNodes[0];
+				if (null != chkbox && true == chkbox.checked) {
+					if (rowCount <= 2) {
+						alert("Cannot delete all the rows.");
+						break;
+					}
+					table.deleteRow(i);
+					rowCount--;
+					i--;
+				}
+			}
+		} catch (e) {
+			alert(e);
+		}
+	}
+</SCRIPT>
+</HEAD>
+<BODY>
+	<INPUT type="button" value="Add Row" onclick="addRow('dataTable')" />
+	<INPUT type="button" value="Insert Row"
+		onclick="insertRow('dataTable')" />
+	<INPUT type="button" value="Delete Row"
+		onclick="deleteRow('dataTable')" />
+	<select id="fileName">
+		<OPTION value="">file name</OPTION>
+	</SELECT>
+		<INPUT type="button" value="Save File"
+		onclick="saveFile()" />
+	<TABLE id="dataTable" width="350px" border="1">
+		<TR>
+			<TH>+</TH>
+			<TH>strAction</TH>
+			<TH>strTagName</TH>
+			<TH>strAttributeNames</TH>
+			<TH>strAtributeValues</TH>
+			<TH>strInputValue</TH>
+			<TH>strLogicalName</TH>
+			<TH>intMillisecondsToWait</TH>
+			<TH>blnOptional</TH>
+			<TH>strAssert</TH>
+			<TH>blnPleaseWait</TH>
+			<TH>blnHighlight</TH>
+			<TH>blnScreenshot</TH>
+			<TH>strFunction</TH>
+			<TH>strAssistiveProperties</TH>
+			<TH>blnExitOnFail</TH>
+			<TH>strOutputLinkName</TH>
+			<TH>strOutputValue</TH>
+			<TH>intLoop</TH>
+		</TR>
+		<TR>
+			<TD><INPUT type="checkbox" name="chk" /></TD>
+			<TD><SELECT name="action">
+					<OPTION value=""></OPTION>
+					<OPTION value="launch">launch</OPTION>
+					<OPTION value="close">close</OPTION>
+					<OPTION value="get">get</OPTION>
+					<OPTION value="set">set</OPTION>
+					<OPTION value="verify">verify</OPTION>
+					<OPTION value="sync_visible">sync_visible</OPTION>
+					<OPTION value="sync_hidden">sync_hidden</OPTION>
+					<OPTION value="sync_enabled">sync_enabled</OPTION>
+					<OPTION value="sync_disabled">sync_disabled</OPTION>
+					<OPTION value="break">break</OPTION>
+			</SELECT></TD>
+
+			<TD><SELECT name="tagname">
+					<OPTION value=""></OPTION>
+					<OPTION value="">a</OPTION>
+					<OPTION value="">alert</OPTION>
+					<OPTION value="">button</OPTION>
+					<OPTION value="">div</OPTION>
+					<OPTION value="">h1</OPTION>
+					<OPTION value="">img</OPTION>
+					<OPTION value="">input</OPTION>
+					<OPTION value="">p</OPTION>
+					<OPTION value="">select</OPTION>
+					<OPTION value="">span</OPTION>
+					<OPTION value="">table</OPTION>
+					<OPTION value="">td</OPTION>
+					<OPTION value="">textarea</OPTION>
+					<OPTION value="">th</OPTION>
+					<OPTION value="">tr</OPTION>
+			</SELECT></TD>
+
+			<TD><INPUT type="text" name="txt" /></TD>
+			<TD><INPUT type="text" name="txt" /></TD>
+			<TD><INPUT type="text" name="txt" /></TD>
+			<TD><INPUT type="text" name="txt" /></TD>
+			<TD><INPUT type="text" name="txt" /></TD>
+			<td><select id="blnOptional">
+					<option value=""></option>
+					<option value="">true</option>
+					<option value="">false</option>
+			</select></td>
+
+			<TD><INPUT type="text" id="strAssert" /></TD>
+
+
+			<td><select id="blnPleaseWait">
+					<option value=""></option>
+					<option value="">true</option>
+					<option value="">false</option>
+			</select></td>
+			<td><select id="blnHighlight">
+					<option value=""></option>
+					<option value="">true</option>
+					<option value="">false</option>
+			</select></td>
+			<td><select id="blnScreenshot">
+					<option value=""></option>
+					<option value="">true</option>
+					<option value="">false</option>
+			</select></td>
+
+
+
+			<TD><INPUT type="text" name="txt" /></TD>
+			<TD><INPUT type="text" name="txt" /></TD>
+			<td><select id="blnExitOnFail">
+					<option value=""></option>
+					<option value="">true</option>
+					<option value="">false</option>
+			</select></td>
+
+			<TD><INPUT type="text" name="txt" /></TD>
+			<TD><INPUT type="text" name="txt" /></TD>
+			<TD><INPUT type="text" name="txt" /></TD>
+		</TR>
+	</TABLE>
+
+</BODY>
+</HTML>
