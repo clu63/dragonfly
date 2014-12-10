@@ -3,7 +3,7 @@
 	[
 		{
 			"strAction": "launch",
-			"strTagName": "firefox",
+			"strTagName": "chrome",
 			"strAttributeNames": "",
 			"strAtributeValues": "",
 			"strInputValue": "http://www.quackit.com/html/templates/frames/frames_example_6.html",

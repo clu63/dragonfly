@@ -167,6 +167,15 @@ public class Evinrude {
 		}
 	}// the end of OSType
 
+	public static void killWindowsProcess(String strProcessToKill) {
+		try {
+			Runtime.getRuntime().exec(strProcessToKill);
+		} catch (IOException e) {
+			// TODO killWindowsProcess Auto-generated catch block
+			System.out.println("killWindowsProcess " + e.toString());
+		}
+	}
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
 		WebDriver objWebDriver = null;
@@ -197,7 +206,7 @@ public class Evinrude {
 		}
 		new File(strResultsPath).mkdirs();
 		new File(strResultsPath + strImagesPath).mkdirs();
-		System.out.println("ClipboardGet = " + ClipboardGet());
+		// System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
 			// String strTestPath = "Data/public/public_mercury_tours.json";
 			// String strTestPath = "Data/public/public_ranorex.json";
@@ -276,7 +285,7 @@ public class Evinrude {
 						objStep.put("strInputValue", strInputValue);
 						System.out.println(strReturnValue.toString());
 					} catch (Throwable e) {
-						System.err.println(e);
+						System.out.println("main call function - " + e.toString());
 					}
 				}// the end of
 				if (!strInputValue.equals("<skip>")) {
@@ -285,14 +294,15 @@ public class Evinrude {
 						objWebDriver = browserLaunch(objStep);
 						blnPass = Boolean.parseBoolean(objStep.get("blnStatus").toString());
 						long lngStartTimedocumenttitle = System.currentTimeMillis();
-						JavascriptExecutor js = (JavascriptExecutor) objWebDriver;
-						String strTitle = (String) js.executeScript("return document.title");
-						System.out.println("main JavascriptExecutor strTitle  = " + strTitle + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
-						long lngStartTimetitle = System.currentTimeMillis();
-						System.out.println("main objWebDriver.getTitle = " + objWebDriver.getTitle() + " " + (System.currentTimeMillis() - lngStartTimetitle));
-						long lngStartTimegetElementsByTagName = System.currentTimeMillis();
-						List<WebElement> objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
-						System.out.println("main objFrameCollection = " + objFrameCollection.size() + " " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName));
+						// JavascriptExecutor js = (JavascriptExecutor) objWebDriver;
+						// String strTitle = (String) js.executeScript("return document.title");
+						// System.out.println("main JavascriptExecutor strTitle  = " + strTitle + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
+						// long lngStartTimetitle = System.currentTimeMillis();
+						// System.out.println("main objWebDriver.getTitle = " + objWebDriver.getTitle() + " " + (System.currentTimeMillis() - lngStartTimetitle));
+						// long lngStartTimegetElementsByTagName = System.currentTimeMillis();
+						// List<WebElement> objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
+						// System.out.println("main objFrameCollection = " + objFrameCollection.size() + " " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName));
+						System.out.println("main objWebDriver.toString = " + objWebDriver.toString() + " " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
 						break;
 					case "close":
 						objWebDriver.close();
@@ -349,59 +359,24 @@ public class Evinrude {
 					System.out.println(objStep.get("strOutputValue").toString());
 				}
 			}// for intStep
-				// TODO confirm the exceptions to catch in main some may need to
-		} catch (FileNotFoundException e) {
-			System.out.println("main FileNotFoundException");
+				// TODO confirm the exceptions to catch in main some may need to be removed
 		} catch (IOException e) {
-			System.out.println("main IOException");
+			System.out.println("main - " + e.toString());
 		} catch (ParseException e) {
-			System.out.println("main ParseException");
-		} catch (BrowserDriverNotSupportedException e1) {
-			System.out.println("main BrowserDriverNotSupportedException");
-			e1.printStackTrace();
+			System.out.println("main - " + e.toString());
+		} catch (BrowserDriverNotSupportedException e) {
+			System.out.println("main - " + e.toString());
 		} finally {
-			// TODO review how end of run is determined for reporting and
-			// cleanup
+			// TODO review how end of run is determined for reporting and cleanup
 			if (intStep == objTestSteps.size() || blnPass == false || objStep.get("strAction").toString().toLowerCase().equals("break")) {
-				try {
-					// writeJsonToHtml(objTestSteps, strResultsPath +
-					// "\\StepsWithDefaults.html");
-					// writeReportToHtml(objTestSteps, strResultsPath +
-					// "\\Report.html");
-					// File file = new File(strResultsPath +
-					// "\\UpdatedJson.json");
-					String strUpdatedJSONPath = "";
-					switch (OSType()) {
-					case "Windows":
-						strUpdatedJSONPath = strResultsPath + "UpdatedJson.json";
-						break;
-					case "Mac":
-						strUpdatedJSONPath = strResultsPath + "UpdatedJson.json";
-						break;
-					default:
-						// TODO switch (OSType()) need to raise an error and log
-						break;
-					}
-					writeJsonToHtml(objTestSteps, strResultsPath + "StepsWithDefaults.html");
-					writeReportToHtml(objTestSteps, strResultsPath + "Report.html");
-					File file = new File(strUpdatedJSONPath);
-					// writeJsonKeysToHtml(JSONObject objTestStep, file);
-					BufferedWriter out;
-					out = new BufferedWriter(new FileWriter(file));
-					out.write(objJsonFile.toString());
-					out.close();
-					// if browser is IE then kill IEDriverServer process (this allows user to interact with browser after test ends)
-					Capabilities capabilities = ((RemoteWebDriver) objWebDriver).getCapabilities();
-					String browsername = capabilities.getBrowserName();
-					if ("internet explorer".equalsIgnoreCase(browsername)) {
-						Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
-					}
-				} catch (IOException e) {
-					System.out.println("main final " + e.toString());
+				writeJsonToHtml(objTestSteps, strResultsPath + "StepsWithDefaults.html");
+				writeReportToHtml(objTestSteps, strResultsPath + "Report.html");
+				writeJsonToFile(objJsonFile, strResultsPath + "StepsAfterRun.json");
+				if (objWebDriver.toString().contains("InternetExplorerDriver")) {
+					killWindowsProcess("taskkill /F /IM IEDriverServer.exe");
 				}
 			}
 		}// the end of try
-			// objWebDriver.manage().logs().getAvailableLogTypes().
 	}// the end of Main
 
 	@SuppressWarnings("serial")
@@ -1585,14 +1560,14 @@ public class Evinrude {
 				long lngStartTimeFrameCollection = System.currentTimeMillis();
 				// TODO add iFrame handling, return a collection of both frame
 				objFrameCollection = objWebDriver.findElements(By.tagName("frame"));
-				System.out.println("elementFind objFrames.size() = " + objFrameCollection.size());
+				System.out.println("elementFind Frames = " + objFrameCollection.size());
 				objFrameCollection.addAll(objWebDriver.findElements(By.tagName("iframe")));
 				intFramesCount = objFrameCollection.size();
 				System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
-				if (intFramesCount >= 1) {
-					intFramesCount = intFramesCount + 1;
-					System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
-				}
+//				if (intFramesCount >= 1) {
+//					intFramesCount = intFramesCount + 1;
+//					System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+//				}
 				for (int intFramesEach = -1; intFramesEach < intFramesCount; intFramesEach++) {
 					System.out.println("elementFind intFramesEach = " + intFramesEach);
 					if (intFramesEach >= 0) {
@@ -3893,7 +3868,7 @@ public class Evinrude {
 	// On Error GoTo 0
 	// End Function
 
-	public static void writeJsonToHtml(JSONArray objTestSteps, String file) throws IOException {
+	public static void writeJsonToHtml(JSONArray objTestSteps, String file) {
 		StringBuilder builder = new StringBuilder();
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file));) {
 			builder.append("<!DOCTYPE html>");
@@ -3960,7 +3935,7 @@ public class Evinrude {
 		}
 	}// the end of writeJsonToHtml
 
-	public static void writeReportToHtml(JSONArray objTestSteps, String file) throws IOException {
+	public static void writeReportToHtml(JSONArray objTestSteps, String file) {
 		String strScreenshotFilePath = "";
 		StringBuilder builder = new StringBuilder();
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file));) {
@@ -4004,6 +3979,21 @@ public class Evinrude {
 			System.out.println(builder.toString());
 		}
 	}// the end of writeReportToHtml
+
+	public static void writeJsonToFile(JSONObject objJsonFile, String file) {
+
+		try {
+			// file = new File(strResultsPath + "UpdatedJson.json");
+			// writeJsonKeysToHtml(JSONObject objTestStep, file);
+			BufferedWriter out;
+			out = new BufferedWriter(new FileWriter(file));
+			out.write(objJsonFile.toString());
+			out.close();
+
+		} catch (IOException e) {
+			System.out.println("main final " + e.toString());
+		}
+	}// the end of writeJsonKeysToHtml
 
 	// TODO Learn how to iterate over jason keys
 	public static void writeJsonKeysToHtml(JSONObject objTestStep, String file) throws IOException {
