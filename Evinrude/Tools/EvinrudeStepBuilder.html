@@ -1,20 +1,99 @@
-<HTML>
-<HEAD>
-<TITLE>Add/Remove Steps</TITLE>
-<SCRIPT language="javascript">
+<html>
+<head>
+<title>Evinrude Step Builder</title>
+<script language="javascript" type="text/javascript">
+	function saveTableToJson(tableID) {
+		try {
+			//alert("working");
+			var strKeyName = "";
+			var saveText = "";
+			var table = document.getElementById(tableID);
+			var rowCount = table.rows.length;
+
+			//alert("rowCount = " + rowCount);
+			for (var intRow = 1; intRow < rowCount; intRow++) {
+				var eachRow = table.rows[intRow];
+				//	var row = table.rows[i];
+				//var newRow = table.insertRow(intRow);
+				var colCount = eachRow.cells.length;
+				//alert("colCount = " + colCount);
+				for (var intCol = 0; intCol < colCount; intCol++) {
+					//alert("intCol = " + intCol);
+					//var newcell = eachRow.insertCell(intCol);
+					var eachCell = eachRow.cells[intCol];
+					//newcell.innerHTML = eachRow.cells[intCol].innerHTML;
+					//alert(table.rows[intRow].cells[intCol].innerHTML);
+					// 					alert(eachCell.innerHTML);
+					// 					alert(eachCell.childNodes[0].type);
+					strKeyName = table.rows[0].cells[intCol].innerHTML
+
+				//	alert(strKeyName);
+					switch (eachCell.childNodes[0].type) {
+					case "text":
+						//saveText = saveText + "|" + eachCell.childNodes[0].value;
+						saveText = saveText + "|" + strKeyName + ":" + eachCell.childNodes[0].value;
+						//alert(saveText);
+						break;
+					case "select-one":
+						//saveText = saveText + "|" + eachCell.childNodes[0].options[eachCell.childNodes[0].selectedIndex].innerHTML;
+
+						saveText = saveText + "|" + strKeyName + ":" + eachCell.childNodes[0].options[eachCell.childNodes[0].selectedIndex].innerHTML;
+					//	alert(saveText);
+						//saveText = saveText + "|" + eachCell.childNodes[0].selectedIndex;
+						break;
+					}
+				}
+			}
+		} catch (e) {
+			alert(e);
+		}
+
+		var ForAppending = 8;
+		var ForWriting = 2
+		var TriStateFalse = 0;
+		var fso = new ActiveXObject("Scripting.FileSystemObject");
+		var newFile = fso.OpenTextFile("C:\\Users\\jxp30\\Documents\\GitHub\\Evinrude\\Evinrude\\Tools\\savefile.txt", ForWriting, true, TriStateFalse);
+		newFile.Write(saveText);
+		newFile.Close();
+	}
+
+	//     z = 1
+	//     sJsonConverted.Cells(z, 1) = "{"
+	//     z = z + 1
+	//     sJsonConverted.Cells(z, 1) = Chr(34) & "test steps" & ":" & Chr(34)
+	//     z = z + 1
+	//     sJsonConverted.Cells(z, 1) = "["
+	//     z = z + 1
+	//     For y = 2 To 20
+	//         sJsonConverted.Cells(z, 1) = "{"
+	//         z = z + 1
+	//         For x = 1 To 18
+	//             If x = 18 Then
+	//                 sJsonConverted.Cells(z, 1) = Chr(34) & sSource.Cells(1, x) & Chr(34) & ":" & Chr(34) & sSource.Cells(y, x) & Chr(34)
+	//             Else
+	//                 sJsonConverted.Cells(z, 1) = Chr(34) & sSource.Cells(1, x) & Chr(34) & ":" & Chr(34) & sSource.Cells(y, x) & Chr(34) & ","
+	//             End If
+	//             z = z + 1
+	//         Next x
+	//         sJsonConverted.Cells(z, 1) = "},"
+	//         z = z + 1
+	//     Next y
+	//     z = z - 1
+	//     sJsonConverted.Cells(z, 1) = "}"
+	//     z = z + 1
+	//     sJsonConverted.Cells(z, 1) = "]"
+	//     z = z + 1
+	//     sJsonConverted.Cells(z, 1) = "}"
+	//     z = z + 1
+
 	function saveFile() {
 		var ForAppending = 8;
 		var ForWriting = 2
 		var TriStateFalse = 0;
 		var fso = new ActiveXObject("Scripting.FileSystemObject");
-		var newFile = fso
-				.OpenTextFile(
-						"C:\\Users\\jxp30\\Documents\\GitHub\\Evinrude\\Evinrude\\Tools\\savefile.txt",
-						ForWriting, true, TriStateFalse);
-
+		var newFile = fso.OpenTextFile("C:\\Users\\jxp30\\Documents\\GitHub\\Evinrude\\Evinrude\\Tools\\savefile.txt", ForWriting, true, TriStateFalse);
 		newFile.Write("saving inside the stepbuilder");
 		newFile.Close();
-
 	}
 
 	function addRow(tableID) {
@@ -23,8 +102,9 @@
 		var row = table.insertRow(rowCount);
 		var colCount = table.rows[0].cells.length;
 		for (var i = 0; i < colCount; i++) {
-			var newcell = row.insertCell(i);
+	var newcell = row.insertCell(i);
 			newcell.innerHTML = table.rows[rowCount - 1].cells[i].innerHTML;
+			//alert(newcell.childNodes[0].type);
 			switch (newcell.childNodes[0].type) {
 			case "text":
 				newcell.childNodes[0].value = "";
@@ -36,6 +116,7 @@
 				newcell.childNodes[0].selectedIndex = 0;
 				break;
 			}
+			//alert(newcell.childNodes[0].type);
 		}
 	}
 
@@ -89,90 +170,86 @@
 			alert(e);
 		}
 	}
-</SCRIPT>
-</HEAD>
-<BODY>
-	<INPUT type="button" value="Add Row" onclick="addRow('dataTable')" />
-	<INPUT type="button" value="Insert Row"
-		onclick="insertRow('dataTable')" />
-	<INPUT type="button" value="Delete Row"
-		onclick="deleteRow('dataTable')" />
+</script>
+</head>
+<body>
+	<input type="button" value="Add Row" onclick="addRow('dataTable')"></input>
+	<input type="button" value="Insert Row" onclick="insertRow('dataTable')"></input>
+	<input type="button" value="Delete Row" onclick="deleteRow('dataTable')"></input>
 	<select id="fileName">
-		<OPTION value="">file name</OPTION>
-	</SELECT>
-		<INPUT type="button" value="Save File"
-		onclick="saveFile()" />
-	<TABLE id="dataTable" width="350px" border="1">
-		<TR>
-			<TH>+</TH>
-			<TH>strAction</TH>
-			<TH>strTagName</TH>
-			<TH>strAttributeNames</TH>
-			<TH>strAtributeValues</TH>
-			<TH>strInputValue</TH>
-			<TH>strLogicalName</TH>
-			<TH>intMillisecondsToWait</TH>
-			<TH>blnOptional</TH>
-			<TH>strAssert</TH>
-			<TH>blnPleaseWait</TH>
-			<TH>blnHighlight</TH>
-			<TH>blnScreenshot</TH>
-			<TH>strFunction</TH>
-			<TH>strAssistiveProperties</TH>
-			<TH>blnExitOnFail</TH>
-			<TH>strOutputLinkName</TH>
-			<TH>strOutputValue</TH>
-			<TH>intLoop</TH>
-		</TR>
-		<TR>
-			<TD><INPUT type="checkbox" name="chk" /></TD>
-			<TD><SELECT name="action">
-					<OPTION value=""></OPTION>
-					<OPTION value="launch">launch</OPTION>
-					<OPTION value="close">close</OPTION>
-					<OPTION value="get">get</OPTION>
-					<OPTION value="set">set</OPTION>
-					<OPTION value="verify">verify</OPTION>
-					<OPTION value="sync_visible">sync_visible</OPTION>
-					<OPTION value="sync_hidden">sync_hidden</OPTION>
-					<OPTION value="sync_enabled">sync_enabled</OPTION>
-					<OPTION value="sync_disabled">sync_disabled</OPTION>
-					<OPTION value="break">break</OPTION>
-			</SELECT></TD>
+		<option value="">file name</option>
+	</select>
+	<input type="button" value="saveTableToJson" onclick="saveTableToJson('dataTable')"></input>
+	<input type="button" value="Save File" onclick="saveFile()"></input>
+	<table id="dataTable" width="350px" border="1">
+		<tr>
+			<th>+</th>
+			<th>strAction</th>
+			<th>strTagName</th>
+			<th>strAttributeNames</th>
+			<th>strAttributeValues</th>
+			<th>strInputValue</th>
+			<th>strLogicalName</th>
+			<th>intMillisecondsToWait</th>
+			<th>blnOptional</th>
+			<th>strAssert</th>
+			<th>blnPleaseWait</th>
+			<th>blnHighlight</th>
+			<th>blnScreenshot</th>
+			<th>strFunction</th>
+			<th>strAssistiveProperties</th>
+			<th>blnExitOnFail</th>
+			<th>strOutputLinkName</th>
+			<th>strOutputValue</th>
+			<th>intLoop</th>
+		</tr>
+		<tr>
+			<td><input type="checkbox" name="chk"></input></td>
+			<td><select id="strAction">
+					<option value=""></option>
+					<option value="launch">launch</option>
+					<option value="close">close</option>
+					<option value="get">get</option>
+					<option value="set">set</option>
+					<option value="verify">verify</option>
+					<option value="sync_visible">sync_visible</option>
+					<option value="sync_hidden">sync_hidden</option>
+					<option value="sync_enabled">sync_enabled</option>
+					<option value="sync_disabled">sync_disabled</option>
+					<option value="break">break</option>
+			</select></td>
+			<td><select id="strTagName">
+					<option value=""></option>
+					<option value="a">a</option>
+					<option value="alert">alert</option>
+					<option value="button">button</option>
+					<option value="div">div</option>
+					<option value="h1">h1</option>
+					<option value="img">img</option>
+					<option value="img">input</option>
+					<option value="p">p</option>
+					<option value="select">select</option>
+					<option value="span">span</option>
+					<option value="table">table</option>
+					<option value="td">td</option>
+					<option value="textarea">textarea</option>
+					<option value="th">th</option>
+					<option value="tr">tr</option>
+			</select></td>
 
-			<TD><SELECT name="tagname">
-					<OPTION value=""></OPTION>
-					<OPTION value="">a</OPTION>
-					<OPTION value="">alert</OPTION>
-					<OPTION value="">button</OPTION>
-					<OPTION value="">div</OPTION>
-					<OPTION value="">h1</OPTION>
-					<OPTION value="">img</OPTION>
-					<OPTION value="">input</OPTION>
-					<OPTION value="">p</OPTION>
-					<OPTION value="">select</OPTION>
-					<OPTION value="">span</OPTION>
-					<OPTION value="">table</OPTION>
-					<OPTION value="">td</OPTION>
-					<OPTION value="">textarea</OPTION>
-					<OPTION value="">th</OPTION>
-					<OPTION value="">tr</OPTION>
-			</SELECT></TD>
 
-			<TD><INPUT type="text" name="txt" /></TD>
-			<TD><INPUT type="text" name="txt" /></TD>
-			<TD><INPUT type="text" name="txt" /></TD>
-			<TD><INPUT type="text" name="txt" /></TD>
-			<TD><INPUT type="text" name="txt" /></TD>
+			<td><input type="text" id="strAttributeNames" value="text"></input></td>
+
+			<td><input type="text" id="strAttributeValues"></input></td>
+			<td><input type="text" id="strInputValue"></input></td>
+			<td><input type="text" id="strLogicalName"></input></td>
+			<td><input type="text" id="intMillisecondsToWait"></input></td>
 			<td><select id="blnOptional">
 					<option value=""></option>
 					<option value="">true</option>
 					<option value="">false</option>
 			</select></td>
-
-			<TD><INPUT type="text" id="strAssert" /></TD>
-
-
+			<td><input type="text" id="strAssert"></input></td>
 			<td><select id="blnPleaseWait">
 					<option value=""></option>
 					<option value="">true</option>
@@ -188,22 +265,17 @@
 					<option value="">true</option>
 					<option value="">false</option>
 			</select></td>
-
-
-
-			<TD><INPUT type="text" name="txt" /></TD>
-			<TD><INPUT type="text" name="txt" /></TD>
+			<td><input type="text" id="strFunction"></input></td>
+			<td><input type="text" id="strAssistiveProperties"></input></td>
 			<td><select id="blnExitOnFail">
 					<option value=""></option>
 					<option value="">true</option>
 					<option value="">false</option>
 			</select></td>
-
-			<TD><INPUT type="text" name="txt" /></TD>
-			<TD><INPUT type="text" name="txt" /></TD>
-			<TD><INPUT type="text" name="txt" /></TD>
-		</TR>
-	</TABLE>
-
-</BODY>
-</HTML>
+			<td><input type="text" id="strOutputLinkName"></input></td>
+			<td><input type="text" id="strOutputValue"></input></td>
+			<td><input type="text" id="intLoop"></input></td>
+		</tr>
+	</table>
+</body>
+</html>

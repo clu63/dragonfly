@@ -35,6 +35,7 @@ import java.io.IOException;
 //import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 //import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -199,8 +200,9 @@ public class Evinrude {
 		System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
 			// String strTestPath = "Data/public/public_mercury_tours.json";
-			String strTestPath = "Data/public/public_ranorex.json";
+			// String strTestPath = "Data/public/public_ranorex.json";
 			// String strTestPath = "Data/public/public_w3c_fireevents.json";
+			String strTestPath = "Data/public/public_quackit_frames.json";
 			Object objParser = parser.parse(new FileReader(strTestPath));
 			objJsonFile = (JSONObject) objParser;
 			objTestSteps = (JSONArray) objJsonFile.get("test steps");
@@ -1181,6 +1183,12 @@ public class Evinrude {
 			case "button":
 			case "a":
 			case "h1":
+			case "h2":
+			case "h3":
+			case "h4":
+			case "h5":
+			case "h6":
+			case "p":
 				objWebElement.click();
 				// objJavascriptExecutor.executeScript("arguments[0].focus();",
 				// objWebElement);
@@ -1468,53 +1476,43 @@ public class Evinrude {
 		} // catch
 	}// the end of isAlertPresent()
 
-	@SuppressWarnings("unchecked")
+	public static WebElement isAlertPresent2(WebDriver objWebDriver) throws NoElementFoundException {
+		try {
+
+			@SuppressWarnings("unused")
+			Alert alert = objWebDriver.switchTo().alert();
+			System.out.println("this is the alert switch to which did not fail");
+			return null;
+		} // try
+		catch (NoAlertPresentException e) {
+			System.out.println("this is the alert switch to which did fail");
+			System.out.println(e.toString());
+			throw new NoElementFoundException("Alert popup was not found.");
+		} // catch
+	}
+
+	@SuppressWarnings({ "unchecked" })
 	public static WebElement elementFind(JSONObject objStep, WebDriver objWebDriver) throws NoElementFoundException, MultipleElementsFoundException {
 		long lngStartTimeElementFind = System.currentTimeMillis();
 		try {
+			int intFramesCount = 0;
 			String strXpath = "";
-			String strTag;
+			String strTagName;
 			String strIndex = "";
 			Boolean blnFound = false;
-			Boolean blnSwitchWindow = false;
-			WebElement objWebElement = null;
-			List<WebElement> objWebElementCollection = null;
-			List<WebElement> objFrameCollection = null;
+			WebElement objWebElement;
+			List<WebElement> objWebElementCollection = new ArrayList<WebElement>();
+			List<WebElement> objFrameCollection = new ArrayList<WebElement>();
 			String strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
-			strTag = objStep.get("strTagName").toString().toLowerCase();
+			strTagName = objStep.get("strTagName").toString().toLowerCase();
 			String arrAttributeNames[] = objStep.get("strAttributeNames").toString().split("\\|", -1);
 			String arrAttributeValues[] = objStep.get("strAtributeValues").toString().split("\\|", -1);
 			String strXpathAttributesTemp = "";
 			String strXpathAttributes = "";
-			if (strTag.toLowerCase().equals("alert")) {
-				// try {
-				// Alert alert = objWebDriver.switchTo().alert();
-				// // System.out.println(alert.getText()); // Print Alert popup
-				// // alert.sendKeys("tegan");
-				// // alert.accept(); // Close Alert popup
-				// // alert.dismiss();; // Close Alert popup
-				// return null;
-				//
-				// } catch (Exception e) {
-				// System.out.println(e.toString());
-				// }
+			if (strTagName.toLowerCase().equals("alert")) {
 				// TODO elementFind finish alert handling
-				try {
-					// objWebDriver.switchTo().alert();
-					objStep.put("strTagType", "alert");
-					@SuppressWarnings("unused")
-					Alert alert = objWebDriver.switchTo().alert();
-					System.out.println("this is the alert switch to which did not fail");
-					// System.out.println(objWebDriver.manage().window().getPosition());
-					// System.out.println(objWebDriver.manage().window().getSize());
-					return null;
-				} // try
-				catch (NoAlertPresentException e) {
-					// return false;
-					System.out.println("this is the alert switch to which did fail");
-					System.out.println(e.toString());
-					throw new NoElementFoundException("Alert popup was not found.");
-				} // catch
+				objStep.put("strTagType", "alert");
+				return isAlertPresent2(objWebDriver);
 			}
 			for (int intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
 				strXpathAttributesTemp = "";
@@ -1553,59 +1551,17 @@ public class Evinrude {
 			} else {
 				strXpathAttributes = "[" + strXpathAttributes + "]";
 			}
-			strXpath = "(//" + strTag + strXpathAttributes + ")" + strIndex;
+			strXpath = "(//" + strTagName + strXpathAttributes + ")" + strIndex;
 			System.out.println("elementFind strXpath = " + strXpath);
-			// System.out.println("elementFind lngMillisecondsWaitedByCreateXpath = "
-			// + (System.currentTimeMillis() - lngStartTimeByCreateXpath));
-			// long lngStartTimeByCreateForGetWindowHandles =
-			// System.currentTimeMillis();
-			// objWebDriver.getWindowHandles()
-			// Set<String> arrHandles = objWebDriver.getWindowHandles();
-			// <String> st =
-			// objWebDriver.getWindowHandles().iterator().hasNext();
-			// ArrayList<String> arrHandles = new ArrayList<String>();
-			// @SuppressWarnings("unchecked")
-			// ArrayList<String> arrHandles = (ArrayList<String>)
-			// objWebDriver.getWindowHandles();
-			// List<WebElement> objWebElementCollection =
-			// objWebDriver.findElements(By.tagName(strTagName));
-			// Iterator<String> arrHandlesEach = ((Collection<String>)
-			// arrHandles).iterator();
-			// objWebDriver.getWindowHandles().iterator().hasNext()
-			// Iterator<String> objWebElementEach = (Iterator<String>)
-			// ((Collection<String>) objWebDriver.getWindowHandles().iterator();
-			// Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
-			// for (int intHandlesEach = 0; intHandlesEach < arrHandles.length;
-			// intHandlesEach++)
-			// while (objWebDriver.getWindowHandles().iterator().hasNext()) {
-			// string winHandle = arrHandles[intHandlesEach].toString();
-			// //for (String winHandle ;arrHandles ;1++) {
-			// for (int intHandlesEach = 0; intHandlesEach <
-			// arrHandles.size(); intHandlesEach++)
-			// String strCurrentWindowHandle = objWebDriver.getWindowHandle();
 			System.out.println("elementFind before loop strCurrentWindowHandle = " + strCurrentWindowHandle);
-			// System.out.println("elementFind before defaultContent strCurrentWindowHandle = "
-			// + objWebDriver.getWindowHandles().size());
-			// objWebDriver.switchTo().defaultContent();
-			// System.out.println("elementFind after defaultContent strCurrentWindowHandle = "
-			// + objWebDriver.getWindowHandles().size());
-			// objWebDriver.switchTo().defaultContent();
 			Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
 			System.out.println("arrHandles.length = " + arrHandles.length);
 			for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0; intHandlesEach--) {
-				// objWebDriver.switchTo().defaultContent();
 				String winHandle = arrHandles[intHandlesEach].toString();
 				System.out.println("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
 				System.out.println("elementFind winHandle = " + winHandle);
 				long lngStartTimeSwitchTo = System.currentTimeMillis();
 				objWebDriver.switchTo().window(winHandle);
-				// if (strCurrentWindowHandle.equals(winHandle)) {
-				// } else {
-				// objWebDriver.switchTo().window(winHandle);
-				// System.out.println("elementFind lngStartTimeSwitchTo = " +
-				// (System.currentTimeMillis() - lngStartTimeSwitchTo));
-				// blnSwitchWindow = true;
-				// }
 				System.out.println("elementFind lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
 				System.out.println("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
 				long intBrowserInnerWidth = 0;
@@ -1626,220 +1582,12 @@ public class Evinrude {
 				}
 				objStep.put("intBrowserInnerWidth", intBrowserInnerWidth);
 				objStep.put("intBrowserInnerHeight", intBrowserInnerHeight);
-				// TODO cleanup old code from get absolute coordinates attempts
-				// int intWebElementBodyX =
-				// Integer.parseInt(objStep.get("intWebElementBodyX").toString());
-				// int intWebElementBodyY =
-				// Integer.parseInt(objStep.get("intWebElementBodyY").toString());
-				// int intWebElementBodyWidth =
-				// Integer.parseInt(objStep.get("intWebElementBodyWidth").toString());
-				// int intWebElementBodyHeight =
-				// Integer.parseInt(objStep.get("intWebElementBodyHeight").toString());
-				// if (blnSwitchWindow == true || intWebElementBodyX +
-				// intWebElementBodyY + intWebElementBodyWidth +
-				// intWebElementBodyHeight == 0) {
-				// blnSwitchWindow = false;
-				// long lngStartTimeManageWindow = System.currentTimeMillis();
-				// Point objWebDriverPoint =
-				// objWebDriver.manage().window().getPosition();
-				// int intBrowserOuterX = objWebDriverPoint.x;
-				// int intBrowserOuterY = objWebDriverPoint.y;
-				// Dimension objWebDriverDimension =
-				// objWebDriver.manage().window().getSize();
-				// int intBrowserOuterWidth = objWebDriverDimension.width;
-				// int intBrowserOuterHeight = objWebDriverDimension.height;
-				// System.out.println("elementAbsoluteCoordinates intBrowserOuterX, Y  intBrowserOuterWidth, Height = "
-				// + objWebDriverPoint + " " + objWebDriverDimension + " " +
-				// (System.currentTimeMillis() - lngStartTimeManageWindow));
-				//
-				// long innerWidth = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
-				// long innerHeight = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
-				//
-				// objStep.put("intoffsetWidth", innerWidth);
-				// objStep.put("intoffsetHeight", innerHeight);
-				//
-				// objStep.put("intBrowserOuterX", intBrowserOuterX);
-				// objStep.put("intBrowserOuterY", intBrowserOuterY);
-				// objStep.put("intBrowserOuterWidth", intBrowserOuterWidth);
-				// objStep.put("intBrowserOuterHeight", intBrowserOuterHeight);
-				// long lngWindowInnerHeight = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return window.innerHeight;");
-				// long lngDocumentElementClientHeight = (long)
-				// ((JavascriptExecutor)
-				// objWebDriver).executeScript("return document.documentElement.clientHeight;");
-				// long lngBodyClientHeight = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return document.body.clientHeight;");
-				//
-				// long offsetWidth = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return document.body.offsetWidth;");
-				// long offsetHeight = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return document.body.offsetHeight;");
-				// long offsetTop = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return document.body.offsetTop;");
-				// long offsetLeft = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return document.body.offsetLeft;");
-				//
-				// long clientWidth = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return document.body.clientWidth;");
-				// long clientHeight = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return document.body.clientHeight;");
-				//
-				// long htmlOffsetWidth = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return document.documentElement.offsetWidth;");
-				// long htmlOffsetHeight = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return document.documentElement.offsetHeight;");
-				// long htmlClientWidth = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return document.documentElement.clientWidth;");
-				// long htmlClientHeight = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return document.documentElement.clientHeight;");
-
-				// var body = document.body, html = document.documentElement;
-				// var height = Math.max(body.scrollHeight, body.offsetHeight,
-				// html.clientHeight, html.scrollHeight, html.offsetHeight);
-
-				// System.out.println("innerWidth = " + innerWidth);
-				// System.out.println("innerHeight = " + innerHeight);
-
-				// System.out.println("lngWindowInnerHeight = " +
-				// lngWindowInnerHeight);
-				// System.out.println("lngDocumentElementClientHeight = " +
-				// lngDocumentElementClientHeight);
-				// System.out.println("lngBodyClientHeight = " +
-				// lngBodyClientHeight);
-				//
-				// System.out.println("BodyoffsetWidth = " + offsetWidth);
-				// System.out.println("BodyoffsetHeight = " + offsetHeight);
-				// System.out.println("BodyoffsetTop = " + offsetTop);
-				// System.out.println("BodyoffsetLeft = " + offsetLeft);
-				//
-				// System.out.println("BodyclientWidth = " + clientWidth);
-				// System.out.println("BodyclientHeight = " + clientHeight);
-				//
-				// System.out.println("htmlOffsetWidth = " + htmlOffsetWidth);
-				// System.out.println("htmlOffsetHeight = " + htmlOffsetHeight);
-				// System.out.println("htmlClientWidth = " + htmlClientWidth);
-				// System.out.println("htmlClientHeight = " + htmlClientHeight);
-				// objStep.put("intoffsetWidth", offsetWidth);
-				// objStep.put("intoffsetHeight", offsetHeight);
-				// objStep.put("intoffsetWidth", htmlOffsetWidth);
-				// objStep.put("intoffsetHeight", htmlOffsetHeight);
-				// long scrollBarWidth = offsetWidth - clientWidth;
-				// long scrollBarHeight = offsetHeight - clientHeight;
-				// System.out.println("scrollBarWidth = " + scrollBarWidth);
-				// System.out.println("scrollBarHeight = " + scrollBarHeight);
-				// window.screenX
-				// window.screenY
-				// long innerWidth = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return window.innerWidth;");
-				// long innerHeight = (long) ((JavascriptExecutor)
-				// objWebDriver).executeScript("return window.innerHeight;");
-				// System.out.println("elementFind innerWidth innerHeight  = " +
-				// innerWidth + " " + innerHeight);
-				// long lngStartTimeHtmlXpath = System.currentTimeMillis();
-				// WebElement objWebElementHtml =
-				// objWebDriver.findElement(By.xpath("/html"));
-				// System.out.println("elementFind objWebElementHtml intMillisecondsWaited = "
-				// + (System.currentTimeMillis() - lngStartTimeHtmlXpath));
-				// long lngStartTimeHtmlCoordinates =
-				// System.currentTimeMillis();
-				// Coordinates objWebElementHtmlCoordinates = ((Locatable)
-				// objWebElementHtml).getCoordinates();
-				// Point objHtmlViewPortPoint =
-				// objWebElementHtmlCoordinates.inViewPort();
-				// System.out.println("elementFind objHtmlViewPortPoint.x = " +
-				// objHtmlViewPortPoint.x);
-				// System.out.println("elementFind objHtmlViewPortPoint.y = " +
-				// objHtmlViewPortPoint.y);
-				// // objStep.put("intWebElementBodyX", objHtmlViewPortPoint.x);
-				// // objStep.put("intWebElementBodyY", objHtmlViewPortPoint.y);
-				// System.out.println("elementFind objBodyViewPortPoint X & Y intMillisecondsWaited = "
-				// + objWebElementHtmlCoordinates + " " +
-				// (System.currentTimeMillis() - lngStartTimeHtmlCoordinates));
-				// long lngStartTimeHtmlDimension = System.currentTimeMillis();
-				// Dimension objWebElementHtmlDimension =
-				// objWebElementHtml.getSize();
-				// System.out.println("elementFind objWebElementHtmlDimension.width = "
-				// + objWebElementHtmlDimension.width);
-				// System.out.println("elementFind objWebElementHtmlDimension.height = "
-				// + objWebElementHtmlDimension.height);
-				// objStep.put("intWebElementBodyWidth",
-				// objWebElementBodyDimension.width);
-				// objStep.put("intWebElementBodyHeight",
-				// objWebElementBodyDimension.height);
-				// long lngStartTimeBodyXpath = System.currentTimeMillis();
-				// WebElement objWebElementBody =
-				// objWebDriver.findElement(By.xpath("/html/body"));
-				// System.out.println("elementFind objWebElementBody intMillisecondsWaited = "
-				// + (System.currentTimeMillis() - lngStartTimeBodyXpath));
-				// long lngStartTimeBodyCoordinates =
-				// System.currentTimeMillis();
-				// Coordinates objWebElementBodyCoordinates = ((Locatable)
-				// objWebElementBody).getCoordinates();
-				// Point objBodyViewPortPoint =
-				// objWebElementBodyCoordinates.inViewPort();
-				// objStep.put("intWebElementBodyX", objBodyViewPortPoint.x);
-				// objStep.put("intWebElementBodyY", objBodyViewPortPoint.y);
-				// System.out.println("elementFind objBodyViewPortPoint X & Y intMillisecondsWaited = "
-				// + objWebElementBodyCoordinates + " " +
-				// (System.currentTimeMillis() - lngStartTimeBodyCoordinates));
-				// long lngStartTimeBodyDimension = System.currentTimeMillis();
-				// Dimension objWebElementBodyDimension =
-				// objWebElementBody.getSize();
-				// System.out.println("elementFind objWebElementBodyDimension.width = "
-				// + objWebElementBodyDimension.width);
-				// System.out.println("elementFind objWebElementBodyDimension.height = "
-				// + objWebElementBodyDimension.height);
-				// objStep.put("intWebElementBodyWidth",
-				// objWebElementBodyDimension.width);
-				// objStep.put("intWebElementBodyHeight",
-				// objWebElementBodyDimension.height);
-				// objStep.put("intWebElementBodyWidth", innerWidth);
-				// objStep.put("intWebElementBodyHeight", innerHeight);
-				// System.out.println("elementFind objWebElementBodyDimension intMillisecondsWaited = "
-				// + objWebElementBodyDimension + " " +
-				// (System.currentTimeMillis() - lngStartTimeBodyDimension));
-				// } // if (blnSwitchWindow == true
-				// long lngStartTimeFrameCollection =
-				// System.currentTimeMillis();
-				// objFrameCollection =
-				// objWebDriver.findElements(By.xpath("//frame"));
-				// //objFrameCollection =
-				// objWebDriver.findElements(By.cssSelector("css=frame"));
-				// int intFramesCount = objFrameCollection.size();
-				// System.out.println("elementFind objFrameCollection = " +
-				// intFramesCount + "  " + (System.currentTimeMillis() -
-				// lngStartTimeFrameCollection));
-				//
-				// if (intFramesCount >= 1) {
-				// intFramesCount = intFramesCount + 1;
-				// System.out.println("elementFind objFrameCollection = " +
-				// intFramesCount + "  " + (System.currentTimeMillis() -
-				// lngStartTimeFrameCollection));
-				// }
-				int intFramesCount = 0;
 				long lngStartTimeFrameCollection = System.currentTimeMillis();
-				// objWebDriver.switchTo().defaultContent();
 				// TODO add iFrame handling, return a collection of both frame
-				// and iframe
-				// objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('iframe');");
-				try {
-					objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.querySelectorAll('frame,iframe');");
-					intFramesCount = objFrameCollection.size();
-				} catch (WebDriverException e) {
-					// objFrameCollection = 0;
-					intFramesCount = 0;
-					System.out.println("elementFind objFrameCollection exception = " + e.toString());
-
-				}
-				// var elems = document.querySelectorAll('frame,iframe')
-
-				// objFrameCollection =
-				// objWebDriver.findElements(By.xpath("//frame"));
-				// objFrameCollection =
-				// objWebDriver.findElements(By.cssSelector("css=frame"));
-				// intFramesCount = objFrameCollection.size();
+				objFrameCollection = objWebDriver.findElements(By.tagName("frame"));
+				System.out.println("elementFind objFrames.size() = " + objFrameCollection.size());
+				objFrameCollection.addAll(objWebDriver.findElements(By.tagName("iframe")));
+				intFramesCount = objFrameCollection.size();
 				System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
 				if (intFramesCount >= 1) {
 					intFramesCount = intFramesCount + 1;
@@ -1850,57 +1598,22 @@ public class Evinrude {
 					if (intFramesEach >= 0) {
 						System.out.println("elementFind frames objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
 						objWebDriver.switchTo().defaultContent();
-						objWebDriver.switchTo().frame(intFramesEach);
-						// objWebDriver.switchTo().frame(0);
+						objWebDriver.switchTo().frame(objFrameCollection.get(intFramesEach));
 					}
-					// strXpath = "(//" + strTag + "[" + strXpathAttributes +
-					// "])" + strIndex;
-					// System.out.println("elementFind strXpath = " + strXpath);
 					long lngStartTimeByXpath = System.currentTimeMillis();
 					objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
-					System.out.println("elementFind lngMillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeByXpath));
-					System.out.println("elementFind objWebElementCollection.size = " + objWebElementCollection.size());
+					System.out.println("elementFind objWebElementCollection.size = " + objWebElementCollection.size() + "lngMillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeByXpath));
 					if (objWebElementCollection.size() == 1) {
 						blnFound = true;
 						break;
 					}
-					// long lngStartTimeFrameCollection =
-					// System.currentTimeMillis();
-					//
-					// objFrameCollection = (List<WebElement>)
-					// ((JavascriptExecutor)
-					// objWebDriver).executeScript("return document.getElementsByTagName('frame');");
-					//
-					// // objFrameCollection =
-					// objWebDriver.findElements(By.xpath("//frame"));
-					// // objFrameCollection =
-					// objWebDriver.findElements(By.cssSelector("css=frame"));
-					// intFramesCount = objFrameCollection.size();
-					// System.out.println("elementFind objFrameCollection = " +
-					// intFramesCount + "  " + (System.currentTimeMillis() -
-					// lngStartTimeFrameCollection));
-					//
-					// if (intFramesCount >= 1) {
-					// intFramesCount = intFramesCount + 1;
-					// System.out.println("elementFind objFrameCollection = " +
-					// intFramesCount + "  " + (System.currentTimeMillis() -
-					// lngStartTimeFrameCollection));
-					// }
-					// long lngStartTimegetElementsByTagName =
-					// System.currentTimeMillis();
-					// List<WebElement> objFrameCollection2 = (List<WebElement>)
-					// ((JavascriptExecutor)
-					// objWebDriver).executeScript("return document.getElementsByTagName('frame');");
-					// System.out.println("elementFind objFrameCollection2 = " +
-					// objFrameCollection2.size() + " " +
-					// (System.currentTimeMillis() -
-					// lngStartTimegetElementsByTagName));
-				}// the end of for (String intFramesEach
+				}
 				switch (objWebElementCollection.size()) {
 				case 0:
 					System.out.println("elementFind - Element properties did not return an element, try refining attributes.");
 					throw new NoElementFoundException("Element properties did not return an element, try refining attributes");
 				case 1:
+					System.out.println(objWebElementCollection.get(0));
 					objWebElement = objWebElementCollection.get(0);
 					objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
 					if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
@@ -1911,34 +1624,6 @@ public class Evinrude {
 					} else {
 						objStep.put("strTagType", objStep.get("strTagName").toString());
 					}
-					// objWebElement =
-					// objWebDriver.findElement(By.xpath(strXpath));
-					// break;
-					// JavascriptExecutor executor = (JavascriptExecutor)
-					// objWebDriver;
-					// //
-					// executor.executeScript("window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
-					// // ( function x() { //do something & return value } )()
-					// //
-					// executor.executeScript("arguments[0].scrollIntoView(false);",
-					// objWebElement);
-					// System.out.println("elementFind JavascriptExecutor clientHeight = "
-					// + executor.executeScript("arguments[0].clientHeight;",
-					// objWebElement));
-					// long lngStartTimeElementFindclientWidth =
-					// System.currentTimeMillis();
-					// System.out.println(((JavascriptExecutor)
-					// objWebDriver).executeScript("return document.documentElement.clientWidth")
-					// + " " + (System.currentTimeMillis() -
-					// lngStartTimeElementFindclientWidth));
-					// long lngStartTimeElementFindclientHeight =
-					// System.currentTimeMillis();
-					// System.out.println(((JavascriptExecutor)
-					// objWebDriver).executeScript("return document.documentElement.clientHeight")
-					// + " " + (System.currentTimeMillis() -
-					// lngStartTimeElementFindclientHeight));
-					// String strTitle = (String)
-					// js.executeScript("return document.title");
 					return objWebElement;
 				default:
 					System.out.println("elementFind - Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
@@ -1952,6 +1637,539 @@ public class Evinrude {
 		}
 		return null;
 	}// the end of elementFind
+
+	// working with commented code 20141209 copied to have reference for code removal of function above
+	// @SuppressWarnings({ "unchecked" })
+	// public static WebElement elementFind(JSONObject objStep, WebDriver objWebDriver) throws NoElementFoundException, MultipleElementsFoundException {
+	// long lngStartTimeElementFind = System.currentTimeMillis();
+	// try {
+	// String strXpath = "";
+	// String strTag;
+	// String strIndex = "";
+	// Boolean blnFound = false;
+	// //Boolean blnSwitchWindow = false;
+	// WebElement objWebElement = null;
+	// List<WebElement> objWebElementCollection;
+	// List<WebElement> objFrameCollection;
+	// String strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
+	// strTag = objStep.get("strTagName").toString().toLowerCase();
+	// String arrAttributeNames[] = objStep.get("strAttributeNames").toString().split("\\|", -1);
+	// String arrAttributeValues[] = objStep.get("strAtributeValues").toString().split("\\|", -1);
+	// String strXpathAttributesTemp = "";
+	// String strXpathAttributes = "";
+	// if (strTag.toLowerCase().equals("alert")) {
+	// // try {
+	// // Alert alert = objWebDriver.switchTo().alert();
+	// // // System.out.println(alert.getText()); // Print Alert popup
+	// // // alert.sendKeys("tegan");
+	// // // alert.accept(); // Close Alert popup
+	// // // alert.dismiss();; // Close Alert popup
+	// // return null;
+	// //
+	// // } catch (Exception e) {
+	// // System.out.println(e.toString());
+	// // }
+	// // TODO elementFind finish alert handling
+	// try {
+	// // objWebDriver.switchTo().alert();
+	// objStep.put("strTagType", "alert");
+	// @SuppressWarnings("unused")
+	// Alert alert = objWebDriver.switchTo().alert();
+	// System.out.println("this is the alert switch to which did not fail");
+	// // System.out.println(objWebDriver.manage().window().getPosition());
+	// // System.out.println(objWebDriver.manage().window().getSize());
+	// return null;
+	// } // try
+	// catch (NoAlertPresentException e) {
+	// // return false;
+	// System.out.println("this is the alert switch to which did fail");
+	// System.out.println(e.toString());
+	// throw new NoElementFoundException("Alert popup was not found.");
+	// } // catch
+	// }
+	// for (int intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
+	// strXpathAttributesTemp = "";
+	// switch (arrAttributeNames[intAttributeEach].toLowerCase()) {
+	// case "index":
+	// strIndex = "[" + arrAttributeValues[intAttributeEach] + "]";
+	// break;
+	// case "text":
+	// if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("re:")) {
+	// strXpathAttributesTemp = "contains(text()" + ", '" + arrAttributeValues[intAttributeEach].substring(3) + "')";
+	// } else {
+	// strXpathAttributesTemp = "text()='" + arrAttributeValues[intAttributeEach] + "' ";
+	// }
+	// break;
+	// default:
+	// if (arrAttributeNames[intAttributeEach].toLowerCase().equals("type")) {
+	// objStep.put("strType", arrAttributeValues[intAttributeEach]);
+	// }
+	// if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("re:")) {
+	// strXpathAttributesTemp = "contains(@" + arrAttributeNames[intAttributeEach] + ", '" + arrAttributeValues[intAttributeEach].substring(3) + "')";
+	// } else {
+	// strXpathAttributesTemp = "@" + arrAttributeNames[intAttributeEach] + "='" + arrAttributeValues[intAttributeEach] + "'";
+	// }
+	// break;
+	// }
+	// if (strXpathAttributesTemp.trim().length() != 0) {
+	// if (strXpathAttributes.trim().length() == 0) {
+	// strXpathAttributes = strXpathAttributesTemp;
+	// } else {
+	// strXpathAttributes = strXpathAttributes + " and " + strXpathAttributesTemp;
+	// }
+	// }
+	// }// for (int intAttributeEach
+	// if (strXpathAttributes.trim().length() == 0) {
+	// strXpathAttributes = "";
+	// } else {
+	// strXpathAttributes = "[" + strXpathAttributes + "]";
+	// }
+	// strXpath = "(//" + strTag + strXpathAttributes + ")" + strIndex;
+	// System.out.println("elementFind strXpath = " + strXpath);
+	// // System.out.println("elementFind lngMillisecondsWaitedByCreateXpath = "
+	// // + (System.currentTimeMillis() - lngStartTimeByCreateXpath));
+	// // long lngStartTimeByCreateForGetWindowHandles =
+	// // System.currentTimeMillis();
+	// // objWebDriver.getWindowHandles()
+	// // Set<String> arrHandles = objWebDriver.getWindowHandles();
+	// // <String> st =
+	// // objWebDriver.getWindowHandles().iterator().hasNext();
+	// // ArrayList<String> arrHandles = new ArrayList<String>();
+	// // @SuppressWarnings("unchecked")
+	// // ArrayList<String> arrHandles = (ArrayList<String>)
+	// // objWebDriver.getWindowHandles();
+	// // List<WebElement> objWebElementCollection =
+	// // objWebDriver.findElements(By.tagName(strTagName));
+	// // Iterator<String> arrHandlesEach = ((Collection<String>)
+	// // arrHandles).iterator();
+	// // objWebDriver.getWindowHandles().iterator().hasNext()
+	// // Iterator<String> objWebElementEach = (Iterator<String>)
+	// // ((Collection<String>) objWebDriver.getWindowHandles().iterator();
+	// // Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
+	// // for (int intHandlesEach = 0; intHandlesEach < arrHandles.length;
+	// // intHandlesEach++)
+	// // while (objWebDriver.getWindowHandles().iterator().hasNext()) {
+	// // string winHandle = arrHandles[intHandlesEach].toString();
+	// // //for (String winHandle ;arrHandles ;1++) {
+	// // for (int intHandlesEach = 0; intHandlesEach <
+	// // arrHandles.size(); intHandlesEach++)
+	// // String strCurrentWindowHandle = objWebDriver.getWindowHandle();
+	// System.out.println("elementFind before loop strCurrentWindowHandle = " + strCurrentWindowHandle);
+	// // System.out.println("elementFind before defaultContent strCurrentWindowHandle = "
+	// // + objWebDriver.getWindowHandles().size());
+	// // objWebDriver.switchTo().defaultContent();
+	// // System.out.println("elementFind after defaultContent strCurrentWindowHandle = "
+	// // + objWebDriver.getWindowHandles().size());
+	// // objWebDriver.switchTo().defaultContent();
+	// Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
+	// System.out.println("arrHandles.length = " + arrHandles.length);
+	// for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0; intHandlesEach--) {
+	// // objWebDriver.switchTo().defaultContent();
+	// String winHandle = arrHandles[intHandlesEach].toString();
+	// System.out.println("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
+	// System.out.println("elementFind winHandle = " + winHandle);
+	// long lngStartTimeSwitchTo = System.currentTimeMillis();
+	// objWebDriver.switchTo().window(winHandle);
+	// // if (strCurrentWindowHandle.equals(winHandle)) {
+	// // } else {
+	// // objWebDriver.switchTo().window(winHandle);
+	// // System.out.println("elementFind lngStartTimeSwitchTo = " +
+	// // (System.currentTimeMillis() - lngStartTimeSwitchTo));
+	// // blnSwitchWindow = true;
+	// // }
+	// System.out.println("elementFind lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
+	// System.out.println("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
+	// long intBrowserInnerWidth = 0;
+	// long intBrowserInnerHeight = 0;
+	// try {
+	// intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
+	// intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
+	// System.out.println("intBrowserInnerWidth = " + intBrowserInnerWidth);
+	// System.out.println("intBrowserInnerHeight = " + intBrowserInnerHeight);
+	// } catch (WebDriverException e) {
+	// throw new NoElementFoundException("WebDriverException returned");
+	// } catch (Exception e) {
+	// System.out.println("BodyoffsetHeight = " + e.toString());
+	// intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetWidth;");
+	// intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetHeight;");
+	// System.out.println("BodyoffsetWidth = " + intBrowserInnerWidth);
+	// System.out.println("BodyoffsetHeight = " + intBrowserInnerHeight);
+	// }
+	// objStep.put("intBrowserInnerWidth", intBrowserInnerWidth);
+	// objStep.put("intBrowserInnerHeight", intBrowserInnerHeight);
+	// // TODO cleanup old code from get absolute coordinates attempts
+	// // int intWebElementBodyX =
+	// // Integer.parseInt(objStep.get("intWebElementBodyX").toString());
+	// // int intWebElementBodyY =
+	// // Integer.parseInt(objStep.get("intWebElementBodyY").toString());
+	// // int intWebElementBodyWidth =
+	// // Integer.parseInt(objStep.get("intWebElementBodyWidth").toString());
+	// // int intWebElementBodyHeight =
+	// // Integer.parseInt(objStep.get("intWebElementBodyHeight").toString());
+	// // if (blnSwitchWindow == true || intWebElementBodyX +
+	// // intWebElementBodyY + intWebElementBodyWidth +
+	// // intWebElementBodyHeight == 0) {
+	// // blnSwitchWindow = false;
+	// // long lngStartTimeManageWindow = System.currentTimeMillis();
+	// // Point objWebDriverPoint =
+	// // objWebDriver.manage().window().getPosition();
+	// // int intBrowserOuterX = objWebDriverPoint.x;
+	// // int intBrowserOuterY = objWebDriverPoint.y;
+	// // Dimension objWebDriverDimension =
+	// // objWebDriver.manage().window().getSize();
+	// // int intBrowserOuterWidth = objWebDriverDimension.width;
+	// // int intBrowserOuterHeight = objWebDriverDimension.height;
+	// // System.out.println("elementAbsoluteCoordinates intBrowserOuterX, Y  intBrowserOuterWidth, Height = "
+	// // + objWebDriverPoint + " " + objWebDriverDimension + " " +
+	// // (System.currentTimeMillis() - lngStartTimeManageWindow));
+	// //
+	// // long innerWidth = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
+	// // long innerHeight = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
+	// //
+	// // objStep.put("intoffsetWidth", innerWidth);
+	// // objStep.put("intoffsetHeight", innerHeight);
+	// //
+	// // objStep.put("intBrowserOuterX", intBrowserOuterX);
+	// // objStep.put("intBrowserOuterY", intBrowserOuterY);
+	// // objStep.put("intBrowserOuterWidth", intBrowserOuterWidth);
+	// // objStep.put("intBrowserOuterHeight", intBrowserOuterHeight);
+	// // long lngWindowInnerHeight = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return window.innerHeight;");
+	// // long lngDocumentElementClientHeight = (long)
+	// // ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.documentElement.clientHeight;");
+	// // long lngBodyClientHeight = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.body.clientHeight;");
+	// //
+	// // long offsetWidth = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.body.offsetWidth;");
+	// // long offsetHeight = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.body.offsetHeight;");
+	// // long offsetTop = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.body.offsetTop;");
+	// // long offsetLeft = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.body.offsetLeft;");
+	// //
+	// // long clientWidth = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.body.clientWidth;");
+	// // long clientHeight = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.body.clientHeight;");
+	// //
+	// // long htmlOffsetWidth = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.documentElement.offsetWidth;");
+	// // long htmlOffsetHeight = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.documentElement.offsetHeight;");
+	// // long htmlClientWidth = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.documentElement.clientWidth;");
+	// // long htmlClientHeight = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.documentElement.clientHeight;");
+	//
+	// // var body = document.body, html = document.documentElement;
+	// // var height = Math.max(body.scrollHeight, body.offsetHeight,
+	// // html.clientHeight, html.scrollHeight, html.offsetHeight);
+	//
+	// // System.out.println("innerWidth = " + innerWidth);
+	// // System.out.println("innerHeight = " + innerHeight);
+	//
+	// // System.out.println("lngWindowInnerHeight = " +
+	// // lngWindowInnerHeight);
+	// // System.out.println("lngDocumentElementClientHeight = " +
+	// // lngDocumentElementClientHeight);
+	// // System.out.println("lngBodyClientHeight = " +
+	// // lngBodyClientHeight);
+	// //
+	// // System.out.println("BodyoffsetWidth = " + offsetWidth);
+	// // System.out.println("BodyoffsetHeight = " + offsetHeight);
+	// // System.out.println("BodyoffsetTop = " + offsetTop);
+	// // System.out.println("BodyoffsetLeft = " + offsetLeft);
+	// //
+	// // System.out.println("BodyclientWidth = " + clientWidth);
+	// // System.out.println("BodyclientHeight = " + clientHeight);
+	// //
+	// // System.out.println("htmlOffsetWidth = " + htmlOffsetWidth);
+	// // System.out.println("htmlOffsetHeight = " + htmlOffsetHeight);
+	// // System.out.println("htmlClientWidth = " + htmlClientWidth);
+	// // System.out.println("htmlClientHeight = " + htmlClientHeight);
+	// // objStep.put("intoffsetWidth", offsetWidth);
+	// // objStep.put("intoffsetHeight", offsetHeight);
+	// // objStep.put("intoffsetWidth", htmlOffsetWidth);
+	// // objStep.put("intoffsetHeight", htmlOffsetHeight);
+	// // long scrollBarWidth = offsetWidth - clientWidth;
+	// // long scrollBarHeight = offsetHeight - clientHeight;
+	// // System.out.println("scrollBarWidth = " + scrollBarWidth);
+	// // System.out.println("scrollBarHeight = " + scrollBarHeight);
+	// // window.screenX
+	// // window.screenY
+	// // long innerWidth = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return window.innerWidth;");
+	// // long innerHeight = (long) ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return window.innerHeight;");
+	// // System.out.println("elementFind innerWidth innerHeight  = " +
+	// // innerWidth + " " + innerHeight);
+	// // long lngStartTimeHtmlXpath = System.currentTimeMillis();
+	// // WebElement objWebElementHtml =
+	// // objWebDriver.findElement(By.xpath("/html"));
+	// // System.out.println("elementFind objWebElementHtml intMillisecondsWaited = "
+	// // + (System.currentTimeMillis() - lngStartTimeHtmlXpath));
+	// // long lngStartTimeHtmlCoordinates =
+	// // System.currentTimeMillis();
+	// // Coordinates objWebElementHtmlCoordinates = ((Locatable)
+	// // objWebElementHtml).getCoordinates();
+	// // Point objHtmlViewPortPoint =
+	// // objWebElementHtmlCoordinates.inViewPort();
+	// // System.out.println("elementFind objHtmlViewPortPoint.x = " +
+	// // objHtmlViewPortPoint.x);
+	// // System.out.println("elementFind objHtmlViewPortPoint.y = " +
+	// // objHtmlViewPortPoint.y);
+	// // // objStep.put("intWebElementBodyX", objHtmlViewPortPoint.x);
+	// // // objStep.put("intWebElementBodyY", objHtmlViewPortPoint.y);
+	// // System.out.println("elementFind objBodyViewPortPoint X & Y intMillisecondsWaited = "
+	// // + objWebElementHtmlCoordinates + " " +
+	// // (System.currentTimeMillis() - lngStartTimeHtmlCoordinates));
+	// // long lngStartTimeHtmlDimension = System.currentTimeMillis();
+	// // Dimension objWebElementHtmlDimension =
+	// // objWebElementHtml.getSize();
+	// // System.out.println("elementFind objWebElementHtmlDimension.width = "
+	// // + objWebElementHtmlDimension.width);
+	// // System.out.println("elementFind objWebElementHtmlDimension.height = "
+	// // + objWebElementHtmlDimension.height);
+	// // objStep.put("intWebElementBodyWidth",
+	// // objWebElementBodyDimension.width);
+	// // objStep.put("intWebElementBodyHeight",
+	// // objWebElementBodyDimension.height);
+	// // long lngStartTimeBodyXpath = System.currentTimeMillis();
+	// // WebElement objWebElementBody =
+	// // objWebDriver.findElement(By.xpath("/html/body"));
+	// // System.out.println("elementFind objWebElementBody intMillisecondsWaited = "
+	// // + (System.currentTimeMillis() - lngStartTimeBodyXpath));
+	// // long lngStartTimeBodyCoordinates =
+	// // System.currentTimeMillis();
+	// // Coordinates objWebElementBodyCoordinates = ((Locatable)
+	// // objWebElementBody).getCoordinates();
+	// // Point objBodyViewPortPoint =
+	// // objWebElementBodyCoordinates.inViewPort();
+	// // objStep.put("intWebElementBodyX", objBodyViewPortPoint.x);
+	// // objStep.put("intWebElementBodyY", objBodyViewPortPoint.y);
+	// // System.out.println("elementFind objBodyViewPortPoint X & Y intMillisecondsWaited = "
+	// // + objWebElementBodyCoordinates + " " +
+	// // (System.currentTimeMillis() - lngStartTimeBodyCoordinates));
+	// // long lngStartTimeBodyDimension = System.currentTimeMillis();
+	// // Dimension objWebElementBodyDimension =
+	// // objWebElementBody.getSize();
+	// // System.out.println("elementFind objWebElementBodyDimension.width = "
+	// // + objWebElementBodyDimension.width);
+	// // System.out.println("elementFind objWebElementBodyDimension.height = "
+	// // + objWebElementBodyDimension.height);
+	// // objStep.put("intWebElementBodyWidth",
+	// // objWebElementBodyDimension.width);
+	// // objStep.put("intWebElementBodyHeight",
+	// // objWebElementBodyDimension.height);
+	// // objStep.put("intWebElementBodyWidth", innerWidth);
+	// // objStep.put("intWebElementBodyHeight", innerHeight);
+	// // System.out.println("elementFind objWebElementBodyDimension intMillisecondsWaited = "
+	// // + objWebElementBodyDimension + " " +
+	// // (System.currentTimeMillis() - lngStartTimeBodyDimension));
+	// // } // if (blnSwitchWindow == true
+	// // long lngStartTimeFrameCollection =
+	// // System.currentTimeMillis();
+	// // objFrameCollection =
+	// // objWebDriver.findElements(By.xpath("//frame"));
+	// // //objFrameCollection =
+	// // objWebDriver.findElements(By.cssSelector("css=frame"));
+	// // int intFramesCount = objFrameCollection.size();
+	// // System.out.println("elementFind objFrameCollection = " +
+	// // intFramesCount + "  " + (System.currentTimeMillis() -
+	// // lngStartTimeFrameCollection));
+	// //
+	// // if (intFramesCount >= 1) {
+	// // intFramesCount = intFramesCount + 1;
+	// // System.out.println("elementFind objFrameCollection = " +
+	// // intFramesCount + "  " + (System.currentTimeMillis() -
+	// // lngStartTimeFrameCollection));
+	// // }
+	// int intFramesCount = 0;
+	// long lngStartTimeFrameCollection = System.currentTimeMillis();
+	// // objWebDriver.switchTo().defaultContent();
+	// // TODO add iFrame handling, return a collection of both frame
+	// // and iframe
+	// // objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('iframe');");
+	//
+	// // Can you just combine the two lists?
+	// // List<WebElement> act = driver.findElements(By.className("act"));
+	// // List<WebElement> dact = driver.findElements(By.className("dact"));
+	// // List<WebElement> all = new ArrayList<WebElement>();
+	// // all.addAll(act);
+	// // all.addAll(dact);
+	// //
+	// //
+	// // Alternatively, you could use an xpath locator as suggested by @Alejandro
+	// // List<WebElement> all = driver.findElements(By.xpath("//*[@class='act' or @class='dact']"));
+	//
+	// // try {
+	// objFrameCollection = objWebDriver.findElements(By.tagName("frame"));
+	// //List<WebElement> objFrames = objWebDriver.findElements(By.tagName("frame"));
+	// System.out.println("elementFind objFrames.size() = " + objFrameCollection.size());
+	// List<WebElement> objIframes = objWebDriver.findElements(By.tagName("iframe"));
+	// System.out.println("elementFind objIframes.size() = " + objIframes.size());
+	// // objFrameCollection.clear();
+	// // System.out.println("elementFind objFrameCollection.clear(); ");
+	// intFramesCount = 0;
+	// //objFrameCollection.clear;
+	// if (objFrameCollection.size() > 0) {
+	// //objFrameCollection.addAll(objFrames);
+	// intFramesCount = objFrameCollection.size();
+	// }
+	// if (objIframes.size() > 0) {
+	// objFrameCollection.addAll(objIframes);
+	// intFramesCount = intFramesCount + objIframes.size();
+	// }
+	//
+	// // System.out.println("elementFind ==null; " + objFrameCollection == null);
+	// // if (objFrameCollection == null) {
+	// // intFramesCount = 0;
+	// // } else {
+	// // intFramesCount = objFrameCollection.size();
+	// // }
+	// // objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
+	//
+	// // objFrameCollection = objWebDriver.findElements(By.xpath("//frame or //iframe"));
+	//
+	// // objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
+	// // objFrameCollection = objWebDriver.findElements(By.cssSelector("css=frame"));
+	// // objFrameCollection = objWebDriver.findElements(By.xpath("//frame|//iframe"));
+	// // objFrameCollection = objWebDriver.findElements(By.tagName("frame"));
+	// // objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
+	// // objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.querySelectorAll('frame');");
+	//
+	// // objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.querySelectorAll(\"frame,iframe\");");
+	// // intFramesCount = objFrameCollection.size();
+	// // } catch (WebDriverException e) {
+	// // // objFrameCollection = 0;
+	// // intFramesCount = 0;
+	// // System.out.println("elementFind objFrameCollection exception = " + e.toString());
+	// //
+	// // }
+	// // var elems = document.querySelectorAll('frame,iframe')
+	//
+	// // objFrameCollection =
+	// // objWebDriver.findElements(By.xpath("//frame"));
+	// // objFrameCollection =
+	// // objWebDriver.findElements(By.cssSelector("css=frame"));
+	// // intFramesCount = objFrameCollection.size();
+	// System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+	// if (intFramesCount >= 1) {
+	// intFramesCount = intFramesCount + 1;
+	// System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+	// }
+	// for (int intFramesEach = -1; intFramesEach < intFramesCount; intFramesEach++) {
+	// System.out.println("elementFind intFramesEach = " + intFramesEach);
+	// if (intFramesEach >= 0) {
+	// System.out.println("elementFind frames objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
+	// objWebDriver.switchTo().defaultContent();
+	// objWebDriver.switchTo().frame(intFramesEach);
+	// // objWebDriver.switchTo().frame(0);
+	// }
+	// // strXpath = "(//" + strTag + "[" + strXpathAttributes +
+	// // "])" + strIndex;
+	// // System.out.println("elementFind strXpath = " + strXpath);
+	// long lngStartTimeByXpath = System.currentTimeMillis();
+	// objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
+	// System.out.println("elementFind lngMillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeByXpath));
+	// System.out.println("elementFind objWebElementCollection.size = " + objWebElementCollection.size());
+	// if (objWebElementCollection.size() == 1) {
+	// blnFound = true;
+	// break;
+	// }
+	// // long lngStartTimeFrameCollection =
+	// // System.currentTimeMillis();
+	// //
+	// // objFrameCollection = (List<WebElement>)
+	// // ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.getElementsByTagName('frame');");
+	// //
+	// // // objFrameCollection =
+	// // objWebDriver.findElements(By.xpath("//frame"));
+	// // // objFrameCollection =
+	// // objWebDriver.findElements(By.cssSelector("css=frame"));
+	// // intFramesCount = objFrameCollection.size();
+	// // System.out.println("elementFind objFrameCollection = " +
+	// // intFramesCount + "  " + (System.currentTimeMillis() -
+	// // lngStartTimeFrameCollection));
+	// //
+	// // if (intFramesCount >= 1) {
+	// // intFramesCount = intFramesCount + 1;
+	// // System.out.println("elementFind objFrameCollection = " +
+	// // intFramesCount + "  " + (System.currentTimeMillis() -
+	// // lngStartTimeFrameCollection));
+	// // }
+	// // long lngStartTimegetElementsByTagName =
+	// // System.currentTimeMillis();
+	// // List<WebElement> objFrameCollection2 = (List<WebElement>)
+	// // ((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.getElementsByTagName('frame');");
+	// // System.out.println("elementFind objFrameCollection2 = " +
+	// // objFrameCollection2.size() + " " +
+	// // (System.currentTimeMillis() -
+	// // lngStartTimegetElementsByTagName));
+	// }// the end of for (String intFramesEach
+	// switch (objWebElementCollection.size()) {
+	// case 0:
+	// System.out.println("elementFind - Element properties did not return an element, try refining attributes.");
+	// throw new NoElementFoundException("Element properties did not return an element, try refining attributes");
+	// case 1:
+	// objWebElement = objWebElementCollection.get(0);
+	// objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
+	// if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
+	// if (objStep.get("strType").toString().toLowerCase().length() == 0) {
+	// objStep.put("strType", objWebElement.getAttribute("type"));
+	// }
+	// objStep.put("strTagType", "input_" + objStep.get("strType").toString());
+	// } else {
+	// objStep.put("strTagType", objStep.get("strTagName").toString());
+	// }
+	// // objWebElement =
+	// // objWebDriver.findElement(By.xpath(strXpath));
+	// // break;
+	// // JavascriptExecutor executor = (JavascriptExecutor)
+	// // objWebDriver;
+	// // //
+	// // executor.executeScript("window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
+	// // // ( function x() { //do something & return value } )()
+	// // //
+	// // executor.executeScript("arguments[0].scrollIntoView(false);",
+	// // objWebElement);
+	// // System.out.println("elementFind JavascriptExecutor clientHeight = "
+	// // + executor.executeScript("arguments[0].clientHeight;",
+	// // objWebElement));
+	// // long lngStartTimeElementFindclientWidth =
+	// // System.currentTimeMillis();
+	// // System.out.println(((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.documentElement.clientWidth")
+	// // + " " + (System.currentTimeMillis() -
+	// // lngStartTimeElementFindclientWidth));
+	// // long lngStartTimeElementFindclientHeight =
+	// // System.currentTimeMillis();
+	// // System.out.println(((JavascriptExecutor)
+	// // objWebDriver).executeScript("return document.documentElement.clientHeight")
+	// // + " " + (System.currentTimeMillis() -
+	// // lngStartTimeElementFindclientHeight));
+	// // String strTitle = (String)
+	// // js.executeScript("return document.title");
+	// return objWebElement;
+	// default:
+	// System.out.println("elementFind - Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
+	// throw new MultipleElementsFoundException("Element properties did not return an element, try refining attributes");
+	// }// the end of switch (objWebElementCollection.size())
+	// }// the end of for win Handles
+	// } catch (NoSuchFrameException e) {
+	// throw new NoElementFoundException("elementFind " + e.toString());
+	// } finally {
+	// System.out.println("elementFind finally lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeElementFind));
+	// }
+	// return null;
+	// }// the end of elementFind
 
 	// public static WebElement elementFindOriginalWithCommentedCodeToUse(String
 	// strTagName, String strAttributeNames, String strAttributeValues,
@@ -2995,6 +3213,11 @@ public class Evinrude {
 			case "div":
 			case "span":
 			case "h1":
+			case "h2":
+			case "h3":
+			case "h4":
+			case "h5":
+			case "h6":
 			case "p":
 				// return objWebElement.getAttribute("innerText");
 				return objWebElement.getText();
