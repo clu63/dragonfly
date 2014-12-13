@@ -2,145 +2,93 @@
 <head>
 <title>Evinrude Step Builder</title>
 <script language="javascript" type="text/javascript">
-	function saveTableToJson(tableID) {
+	function saveTableToJson() {
 		try {
-			//alert("working");
 			var strKeyName = "";
-			var saveText = "";
-			var table = document.getElementById(tableID);
-			var rowCount = table.rows.length;
-
-			//alert("rowCount = " + rowCount);
-			for (var intRow = 1; intRow < rowCount; intRow++) {
-				var eachRow = table.rows[intRow];
-				//	var row = table.rows[i];
-				//var newRow = table.insertRow(intRow);
-				var colCount = eachRow.cells.length;
-				//alert("colCount = " + colCount);
-				for (var intCol = 0; intCol < colCount; intCol++) {
-					//alert("intCol = " + intCol);
-					//var newcell = eachRow.insertCell(intCol);
-					var eachCell = eachRow.cells[intCol];
-					//newcell.innerHTML = eachRow.cells[intCol].innerHTML;
-					//alert(table.rows[intRow].cells[intCol].innerHTML);
-					// 					alert(eachCell.innerHTML);
-					// 					alert(eachCell.childNodes[0].type);
-					strKeyName = table.rows[0].cells[intCol].innerHTML
-
-				//	alert(strKeyName);
-					switch (eachCell.childNodes[0].type) {
+			var strTextToJson = "{\"test steps\":[";
+			var objTable = document.getElementById('EvinrudeStepTable');
+			var intRowCount = objTable.rows.length;
+			var intRow;
+			var intColumnCount;
+			var objRowEach;
+			var intColumnEach;
+			var objCellEach;
+			for (intRow = 1; intRow < intRowCount; intRow++) {
+				strTextToJson = strTextToJson + "{";
+				objRowEach = objTable.rows[intRow];
+				intColumnCount = objRowEach.cells.length;
+				for (intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
+					objCellEach = objRowEach.cells[intColumnEach];
+					strKeyName = objTable.rows[0].cells[intColumnEach].innerHTML
+					switch (objCellEach.childNodes[0].type) {
 					case "text":
-						//saveText = saveText + "|" + eachCell.childNodes[0].value;
-						saveText = saveText + "|" + strKeyName + ":" + eachCell.childNodes[0].value;
-						//alert(saveText);
+						strTextToJson = strTextToJson + "\"" + strKeyName + "\":\"" + objCellEach.childNodes[0].value + "\",";
 						break;
 					case "select-one":
-						//saveText = saveText + "|" + eachCell.childNodes[0].options[eachCell.childNodes[0].selectedIndex].innerHTML;
-
-						saveText = saveText + "|" + strKeyName + ":" + eachCell.childNodes[0].options[eachCell.childNodes[0].selectedIndex].innerHTML;
-					//	alert(saveText);
-						//saveText = saveText + "|" + eachCell.childNodes[0].selectedIndex;
+						strTextToJson = strTextToJson + "\"" + strKeyName + "\":\"" + objCellEach.childNodes[0].options[objCellEach.childNodes[0].selectedIndex].innerHTML + "\",";
 						break;
 					}
 				}
+				strTextToJson = strTextToJson.replace(/,+$/, "");
+				strTextToJson = strTextToJson + "},";
 			}
+			strTextToJson = strTextToJson.replace(/,+$/, "");
+			strTextToJson = strTextToJson + "],\"link\":[{}]}";
 		} catch (e) {
 			alert(e);
 		}
-
 		var ForAppending = 8;
 		var ForWriting = 2
 		var TriStateFalse = 0;
 		var fso = new ActiveXObject("Scripting.FileSystemObject");
-		var newFile = fso.OpenTextFile("C:\\Users\\jxp30\\Documents\\GitHub\\Evinrude\\Evinrude\\Tools\\savefile.txt", ForWriting, true, TriStateFalse);
-		newFile.Write(saveText);
+		var newFile = fso.OpenTextFile("C:\\Users\\jxp30\\Documents\\GitHub\\Evinrude\\Evinrude\\Tools\\savefile.json", ForWriting, true, TriStateFalse);
+		newFile.Write(strTextToJson);
 		newFile.Close();
 	}
 
-	//     z = 1
-	//     sJsonConverted.Cells(z, 1) = "{"
-	//     z = z + 1
-	//     sJsonConverted.Cells(z, 1) = Chr(34) & "test steps" & ":" & Chr(34)
-	//     z = z + 1
-	//     sJsonConverted.Cells(z, 1) = "["
-	//     z = z + 1
-	//     For y = 2 To 20
-	//         sJsonConverted.Cells(z, 1) = "{"
-	//         z = z + 1
-	//         For x = 1 To 18
-	//             If x = 18 Then
-	//                 sJsonConverted.Cells(z, 1) = Chr(34) & sSource.Cells(1, x) & Chr(34) & ":" & Chr(34) & sSource.Cells(y, x) & Chr(34)
-	//             Else
-	//                 sJsonConverted.Cells(z, 1) = Chr(34) & sSource.Cells(1, x) & Chr(34) & ":" & Chr(34) & sSource.Cells(y, x) & Chr(34) & ","
-	//             End If
-	//             z = z + 1
-	//         Next x
-	//         sJsonConverted.Cells(z, 1) = "},"
-	//         z = z + 1
-	//     Next y
-	//     z = z - 1
-	//     sJsonConverted.Cells(z, 1) = "}"
-	//     z = z + 1
-	//     sJsonConverted.Cells(z, 1) = "]"
-	//     z = z + 1
-	//     sJsonConverted.Cells(z, 1) = "}"
-	//     z = z + 1
-
-	function saveFile() {
-		var ForAppending = 8;
-		var ForWriting = 2
-		var TriStateFalse = 0;
-		var fso = new ActiveXObject("Scripting.FileSystemObject");
-		var newFile = fso.OpenTextFile("C:\\Users\\jxp30\\Documents\\GitHub\\Evinrude\\Evinrude\\Tools\\savefile.txt", ForWriting, true, TriStateFalse);
-		newFile.Write("saving inside the stepbuilder");
-		newFile.Close();
-	}
-
-	function addRow(tableID) {
-		var table = document.getElementById(tableID);
-		var rowCount = table.rows.length;
-		var row = table.insertRow(rowCount);
-		var colCount = table.rows[0].cells.length;
-		for (var i = 0; i < colCount; i++) {
-	var newcell = row.insertCell(i);
-			newcell.innerHTML = table.rows[rowCount - 1].cells[i].innerHTML;
-			//alert(newcell.childNodes[0].type);
-			switch (newcell.childNodes[0].type) {
+	function addRow() {
+		var objTable = document.getElementById('EvinrudeStepTable');
+		var intRowCount = objTable.rows.length;
+		var objRowNew = objTable.insertRow(intRowCount);
+		var intColumnCount = objTable.rows[0].cells.length;
+		for (var i = 0; i < intColumnCount; i++) {
+			var objCellNew = objRowNew.insertCell(i);
+			objCellNew.innerHTML = objTable.rows[intRowCount - 1].cells[i].innerHTML;
+			switch (objCellNew.childNodes[0].type) {
 			case "text":
-				newcell.childNodes[0].value = "";
+				objCellNew.childNodes[0].value = "";
 				break;
 			case "checkbox":
-				newcell.childNodes[0].checked = false;
+				objCellNew.childNodes[0].checked = false;
 				break;
 			case "select-one":
-				newcell.childNodes[0].selectedIndex = 0;
+				objCellNew.childNodes[0].selectedIndex = 0;
 				break;
 			}
-			//alert(newcell.childNodes[0].type);
 		}
 	}
 
-	function insertRow(tableID) {
-		var table = document.getElementById(tableID);
-		var rowCount = table.rows.length;
-		for (var intRow = 0; intRow < rowCount; intRow++) {
-			var eachRow = table.rows[intRow];
-			var chkbox = eachRow.cells[0].childNodes[0];
-			if (null != chkbox && true == chkbox.checked) {
-				var newRow = table.insertRow(intRow);
-				var colCount = eachRow.cells.length;
-				for (var intCol = 0; intCol < colCount; intCol++) {
-					var newcell = newRow.insertCell(intCol);
-					newcell.innerHTML = eachRow.cells[intCol].innerHTML;
-					switch (newcell.childNodes[0].type) {
+	function insertRow() {
+		var objTable = document.getElementById('EvinrudeStepTable');
+		var intRowCount = objTable.rows.length;
+		for (var intRow = 0; intRow < intRowCount; intRow++) {
+			var objRowEach = objTable.rows[intRow];
+			var objCheckboxEach = objRowEach.cells[0].childNodes[0];
+			if (null != objCheckboxEach && true == objCheckboxEach.checked) {
+				var objRowNew = objTable.insertRow(intRow);
+				var intColumnCount = objRowEach.cells.length;
+				for (var intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
+					var objCellNew = objRowNew.insertCell(intColumnEach);
+					objCellNew.innerHTML = objRowEach.cells[intColumnEach].innerHTML;
+					switch (objCellNew.childNodes[0].type) {
 					case "text":
-						newcell.childNodes[0].value = "";
+						objCellNew.childNodes[0].value = "";
 						break;
 					case "checkbox":
-						newcell.childNodes[0].checked = false;
+						objCellNew.childNodes[0].checked = false;
 						break;
 					case "select-one":
-						newcell.childNodes[0].selectedIndex = 0;
+						objCellNew.childNodes[0].selectedIndex = 0;
 						break;
 					}
 				}
@@ -149,21 +97,33 @@
 		}
 	}
 
-	function deleteRow(tableID) {
+	function deleteRow() {
 		try {
-			var table = document.getElementById(tableID);
-			var rowCount = table.rows.length;
-			for (var i = 0; i < rowCount; i++) {
-				var row = table.rows[i];
-				var chkbox = row.cells[0].childNodes[0];
-				if (null != chkbox && true == chkbox.checked) {
-					if (rowCount <= 2) {
+			var objTable = document.getElementById('EvinrudeStepTable');
+			var intRowCount = objTable.rows.length;
+			var blnResponse = false;
+			for (var intRowEach = 0; intRowEach < intRowCount; intRowEach++) {
+				var objRowEach = objTable.rows[intRowEach];
+				var objCheckboxEach = objRowEach.cells[0].childNodes[0];
+				if (null != objCheckboxEach && true == objCheckboxEach.checked) {
+
+					if (intRowCount <= 2) {
 						alert("Cannot delete all the rows.");
 						break;
 					}
-					table.deleteRow(i);
-					rowCount--;
-					i--;
+
+					if (blnResponse == false) {
+
+						blnResponse = confirm("All rows with checkboxes selected will be deleted. Press OK to continue or Cancel to return");
+						if (blnResponse == true) {
+						} else {
+							break;
+						}
+					}
+
+					objTable.deleteRow(intRowEach);
+					intRowCount--;
+					intRowEach--;
 				}
 			}
 		} catch (e) {
@@ -173,15 +133,14 @@
 </script>
 </head>
 <body>
-	<input type="button" value="Add Row" onclick="addRow('dataTable')"></input>
-	<input type="button" value="Insert Row" onclick="insertRow('dataTable')"></input>
-	<input type="button" value="Delete Row" onclick="deleteRow('dataTable')"></input>
+	<input type="button" value="Add Row" onclick="addRow()"></input>
+	<input type="button" value="Insert Row" onclick="insertRow()"></input>
+	<input type="button" value="Delete Row" onclick="deleteRow()"></input>
 	<select id="fileName">
 		<option value="">file name</option>
 	</select>
-	<input type="button" value="saveTableToJson" onclick="saveTableToJson('dataTable')"></input>
-	<input type="button" value="Save File" onclick="saveFile()"></input>
-	<table id="dataTable" width="350px" border="1">
+	<input type="button" value="Save Steps To Json" onclick="saveTableToJson()"></input>
+	<table id="EvinrudeStepTable" width="350px" border="1">
 		<tr>
 			<th>+</th>
 			<th>strAction</th>
@@ -220,6 +179,11 @@
 			</select></td>
 			<td><select id="strTagName">
 					<option value=""></option>
+					<option value="chrome">chrome</option>
+					<option value="firefox">firefox</option>
+					<option value="ie">ie</option>
+					<option value="opera">opera</option>
+					<option value="safari">safari</option>
 					<option value="a">a</option>
 					<option value="alert">alert</option>
 					<option value="button">button</option>
@@ -236,10 +200,7 @@
 					<option value="th">th</option>
 					<option value="tr">tr</option>
 			</select></td>
-
-
 			<td><input type="text" id="strAttributeNames" value="text"></input></td>
-
 			<td><input type="text" id="strAttributeValues"></input></td>
 			<td><input type="text" id="strInputValue"></input></td>
 			<td><input type="text" id="strLogicalName"></input></td>
@@ -249,7 +210,15 @@
 					<option value="">true</option>
 					<option value="">false</option>
 			</select></td>
-			<td><input type="text" id="strAssert"></input></td>
+			<td><select id="strAssert">
+					<option value=""></option>
+					<option value="">off</option>
+					<option value="">value</option>
+					<option value="">visible</option>
+					<option value="">hidden</option>
+					<option value="">enabled</option>
+					<option value="">disabled</option>
+			</select></td>
 			<td><select id="blnPleaseWait">
 					<option value=""></option>
 					<option value="">true</option>
