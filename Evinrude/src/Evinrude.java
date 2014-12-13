@@ -188,6 +188,7 @@ public class Evinrude {
 		int intStep = 0;
 		int intMillisecondsToWaitDefault = 20000;
 		String strCurrentWindowHandle = "";
+		int intFrame = -1;
 		String strResultsPath = "";
 		String strImagesPath = "";
 		System.out.println("Working Directory = " + System.getProperty("user.dir"));
@@ -209,9 +210,10 @@ public class Evinrude {
 		// System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
 			// String strTestPath = "Data/public/public_mercury_tours.json";
-			// String strTestPath = "Data/public/public_ranorex.json";
+			String strTestPath = "Data/public/public_ranorex.json";
+			// String strTestPath = "Data/public/public_w3c_fireevents.json"
 			// String strTestPath = "Data/public/public_w3c_fireevents.json";
-			String strTestPath = "Data/public/public_quackit_frames.json";
+			// String strTestPath = "Data/public/public_GolfNow.json";
 			Object objParser = parser.parse(new FileReader(strTestPath));
 			objJsonFile = (JSONObject) objParser;
 			objTestSteps = (JSONArray) objJsonFile.get("test steps");
@@ -247,6 +249,7 @@ public class Evinrude {
 				objStep.put("strScreenshotFilePath", strResultsPath + strImagesPath);
 				System.out.println("strScreenshotFilePath = " + objStep.get("strScreenshotFilePath").toString());
 				objStep.put("strStatus", "info");
+				objStep.put("intFrame", intFrame);
 				// TODO consider moving the step println to a method and call
 				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
 				System.out.println("main strAction = " + objStep.get("strAction").toString());
@@ -341,6 +344,7 @@ public class Evinrude {
 						break;
 					}// the end of if (strAction.toLowerCase().equals("break"))
 					strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
+					intFrame = Integer.parseInt(objStep.get("intFrame").toString());
 					if (blnPass == true) {
 						System.out.println("main strCurrentWindowHandle = " + strCurrentWindowHandle);
 					} else {
@@ -380,11 +384,11 @@ public class Evinrude {
 	}// the end of Main
 
 	@SuppressWarnings("serial")
-	public static class NoElementFoundException extends Exception {
-		public NoElementFoundException(String message) {
+	public static class ElementNotFoundException extends Exception {
+		public ElementNotFoundException(String message) {
 			super(message);
 		}
-	}// the end of NoElementFoundException
+	}// the end of ElementNotFoundException
 
 	@SuppressWarnings("serial")
 	public static class MultipleElementsFoundException extends Exception {
@@ -392,6 +396,13 @@ public class Evinrude {
 			super(message);
 		}
 	}// the end of MultipleElementsFoundException
+
+	@SuppressWarnings("serial")
+	public static class ElementNotSetException extends Exception {
+		public ElementNotSetException(String message) {
+			super(message);
+		}
+	}// the end of ElementNotVisibleException
 
 	@SuppressWarnings("serial")
 	public static class ElementNotVisibleException extends Exception {
@@ -474,7 +485,7 @@ public class Evinrude {
 					blnGet = true;
 				}
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | NoElementFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
 				System.out.println("elementGetSync - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeGetSync));
 			} catch (ElementNotVisibleException e) {
@@ -603,6 +614,10 @@ public class Evinrude {
 						elementSet(objStep, objWebDriver, objWebElement);
 						blnSet = true;
 					}
+					if (blnAssert == false) {
+						elementVerifyValue(objStep, objWebDriver, objWebElement);
+						blnAssert = true;
+					}
 					coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
 					break;
 				case "visible":
@@ -629,7 +644,7 @@ public class Evinrude {
 					break;
 				}// the end of switch (strAssert.toLowerCase())
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | NoElementFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
 				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
 			} catch (ElementNotVisibleException e) {
@@ -645,6 +660,12 @@ public class Evinrude {
 				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
 				// blnSet = true;
 				// blnHidden = false;
+				blnAssert = false;
+			} catch (ValueNotMatchedException e) {
+				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+				blnAssert = false;
+			} catch (ElementNotSetException e) {
+				blnSet = true;
 				blnAssert = false;
 			} finally {
 				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeSetSync);
@@ -689,10 +710,11 @@ public class Evinrude {
 		}// the end of While
 	}// the end of elementSetSync
 
-	public static String elementVerifyValue(JSONObject objStep, String strValueExpected, WebDriver objWebDriver, WebElement objWebElement) throws ValueNotMatchedException, ElementTagNameNotSupportedException {
+	public static String elementVerifyValue(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ValueNotMatchedException, ElementTagNameNotSupportedException {
 		long lngStartTimeElementVerify = System.currentTimeMillis();
 		String strGetValue = "";
 		String strActualValue = "";
+		String strValueExpected = objStep.get("strInputValue").toString();
 		try {
 			strGetValue = elementGet(objStep, objWebDriver, objWebElement);
 			strActualValue = verifyMatch(strGetValue, strValueExpected);
@@ -723,11 +745,11 @@ public class Evinrude {
 					blnVisible = true;
 				}
 				if (blnVerified == false) {
-					strActualValue = elementVerifyValue(objStep, strValueExpected, objWebDriver, objWebElement);
+					strActualValue = elementVerifyValue(objStep, objWebDriver, objWebElement);
 					blnVerified = true;
 				}
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | NoElementFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
 				blnVisible = false;
 				blnStatus = false;
@@ -813,7 +835,7 @@ public class Evinrude {
 				// coordinateHighlightScreenshot(objStep, "element",
 				// Color.GREEN, "screen", objWebDriver, null, objStep);
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | NoElementFoundException | MultipleElementsFoundException | ElementNotVisibleException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException | ElementNotVisibleException e) {
 				blnFound = false;
 				blnVisible = false;
 				System.out.println("elementVisibleSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeVisibleSync));
@@ -869,7 +891,7 @@ public class Evinrude {
 				// Boolean.parseBoolean(objStep.get("blnScreenshot").toString()),
 				// "screen", Color.GREEN, "screen", objWebDriver, null);
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException | NoElementFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException | ElementNotFoundException e) {
 				blnFound = true;
 				blnHidden = true;
 				System.out.println("elementHiddenSync - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeHiddenSync));
@@ -928,7 +950,7 @@ public class Evinrude {
 				// coordinateHighlightScreenshot(objStep, "element",
 				// Color.GREEN, "screen", objWebDriver, null, objStep);
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | NoElementFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
 				blnEnabled = false;
 				System.out.println("elementEnabledSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeEnabledSync));
@@ -987,7 +1009,7 @@ public class Evinrude {
 				// coordinateHighlightScreenshot(objStep, "element",
 				// Color.GREEN, "screen", objWebDriver, null, objStep);
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | NoElementFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
 				blnDisabled = false;
 				System.out.println("elementDisabledSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeDisabledSync));
@@ -1039,6 +1061,7 @@ public class Evinrude {
 		objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngStartTimeBrowserLaunch));
 		try {
 			objStep.put("strStatus", "pass");
+			objStep.put("intFrame", -1);
 			switch (objStep.get("strTagName").toString()) {
 			case "firefox":
 				objWebDriver = new FirefoxDriver();
@@ -1136,9 +1159,10 @@ public class Evinrude {
 		return data;
 	}// the end of ClipboardGet
 
-	public static void elementSet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementTagNameNotSupportedException {
+	public static void elementSet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementTagNameNotSupportedException, ElementNotSetException {
 		long lngStartTimeElementSet = System.currentTimeMillis();
 		JavascriptExecutor objJavascriptExecutor = null;
+		Boolean blnSet = false;
 		if (objWebElement != null) {
 			objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
 		}
@@ -1164,6 +1188,7 @@ public class Evinrude {
 			case "h5":
 			case "h6":
 			case "p":
+				blnSet = true;
 				objWebElement.click();
 				// objJavascriptExecutor.executeScript("arguments[0].focus();",
 				// objWebElement);
@@ -1176,6 +1201,7 @@ public class Evinrude {
 			case "input_password":
 			case "textarea":
 			case "input_email":
+				blnSet = true;
 				// Actions builder = new Actions(objWebDriver);
 				// // Action action1 =
 				// builder.click(objWebElement).sendKeys(Keys.CONTROL +
@@ -1236,6 +1262,7 @@ public class Evinrude {
 			// /simulate(document.getElementById("btn"), "click", { pointerX:
 			// 123, pointerY: 321 })
 			case "input_radio":
+				blnSet = true;
 				// objWebElement.click();
 				objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
 				objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
@@ -1250,6 +1277,7 @@ public class Evinrude {
 				}
 				break;
 			case "input_checkbox":
+				blnSet = true;
 				System.out.println("elementSet IT'S A input_checkbox" + (System.currentTimeMillis() - lngStartTimeSwitchSet));
 				// System.out.println("objWebElement.isSelected() = " +
 				// objWebElement.isSelected());
@@ -1298,6 +1326,7 @@ public class Evinrude {
 					}
 					break;
 				case "<off>":
+					blnSet = true;
 					if (objWebElement.isSelected() == true) {
 						// objWebElement.click();
 						objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
@@ -1346,6 +1375,7 @@ public class Evinrude {
 					// intOptionsEach + " =  " +
 					// arrOptions[intOptionsEach].toString());
 					if (arrOptions[intOptionsEach].toString().equals(objStep.get("strInputValue").toString())) {
+						blnSet = true;
 						// objSelect.selectByIndex(intOptionsEach);
 						// executor3.executeScript("arguments[0].options.index="
 						// + intOptionsEach + ";", objWebElement);
@@ -1392,6 +1422,7 @@ public class Evinrude {
 				// Set objWebElement = gobjWebElement.AsTable
 				break;
 			case "alert":
+				blnSet = true;
 				Alert alert = objWebDriver.switchTo().alert();
 				System.out.println(alert.getText()); // Print Alert popup
 				System.out.println(objStep.get("strAtributeValues").toString().toLowerCase());
@@ -1411,6 +1442,9 @@ public class Evinrude {
 				throw new ElementTagNameNotSupportedException("Element tag not supported");
 			}// the end of switch (strTagName.toLowerCase())
 		} finally {
+			if (blnSet = false) {
+				throw new ElementNotSetException("Element not set");
+			}
 			System.out.println("elementSet finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet));
 		}
 	}// the end of elementSet
@@ -1451,7 +1485,7 @@ public class Evinrude {
 		} // catch
 	}// the end of isAlertPresent()
 
-	public static WebElement isAlertPresent2(WebDriver objWebDriver) throws NoElementFoundException {
+	public static WebElement isAlertPresent2(WebDriver objWebDriver) throws ElementNotFoundException {
 		try {
 
 			@SuppressWarnings("unused")
@@ -1462,13 +1496,16 @@ public class Evinrude {
 		catch (NoAlertPresentException e) {
 			System.out.println("this is the alert switch to which did fail");
 			System.out.println(e.toString());
-			throw new NoElementFoundException("Alert popup was not found.");
+			throw new ElementNotFoundException("Alert popup was not found.");
 		} // catch
 	}
 
 	@SuppressWarnings({ "unchecked" })
-	public static WebElement elementFind(JSONObject objStep, WebDriver objWebDriver) throws NoElementFoundException, MultipleElementsFoundException {
+	public static WebElement elementFind(JSONObject objStep, WebDriver objWebDriver) throws ElementNotFoundException, MultipleElementsFoundException {
 		long lngStartTimeElementFind = System.currentTimeMillis();
+		objWebDriver.manage().timeouts().implicitlyWait(10, TimeUnit.NANOSECONDS);
+		Boolean blnSwitch = false;
+		// objWebDriver.
 		try {
 			int intFramesCount = 0;
 			String strXpath = "";
@@ -1478,6 +1515,7 @@ public class Evinrude {
 			WebElement objWebElement;
 			List<WebElement> objWebElementCollection = new ArrayList<WebElement>();
 			List<WebElement> objFrameCollection = new ArrayList<WebElement>();
+			List<WebElement> objTagNameCollection = new ArrayList<WebElement>();
 			String strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
 			strTagName = objStep.get("strTagName").toString().toLowerCase();
 			String arrAttributeNames[] = objStep.get("strAttributeNames").toString().split("\\|", -1);
@@ -1528,68 +1566,162 @@ public class Evinrude {
 			}
 			strXpath = "(//" + strTagName + strXpathAttributes + ")" + strIndex;
 			System.out.println("elementFind strXpath = " + strXpath);
-			System.out.println("elementFind before loop strCurrentWindowHandle = " + strCurrentWindowHandle);
+			// System.out.println("elementFind before loop strCurrentWindowHandle = " + strCurrentWindowHandle);
+
 			Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
-			System.out.println("arrHandles.length = " + arrHandles.length);
+			// System.out.println("arrHandles.length = " + arrHandles.length);
 			for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0; intHandlesEach--) {
-				String winHandle = arrHandles[intHandlesEach].toString();
-				System.out.println("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
-				System.out.println("elementFind winHandle = " + winHandle);
+				String strWindowHandle = arrHandles[intHandlesEach].toString();
+				// System.out.println("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
+				// System.out.println("elementFind winHandle = " + winHandle);
 				long lngStartTimeSwitchTo = System.currentTimeMillis();
-				objWebDriver.switchTo().window(winHandle);
-				System.out.println("elementFind lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
-				System.out.println("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
+				// objWebDriver.switchTo().window(strWindowHandle);
+				// System.out.println("elementFind lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
+				// System.out.println("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
+
+				System.out.println("objStep.get(\"inFrame\") = " + Integer.parseInt(objStep.get("intFrame").toString()));
+				if (strCurrentWindowHandle.equals(strWindowHandle)) {
+					blnSwitch = true;
+				} else {
+					if (Integer.parseInt(objStep.get("intFrame").toString()) >= 0) {
+						blnSwitch = true;
+					}
+				}
+				if (blnSwitch = true) {
+					objWebDriver.switchTo().window(strWindowHandle);
+					System.out.println("elementFind Switched = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
+					objStep.put("intFrame", -1);
+				}
+
+				// }
+				// if (strCurrentWindowHandle.equals(strWindowHandle) || Integer.parseInt(objStep.get("intFrame").toString()) < 0) {
+				// System.out.println("elementFind No Switch = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
+				//
+				// } else {
+				// objWebDriver.switchTo().window(strWindowHandle);
+				// System.out.println("elementFind Switched = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
+				// objStep.put("intFrame", -1);
+				// // blnSwitchWindow = true;
+				// }
+
 				long intBrowserInnerWidth = 0;
 				long intBrowserInnerHeight = 0;
 				try {
 					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
 					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
-					System.out.println("intBrowserInnerWidth = " + intBrowserInnerWidth);
-					System.out.println("intBrowserInnerHeight = " + intBrowserInnerHeight);
+					// System.out.println("intBrowserInnerWidth = " + intBrowserInnerWidth);
+					// System.out.println("intBrowserInnerHeight = " + intBrowserInnerHeight);
 				} catch (WebDriverException e) {
-					throw new NoElementFoundException("WebDriverException returned");
+					throw new ElementNotFoundException("WebDriverException returned");
 				} catch (Exception e) {
-					System.out.println("BodyoffsetHeight = " + e.toString());
+					// System.out.println("BodyoffsetHeight = " + e.toString());
 					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetWidth;");
 					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetHeight;");
-					System.out.println("BodyoffsetWidth = " + intBrowserInnerWidth);
-					System.out.println("BodyoffsetHeight = " + intBrowserInnerHeight);
+					// System.out.println("BodyoffsetWidth = " + intBrowserInnerWidth);
+					// System.out.println("BodyoffsetHeight = " + intBrowserInnerHeight);
 				}
 				objStep.put("intBrowserInnerWidth", intBrowserInnerWidth);
 				objStep.put("intBrowserInnerHeight", intBrowserInnerHeight);
-				long lngStartTimeFrameCollection = System.currentTimeMillis();
-				// TODO add iFrame handling, return a collection of both frame
-				objFrameCollection = objWebDriver.findElements(By.tagName("frame"));
-				System.out.println("elementFind Frames = " + objFrameCollection.size());
-				objFrameCollection.addAll(objWebDriver.findElements(By.tagName("iframe")));
-				intFramesCount = objFrameCollection.size();
-				System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
-//				if (intFramesCount >= 1) {
-//					intFramesCount = intFramesCount + 1;
-//					System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
-//				}
-				for (int intFramesEach = -1; intFramesEach < intFramesCount; intFramesEach++) {
-					System.out.println("elementFind intFramesEach = " + intFramesEach);
-					if (intFramesEach >= 0) {
-						System.out.println("elementFind frames objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
-						objWebDriver.switchTo().defaultContent();
-						objWebDriver.switchTo().frame(objFrameCollection.get(intFramesEach));
-					}
+
+				long lngStartTimegetElementsByTagName = System.currentTimeMillis();
+				List<WebElement> objCollectionJS = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
+				System.out.println("elementFind objCollectionJS = " + objCollectionJS.size() + " strTagName = " + strTagName + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName));
+				if (objCollectionJS.size() > 0) {
 					long lngStartTimeByXpath = System.currentTimeMillis();
 					objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
-					System.out.println("elementFind objWebElementCollection.size = " + objWebElementCollection.size() + "lngMillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeByXpath));
-					if (objWebElementCollection.size() == 1) {
-						blnFound = true;
-						break;
+					System.out.println("elementFind objWebElementCollection.size = " + objWebElementCollection.size() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeByXpath));
+				}
+
+				if (objWebElementCollection.size() == 0) {
+
+					long lngStartTimeFrameCollection = System.currentTimeMillis();
+					// TODO add iFrame handling, return a collection of both frame
+					// objFrameCollection = objWebDriver.findElements(By.tagName("frame"));
+					objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
+
+					System.out.println("elementFind Frames = " + objFrameCollection.size() + " MillisecondsWaitedFrame " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+
+					objFrameCollection.addAll((List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('iframe');"));
+					// objFrameCollection.addAll(objWebDriver.findElements(By.tagName("iframe")));
+					intFramesCount = objFrameCollection.size();
+					System.out.println("elementFind objFrameCollection = " + intFramesCount + " MillisecondsWaitedIframe " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+					// if (intFramesCount >= 1) {
+					// intFramesCount = intFramesCount + 1;
+					// System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+					// }
+					for (int intFramesEach = 0; intFramesEach < intFramesCount; intFramesEach++) {
+						System.out.println("elementFind intFramesEach = " + intFramesEach);
+						// if (intFramesEach >= 0) {
+						long lngStartTimeSwitchToFrame = System.currentTimeMillis();
+						objWebDriver.switchTo().defaultContent();
+						objWebDriver.switchTo().frame(objFrameCollection.get(intFramesEach));
+						objStep.put("intFrame", intFramesEach);
+						System.out.println("elementFind frames objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeSwitchToFrame));
+						// }
+
+						long lngStartTimegetElementsByTagName2 = System.currentTimeMillis();
+						List<WebElement> objCollectionJS2 = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
+						System.out.println("elementFind objCollectionJS2 = " + objCollectionJS2.size() + " strTagName = " + strTagName + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName2));
+
+						// long lngStartTimegetElementsByXpath = System.currentTimeMillis();
+						// List<WebElement> objCollectionJS = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElements(By.xpath('" + strXpath + "');");
+						// System.out.println("elementFind objCollectionJS = " + objCollectionJS.size() + " " + (System.currentTimeMillis() - lngStartTimegetElementsByXpath));
+
+						// jse.executeScript("document.getElement(By.xpath(\"//div[@class='btnContr']/input[@onclick='return cancel();']\")");
+
+						// long lngStartTimeTagName = System.currentTimeMillis();
+						// objTagNameCollection = objWebDriver.findElements(By.tagName(strTagName));
+						// System.out.println("elementFind objWebElementCollection.size = " + objTagNameCollection.size() + " MillisecondsWaitedTagName = " + (System.currentTimeMillis() - lngStartTimeTagName));
+
+						// if (objCollectionJS.size() > 0) {
+						// long lngStartTimeByTagNameByXpath = System.currentTimeMillis();
+						// List<WebElement> objWebElementCollectionByTagNameByXpath = objCollectionJS.get(0).findElements(By.xpath(strXpath));
+						// System.out.println("elementFind objWebElementCollectionByTagNameByXpath.size = " + objWebElementCollectionByTagNameByXpath.size() + " MillisecondsWaitedTagName = " + (System.currentTimeMillis() - lngStartTimeByTagNameByXpath));
+						// }
+
+						// if (objCollectionJS.size() > 0) {
+						//
+						// JavascriptExecutor objJavascriptExecutor = null;
+						// objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
+						// long lngStartTimeJS = System.currentTimeMillis();
+						// System.out.println("JS value = " + objJavascriptExecutor.executeScript("return arguments[0].value;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
+						// lngStartTimeJS = System.currentTimeMillis();
+						// System.out.println("JS innerText = " + objJavascriptExecutor.executeScript("return arguments[0].innerText;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
+						// lngStartTimeJS = System.currentTimeMillis();
+						// System.out.println("JS innerHTML = " + objJavascriptExecutor.executeScript("return arguments[0].innerHTML;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
+						// lngStartTimeJS = System.currentTimeMillis();
+						// System.out.println("JS outerHTML = " + objJavascriptExecutor.executeScript("return arguments[0].outerHTML;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
+						//
+						// }
+
+						if (objCollectionJS2.size() > 0) {
+							long lngStartTimeByXpath = System.currentTimeMillis();
+							objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
+							System.out.println("elementFind objWebElementCollection.size = " + objWebElementCollection.size() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeByXpath));
+						}
+
+						if (objWebElementCollection.size() > 0) {
+							blnFound = true;
+							break;
+						}
 					}
 				}
+
 				switch (objWebElementCollection.size()) {
 				case 0:
-					System.out.println("elementFind - Element properties did not return an element, try refining attributes.");
-					throw new NoElementFoundException("Element properties did not return an element, try refining attributes");
+					// System.out.println("elementFind - Element properties did not return an element, try refining attributes.");
+					throw new ElementNotFoundException("Element properties did not return an element, try refining attributes");
 				case 1:
-					System.out.println(objWebElementCollection.get(0));
+
+					// System.out.println(objWebElementCollection.get(0));
 					objWebElement = objWebElementCollection.get(0);
+
+					// long lngStartTimeGetXpath = System.currentTimeMillis();
+					// System.out.println("xpath = " + getElementXPath(objWebDriver, objWebElement) + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeGetXpath));
+					System.out.println("strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
+
+					System.out.println("objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
+
 					objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
 					if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
 						if (objStep.get("strType").toString().toLowerCase().length() == 0) {
@@ -1601,21 +1733,65 @@ public class Evinrude {
 					}
 					return objWebElement;
 				default:
-					System.out.println("elementFind - Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
+					// System.out.println("elementFind - Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
 					throw new MultipleElementsFoundException("Element properties did not return an element, try refining attributes");
 				}// the end of switch (objWebElementCollection.size())
 			}// the end of for win Handles
 		} catch (NoSuchFrameException e) {
-			throw new NoElementFoundException("elementFind " + e.toString());
+			throw new ElementNotFoundException("elementFind " + e.toString());
 		} finally {
-			System.out.println("elementFind finally lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeElementFind));
+			System.out.println("elementFind finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementFind));
 		}
 		return null;
 	}// the end of elementFind
 
+	public static String getElementXPath(WebDriver driver, WebElement element) {
+		return (String) ((JavascriptExecutor) driver).executeScript("gPt=function(c){if(c.id!==''){return'id(\"'+c.id+'\")'}if(c===document.body){return c.tagName}var a=0;var e=c.parentNode.childNodes;for(var b=0;b<e.length;b++){var d=e[b];if(d===c){return gPt(c.parentNode)+'/'+c.tagName+'['+(a+1)+']'}if(d.nodeType===1&&d.tagName===c.tagName){a++}}};return gPt(arguments[0]).toLowerCase();", element);
+	}
+
+	// public String GetElementXPath(WebElement element, WebDriver driver)
+	// {
+	// return (String) ((JavascriptExecutor) driver).executeScript(
+	// "getXPath=function(node)" +
+	// "{" +
+	// "if (node.id !== '')" +
+	// "{" +
+	// "return '//' + node.tagName.toLowerCase() + '[@id=\"' + node.id + '\"]'" +
+	// "}" +
+	//
+	// "if (node === document.body)" +
+	// "{" +
+	// "return node.tagName.toLowerCase()" +
+	// "}" +
+	//
+	// "var nodeCount = 0;" +
+	// "var childNodes = node.parentNode.childNodes;" +
+	//
+	// "for (var i=0; i<childNodes.length; i++)" +
+	// "{" +
+	// "var currentNode = childNodes[i];" +
+	//
+	// "if (currentNode === node)" +
+	// "{" +
+	// return getXPath(node.parentNode) +
+	// '/' + node.tagName.toLowerCase() +
+	// '[' + (nodeCount+1) + ']'" +
+	// "}" +
+	//
+	// "if (currentNode.nodeType === 1 && " +
+	// "currentNode.tagName.toLowerCase() === node.tagName.toLowerCase())" +
+	// "{" +
+	// "nodeCount++" +
+	// "}" +
+	// "}" +
+	// "};" +
+	//
+	// "return getXPath(arguments[0]);", element);
+	// }
+
 	// working with commented code 20141209 copied to have reference for code removal of function above
 	// @SuppressWarnings({ "unchecked" })
-	// public static WebElement elementFind(JSONObject objStep, WebDriver objWebDriver) throws NoElementFoundException, MultipleElementsFoundException {
+	// public static WebElement elementFind(JSONObject objStep, WebDriver objWebDriver) throws ElementNotFoundException, MultipleElementsFoundException {
 	// long lngStartTimeElementFind = System.currentTimeMillis();
 	// try {
 	// String strXpath = "";
@@ -1659,7 +1835,7 @@ public class Evinrude {
 	// // return false;
 	// System.out.println("this is the alert switch to which did fail");
 	// System.out.println(e.toString());
-	// throw new NoElementFoundException("Alert popup was not found.");
+	// throw new ElementNotFoundException("Alert popup was not found.");
 	// } // catch
 	// }
 	// for (int intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
@@ -1762,7 +1938,7 @@ public class Evinrude {
 	// System.out.println("intBrowserInnerWidth = " + intBrowserInnerWidth);
 	// System.out.println("intBrowserInnerHeight = " + intBrowserInnerHeight);
 	// } catch (WebDriverException e) {
-	// throw new NoElementFoundException("WebDriverException returned");
+	// throw new ElementNotFoundException("WebDriverException returned");
 	// } catch (Exception e) {
 	// System.out.println("BodyoffsetHeight = " + e.toString());
 	// intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetWidth;");
@@ -2092,7 +2268,7 @@ public class Evinrude {
 	// switch (objWebElementCollection.size()) {
 	// case 0:
 	// System.out.println("elementFind - Element properties did not return an element, try refining attributes.");
-	// throw new NoElementFoundException("Element properties did not return an element, try refining attributes");
+	// throw new ElementNotFoundException("Element properties did not return an element, try refining attributes");
 	// case 1:
 	// objWebElement = objWebElementCollection.get(0);
 	// objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
@@ -2139,7 +2315,7 @@ public class Evinrude {
 	// }// the end of switch (objWebElementCollection.size())
 	// }// the end of for win Handles
 	// } catch (NoSuchFrameException e) {
-	// throw new NoElementFoundException("elementFind " + e.toString());
+	// throw new ElementNotFoundException("elementFind " + e.toString());
 	// } finally {
 	// System.out.println("elementFind finally lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeElementFind));
 	// }
@@ -3202,7 +3378,13 @@ public class Evinrude {
 			case "input_email":
 				return objWebElement.getAttribute("value");
 			case "input_radio":
-				return objWebElement.getAttribute("id");
+				//TODO fix return value to <on> or <off> based on is selected
+				//return objWebElement.getAttribute("id");
+				if (objWebElement.isSelected() == false) {
+					return "<off>";
+				} else {
+					return "<on>";
+				}
 			case "input_checkbox":
 				if (objWebElement.isSelected() == false) {
 					return "<off>";
@@ -3360,6 +3542,22 @@ public class Evinrude {
 				System.out.println("getSize().height:= '" + row.getSize().height + "'");
 				System.out.println("getSize().width:= '" + row.getSize().width + "'");
 				System.out.println("src:= '" + row.getAttribute("src") + "'");
+
+				// if (objCollectionJS.size() > 0) {
+				//
+				// JavascriptExecutor objJavascriptExecutor = null;
+				// objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
+				// long lngStartTimeJS = System.currentTimeMillis();
+				// System.out.println("JS value = " + objJavascriptExecutor.executeScript("return arguments[0].value;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
+				// lngStartTimeJS = System.currentTimeMillis();
+				// System.out.println("JS innerText = " + objJavascriptExecutor.executeScript("return arguments[0].innerText;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
+				// lngStartTimeJS = System.currentTimeMillis();
+				// System.out.println("JS innerHTML = " + objJavascriptExecutor.executeScript("return arguments[0].innerHTML;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
+				// lngStartTimeJS = System.currentTimeMillis();
+				// System.out.println("JS outerHTML = " + objJavascriptExecutor.executeScript("return arguments[0].outerHTML;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
+				//
+				// }
+
 				// } catch (ElementNotVisibleException e) {
 				// // TODO Auto-generated catch block
 				// // e.printStackTrace();

@@ -3,7 +3,7 @@
 	[
 		{
 			"strAction": "launch",
-			"strTagName": "chrome",
+			"strTagName": "ie",
 			"strAttributeNames": "",
 			"strAtributeValues": "",
 			"strInputValue": "http://www.quackit.com/html/templates/frames/frames_example_6.html",
