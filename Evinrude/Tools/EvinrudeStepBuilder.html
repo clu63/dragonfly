@@ -2,10 +2,55 @@
 <head>
 <title>Evinrude Step Builder</title>
 <script language="javascript" type="text/javascript">
+	function readTextFile() {
+	document.location.reload(true);
+		try {
+			//alert("start")
+			var file = "file:///C:/Users/jxp30/Documents/GitHub/Evinrude/Evinrude/Tools/savefile.json"
+			//	alert(file)
+			//var rawFile = new XMLHttpRequest();
+			var rawFile = new ActiveXObject("Microsoft.XMLHTTP");
+			//	alert("rawFile")
+			rawFile.open("GET", file, false);
+			//	alert("rawFile.open")
+			rawFile.onreadystatechange = function() {
+				if (rawFile.readyState === 4) {
+					if (rawFile.status === 200 || rawFile.status == 0) {
+						var allText = rawFile.responseText;
+						alert(allText);
+
+					//var	objJsonFile = JSON.parse(allText);
+					
+					var objJsonFile = eval ("(" + allText + ")");
+					
+					//	alert("parse");
+						
+					
+					var intRow;
+					var intRowCount=objJsonFile.steps.length;
+					alert(intRowCount);
+					for (intRow = 0; intRow < intRowCount; intRow++) {
+					alert(objJsonFile.steps[intRow].strAction);
+					}
+					
+					//JSONArray
+						// 						objTestSteps = (JSONArray)
+						// 						objJsonFile.get("steps");
+
+						//alert(objJsonFile.get("steps").get(0).get("strAction").toString());
+					}
+				}
+			}
+			rawFile.send(null);
+		} catch (e) {
+			alert(e);
+		}
+	}
+
 	function saveTableToJson() {
 		try {
 			var strKeyName = "";
-			var strTextToJson = "{\"test steps\":[";
+			var strTextToJson = "{\"steps\":[";
 			var objTable = document.getElementById('EvinrudeStepTable');
 			var intRowCount = objTable.rows.length;
 			var intRow;
@@ -140,6 +185,7 @@
 		<option value="">file name</option>
 	</select>
 	<input type="button" value="Save Steps To Json" onclick="saveTableToJson()"></input>
+	<input type="button" value="readTextFile" onclick="readTextFile()"></input>
 	<table id="EvinrudeStepTable" width="350px" border="1">
 		<tr>
 			<th>+</th>

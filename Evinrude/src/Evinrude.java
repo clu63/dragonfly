@@ -216,7 +216,7 @@ public class Evinrude {
 			// String strTestPath = "Data/public/public_GolfNow.json";
 			Object objParser = parser.parse(new FileReader(strTestPath));
 			objJsonFile = (JSONObject) objParser;
-			objTestSteps = (JSONArray) objJsonFile.get("test steps");
+			objTestSteps = (JSONArray) objJsonFile.get("steps");
 			JSONArray objLinkArray = (JSONArray) objJsonFile.get("link");
 			JSONObject objLinks = (JSONObject) objLinkArray.get(0);
 			writeJsonToHtml(objTestSteps, strResultsPath + "StepsOriginal.html");
@@ -4071,7 +4071,7 @@ public class Evinrude {
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file));) {
 			builder.append("<!DOCTYPE html>");
 			builder.append("<html lang=\"en\">");
-			builder.append("<head><title>Evinrude Test Steps</title></head>");
+			builder.append("<head><title>Evinrude steps</title></head>");
 			builder.append("<body><h1>");
 			builder.append("<table border=\"1\" cellspacing=\"1\" cellpadding=\"5\">");
 			builder.append("<tr>");
