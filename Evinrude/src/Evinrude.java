@@ -3378,8 +3378,8 @@ public class Evinrude {
 			case "input_email":
 				return objWebElement.getAttribute("value");
 			case "input_radio":
-				//TODO fix return value to <on> or <off> based on is selected
-				//return objWebElement.getAttribute("id");
+				// TODO fix return value to <on> or <off> based on is selected
+				// return objWebElement.getAttribute("id");
 				if (objWebElement.isSelected() == false) {
 					return "<off>";
 				} else {
