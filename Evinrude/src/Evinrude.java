@@ -255,7 +255,7 @@ public class Evinrude {
 				System.out.println("main strAction = " + objStep.get("strAction").toString());
 				System.out.println("main strTagName = " + objStep.get("strTagName").toString());
 				System.out.println("main strAttributeNames = " + objStep.get("strAttributeNames").toString());
-				System.out.println("main strAtributeValues = " + objStep.get("strAtributeValues").toString());
+				System.out.println("main strAttributeValues = " + objStep.get("strAttributeValues").toString());
 				System.out.println("main strInputValue = " + objStep.get("strInputValue").toString());
 				System.out.println("main strLogicalName = " + objStep.get("strLogicalName").toString());
 				System.out.println("main intMillisecondsToWait = " + objStep.get("intMillisecondsToWait").toString());
@@ -1425,8 +1425,8 @@ public class Evinrude {
 				blnSet = true;
 				Alert alert = objWebDriver.switchTo().alert();
 				System.out.println(alert.getText()); // Print Alert popup
-				System.out.println(objStep.get("strAtributeValues").toString().toLowerCase());
-				switch (objStep.get("strAtributeValues").toString().toLowerCase()) {
+				System.out.println(objStep.get("strAttributeValues").toString().toLowerCase());
+				switch (objStep.get("strAttributeValues").toString().toLowerCase()) {
 				case "text":
 					alert.sendKeys("tegan");
 					break;
@@ -1519,7 +1519,7 @@ public class Evinrude {
 			String strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
 			strTagName = objStep.get("strTagName").toString().toLowerCase();
 			String arrAttributeNames[] = objStep.get("strAttributeNames").toString().split("\\|", -1);
-			String arrAttributeValues[] = objStep.get("strAtributeValues").toString().split("\\|", -1);
+			String arrAttributeValues[] = objStep.get("strAttributeValues").toString().split("\\|", -1);
 			String strXpathAttributesTemp = "";
 			String strXpathAttributes = "";
 			if (strTagName.toLowerCase().equals("alert")) {
@@ -1805,7 +1805,7 @@ public class Evinrude {
 	// String strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
 	// strTag = objStep.get("strTagName").toString().toLowerCase();
 	// String arrAttributeNames[] = objStep.get("strAttributeNames").toString().split("\\|", -1);
-	// String arrAttributeValues[] = objStep.get("strAtributeValues").toString().split("\\|", -1);
+	// String arrAttributeValues[] = objStep.get("strAttributeValues").toString().split("\\|", -1);
 	// String strXpathAttributesTemp = "";
 	// String strXpathAttributes = "";
 	// if (strTag.toLowerCase().equals("alert")) {
@@ -3435,7 +3435,7 @@ public class Evinrude {
 			case "alert":
 				Alert alert = objWebDriver.switchTo().alert();
 				System.out.println(alert.getText()); // Print Alert popup
-				System.out.println(objStep.get("strAtributeValues").toString().toLowerCase());
+				System.out.println(objStep.get("strAttributeValues").toString().toLowerCase());
 				return alert.getText();
 			default:
 				System.out.println("elementGet tag not supported");
@@ -4079,7 +4079,7 @@ public class Evinrude {
 			builder.append("<th>strAction</th>");
 			builder.append("<th>strTagName</th>");
 			builder.append("<th>strAttributeNames</th>");
-			builder.append("<th>strAtributeValues</th>");
+			builder.append("<th>strAttributeValues</th>");
 			builder.append("<th>strInputValue</th>");
 			builder.append("<th>strLogicalName</th>");
 			builder.append("<th>intMillisecondsToWait</th>");
@@ -4103,7 +4103,7 @@ public class Evinrude {
 				builder.append("<td> " + objStep.get("strAction").toString() + "</td>");
 				builder.append("<td> " + objStep.get("strTagName").toString() + "</td>");
 				builder.append("<td> " + objStep.get("strAttributeNames").toString() + "</td>");
-				builder.append("<td> " + objStep.get("strAtributeValues").toString() + "</td>");
+				builder.append("<td> " + objStep.get("strAttributeValues").toString() + "</td>");
 				builder.append("<td> " + objStep.get("strInputValue").toString() + "</td>");
 				builder.append("<td> " + objStep.get("strLogicalName").toString() + "</td>");
 				builder.append("<td> " + objStep.get("intMillisecondsToWait").toString() + "</td>");

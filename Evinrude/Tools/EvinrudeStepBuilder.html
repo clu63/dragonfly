@@ -2,8 +2,7 @@
 <head>
 <title>Evinrude Step Builder</title>
 <script language="javascript" type="text/javascript">
-	function readTextFile() {
-		document.location.reload(true);
+	function loadJsonFile() {
 		var objTable;
 		var intRow;
 		var intColumnCount;
@@ -13,33 +12,21 @@
 		var strKeyName
 		var strKeyValue
 		try {
-			//alert("start")
+			refreshTable();
 			var fileToLoad = document.getElementById('fileToLoad').value;
-			// 			alert(fileToLoad);
-			//var file = "file:///" + fileToLoad.replace("\", "/");
-
 			var file = "file:///" + fileToLoad.split('\\').join('\/')
-
-			//alert(file);
-
-			//var file = "file:///C:/Users/jxp30/Documents/GitHub/Evinrude/Evinrude/Data/public/public_mercury_tours.json"
-
-			//var file = "file:///C:/Users/jxp30/Documents/GitHub/Evinrude/Evinrude/Tools/savefile.json";
-			//objTable = document.getElementById('EvinrudeStepTable');
 			//var rawFile = new XMLHttpRequest();
-			//alert("pause");
 			var rawFile = new ActiveXObject("Microsoft.XMLHTTP");
-			alert("pause");
 			rawFile.open("GET", file, false);
 			rawFile.onreadystatechange = function() {
 				if (rawFile.readyState === 4) {
 					if (rawFile.status === 200 || rawFile.status == 0) {
+					
 						var allText = rawFile.responseText;
 						//var	objJsonFile = JSON.parse(allText);
 						var objJsonFile = eval("(" + allText + ")");
 						var intRow;
 						var intRowCount = objJsonFile.steps.length;
-						alert("pause");
 						for (intRow = 0; intRow < intRowCount; intRow++) {
 							if (intRow > 0) {
 								addRow();
@@ -48,8 +35,11 @@
 							intColumnCount = objRowEach.cells.length;
 							for (intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
 								objCellEach = objRowEach.cells[intColumnEach];
-								strKeyName = document.getElementById('EvinrudeStepTable').rows[0].cells[intColumnEach].innerHTML
-								strKeyValue = objJsonFile.steps[intRow][strKeyName]
+								strKeyName = document.getElementById('EvinrudeStepTable').rows[0].cells[intColumnEach].innerHTML;
+								strKeyValue = objJsonFile.steps[intRow][strKeyName];
+								if (strKeyName == "strTagName") {
+									strKeyValue = strKeyValue.toLowerCase();
+								}
 								switch (objCellEach.childNodes[0].type) {
 								case "text":
 									objCellEach.childNodes[0].value = strKeyValue;
@@ -70,11 +60,10 @@
 		}
 	}
 
-	function selectItemByValue(elmnt, value) {
-
-		for (var i = 0; i < elmnt.options.length; i++) {
-			if (elmnt.options[i].value == value)
-				elmnt.selectedIndex = i;
+	function selectItemByValue(objElement, strValue) {
+		for (var intOptionsEach = 0; intOptionsEach < objElement.options.length; intOptionsEach++) {
+			if (objElement.options[intOptionsEach].value == strValue)
+				objElement.selectedIndex = intOptionsEach;
 		}
 	}
 
@@ -117,7 +106,9 @@
 		var ForWriting = 2
 		var TriStateFalse = 0;
 		var fso = new ActiveXObject("Scripting.FileSystemObject");
-		var newFile = fso.OpenTextFile("C:\\Users\\jxp30\\Documents\\GitHub\\Evinrude\\Evinrude\\Tools\\savefile.json", ForWriting, true, TriStateFalse);
+		var strnewFile = document.getElementById('fileToLoad').value;
+		var file =  strnewFile.split('\\').join('\\\\')
+		var newFile = fso.OpenTextFile(file, ForWriting, true, TriStateFalse);
 		newFile.Write(strTextToJson);
 		newFile.Close();
 	}
@@ -207,11 +198,32 @@
 			alert(e);
 		}
 	}
-	function loadFileAsText() {
+	function refreshTable() {
+		var objTable = document.getElementById('EvinrudeStepTable');
+		var intRowCount = objTable.rows.length;
+		var blnResponse = false;
+		for (var intRowEach = 2; intRowEach < intRowCount; intRowEach++) {
+			objTable.deleteRow(intRowEach);
+			intRowCount--;
+			intRowEach--;
+		}
 
-		var fileToLoad = document.getElementById('fileToLoad').value;
-		alert(fileToLoad);
-		//alert(document.getElementById('loadFileAsText').files[0]);
+		var intColumnCount = objTable.rows[0].cells.length;
+		for (var intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
+			var objCellEach = objTable.rows[1].cells(intColumnEach);
+
+			switch (objCellEach.childNodes[0].type) {
+			case "text":
+				objCellEach.childNodes[0].value = "";
+				break;
+			case "checkbox":
+				objCellEach.childNodes[0].checked = false;
+				break;
+			case "select-one":
+				objCellEach.childNodes[0].selectedIndex = 0;
+				break;
+			}
+		}
 	}
 </script>
 </head>
@@ -219,18 +231,11 @@
 	<input type="button" value="Add Row" onclick="addRow()"></input>
 	<input type="button" value="Insert Row" onclick="insertRow()"></input>
 	<input type="button" value="Delete Row" onclick="deleteRow()"></input>
-	<select id="fileName">
-		<option value="">file name</option>
-	</select>
-	<input type="button" value="Save Steps To Json" onclick="saveTableToJson()"></input>
-	<input type="button" value="readTextFile" onclick="readTextFile()"></input>
+	<input type="button" value="Refresh Table" onclick="refreshTable()"></input>
+<input type="file" style="width: 750px" id="fileToLoad">
+	<input type="button" value="Load JSON" onclick="loadJsonFile()"></input>
+	<input type="button" value="Save JSON" onclick="saveTableToJson()"></input>
 
-	<tr>
-		<td>Select a File to Load:</td>
-		<td><input type="file" style="width: 750px" id="fileToLoad"></td>
-		<td><button onclick="loadFileAsText()">Load Selected File</button>
-		<td>
-	</tr>
 	<table id="EvinrudeStepTable" width="350px" border="1">
 		<tr>
 			<th>+</th>
@@ -297,52 +302,51 @@
 					<option value="th">th</option>
 					<option value="tr">tr</option>
 			</select></td>
-			<td><input type="text" id="strAttributeNames" value="text"></input></td>
+			<td><input type="text" id="strAttributeNames"></input></td>
 			<td><input type="text" id="strAttributeValues"></input></td>
 			<td><input type="text" id="strInputValue"></input></td>
 			<td><input type="text" id="strLogicalName"></input></td>
 			<td><input type="text" id="intMillisecondsToWait"></input></td>
 			<td><select id="blnOptional">
 					<option value=""></option>
-					<option value="">true</option>
-					<option value="">false</option>
+					<option value="true">true</option>
+					<option value="false">false</option>
 			</select></td>
 			<td><select id="strAssert">
 					<option value=""></option>
-					<option value="">off</option>
-					<option value="">value</option>
-					<option value="">visible</option>
-					<option value="">hidden</option>
-					<option value="">enabled</option>
-					<option value="">disabled</option>
+					<option value="off">off</option>
+					<option value="value">value</option>
+					<option value="visible">visible</option>
+					<option value="hidden">hidden</option>
+					<option value="enabled">enabled</option>
+					<option value="disabled">disabled</option>
 			</select></td>
 			<td><select id="blnPleaseWait">
 					<option value=""></option>
-					<option value="">true</option>
-					<option value="">false</option>
+					<option value="true">true</option>
+					<option value="false">false</option>
 			</select></td>
 			<td><select id="blnHighlight">
 					<option value=""></option>
-					<option value="">true</option>
-					<option value="">false</option>
+					<option value="true">true</option>
+					<option value="false">false</option>
 			</select></td>
 			<td><select id="blnScreenshot">
 					<option value=""></option>
-					<option value="">true</option>
-					<option value="">false</option>
+					<option value="true">true</option>
+					<option value="false">false</option>
 			</select></td>
 			<td><input type="text" id="strFunction"></input></td>
 			<td><input type="text" id="strAssistiveProperties"></input></td>
 			<td><select id="blnExitOnFail">
 					<option value=""></option>
-					<option value="">true</option>
-					<option value="">false</option>
+					<option value="true">true</option>
+					<option value="false">false</option>
 			</select></td>
 			<td><input type="text" id="strOutputLinkName"></input></td>
 			<td><input type="text" id="strOutputValue"></input></td>
 			<td><input type="text" id="intLoop"></input></td>
 		</tr>
 	</table>
-
 </body>
 </html>
