@@ -14,10 +14,22 @@
 		var strKeyValue
 		try {
 			//alert("start")
-			var file = "file:///C:/Users/jxp30/Documents/GitHub/Evinrude/Evinrude/Tools/savefile.json"
-			objTable = document.getElementById('EvinrudeStepTable');
+			var fileToLoad = document.getElementById('fileToLoad').value;
+			// 			alert(fileToLoad);
+			//var file = "file:///" + fileToLoad.replace("\", "/");
+
+			var file = "file:///" + fileToLoad.split('\\').join('\/')
+
+			//alert(file);
+
+			//var file = "file:///C:/Users/jxp30/Documents/GitHub/Evinrude/Evinrude/Data/public/public_mercury_tours.json"
+
+			//var file = "file:///C:/Users/jxp30/Documents/GitHub/Evinrude/Evinrude/Tools/savefile.json";
+			//objTable = document.getElementById('EvinrudeStepTable');
 			//var rawFile = new XMLHttpRequest();
+			//alert("pause");
 			var rawFile = new ActiveXObject("Microsoft.XMLHTTP");
+			alert("pause");
 			rawFile.open("GET", file, false);
 			rawFile.onreadystatechange = function() {
 				if (rawFile.readyState === 4) {
@@ -195,6 +207,12 @@
 			alert(e);
 		}
 	}
+	function loadFileAsText() {
+
+		var fileToLoad = document.getElementById('fileToLoad').value;
+		alert(fileToLoad);
+		//alert(document.getElementById('loadFileAsText').files[0]);
+	}
 </script>
 </head>
 <body>
@@ -206,6 +224,13 @@
 	</select>
 	<input type="button" value="Save Steps To Json" onclick="saveTableToJson()"></input>
 	<input type="button" value="readTextFile" onclick="readTextFile()"></input>
+
+	<tr>
+		<td>Select a File to Load:</td>
+		<td><input type="file" style="width: 750px" id="fileToLoad"></td>
+		<td><button onclick="loadFileAsText()">Load Selected File</button>
+		<td>
+	</tr>
 	<table id="EvinrudeStepTable" width="350px" border="1">
 		<tr>
 			<th>+</th>
@@ -252,11 +277,17 @@
 					<option value="safari">safari</option>
 					<option value="a">a</option>
 					<option value="alert">alert</option>
+					<option value="body">body</option>
 					<option value="button">button</option>
 					<option value="div">div</option>
 					<option value="h1">h1</option>
+					<option value="h2">h2</option>
+					<option value="h3">h3</option>
+					<option value="h4">h4</option>
+					<option value="h5">h5</option>
+					<option value="h6">h6</option>
 					<option value="img">img</option>
-					<option value="img">input</option>
+					<option value="input">input</option>
 					<option value="p">p</option>
 					<option value="select">select</option>
 					<option value="span">span</option>
@@ -312,5 +343,6 @@
 			<td><input type="text" id="intLoop"></input></td>
 		</tr>
 	</table>
+
 </body>
 </html>
