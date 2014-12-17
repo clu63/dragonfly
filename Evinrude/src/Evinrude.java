@@ -522,9 +522,6 @@ public class Evinrude {
 					} else {
 						coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
 					}
-					// coordinateHighlightScreenshot(objStep, "element",
-					// Color.GREEN, "screen", objWebDriver, objWebElement,
-					// objStep);
 					return true;
 				} else if (blnStatus == false) {
 					if (intMillisecondsWaited <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
@@ -542,8 +539,7 @@ public class Evinrude {
 							coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, objWebElement, objStep);
 							return false;
 						}
-					}// the end of if (intMillisecondsWaited <=
-						// intMillisecondsToWait)
+					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
 			}// the end of try
 		}// the end of While
@@ -3345,16 +3341,19 @@ public class Evinrude {
 
 	public static String elementGet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementTagNameNotSupportedException {
 		long lngStartTimeElementGet = System.currentTimeMillis();
+		String strElementGet = "";
 		try {
 			switch (objStep.get("strTagType").toString().toLowerCase()) {
 			case "img":
-				return objWebElement.getAttribute("src");
+				strElementGet = objWebElement.getAttribute("src");
+				break;
 			case "input_button":
 			case "input_submit":
 			case "input_reset":
 			case "input_image":
 			case "button":
-				return objWebElement.getAttribute("value").trim();
+				strElementGet = objWebElement.getAttribute("value").trim();
+				break;
 			case "a":
 			case "th":
 			case "tr":
@@ -3368,79 +3367,41 @@ public class Evinrude {
 			case "h5":
 			case "h6":
 			case "p":
-				// return objWebElement.getAttribute("innerText");
-				return objWebElement.getText();
+				strElementGet = objWebElement.getText();
+				break;
 			case "input_text":
 			case "input_password":
 			case "textarea":
 			case "input_email":
-				return objWebElement.getAttribute("value");
+				strElementGet = objWebElement.getAttribute("value");
+				break;
 			case "input_radio":
-				// TODO fix return value to <on> or <off> based on is selected
-				// return objWebElement.getAttribute("id");
-				if (objWebElement.isSelected() == false) {
-					return "<off>";
-				} else {
-					return "<on>";
-				}
 			case "input_checkbox":
 				if (objWebElement.isSelected() == false) {
-					return "<off>";
+					strElementGet = "<off>";
 				} else {
-					return "<on>";
+					strElementGet = "<on>";
 				}
+				break;
 			case "select":
-				long lngStartTimeElementOptionCount = System.currentTimeMillis();
-				JavascriptExecutor executor = (JavascriptExecutor) objWebDriver;
-				// long lngOptionCount = (long)
-				// executor.executeScript("var x = arguments[0];return x.length;",
-				// objWebElement);
-				// String lngOptionCount = (String)
-				// executor.executeScript("var x = arguments[0];var i;for (i = 0; i < x.length; i++)"
-				// + "{txt = txt + x.options[i].text;}" + "return txt;",
-				// objWebElement);
-				// //this works use it
-				// String lngOptionCount = (String)
-				// executor.executeScript("var txt;var x = arguments[0];var i;for (i = 01; i < x.length; i++)"
-				// + "{txt = txt + '|' + x.options[i].text;}" + "return txt;",
-				// objWebElement);
-				// System.out.println("lngOptionCount = " + lngOptionCount +
-				// " intMillisecondsWaited = " + (System.currentTimeMillis() -
-				// lngStartTimeElementOptionCount));
-				String strOptionSelected = (String) executor.executeScript("var select = arguments[0];var selection=select.options[select.selectedIndex].innerHTML;return selection;", objWebElement);
-				System.out.println("strOptionSelected = " + strOptionSelected + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementOptionCount));
-				return strOptionSelected.trim();
-				// var elt = arguments[0];
-				// var selection=elt.options[elt.selectedIndex].innerHTML;
-				// return selection;
-				// function getSelectedText(elementId) {
-				// var elt = document.getElementById(elementId);
-				// if (elt.selectedIndex == -1)
-				// return null;
-				// return elt.options[elt.selectedIndex].text;
-				// }
-				// var text = getSelectedText('test');
-				// Select objSelect = new Select((WebElement) objWebElement);
-				// WebElement option = objSelect.getFirstSelectedOption();
-				// return option.getText();
-				// from selenium import webdriver
-				// b = webdriver.Firefox()
-				// #...some commands here
-				// b.find_element_by_xpath("//select/option[@value='The Options I am Looking for']").click()
-				// b.find_element_by_xpath("//select[@name='element_name']/option[text()='option_text']").click()
+				JavascriptExecutor objExecutor = (JavascriptExecutor) objWebDriver;
+				strElementGet = (String) objExecutor.executeScript("var select = arguments[0];var selection=select.options[select.selectedIndex].innerHTML;return selection;", objWebElement);
+				strElementGet = strElementGet.trim();
+				break;
 			case "table":
-				return objWebElement.getText();
+				strElementGet = objWebElement.getText();
+				break;
 			case "alert":
 				Alert alert = objWebDriver.switchTo().alert();
-				System.out.println(alert.getText()); // Print Alert popup
-				System.out.println(objStep.get("strAttributeValues").toString().toLowerCase());
-				return alert.getText();
+				strElementGet = alert.getText();
+				break;
 			default:
-				System.out.println("elementGet tag not supported");
+				strElementGet = "elementGet tag not supported";
 				throw new ElementTagNameNotSupportedException("Element tag not supported");
 			}
 		} finally {
-			System.out.println("ElementGet finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementGet));
+			System.out.println("ElementGet finally strElementGet = " + strElementGet + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementGet));
+			return strElementGet;
 		}
 	} // the end of ElementGet
 
@@ -3728,7 +3689,7 @@ public class Evinrude {
 				elementAbsoluteCoordinates(objStep, intThickness, objWebDriver, objWebElement, objRectangleArea);
 				break;
 			default:
-				//TODO add reporting  for default 
+				// TODO add reporting for default
 				System.out.println("getRectangleAreaByName default screen, window, page and element not " + strAreaObjectName);
 				break;
 			}
