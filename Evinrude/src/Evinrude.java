@@ -1,14 +1,12 @@
 //TODO Highlight based on webelement null or json coordinates
 //TODO Alert handling get and verify
-//TODO Store in github
-//TODO Create new folder for each run
 //TODO Assert finish set method
 //TODO Create an array json for link values from output link name
+//TODO Remove json variables assignment
 //TODO Pass json not variables
 //TODO Update json with results status timing step details
 //TODO Webtable for json file
 //TODO Highlight based on status: pass, fail, info, warning, optional
-//TODO Remove json variables assignment
 //TODO Confirm all browsers work
 //TODO Json Element properties combine , using json format for key and value
 //TODO Switchto frames and iframes
@@ -19,30 +17,21 @@
 //TODO Add comment to file for changes
 //TODO Check changes to library files and save backup.
 //TODO Copy library files to local drive.
+//TODO check for StaleElementReferenceException included
 
 import java.io.BufferedWriter;
-
-//import com.thoughtworks.selenium.DefaultSelenium;
-//import com.thoughtworks.selenium.Selenium;
-//import com.thoughtworks.selenium.webdriven.SeleneseCommand;
-//import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-//import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-//import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-//import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -55,8 +44,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
-//import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoAlertPresentException;
@@ -71,60 +58,111 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-//import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
-//import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.remote.DesiredCapabilities;
-//import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.Dimension;
-//import org.openqa.selenium.Point;
-//import org.openqa.selenium.interactions.Mouse;
-//import com.steadystate.css.parser.Locatable;
 
-//import java.awt.Point;
-//import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.awt.AWTException;
 import java.awt.Color;
-//import java.awt.Component;
-//import java.awt.MouseInfo;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
-//import java.awt.Window;
-//import java.awt.image.BufferedImage;
-//import java.io.File;
-//import java.text.SimpleDateFormat;
-//import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-//import javax.imageio.ImageIO;
-
 import java.lang.Object;
-//import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.openqa.selenium.safari.SafariDriver;
-//import  com.google.gwt.user.client.Window;
 
 import com.opera.core.systems.*;
 
 import java.awt.HeadlessException;
-//import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.Capabilities;
-//import java.io.IOException;
-
-// StaleElementReferenceException 
-
 public class Evinrude {
+
+	@SuppressWarnings("serial")
+	public static class ElementNotFoundException extends Exception {
+		public ElementNotFoundException(String message) {
+			super(message);
+		}
+	}// the end of ElementNotFoundException
+
+	@SuppressWarnings("serial")
+	public static class MultipleElementsFoundException extends Exception {
+		public MultipleElementsFoundException(String message) {
+			super(message);
+		}
+	}// the end of MultipleElementsFoundException
+
+	@SuppressWarnings("serial")
+	public static class ElementNotSetException extends Exception {
+		public ElementNotSetException(String message) {
+			super(message);
+		}
+	}// the end of ElementNotVisibleException
+
+	@SuppressWarnings("serial")
+	public static class ElementNotVisibleException extends Exception {
+		public ElementNotVisibleException(String message) {
+			super(message);
+		}
+	}// the end of ElementNotVisibleException
+
+	@SuppressWarnings("serial")
+	public static class ElementNotHiddenException extends Exception {
+		public ElementNotHiddenException(String message) {
+			super(message);
+		}
+	}// the end of ElementNotHiddenException
+
+	@SuppressWarnings("serial")
+	public static class ElementNotEnabledException extends Exception {
+		public ElementNotEnabledException(String message) {
+			super(message);
+		}
+	}// the end of ElementNotEnabledException
+
+	@SuppressWarnings("serial")
+	public static class ElementNotDisabledException extends Exception {
+		public ElementNotDisabledException(String message) {
+			super(message);
+		}
+	}// the end of ElementNotDisabledException
+
+	@SuppressWarnings("serial")
+	public static class ValueNotMatchedException extends Exception {
+		public ValueNotMatchedException(String message) {
+			super(message);
+		}
+	}// the end of ValueNotMatchedException
+
+	@SuppressWarnings("serial")
+	public static class ElementValueNotVerifiedException extends Exception {
+		public ElementValueNotVerifiedException(String message) {
+			super(message);
+		}
+	}// the end of ElementValueNotVerifiedException
+
+	@SuppressWarnings("serial")
+	public static class ElementTagNameNotSupportedException extends Exception {
+		public ElementTagNameNotSupportedException(String message) {
+			super(message);
+		}
+	}// the end of ElementTagNameNotSupportedException
+
+	@SuppressWarnings("serial")
+	public static class BrowserDriverNotSupportedException extends Exception {
+		public BrowserDriverNotSupportedException(String message) {
+			super(message);
+		}
+	}// the end of BrowserDriverNotSupportedException
+
 	public String data_DateDaysOut(String strDaysOut) {
 		Integer intDaysOut = Integer.parseInt(strDaysOut);
 		SimpleDateFormat FormattedDATE = new SimpleDateFormat("MM/dd/yyyy");
@@ -294,17 +332,10 @@ public class Evinrude {
 				if (!strInputValue.equals("<skip>")) {
 					switch (objStep.get("strAction").toString().toLowerCase()) {
 					case "launch":
+						// TODO create a browserLaunchSync to manage reporting and sync
 						objWebDriver = browserLaunch(objStep);
 						blnPass = Boolean.parseBoolean(objStep.get("blnStatus").toString());
 						long lngStartTimedocumenttitle = System.currentTimeMillis();
-						// JavascriptExecutor js = (JavascriptExecutor) objWebDriver;
-						// String strTitle = (String) js.executeScript("return document.title");
-						// System.out.println("main JavascriptExecutor strTitle  = " + strTitle + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
-						// long lngStartTimetitle = System.currentTimeMillis();
-						// System.out.println("main objWebDriver.getTitle = " + objWebDriver.getTitle() + " " + (System.currentTimeMillis() - lngStartTimetitle));
-						// long lngStartTimegetElementsByTagName = System.currentTimeMillis();
-						// List<WebElement> objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
-						// System.out.println("main objFrameCollection = " + objFrameCollection.size() + " " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName));
 						System.out.println("main objWebDriver.toString = " + objWebDriver.toString() + " " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
 						break;
 					case "close":
@@ -382,83 +413,6 @@ public class Evinrude {
 			}
 		}// the end of try
 	}// the end of Main
-
-	@SuppressWarnings("serial")
-	public static class ElementNotFoundException extends Exception {
-		public ElementNotFoundException(String message) {
-			super(message);
-		}
-	}// the end of ElementNotFoundException
-
-	@SuppressWarnings("serial")
-	public static class MultipleElementsFoundException extends Exception {
-		public MultipleElementsFoundException(String message) {
-			super(message);
-		}
-	}// the end of MultipleElementsFoundException
-
-	@SuppressWarnings("serial")
-	public static class ElementNotSetException extends Exception {
-		public ElementNotSetException(String message) {
-			super(message);
-		}
-	}// the end of ElementNotVisibleException
-
-	@SuppressWarnings("serial")
-	public static class ElementNotVisibleException extends Exception {
-		public ElementNotVisibleException(String message) {
-			super(message);
-		}
-	}// the end of ElementNotVisibleException
-
-	@SuppressWarnings("serial")
-	public static class ElementNotHiddenException extends Exception {
-		public ElementNotHiddenException(String message) {
-			super(message);
-		}
-	}// the end of ElementNotHiddenException
-
-	@SuppressWarnings("serial")
-	public static class ElementNotEnabledException extends Exception {
-		public ElementNotEnabledException(String message) {
-			super(message);
-		}
-	}// the end of ElementNotEnabledException
-
-	@SuppressWarnings("serial")
-	public static class ElementNotDisabledException extends Exception {
-		public ElementNotDisabledException(String message) {
-			super(message);
-		}
-	}// the end of ElementNotDisabledException
-
-	@SuppressWarnings("serial")
-	public static class ValueNotMatchedException extends Exception {
-		public ValueNotMatchedException(String message) {
-			super(message);
-		}
-	}// the end of ValueNotMatchedException
-
-	@SuppressWarnings("serial")
-	public static class ElementValueNotVerifiedException extends Exception {
-		public ElementValueNotVerifiedException(String message) {
-			super(message);
-		}
-	}// the end of ElementValueNotVerifiedException
-
-	@SuppressWarnings("serial")
-	public static class ElementTagNameNotSupportedException extends Exception {
-		public ElementTagNameNotSupportedException(String message) {
-			super(message);
-		}
-	}// the end of ElementTagNameNotSupportedException
-
-	@SuppressWarnings("serial")
-	public static class BrowserDriverNotSupportedException extends Exception {
-		public BrowserDriverNotSupportedException(String message) {
-			super(message);
-		}
-	}// the end of BrowserDriverNotSupportedException
 
 	public static Boolean elementGetSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
 		Long lngStartTimeGetSync = System.currentTimeMillis();
@@ -556,10 +510,7 @@ public class Evinrude {
 		Boolean blnExit = false;
 		Boolean blnHidden = false;
 		Boolean blnAssert = false;
-		// String strCurrentWindowHandle =
-		// objStep.get("strCurrentWindowHandle").toString();
-		// String strInputValue = objStep.get("strInputValue").toString();
-		// objStep.put("strCurrentWindowHandle", strCurrentWindowHandle);
+		Boolean blnDisabled = false;
 		objStep.put("strOutputValue", objStep.get("strInputValue").toString());
 		while (true) {
 			try {
@@ -621,12 +572,22 @@ public class Evinrude {
 						elementSet(objStep, objWebDriver, objWebElement);
 						blnSet = true;
 					}
+					if (blnAssert == false) {
+						elementVisible(objStep, objWebDriver, objWebElement);
+						blnVisible = true;
+						blnAssert = true;
+					}
 					coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
 					break;
 				case "enabled":
 					if (blnSet == false) {
 						elementSet(objStep, objWebDriver, objWebElement);
 						blnSet = true;
+					}
+					if (blnAssert == false) {
+						elementEnabled(objStep, objWebDriver, objWebElement);
+						// blnVisible = true;
+						blnAssert = true;
 					}
 					coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
 					break;
@@ -635,7 +596,11 @@ public class Evinrude {
 						elementSet(objStep, objWebDriver, objWebElement);
 						blnSet = true;
 					}
-					// TODO assert add call to elementDisabled
+					if (blnAssert == false) {
+						elementDisabled(objWebElement);
+						// blnVisible = true;
+						blnAssert = true;
+					}
 					coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, objWebElement, objStep);
 					break;
 				}// the end of switch (strAssert.toLowerCase())
@@ -663,6 +628,10 @@ public class Evinrude {
 			} catch (ElementNotSetException e) {
 				blnSet = true;
 				blnAssert = false;
+			} catch (ElementNotDisabledException e) {
+				blnDisabled = false;
+				blnAssert = false;
+				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
 			} finally {
 				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeSetSync);
 				System.out.println("elementSetSync finally intMillisecondsWaited = " + intMillisecondsWaited);
@@ -1061,7 +1030,6 @@ public class Evinrude {
 				objWebDriver = new FirefoxDriver();
 				objWebDriver.get(objStep.get("strInputValue").toString());
 				objWebDriver.manage().window().maximize();
-				// objWebDriver.switchTo().defaultContent();
 				Actions myAction = new Actions(objWebDriver);
 				myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL).build().perform();
 				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
@@ -1090,7 +1058,7 @@ public class Evinrude {
 					System.setProperty("webdriver.chrome.driver", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome");
 					break;
 				default:
-					// need to raise an error and log
+					// TODO need to raise an error and log
 					break;
 				}
 				objWebDriver = new ChromeDriver();
@@ -1422,7 +1390,7 @@ public class Evinrude {
 				System.out.println(objStep.get("strAttributeValues").toString().toLowerCase());
 				switch (objStep.get("strAttributeValues").toString().toLowerCase()) {
 				case "text":
-					alert.sendKeys("tegan");
+					alert.sendKeys(objStep.get("strInputValue").toString());
 					break;
 				case "accept":
 					alert.accept(); // Close Alert popup
@@ -1712,6 +1680,12 @@ public class Evinrude {
 
 					// long lngStartTimeGetXpath = System.currentTimeMillis();
 					// System.out.println("xpath = " + getElementXPath(objWebDriver, objWebElement) + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeGetXpath));
+
+					// TODO add title and url to each element found in the objStep json
+					// JavascriptExecutor js = (JavascriptExecutor) objWebDriver;
+					// String strTitle = (String) js.executeScript("return document.title");
+					// System.out.println("main JavascriptExecutor strTitle  = " + strTitle + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
+
 					System.out.println("strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
 
 					System.out.println("objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
@@ -3297,11 +3271,11 @@ public class Evinrude {
 	}// the end of VerifyMatch
 
 	public static String RegularExpressionMatch(String strPattern, String strActualValue) {
-		Pattern pattern = Pattern.compile(strPattern);
-		Matcher matcher = pattern.matcher(strActualValue);
-		matcher.matches();
-		String whatYouNeed = matcher.group(0);
-		return whatYouNeed;
+		Pattern objPattern = Pattern.compile(strPattern);
+		Matcher objMatcher = objPattern.matcher(strActualValue);
+		objMatcher.matches();
+		String strMatchedString = objMatcher.group(0);
+		return strMatchedString;
 		// On Error Resume Next
 		// '**********************************************************************
 		// 'Variable Declaration
@@ -3573,6 +3547,7 @@ public class Evinrude {
 
 	@SuppressWarnings({ "serial", "unchecked" })
 	public static void coordinateHighlightScreenshot(final JSONObject objStepHighlightArea, final String strHighlightArea, String strScreenshotArea, final WebDriver objWebDriver, final WebElement objWebElement, JSONObject objStep) {
+		long lngStartTimeCoordinateHighlightScreenshot = System.currentTimeMillis();
 		JFrame objJFrame = new JFrame() {
 			{
 				Rectangle objHighlightArea = new Rectangle(0, 0, 0, 0);
@@ -3613,69 +3588,64 @@ public class Evinrude {
 			Rectangle objHighlightArea = new Rectangle(0, 0, 0, 0);
 			String strScreenshotFilePath = "";
 			try {
-				long lngStartTimeScreenshotTrue = System.currentTimeMillis();
 				Robot robot = new Robot();
 				getRectangleAreaByName(objStep, 0, strScreenshotArea, objHighlightArea, objWebDriver, objWebElement);
 				BufferedImage screenShot = robot.createScreenCapture(objHighlightArea);
-				System.out.println("coordinateHighlightScreenshot robot.createScreenCapture intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeScreenshotTrue));
-
 				strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "Screenshot_" + dateTimestamp() + ".jpg";
-				System.out.println("strScreenshotFilePath = " + strScreenshotFilePath);
-
-				// switch (OSType()) {
-				// case "Windows":
-				// strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "Screenshot_" + dateTimestamp() + ".jpg";
-				// break;
-				// case "Mac":
-				// strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "Screenshot_" + dateTimestamp() + ".jpg";
-				// break;
-				// default:
-				// // TODO need to raise an error and log
-				// break;
-				// }// the end of switch(OSType())
 				objStep.put("strScreenshotFilePath", strScreenshotFilePath);
-				// long lngStartTimeThread = System.currentTimeMillis();
 				Thread objThread = new Thread(new threadSaveImage(screenShot, "jpg", strScreenshotFilePath));
 				objThread.start();
-				// System.out.println("coordinateHighlightScreenshot threadSaveImage intMillisecondsWaited = "
-				// + (System.currentTimeMillis() - lngStartTimeThread));
-				// System.out.println("coordinateHighlightScreenshot blnScreenshot end total intMillisecondsWaited = "
-				// + (System.currentTimeMillis() - lngStartTimeScreenshotTrue));
 			} catch (AWTException e) {
-				System.out.println("coordinateHighlightScreenshot AWTException");
+				// TODO handle coordinateHighlightScreenshot AWTException
+				System.out.println("coordinateHighlightScreenshot " + e.toString());
 			} catch (Exception e) {
-				System.out.println("coordinateHighlightScreenshot Exception");
+				// TODO handle coordinateHighlightScreenshot Exception
+				System.out.println("coordinateHighlightScreenshot " + e.toString());
 			}
 		}// the end of if (blnScreenshot == true)
 		if (Boolean.parseBoolean(objStep.get("blnHighlight").toString()) == true) {
 			try {
 				Thread.sleep(intSleepMilliseconds);
 			} catch (InterruptedException e) {
-				System.out.println("coordinateHighlightScreenshot InterruptedException");
+				// TODO handle coordinateHighlightScreenshot InterruptedException
+				System.out.println("coordinateHighlightScreenshot " + e.toString());
 			}
 			objJFrame.setVisible(false);
 			objJFrame.dispose();
 		}
+		System.out.println("coordinateHighlightScreenshot MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeCoordinateHighlightScreenshot));
 	}// the end of coordinateHighlightScreenshot
 
 	public static void getRectangleAreaByName(JSONObject objStep, Integer intThickness, String strAreaObjectName, Rectangle objRectangleArea, WebDriver objWebDriver, WebElement objWebElement) {
 		long lngStartTimeGetRectangleAreaByName = System.currentTimeMillis();
+		int intX = 0;
+		int intY = 0;
+		int intWidth = 0;
+		int intHeight = 0;
 		try {
 			switch (strAreaObjectName.toLowerCase()) {
 			case "screen":
-				int intX = 0;
-				int intY = 0;
-				int intWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
-				int intHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-				objRectangleArea.setBounds(intX, intY, intWidth, intHeight);
+				intX = 0;
+				intY = 0;
+				intWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+				intHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
+				// objRectangleArea.setBounds(intX, intY, intWidth, intHeight);
 				break;
 			case "window":
 				intX = objWebDriver.manage().window().getPosition().getX();
 				intY = objWebDriver.manage().window().getPosition().getY();
 				intWidth = objWebDriver.manage().window().getSize().width;
 				intHeight = objWebDriver.manage().window().getSize().height;
-				objRectangleArea.setBounds(intX, intY, intWidth, intHeight);
-				System.out.println(intX + intY + intWidth + intHeight);
+				// if (intX < 0) {
+				// intWidth = intWidth + 2 * intX;
+				// intX = 0;
+				// }
+				// if (intY < 0) {
+				// intHeight = intHeight + 2 * intY;
+				// intY = 0;
+				// }
+				// objRectangleArea.setBounds(intX, intY, intWidth, intHeight);
+				// System.out.println(intX + intY + intWidth + intHeight);
 				break;
 			case "page":
 				WebElement objWebElementPage = objWebDriver.findElement(By.xpath("//body"));
@@ -3683,10 +3653,24 @@ public class Evinrude {
 				intY = objWebElementPage.getLocation().getY() - intThickness;
 				intWidth = objWebElementPage.getSize().width + (2 * intThickness);
 				intHeight = objWebElementPage.getSize().height + (2 * intThickness);
-				objRectangleArea.setBounds(intX, intY, intWidth, intHeight);
+				// if (intX < 0) {
+				// intWidth = intWidth + 2 * intX;
+				// intX = 0;
+				// }
+				// if (intY < 0) {
+				// intHeight = intHeight + 2 * intY;
+				// intY = 0;
+				// }
+				// objRectangleArea.setBounds(intX, intY, intWidth, intHeight);
 				break;
 			case "element":
-				elementAbsoluteCoordinates(objStep, intThickness, objWebDriver, objWebElement, objRectangleArea);
+				intX = Integer.parseInt(objStep.get("intElementScreenX").toString()) - intThickness;
+				intY = Integer.parseInt(objStep.get("intElementScreenY").toString()) - intThickness;
+				intWidth = Integer.parseInt(objStep.get("intElementWidth").toString()) + (2 * intThickness);
+				intHeight = Integer.parseInt(objStep.get("intElementHeight").toString()) + (2 * intThickness);
+				// System.out.println("elementAbsoluteCoordinates  = " + intX + " " + intY + " " + intWidth + " " + intHeight);
+				// objRectangleArea.setBounds(intX, intY, intWidth, intHeight);
+				// elementAbsoluteCoordinates(objStep, intThickness, objWebDriver, objWebElement, objRectangleArea);
 				break;
 			default:
 				// TODO add reporting for default
@@ -3694,7 +3678,16 @@ public class Evinrude {
 				break;
 			}
 		} finally {
-			System.out.println("getRectangleAreaByName finally " + strAreaObjectName.toLowerCase() + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeGetRectangleAreaByName));
+			if (intX < 0) {
+				intWidth = intWidth + 2 * intX;
+				intX = 0;
+			}
+			if (intY < 0) {
+				intHeight = intHeight + 2 * intY;
+				intY = 0;
+			}
+			objRectangleArea.setBounds(intX, intY, intWidth, intHeight);
+			System.out.println("getRectangleAreaByName finally strAreaObjectName = " + strAreaObjectName.toLowerCase() + " objRectangleArea = " + objRectangleArea + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeGetRectangleAreaByName));
 		}
 	}// the end of getRectangleAreaByName
 
@@ -3710,158 +3703,13 @@ public class Evinrude {
 		}
 
 		public void run() {
-			// long lngStartTime = System.currentTimeMillis();
 			try {
 				ImageIO.write(objScreenShot, strImageType.toUpperCase(), new File(strPathFileName));
 			} catch (IOException e) {
 				System.out.println("threadSaveImage IOException = ");
 			}
-			// System.out.println("threadSaveImage intMillisecondsWaited = " +
-			// (System.currentTimeMillis() - lngStartTime));
-			// return null;
 		}
 	}// the end of threadSaveImage
-
-	@SuppressWarnings("serial")
-	public static void elementHighlightMultiple(final int intX, final int intY, final int intWidth, final int intHeight, final Color colorColor, final int intThickness, int intSleepMilliseconds) {
-		JFrame objJFrame = new JFrame() {
-			{
-				setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				// setBounds(intX, intY, intWidth, intHeight);
-				setUndecorated(true);
-				setBackground(new Color(0, 0, 0, 0));
-				// getRootPane().setBorder(BorderFactory.createLineBorder(colorColor,
-				// intThickness, false));
-				// getRootPane().setBorder(new CompoundBorder(
-				// BorderFactory.createLineBorder(colorColor, intThickness,
-				// false),
-				// BorderFactory.createLineBorder(colorColor, intThickness,
-				// false)));
-				getRootPane().setBorder(new CompoundBorder(BorderFactory.createMatteBorder(0, 0, 50, 75, Color.BLUE), BorderFactory.createMatteBorder(100, 100, 150, 175, Color.RED)));
-				setVisible(true);
-				// setBounds(intX + 100, intY + 100, intWidth + 100, intHeight +
-				// 100);
-				// setUndecorated(true);
-				// setBackground(new Color(0, 0, 0, 0));
-				// getRootPane().setBorder(BorderFactory.createLineBorder(colorColor,
-				// intThickness, false));
-				//
-				// setVisible(true);
-			}
-		};
-		try {
-			Thread.sleep(intSleepMilliseconds);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		objJFrame.setVisible(false);
-		objJFrame.dispose();
-	}// elementHighlightMultiple
-
-	@SuppressWarnings("serial")
-	public static void elementHighlight(final int intX, final int intY, final int intWidth, final int intHeight, final Color colorColor, final int intThickness, int intSleepMilliseconds) throws InterruptedException {
-		JFrame objJFrame = new JFrame() {
-			{
-				setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				// setBounds(intX + 1, intY + 107, intWidth, intHeight);
-				// with padding setBounds((intX + 1) - intThickness, (intY +
-				// 107) - intThickness, intWidth + 2 * intThickness, intHeight +
-				// 2 * intThickness);
-				// setBounds(intX - intThickness, intY - intThickness, intWidth
-				// + (2 * intThickness), intHeight + (2 * intThickness));
-				setBounds(intX, intY, intWidth, intHeight);
-				setUndecorated(true);
-				setBackground(new Color(0, 0, 0, 0));
-				getRootPane().setBorder(BorderFactory.createLineBorder(colorColor, intThickness, false));
-				setVisible(true);
-			}
-		};
-		// INSERT CALL FOR SCREEN SHOT
-		// Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		// double areawidth = screenSize.getWidth();
-		// double areaheight = screenSize.getHeight();
-		//
-		// // Toolkit.getDefaultToolkit()
-		//
-		// int areax = 0;
-		// int areay = 0;
-		// int width = 1366;
-		// int height = 768;
-		// Rectangle area2 = new Rectangle(areax, areay, areawidth, areaheight);
-		// coordinateScreenshot();
-		Thread.sleep(intSleepMilliseconds);
-		objJFrame.setVisible(false);
-		objJFrame.dispose();
-	}// the end of elementHighlight
-
-	// public static void coordinateScreenshot(String strAreaObjectName,
-	// WebDriver objWebDriver, WebElement objWebElement) {
-	// Rectangle area = null;
-	// try {
-	// long lngStartTime = System.currentTimeMillis();
-	// Robot robot = new Robot();
-	// switch (strAreaObjectName.toLowerCase()) {
-	// case "screen":
-	// int intX = 0;
-	// int intY = 0;
-	// int intWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
-	// int intHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-	// area = new Rectangle(intX, intY, intWidth, intHeight);
-	// break;
-	// case "window":
-	// // int intX = 0;
-	// // int intY = 0;
-	// // int intWidth =
-	// // Toolkit.getDefaultToolkit().getScreenSize().width;
-	// // int intHeight =
-	// // Toolkit.getDefaultToolkit().getScreenSize().height;
-	// // area = new Rectangle(intX, intY, intWidth, intHeight);
-	// break;
-	// case "page":
-	// // int intX = 0;
-	// // int intY = 0;
-	// // int intWidth =
-	// // Toolkit.getDefaultToolkit().getScreenSize().width;
-	// // int intHeight =
-	// // Toolkit.getDefaultToolkit().getScreenSize().height;
-	// // area = new Rectangle(intX, intY, intWidth, intHeight);
-	// break;
-	// case "element":
-	// area = elementAbsoluteCoordinates(objWebDriver, objWebElement);
-	// break;
-	// default:
-	// break;
-	// }
-	// BufferedImage screenShot = robot.createScreenCapture(area);
-	// saveImage(screenShot, "jpg", "c:\\temp\\screenshots\\screenShot" +
-	// dateTimestamp() + ".jpg");
-	//
-	// // MyRunnable myRunnable = new MyRunnable();
-	// // Thread myThread = new Thread(myRunnable);
-	// // myThread.start();
-	//
-	// long lngEndTime = System.currentTimeMillis();
-	// Integer intMillisecondsWaited = (lngEndTime - lngStartTime);
-	// System.out.println("intMillisecondsWaited = " + intMillisecondsWaited);
-	// } catch (AWTException e) {
-	// } catch (Exception e) {
-	// }
-	// }// the end of coordinateScreenshot
-
-	// public static final void saveImage(BufferedImage objScreenShot, String
-	// strImageType, String strPathFileName) {
-	// long lngStartTime = System.currentTimeMillis();
-	// try {
-	// ImageIO.write(objScreenShot, strImageType.toUpperCase(), new
-	// File(strPathFileName));
-	// } catch (IOException e) {
-	// System.out.println("saveImage IOException = ");
-	// }
-	// System.out.println("saveImage intMillisecondsWaited = " +
-	// (System.currentTimeMillis() - lngStartTime));
-	// // return null;
-	// }
 
 	public static final String dateTimestamp() {
 		Date date = new Date();
@@ -3896,18 +3744,6 @@ public class Evinrude {
 		JavascriptExecutor executor = (JavascriptExecutor) objWebDriver;
 		executor.executeScript("window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
 	}// the end of scrollToBottom
-
-	// var element = document.getElementById("some_id");
-	// var offsetTop = element.offsetTop;
-	// var offsetLeft = element.offsetLeft;
-
-	// //WebDriver driver = new AnyDriverYouWant();
-	// JavascriptExecutor js;
-	// if (driver instanceof JavascriptExecutor) {
-	// js = (JavascriptExecutor)driver;
-	// }
-	// js.executeScript("return document.getElementById('someId');");
-	// }
 
 	// Function DevelopmentModeSlideShow()
 	// On Error Resume Next
@@ -3978,53 +3814,6 @@ public class Evinrude {
 	// strText = strText & "<PARAM NAME=" & Chr(34) & "VideoBorderColor" &
 	// Chr(34) & " value=" & Chr(34) & "False" & Chr(34) & "></OBJECT>"
 	// EmbedVideo = strText
-	// End Function
-
-	// Function TerminalEmulatorTableSetScreenArray(intRSColCount)
-	// On Error Resume Next
-	// ReDim arrTable(intRSColCount + 1, 0)
-	// intArrayRows = 0
-	// intTableStartRow = CInt(objTable.GetTOProperty("start row"))
-	// intTableEndRow = CInt(objTable.GetTOProperty("end row"))
-	// strScreenText = TerminalEmulatorGetPuTTyScreenText
-	// strText = ""
-	// strText = strText & "<table border=""1"">"
-	// strText = strText & "<tr>"
-	// For intColumnEach = 0 To UBound(arrColumns, 2)
-	// strText = strText & "<th>" & arrColumns(0, intColumnEach) & "</th>"
-	// If arrColumns(1, intColumnEach) <> "SKIP" Then
-	// If strStepBuild <> "" Then
-	// strStepBuild = strStepBuild & " and "
-	// End If
-	// strStepBuild = strStepBuild & arrColumns(0, intColumnEach) & " value {" &
-	// arrColumns(1, intColumnEach) & "} "
-	// End If
-	// Next
-	// strStepName = strTableValue & " " & strStepBuild & " in " & strTableName
-	// & " table "
-	// strText = strText & "</tr>"
-	// strText = strText & "<tr>"
-	// For intRowEach = intTableStartRow To intTableEndRow
-	// strActualValue = TerminalEmulatorGetText(strScreenText, intRowEach,
-	// arrColumns(5, 0), arrColumns(6, 0))
-	// If strActualValue <> "" Then
-	// ReDim Preserve arrTable(intRSColCount + 1, intArrayRows)
-	// arrTable(0, intArrayRows) = intRowEach
-	// For intColumnsEach = 0 To intRSColCount
-	// arrTable(intColumnsEach + 1, intArrayRows) =
-	// TerminalEmulatorGetText(strScreenText, intRowEach, arrColumns(5,
-	// intColumnsEach), arrColumns(6, intColumnsEach))
-	// strText = strText & "<td>" & Replace(arrTable(intColumnsEach + 1,
-	// intArrayRows), " ", "&nbsp;") & "</td>"
-	// Next
-	// strText = strText & "</tr>"
-	// intArrayRows = intArrayRows + 1
-	// End If
-	// Next
-	// strText = strText & "</table> "
-	// strTableData = strTableData & strText
-	// Err.Clear
-	// On Error GoTo 0
 	// End Function
 
 	public static void writeJsonToHtml(JSONArray objTestSteps, String file) {
@@ -4107,7 +3896,7 @@ public class Evinrude {
 				builder.append("<div id=step_" + intTestStepRow + ">");
 				builder.append("<TABLE border=1 width=100% height=10%>");
 				builder.append("<TR>");
-				builder.append("<TD align=center valign=middle>Expected</TD>");
+				builder.append("<TD width= 100px align=center valign=middle>Expected</TD>");
 				builder.append("<TD align=left valign=middle>" + objStep.get("strAction").toString() + "</TD>");
 				builder.append("</TR>");
 				builder.append("<TR>");
