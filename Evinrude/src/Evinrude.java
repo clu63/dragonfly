@@ -1006,8 +1006,6 @@ public class Evinrude {
 					elementDisabled(objWebElement);
 					blnDisabled = true;
 				}
-				// coordinateHighlightScreenshot(objStep, "element",
-				// Color.GREEN, "screen", objWebDriver, null, objStep);
 				blnStatus = true;
 			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
@@ -1020,7 +1018,7 @@ public class Evinrude {
 				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeDisabledSync);
 				if (blnStatus == true) {
 					objStep.put("strStatus", "pass");
-					coordinateHighlightScreenshot(objStep, "element", "screen", objWebDriver, null, objStep);
+					coordinateHighlightScreenshot(objStep, "screen", "screen", objWebDriver, objWebElement, objStep);
 				}
 				if (blnStatus == true) {
 					if (intMillisecondsWaited > Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
@@ -3730,6 +3728,8 @@ public class Evinrude {
 				elementAbsoluteCoordinates(objStep, intThickness, objWebDriver, objWebElement, objRectangleArea);
 				break;
 			default:
+				//TODO add reporting  for default 
+				System.out.println("getRectangleAreaByName default screen, window, page and element not " + strAreaObjectName);
 				break;
 			}
 		} finally {

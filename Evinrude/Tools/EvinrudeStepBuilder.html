@@ -1,5 +1,16 @@
+<!DOCTYPE html>
 <html>
 <head>
+<style>
+select {
+	border: 0;
+	width: 100%;
+}
+input[type=text] {
+	border: 0;
+	width: 100%;
+}
+</style>
 <title>Evinrude Step Builder</title>
 <script language="javascript" type="text/javascript">
 	function loadJsonFile() {
@@ -21,7 +32,7 @@
 			rawFile.onreadystatechange = function() {
 				if (rawFile.readyState === 4) {
 					if (rawFile.status === 200 || rawFile.status == 0) {
-					
+
 						var allText = rawFile.responseText;
 						//var	objJsonFile = JSON.parse(allText);
 						var objJsonFile = eval("(" + allText + ")");
@@ -107,7 +118,7 @@
 		var TriStateFalse = 0;
 		var fso = new ActiveXObject("Scripting.FileSystemObject");
 		var strnewFile = document.getElementById('fileToLoad').value;
-		var file =  strnewFile.split('\\').join('\\\\')
+		var file = strnewFile.split('\\').join('\\\\')
 		var newFile = fso.OpenTextFile(file, ForWriting, true, TriStateFalse);
 		newFile.Write(strTextToJson);
 		newFile.Close();
@@ -232,11 +243,11 @@
 	<input type="button" value="Insert Row" onclick="insertRow()"></input>
 	<input type="button" value="Delete Row" onclick="deleteRow()"></input>
 	<input type="button" value="Refresh Table" onclick="refreshTable()"></input>
-<input type="file" style="width: 750px" id="fileToLoad">
+	<input type="file" style="width: 750px" id="fileToLoad">
 	<input type="button" value="Load JSON" onclick="loadJsonFile()"></input>
 	<input type="button" value="Save JSON" onclick="saveTableToJson()"></input>
 
-	<table id="EvinrudeStepTable" width="350px" border="1">
+	<table id="EvinrudeStepTable" border="1">
 		<tr>
 			<th>+</th>
 			<th>strAction</th>
