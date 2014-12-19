@@ -1,0 +1,32 @@
+{
+	"steps": 
+	[
+		{
+			"strAction": "",
+			"strTagName": "",
+			"strAttributeNames": "",
+			"strAttributeValues": "",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		}
+	],
+
+	"link": 
+	[
+		{
+			
+		}
+	]
+}

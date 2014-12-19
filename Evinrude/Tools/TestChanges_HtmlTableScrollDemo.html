@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>Scrolling Table Fluid Width and Height - jsFiddle demo</title>
+<title>Scrolling Table Fluid Width and Height</title>
 
 <script type='text/javascript' src='/js/lib/dummy.js'></script>
 
@@ -201,7 +201,7 @@ body {
 	window.onload = function() {
 		/* THIS JAVASCRIPT JUST ADDS ROWS FOR TESTING PURPOSES */
 		(function() {
-			for (var n = 128, r = document.querySelector("tbody>tr"), p = r.parentNode; n--; p.appendChild(r.cloneNode(true)))
+			for (var n = 127, r = document.querySelector("tbody>tr"), p = r.parentNode; n--; p.appendChild(r.cloneNode(true)))
 				;
 		})();
 	}//]]>
@@ -218,26 +218,50 @@ body {
 					<caption>Top Caption</caption>
 					<thead>
 						<tr>
-							<th><div label="Column 1" /></th>
-							<th><div label="Column 2" /></th>
-							<th><div label="Column 3" /></th>
-							<th>
-								<!--more versatile way of doing column label; requires 2 identical copies of label-->
-								<div>
-									<div>Column 4</div>
-									<div>Column 4</div>
-								</div>
-							</th>
+							<th>+</th>
+							<th>strAction</th>
+							<th>strTagName</th>
+							<th>strAttributeNames</th>
+							<th>strAttributeValues</th>
+							<th>strInputValue</th>
+							<th>strLogicalName</th>
+							<th>intMillisecondsToWait</th>
+							<th>blnOptional</th>
+							<th>strAssert</th>
+							<th>blnPleaseWait</th>
+							<th>blnHighlight</th>
+							<th>blnScreenshot</th>
+							<th>strFunction</th>
+							<th>strAssistiveProperties</th>
+							<th>blnExitOnFail</th>
+							<th>strOutputLinkName</th>
+							<th>strOutputValue</th>
+							<th>intLoop</th>
 							<th class="scrollbarhead" />
 							<!--ALWAYS ADD THIS EXTRA CELL AT END OF HEADER ROW-->
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td>Lorem ipsum</td>
-							<td>Dolor</td>
-							<td>Sit</td>
-							<td>Amet consectetur</td>
+							<td>+</td>
+							<td>strAction</td>
+							<td>strTagName</td>
+							<td>strAttributeNames</td>
+							<td>strAttributeValues</td>
+							<td>strInputValue</td>
+							<td>strLogicalName</td>
+							<td>intMillisecondsToWait</td>
+							<td>blnOptional</td>
+							<td>strAssert</td>
+							<td>blnPleaseWait</td>
+							<td>blnHighlight</td>
+							<td>blnScreenshot</td>
+							<td>strFunction</td>
+							<td>strAssistiveProperties</td>
+							<td>blnExitOnFail</td>
+							<td>strOutputLinkName</td>
+							<td>strOutputValue</td>
+							<td>intLoop</td>
 						</tr>
 					</tbody>
 				</table>
