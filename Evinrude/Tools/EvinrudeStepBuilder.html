@@ -15,62 +15,69 @@ input[type=text] {
 <title>Evinrude Step Builder</title>
 <script language="javascript" type="text/javascript">
 	function loadJsonFile() {
-		var objTable;
-		var intRow;
-		var intColumnCount;
-		var objRowEach;
-		var intColumnEach;
-		var objCellEach;
-		var strKeyName
-		var strKeyValue
 		try {
-			refreshTable();
-			var fileToLoad = document.getElementById('fileToLoad').value;
-			var file = "file:///" + fileToLoad.split('\\').join('\/')
-			//var rawFile = new XMLHttpRequest();
-			var rawFile = new ActiveXObject("Microsoft.XMLHTTP");
-			rawFile.open("GET", file, false);
-			rawFile.onreadystatechange = function() {
-				if (rawFile.readyState === 4) {
-					if (rawFile.status === 200 || rawFile.status == 0) {
-
-						var allText = rawFile.responseText;
-						//var	objJsonFile = JSON.parse(allText);
-						var objJsonFile = eval("(" + allText + ")");
-						var intRow;
-						var intRowCount = objJsonFile.steps.length;
-						for (intRow = 0; intRow < intRowCount; intRow++) {
-							if (intRow > 0) {
-								addRow();
-							}
-							objRowEach = document.getElementById('EvinrudeStepTable').rows[intRow + 1];
-							intColumnCount = objRowEach.cells.length;
-							for (intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
-								objCellEach = objRowEach.cells[intColumnEach];
-								strKeyName = document.getElementById('EvinrudeStepTable').rows[0].cells[intColumnEach].innerHTML;
-								strKeyValue = objJsonFile.steps[intRow][strKeyName];
-								if (strKeyName == "strTagName") {
-									strKeyValue = strKeyValue.toLowerCase();
-								}
-								switch (objCellEach.childNodes[0].type) {
-								case "text":
-									objCellEach.childNodes[0].value = strKeyValue;
-									break;
-								case "select-one":
-									selectItemByValue(objCellEach.childNodes[0], strKeyValue);
-									break;
-								}
-							}
-
-						}
-					}
-				}
-			}
-			rawFile.send(null);
+			var objTable;
+			var intRow;
+			var intColumnCount;
+			var objRowEach;
+			var intColumnEach;
+			var objCellEach;
+			var strKeyName
+			var strKeyValue
+			var blnResponse
+			var strFileToLoad
+			strFileToLoad = document.getElementById('fileToLoad').value;
+			if (strFileToLoad == "") {
+				alert("no file")
+			} else {
+				blnResponse = confirm("All rows will be replaced with selected file. Press OK to continue or Cancel to return");
+				if (blnResponse == true) {
+					refreshTable();
+					var file = "file:///" + strFileToLoad.split('\\').join('\/');
+					//var rawFile = new XMLHttpRequest();
+					var rawFile = new ActiveXObject("Microsoft.XMLHTTP");
+					rawFile.open("GET", file, false);
+					rawFile.onreadystatechange = function() {
+						if (rawFile.readyState === 4) {
+							if (rawFile.status === 200 || rawFile.status == 0) {
+								var allText = rawFile.responseText;
+								//var	objJsonFile = JSON.parse(allText);
+								var objJsonFile = eval("(" + allText + ")");
+								var intRow;
+								var intRowCount = objJsonFile.steps.length;
+								for (intRow = 0; intRow < intRowCount; intRow++) {
+									if (intRow > 0) {
+										addRow();
+									}
+									objRowEach = document.getElementById('EvinrudeStepTable').rows[intRow + 1];
+									intColumnCount = objRowEach.cells.length;
+									for (intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
+										objCellEach = objRowEach.cells[intColumnEach];
+										strKeyName = document.getElementById('EvinrudeStepTable').rows[0].cells[intColumnEach].innerHTML;
+										strKeyValue = objJsonFile.steps[intRow][strKeyName];
+										if (strKeyName == "strTagName") {
+											strKeyValue = strKeyValue.toLowerCase();
+										}
+										switch (objCellEach.childNodes[0].type) {
+										case "text":
+											objCellEach.childNodes[0].value = strKeyValue;
+											break;
+										case "select-one":
+											selectItemByValue(objCellEach.childNodes[0], strKeyValue);
+											break;
+										}// the end of switch
+									}// the end of for intColumnEach
+								}// the end of for intRow
+							}// the end of if rawFile.status
+						}// the end of if rawFile.readyState
+					}// the end of rawFile.onreadystatechange
+					rawFile.send(null);
+				}// the end of if blnResponse
+			}// the end of if strFileToLoad
 		} catch (e) {
 			alert(e);
 		}
-	}
+	}// the end of loadJsonFile
 
 	function selectItemByValue(objElement, strValue) {
 		for (var intOptionsEach = 0; intOptionsEach < objElement.options.length; intOptionsEach++) {
@@ -81,48 +88,56 @@ input[type=text] {
 
 	function saveTableToJson() {
 		try {
-			var strKeyName = "";
-			var strTextToJson = "{\"steps\":[";
-			var objTable = document.getElementById('EvinrudeStepTable');
-			var intRowCount = objTable.rows.length;
-			var intRow;
-			var intColumnCount;
-			var objRowEach;
-			var intColumnEach;
-			var objCellEach;
-			for (intRow = 1; intRow < intRowCount; intRow++) {
-				strTextToJson = strTextToJson + "{";
-				objRowEach = objTable.rows[intRow];
-				intColumnCount = objRowEach.cells.length;
-				for (intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
-					objCellEach = objRowEach.cells[intColumnEach];
-					strKeyName = objTable.rows[0].cells[intColumnEach].innerHTML
-					switch (objCellEach.childNodes[0].type) {
-					case "text":
-						strTextToJson = strTextToJson + "\"" + strKeyName + "\":\"" + objCellEach.childNodes[0].value + "\",";
-						break;
-					case "select-one":
-						strTextToJson = strTextToJson + "\"" + strKeyName + "\":\"" + objCellEach.childNodes[0].options[objCellEach.childNodes[0].selectedIndex].innerHTML + "\",";
-						break;
+			var strFileToSave = document.getElementById('fileToLoad').value;
+			if (strFileToSave == "") {
+				alert("no file")
+			} else {
+				var blnResponse = confirm("All rows will replace selected file. Press OK to continue or Cancel to return");
+				if (blnResponse == true) {
+					var ForAppending = 8;
+					var ForWriting = 2;
+					var intColumnCount;
+					var intColumnEach;
+					var intRow;
+					var intRowCount = document.getElementById('EvinrudeStepTable').rows.length;
+					var objCellEach;
+					var objFile;
+					var objFileSystemObject = new ActiveXObject("Scripting.FileSystemObject");
+					var objRowEach;
+					var objTable = document.getElementById('EvinrudeStepTable');
+					var strKeyName = "";
+					var strTextToJson = "{\"steps\":[";
+					var TriStateFalse = 0;
+					for (intRow = 1; intRow < intRowCount; intRow++) {
+						strTextToJson = strTextToJson + "{";
+						objRowEach = objTable.rows[intRow];
+						intColumnCount = objRowEach.cells.length;
+						for (intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
+							objCellEach = objRowEach.cells[intColumnEach];
+							strKeyName = objTable.rows[0].cells[intColumnEach].innerHTML;
+							switch (objCellEach.childNodes[0].type) {
+							case "text":
+								strTextToJson = strTextToJson + "\"" + strKeyName + "\":\"" + objCellEach.childNodes[0].value + "\",";
+								break;
+							case "select-one":
+								strTextToJson = strTextToJson + "\"" + strKeyName + "\":\"" + objCellEach.childNodes[0].options[objCellEach.childNodes[0].selectedIndex].innerHTML + "\",";
+								break;
+							}
+						}
+						strTextToJson = strTextToJson.replace(/,+$/, "");
+						strTextToJson = strTextToJson + "},";
 					}
-				}
-				strTextToJson = strTextToJson.replace(/,+$/, "");
-				strTextToJson = strTextToJson + "},";
-			}
-			strTextToJson = strTextToJson.replace(/,+$/, "");
-			strTextToJson = strTextToJson + "],\"link\":[{}]}";
+					strTextToJson = strTextToJson.replace(/,+$/, "");
+					strTextToJson = strTextToJson + "],\"link\":[{}]}";
+					strFileToSave = strFileToSave.split('\\').join('\\\\')
+					objFile = objFileSystemObject.OpenTextFile(strFileToSave, ForWriting, true, TriStateFalse);
+					objFile.Write(strTextToJson);
+					objFile.Close();
+				}// the end of if blnResponse
+			}// the end of if strFileToSave
 		} catch (e) {
 			alert(e);
 		}
-		var ForAppending = 8;
-		var ForWriting = 2
-		var TriStateFalse = 0;
-		var fso = new ActiveXObject("Scripting.FileSystemObject");
-		var strnewFile = document.getElementById('fileToLoad').value;
-		var file = strnewFile.split('\\').join('\\\\')
-		var newFile = fso.OpenTextFile(file, ForWriting, true, TriStateFalse);
-		newFile.Write(strTextToJson);
-		newFile.Close();
 	}
 
 	function addRow() {
@@ -186,21 +201,17 @@ input[type=text] {
 				var objRowEach = objTable.rows[intRowEach];
 				var objCheckboxEach = objRowEach.cells[0].childNodes[0];
 				if (null != objCheckboxEach && true == objCheckboxEach.checked) {
-
 					if (intRowCount <= 2) {
 						alert("Cannot delete all the rows.");
 						break;
 					}
-
 					if (blnResponse == false) {
-
 						blnResponse = confirm("All rows with checkboxes selected will be deleted. Press OK to continue or Cancel to return");
 						if (blnResponse == true) {
 						} else {
 							break;
 						}
 					}
-
 					objTable.deleteRow(intRowEach);
 					intRowCount--;
 					intRowEach--;
@@ -210,20 +221,26 @@ input[type=text] {
 			alert(e);
 		}
 	}
+
+	function refreshTableCall() {
+		var blnResponse = false;
+		blnResponse = confirm("All rows will deleted and refreshed to a new table. Press OK to continue or Cancel to return");
+		if (blnResponse == true) {
+			refreshTable();
+		}
+	}
+
 	function refreshTable() {
 		var objTable = document.getElementById('EvinrudeStepTable');
 		var intRowCount = objTable.rows.length;
-		var blnResponse = false;
 		for (var intRowEach = 2; intRowEach < intRowCount; intRowEach++) {
 			objTable.deleteRow(intRowEach);
 			intRowCount--;
 			intRowEach--;
 		}
-
 		var intColumnCount = objTable.rows[0].cells.length;
 		for (var intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
 			var objCellEach = objTable.rows[1].cells(intColumnEach);
-
 			switch (objCellEach.childNodes[0].type) {
 			case "text":
 				objCellEach.childNodes[0].value = "";
@@ -244,7 +261,7 @@ input[type=text] {
 	<input type="button" value="Add Row" onclick="addRow()"></input>
 	<input type="button" value="Insert Row" onclick="insertRow()"></input>
 	<input type="button" value="Delete Row" onclick="deleteRow()"></input>
-	<input type="button" value="Refresh Table" onclick="refreshTable()"></input>
+	<input type="button" value="Refresh Table" onclick="refreshTableCall()"></input>
 	<input type="file" style="width: 750px" id="fileToLoad">
 	<input type="button" value="Load JSON" onclick="loadJsonFile()"></input>
 	<input type="button" value="Save JSON" onclick="saveTableToJson()"></input>

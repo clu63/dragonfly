@@ -247,7 +247,8 @@ public class Evinrude {
 		new File(strResultsPath + strImagesPath).mkdirs();
 		// System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
-			String strTestPath = "Data/public/public_w3c_Visibility.json";
+			String strTestPath = "Data/public/local_size_Visibility.json";
+			// String strTestPath = "Data/public/public_w3c_Visibility.json";
 			// String strTestPath = "Data/public/public_mercury_tours.json";
 			// String strTestPath = "Data/public/public_ranorex.json";
 			// String strTestPath = "Data/public/public_w3c_fireevents.json"
@@ -2913,7 +2914,7 @@ public class Evinrude {
 	// }
 
 	@SuppressWarnings("unchecked")
-	public static boolean elementVisible(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementNotVisibleException {
+	public static boolean elementVisibleOriginal(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementNotVisibleException {
 		long lngStartTimeElementVisible = System.currentTimeMillis();
 		try {
 			// TODO Alert complete
@@ -3079,12 +3080,8 @@ public class Evinrude {
 				objStep.put("intElementWidth", objElementDimension.width);
 				objStep.put("intElementHeight", objElementDimension.height);
 				if (objElementDimension.width == 0 || objElementDimension.height == 0) {
-					// System.out.println("elementVisible getSize = " +
-					// objWebElement.getSize().width + "  " +
-					// objWebElement.getSize().height);
-					// System.out.println("elementVisible intMillisecondsWaited = "
-					// + (System.currentTimeMillis() -
-					// lngStartTimeElementVisible));
+					System.out.println("elementVisible getSize = " + objWebElement.getSize().width + "  " + objWebElement.getSize().height);
+					System.out.println("elementVisible intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementVisible));
 					throw new ElementNotVisibleException("Element size failed");
 				} else {
 					elementCoordinates(objStep, objWebDriver);
@@ -3104,6 +3101,44 @@ public class Evinrude {
 			}// the end of if (objWebElement.isDisplayed())
 		} finally {
 			System.out.println("elementVisible finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementVisible));
+		}
+	}// the end of elementVisibleOriginal
+
+	@SuppressWarnings("unchecked")
+	public static boolean elementVisible(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementNotVisibleException {
+		long lngStartTimeElementVisible = System.currentTimeMillis();
+		try {
+			// TODO Alert complete
+			if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
+				try {
+					@SuppressWarnings("unused")
+					Alert alert = objWebDriver.switchTo().alert();
+					System.out.println("elementVisible alert passed");
+					// System.out.println(objWebDriver.manage().window().getPosition());
+					// System.out.println(objWebDriver.manage().window().getSize());
+					return true;
+				} // try
+				catch (NoAlertPresentException e) {
+					System.out.println(e.toString());
+					throw new ElementNotVisibleException("Alert popup was not found.");
+				} // catch
+			}
+			if (objWebElement.isDisplayed()) {
+				Coordinates objElementCoordinates = ((Locatable) objWebElement).getCoordinates();
+				Point objElementPoint = objElementCoordinates.inViewPort();
+				Dimension objElementDimension = objWebElement.getSize();
+				objStep.put("intElementX", objElementPoint.x);
+				objStep.put("intElementY", objElementPoint.y);
+				objStep.put("intElementWidth", objElementDimension.width);
+				objStep.put("intElementHeight", objElementDimension.height);
+				elementCoordinates(objStep, objWebDriver);
+				return true;
+			} else {
+				System.out.println("elementVisible objWebElement.isDisplayed() = return false MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementVisible));
+				throw new ElementNotVisibleException("Element isDisplayed failed");
+			}// the end of if (objWebElement.isDisplayed())
+		} finally {
+			System.out.println("elementVisible finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementVisible));
 		}
 	}// the end of elementVisible
 
