@@ -3,7 +3,7 @@
 	[
 		{
 			"strAction": "launch",
-			"strTagName": "ie",
+			"strTagName": "firefox",
 			"strAttributeNames": "",
 			"strAttributeValues": "",
 			"strInputValue": "http://www.ranorex.com/web-testing-examples/vip/",
@@ -363,6 +363,27 @@
 			"strTagName": "input",
 			"strAttributeNames": "id",
 			"strAttributeValues": "Save",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		},
+
+		{
+			"strAction": "close",
+			"strTagName": "",
+			"strAttributeNames": "",
+			"strAttributeValues": "",
 			"strInputValue": "",
 			"strLogicalName": "",
 			"intMillisecondsToWait": "",

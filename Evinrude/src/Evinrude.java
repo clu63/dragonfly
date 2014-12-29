@@ -853,6 +853,7 @@ public class Evinrude {
 		Boolean blnStatus = false;
 		while (true) {
 			try {
+				System.out.println("elementHiddenSync - blnFound = " + blnFound);
 				if (blnFound == false) {
 					objWebElement = elementFind(objStep, objWebDriver);
 					blnFound = true;
@@ -1494,9 +1495,8 @@ public class Evinrude {
 	@SuppressWarnings({ "unchecked" })
 	public static WebElement elementFind(JSONObject objStep, WebDriver objWebDriver) throws ElementNotFoundException, MultipleElementsFoundException {
 		long lngStartTimeElementFind = System.currentTimeMillis();
-		objWebDriver.manage().timeouts().implicitlyWait(10, TimeUnit.NANOSECONDS);
+		//objWebDriver.manage().timeouts().implicitlyWait(10, TimeUnit.NANOSECONDS);
 		Boolean blnSwitch = false;
-		// objWebDriver.
 		try {
 			int intFramesCount = 0;
 			String strXpath = "";
@@ -1509,15 +1509,17 @@ public class Evinrude {
 			List<WebElement> objTagNameCollection = new ArrayList<WebElement>();
 			String strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
 			strTagName = objStep.get("strTagName").toString().toLowerCase();
+			//System.out.println("elementFind strTagName = " + strTagName);
 			String arrAttributeNames[] = objStep.get("strAttributeNames").toString().split("\\|", -1);
 			String arrAttributeValues[] = objStep.get("strAttributeValues").toString().split("\\|", -1);
 			String strXpathAttributesTemp = "";
 			String strXpathAttributes = "";
 			if (strTagName.toLowerCase().equals("alert")) {
-				// TODO elementFind finish alert handling
+				// TODO elementFind finish alert handling  --- will need to consider issue where objWebDriver no longer exists maybe place this after setting window
 				objStep.put("strTagType", "alert");
 				return isAlertPresent2(objWebDriver);
 			}
+			//System.out.println("elementFind before strXpath");
 			for (int intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
 				strXpathAttributesTemp = "";
 				switch (arrAttributeNames[intAttributeEach].toLowerCase()) {
@@ -1557,11 +1559,10 @@ public class Evinrude {
 			}
 			strXpath = "(//" + strTagName + strXpathAttributes + ")" + strIndex;
 			System.out.println("elementFind strXpath = " + strXpath);
-			// System.out.println("elementFind before loop strCurrentWindowHandle = "
-			// + strCurrentWindowHandle);
+			System.out.println("elementFind before loop strCurrentWindowHandle = " + strCurrentWindowHandle);
 
 			Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
-			// System.out.println("arrHandles.length = " + arrHandles.length);
+			//System.out.println("arrHandles.length = " + arrHandles.length);
 			for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0; intHandlesEach--) {
 				String strWindowHandle = arrHandles[intHandlesEach].toString();
 				// System.out.println("elementFind strCurrentWindowHandle = " +
@@ -1569,10 +1570,8 @@ public class Evinrude {
 				// System.out.println("elementFind winHandle = " + winHandle);
 				long lngStartTimeSwitchTo = System.currentTimeMillis();
 				// objWebDriver.switchTo().window(strWindowHandle);
-				// System.out.println("elementFind lngStartTimeSwitchTo = " +
-				// (System.currentTimeMillis() - lngStartTimeSwitchTo));
-				// System.out.println("elementFind objWebDriver.getTitle = " +
-				// objWebDriver.getTitle());
+				// System.out.println("elementFind lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
+				// System.out.println("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
 
 				System.out.println("objStep.get(\"inFrame\") = " + Integer.parseInt(objStep.get("intFrame").toString()));
 				if (strCurrentWindowHandle.equals(strWindowHandle)) {
@@ -1607,16 +1606,16 @@ public class Evinrude {
 				try {
 					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
 					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
-//					System.out.println("intBrowserInnerWidth = " + intBrowserInnerWidth);
-//					System.out.println("intBrowserInnerHeight = " + intBrowserInnerHeight);
+					// System.out.println("intBrowserInnerWidth = " + intBrowserInnerWidth);
+					// System.out.println("intBrowserInnerHeight = " + intBrowserInnerHeight);
 				} catch (WebDriverException e) {
 					throw new ElementNotFoundException("WebDriverException returned");
 				} catch (Exception e) {
 					// System.out.println("BodyoffsetHeight = " + e.toString());
 					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetWidth;");
 					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetHeight;");
-//					System.out.println("BodyoffsetWidth = " + intBrowserInnerWidth);
-//					System.out.println("BodyoffsetHeight = " + intBrowserInnerHeight);
+					// System.out.println("BodyoffsetWidth = " + intBrowserInnerWidth);
+					// System.out.println("BodyoffsetHeight = " + intBrowserInnerHeight);
 				}
 				objStep.put("intBrowserInnerWidth", intBrowserInnerWidth);
 				objStep.put("intBrowserInnerHeight", intBrowserInnerHeight);
@@ -1719,9 +1718,9 @@ public class Evinrude {
 					// String strTitle = (String) js.executeScript("return document.title");
 					// System.out.println("main JavascriptExecutor strTitle  = " + strTitle + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
 
-					System.out.println("strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
+					//System.out.println("strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
 
-					System.out.println("objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
+					//System.out.println("objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
 
 					objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
 					if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
