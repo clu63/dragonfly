@@ -3,10 +3,10 @@
 	[
 		{
 			"strAction": "launch",
-			"strTagName": "chrome",
+			"strTagName": "safari",
 			"strAttributeNames": "",
 			"strAttributeValues": "",
-			"strInputValue": "file:///C:/Users/jxp30/Documents/GitHub/Evinrude/Evinrude/Tools/Websites/ElementHiddenSize.html",
+			"strInputValue": "file:///C:/Users/Joseph/Documents/GitHub/Evinrude/Evinrude/Tools/Websites/ElementHiddenSize.html",
 			"strLogicalName": "",
 			"intMillisecondsToWait": "",
 			"blnOptional": "",
@@ -23,11 +23,11 @@
 		},
 
 		{
-			"strAction": "sync_visible",
+			"strAction": " sync_visible",
 			"strTagName": "body",
 			"strAttributeNames": "index",
 			"strAttributeValues": "1",
-			"strInputValue": "",
+			"strInputValue": "<skip>",
 			"strLogicalName": "",
 			"intMillisecondsToWait": "",
 			"blnOptional": "",
