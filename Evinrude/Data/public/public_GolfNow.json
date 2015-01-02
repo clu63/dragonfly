@@ -233,7 +233,7 @@
 		},
 
 		{
-			"strAction": "set",
+			"strAction": "break",
 			"strTagName": "input",
 			"strAttributeNames": "id|type",
 			"strAttributeValues": "ctl00_TemplateContainer_ctl03_btnSearch|submit",

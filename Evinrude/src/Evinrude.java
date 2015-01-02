@@ -20,6 +20,8 @@
 //TODO check for StaleElementReferenceException included
 
 import com.opera.core.systems.*;
+import com.thoughtworks.selenium.Wait;
+
 import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.datatransfer.DataFlavor;
@@ -47,9 +49,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -73,6 +77,8 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -244,10 +250,10 @@ public class Evinrude {
 			// String strTestPath = "Data/public/local_size_Visibility.json";
 			// String strTestPath = "Data/public/public_w3c_Visibility.json";
 			// String strTestPath = "Data/public/public_mercury_tours.json";
-			String strTestPath = "Data/public/public_ranorex.json";
+			// String strTestPath = "Data/public/public_ranorex.json";
 			// String strTestPath = "Data/public/public_w3c_fireevents.json"
 			// String strTestPath = "Data/public/public_w3c_fireevents.json";
-			// String strTestPath = "Data/public/public_GolfNow.json";
+			String strTestPath = "Data/public/public_GolfNow.json";
 			Object objParser = parser.parse(new FileReader(strTestPath));
 			objJsonFile = (JSONObject) objParser;
 			objTestSteps = (JSONArray) objJsonFile.get("steps");
@@ -383,7 +389,7 @@ public class Evinrude {
 							webElementCollectionTable(objStep.get("strTagName").toString(), objWebDriver);
 							break;
 						}
-					}// the end of if (blnPass = true)
+					}// the end of if (blnPass == true)
 				}// the end of if (strInputValue != "<skip>")
 				if (objStep.get("strOutputLinkName").toString().trim().length() != 0) {
 					objLinks.put(objStep.get("strOutputLinkName").toString(), objStep.get("strOutputValue").toString());
@@ -491,8 +497,7 @@ public class Evinrude {
 							coordinateHighlightScreenshot(objStep, "screen", objWebDriver, objWebElement, objStep);
 							return false;
 						}
-					}// the end of if (intMillisecondsWaited <=
-						// intMillisecondsToWait)
+					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
 			}// the end of try
 		}// the end of While
@@ -627,6 +632,7 @@ public class Evinrude {
 				blnAssert = false;
 			} catch (ValueNotMatchedException e) {
 				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+				blnFound = false;
 				blnAssert = false;
 			} catch (ElementNotSetException e) {
 				blnSet = true;
@@ -687,7 +693,7 @@ public class Evinrude {
 			strGetValue = elementGet(objStep, objWebDriver, objWebElement);
 			strActualValue = verifyMatch(strGetValue, strValueExpected);
 		} finally {
-			System.out.println("elementVerifyValue finally strValueActual = " + strActualValue + " elementVerifyValue strValueExpected = " + strValueExpected + " intMillisecondsWaited = " + (int) (System.currentTimeMillis() - lngStartTimeElementVerify));
+			System.out.println("elementVerifyValue finally strValueActual = " + strGetValue + " strValueExpected = " + strValueExpected + " intMillisecondsWaited = " + (int) (System.currentTimeMillis() - lngStartTimeElementVerify));
 		}
 		return strActualValue;
 	}// the end of elementVerifyValue
@@ -773,15 +779,14 @@ public class Evinrude {
 							objStep.put("strOutputValue", strActualValue);
 							objStep.put("strStatus", "fail");
 
-							if (blnValueNotMatched = false) {
+							if (blnValueNotMatched == false) {
 								coordinateHighlightScreenshot(objStep, "screen", objWebDriver, objWebElement, objStep);
 							} else {
 								coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
 							}
 							return false;
 						}
-					}// the end of if (intMillisecondsWaited <=
-						// intMillisecondsToWait)
+					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
 			}// the end of try
 		}// the end of While
@@ -831,8 +836,7 @@ public class Evinrude {
 							coordinateHighlightScreenshot(objStep, "screen", objWebDriver, null, objStep);
 							return false;
 						}
-					}// the end of if (intMillisecondsWaited <=
-						// intMillisecondsToWait)
+					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
 			}// the end of try
 		}// the end of While
@@ -851,7 +855,7 @@ public class Evinrude {
 					objWebElement = elementFind(objStep, objWebDriver);
 					blnFound = true;
 				}
-				if (blnFound = true && blnHidden == false) {
+				if (blnFound == true && blnHidden == false) {
 					elementHidden(objStep, objWebDriver, objWebElement);
 					blnHidden = true;
 				}
@@ -889,8 +893,7 @@ public class Evinrude {
 							coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
 							return false;
 						}
-					}// the end of if (intMillisecondsWaited <=
-						// intMillisecondsToWait)
+					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
 			}// the end of try
 		}// the end of While
@@ -949,8 +952,7 @@ public class Evinrude {
 							coordinateHighlightScreenshot(objStep, "screen", objWebDriver, null, objStep);
 							return false;
 						}
-					}// the end of if (intMillisecondsWaited <=
-						// intMillisecondsToWait)
+					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
 			}// the end of try
 		}// the end of While
@@ -1426,13 +1428,52 @@ public class Evinrude {
 			default:
 				throw new ElementTagNameNotSupportedException("Element tag not supported");
 			}// the end of switch (strTagName.toLowerCase())
+
+			if (blnSet == true) {
+				//Thread.sleep(1000); 
+				long lngStartTimeElementSetJQueryAJAXCallsHaveCompleted = System.currentTimeMillis();
+				((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
+
+				//((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
+
+				System.out.println("elementSet document.readyState MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return document.readyState"));
+
+				// wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfAllElementsLocatedBy(objWebElement)));
+				// System.out.println("elementSet finally jQueryAJAXCallsHaveCompleted = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
+
+				// IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.00));
+				// wait.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
+
+				System.out.println("elementSet jQueryAJAXCallsHaveCompleted MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSetJQueryAJAXCallsHaveCompleted));
+			}
+
+		} catch (Exception e) {
+			System.out.println("elementSet Exception = " + e.toString());
 		} finally {
-			if (blnSet = false) {
+			if (blnSet == false) {
 				throw new ElementNotSetException("Element not set");
 			}
 			System.out.println("elementSet finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet));
 		}
 	}// the end of elementSet
+
+	public static ExpectedCondition<Boolean> angularHasFinishedProcessing() {
+		return new ExpectedCondition<Boolean>() {
+			@Override
+			public Boolean apply(WebDriver driver) {
+				return Boolean.valueOf(((JavascriptExecutor) driver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)").toString());
+			}
+		};
+	}
+
+	public static ExpectedCondition<Boolean> jQueryAJAXCallsHaveCompleted() {
+		return new ExpectedCondition<Boolean>() {
+			@Override
+			public Boolean apply(WebDriver driver) {
+				return (Boolean) ((JavascriptExecutor) driver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
+			}
+		};
+	}
 
 	// public static Boolean elementVerifyValue(String strTagName, WebElement
 	// objWebElement, String strValueExpected) throws
@@ -1488,7 +1529,7 @@ public class Evinrude {
 	@SuppressWarnings({ "unchecked" })
 	public static WebElement elementFind(JSONObject objStep, WebDriver objWebDriver) throws ElementNotFoundException, MultipleElementsFoundException {
 		long lngStartTimeElementFind = System.currentTimeMillis();
-		//objWebDriver.manage().timeouts().implicitlyWait(10, TimeUnit.NANOSECONDS);
+		// objWebDriver.manage().timeouts().implicitlyWait(10, TimeUnit.NANOSECONDS);
 		Boolean blnSwitch = false;
 		try {
 			int intFramesCount = 0;
@@ -1502,17 +1543,17 @@ public class Evinrude {
 			List<WebElement> objTagNameCollection = new ArrayList<WebElement>();
 			String strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
 			strTagName = objStep.get("strTagName").toString().toLowerCase();
-			//System.out.println("elementFind strTagName = " + strTagName);
+			// System.out.println("elementFind strTagName = " + strTagName);
 			String arrAttributeNames[] = objStep.get("strAttributeNames").toString().split("\\|", -1);
 			String arrAttributeValues[] = objStep.get("strAttributeValues").toString().split("\\|", -1);
 			String strXpathAttributesTemp = "";
 			String strXpathAttributes = "";
 			if (strTagName.toLowerCase().equals("alert")) {
-				// TODO elementFind finish alert handling  --- will need to consider issue where objWebDriver no longer exists maybe place this after setting window
+				// TODO elementFind finish alert handling --- will need to consider issue where objWebDriver no longer exists maybe place this after setting window
 				objStep.put("strTagType", "alert");
 				return isAlertPresent2(objWebDriver);
 			}
-			//System.out.println("elementFind before strXpath");
+			// System.out.println("elementFind before strXpath");
 			for (int intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
 				strXpathAttributesTemp = "";
 				switch (arrAttributeNames[intAttributeEach].toLowerCase()) {
@@ -1555,7 +1596,7 @@ public class Evinrude {
 			System.out.println("elementFind before loop strCurrentWindowHandle = " + strCurrentWindowHandle);
 
 			Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
-			//System.out.println("arrHandles.length = " + arrHandles.length);
+			// System.out.println("arrHandles.length = " + arrHandles.length);
 			for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0; intHandlesEach--) {
 				String strWindowHandle = arrHandles[intHandlesEach].toString();
 				// System.out.println("elementFind strCurrentWindowHandle = " +
@@ -1574,7 +1615,7 @@ public class Evinrude {
 						blnSwitch = true;
 					}
 				}
-				if (blnSwitch = true) {
+				if (blnSwitch == true) {
 					objWebDriver.switchTo().window(strWindowHandle);
 					System.out.println("elementFind Switched = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
 					objStep.put("intFrame", -1);
@@ -1711,9 +1752,9 @@ public class Evinrude {
 					// String strTitle = (String) js.executeScript("return document.title");
 					// System.out.println("main JavascriptExecutor strTitle  = " + strTitle + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
 
-					//System.out.println("strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
+					// System.out.println("strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
 
-					//System.out.println("objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
+					// System.out.println("objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
 
 					objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
 					if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
