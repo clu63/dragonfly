@@ -289,7 +289,7 @@ public class Evinrude {
 				objStep.put("strCurrentWindowHandle", strCurrentWindowHandle);
 				objStep.put("strType", "");
 				objStep.put("strScreenshotFilePath", strResultsPath + strImagesPath);
-				System.out.println("strScreenshotFilePath = " + objStep.get("strScreenshotFilePath").toString());
+				// System.out.println("strScreenshotFilePath = " + objStep.get("strScreenshotFilePath").toString());
 				objStep.put("strStatus", "info");
 				objStep.put("intFrame", intFrame);
 
@@ -503,6 +503,187 @@ public class Evinrude {
 		}// the end of While
 	}// the end of elementGetSync
 
+	public static void elementSet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementTagNameNotSupportedException, ElementNotSetException {
+		long lngStartTimeElementSet = System.currentTimeMillis();
+		JavascriptExecutor objJavascriptExecutor = null;
+		Boolean blnSet = false;
+		if (objWebElement != null) {
+			objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
+		}
+		try {
+			// System.out.println(objStep.get("strTagType").toString().toLowerCase());
+			switch (objStep.get("strTagType").toString().toLowerCase()) {
+			case "input_button":
+			case "input_submit":
+			case "input_reset":
+			case "input_image":
+			case "tr":
+			case "td":
+			case "div":
+			case "span":
+			case "img":
+			case "button":
+			case "a":
+			case "h1":
+			case "h2":
+			case "h3":
+			case "h4":
+			case "h5":
+			case "h6":
+			case "p":
+				blnSet = true;
+				objWebElement.click();
+				// objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
+				// objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
+				// objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
+				break;
+			case "input_text":
+			case "input_password":
+			case "textarea":
+			case "input_email":
+				blnSet = true;
+				objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
+				objJavascriptExecutor.executeScript("arguments[0].value = '';", objWebElement);
+				objJavascriptExecutor.executeScript("arguments[0].value = '" + objStep.get("strInputValue").toString() + "';", objWebElement);
+				objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
+				System.out.println("onchange before");
+				try {
+					objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
+				} catch (WebDriverException e) {
+					System.out.println("elementSet = " + e.toString());
+				}
+				break;
+			case "input_radio":
+				blnSet = true;
+				objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
+				objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
+				objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
+				try {
+					objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
+				} catch (WebDriverException e) {
+					System.out.println("elementSet = " + e.toString());
+				}
+				break;
+			case "input_checkbox":
+				blnSet = true;
+				switch (objStep.get("strInputValue").toString().toLowerCase()) {
+				case "<on>":
+					if (objWebElement.isSelected() == false) {
+						objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
+						objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
+						objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
+						try {
+							objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
+						} catch (WebDriverException e) {
+							System.out.println("elementSet = " + e.toString());
+						}
+					}
+					break;
+				case "<off>":
+					blnSet = true;
+					if (objWebElement.isSelected() == true) {
+						objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
+						objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
+						objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
+						try {
+							objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
+						} catch (WebDriverException e) {
+							System.out.println("elementSet = " + e.toString());
+						}
+					}
+					break;
+				}// the end of switch (strInputValue.toLowerCase())
+				break;
+			case "select":
+				int intOptionsEach;
+				String strOptions = (String) objJavascriptExecutor.executeScript("var txt = '';var x = arguments[0];var i;for (i = 0; i < x.length; i++)" + "{txt = txt + '|' + x.options[i].text;}" + "return txt;", objWebElement);
+				strOptions = strOptions.substring(1);
+				String[] arrOptions;
+				arrOptions = strOptions.split("\\|");
+				for (intOptionsEach = 0; intOptionsEach < arrOptions.length; intOptionsEach++) {
+					if (arrOptions[intOptionsEach].toString().equals(objStep.get("strInputValue").toString())) {
+						blnSet = true;
+						objJavascriptExecutor.executeScript("arguments[0].selectedIndex=" + intOptionsEach + ";", objWebElement);
+						try {
+							objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
+						} catch (WebDriverException e) {
+							System.out.println("elementSet = " + e.toString());
+						}
+						break;
+					}
+				}
+				break;
+			case "table":
+				// Set objWebElement = gobjWebElement.AsTable
+				break;
+			case "alert":
+				blnSet = true;
+				Alert alert = objWebDriver.switchTo().alert();
+				System.out.println(alert.getText()); // Print Alert popup
+				System.out.println(objStep.get("strAttributeValues").toString().toLowerCase());
+				switch (objStep.get("strAttributeValues").toString().toLowerCase()) {
+				case "text":
+					alert.sendKeys(objStep.get("strInputValue").toString());
+					break;
+				case "accept":
+					alert.accept(); // Close Alert popup
+					break;
+				case "dismiss":
+					alert.dismiss();// Close Alert popup
+					break;
+				}
+				break;
+			default:
+				throw new ElementTagNameNotSupportedException("Element tag not supported");
+			}// the end of switch (strTagName.toLowerCase())
+
+			if (blnSet == true) {
+				Thread.sleep(1000);
+				long lngStartTimeElementSetJQueryAJAXCallsHaveCompleted = System.currentTimeMillis();
+				((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
+
+				// ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
+
+				System.out.println("elementSet document.readyState MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return document.readyState"));
+
+				// wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfAllElementsLocatedBy(objWebElement)));
+				// System.out.println("elementSet finally jQueryAJAXCallsHaveCompleted = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
+
+				// IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.00));
+				// wait.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
+
+				System.out.println("elementSet jQueryAJAXCallsHaveCompleted MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSetJQueryAJAXCallsHaveCompleted));
+			}
+
+		} catch (Exception e) {
+			System.out.println("elementSet Exception = " + e.toString());
+		} finally {
+			if (blnSet == false) {
+				throw new ElementNotSetException("Element not set");
+			}
+			System.out.println("elementSet finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet));
+		}
+	}// the end of elementSet
+
+	public static ExpectedCondition<Boolean> angularHasFinishedProcessing() {
+		return new ExpectedCondition<Boolean>() {
+			@Override
+			public Boolean apply(WebDriver driver) {
+				return Boolean.valueOf(((JavascriptExecutor) driver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)").toString());
+			}
+		};
+	}
+
+	public static ExpectedCondition<Boolean> jQueryAJAXCallsHaveCompleted() {
+		return new ExpectedCondition<Boolean>() {
+			@Override
+			public Boolean apply(WebDriver driver) {
+				return (Boolean) ((JavascriptExecutor) driver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
+			}
+		};
+	}
+
+	@SuppressWarnings("unchecked")
 	public static Boolean elementSetSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
 		Long lngStartTimeSetSync = System.currentTimeMillis();
 		Integer intMillisecondsWaited = null;
@@ -512,9 +693,7 @@ public class Evinrude {
 		Boolean blnSet = false;
 		Boolean blnStatus = false;
 		Boolean blnExit = false;
-		Boolean blnHidden = false;
 		Boolean blnAssert = false;
-		Boolean blnDisabled = false;
 		objStep.put("strOutputValue", objStep.get("strInputValue").toString());
 		while (true) {
 			try {
@@ -536,6 +715,7 @@ public class Evinrude {
 				switch (objStep.get("strAssert").toString().toLowerCase()) {
 				case "off":
 					objStep.put("strStatus", "pass");
+					// TODO complete Alert Set, move or consider how to handle assert
 					if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
 						coordinateHighlightScreenshot(objStep, "screen", objWebDriver, null, objStep);
 					} else {
@@ -546,6 +726,7 @@ public class Evinrude {
 						blnSet = true;
 						blnAssert = true;
 					}
+					blnStatus = true;
 					break;
 				case "hidden":
 					objStep.put("strStatus", "pass");
@@ -556,9 +737,9 @@ public class Evinrude {
 					}
 					if (blnAssert == false) {
 						elementHidden(objStep, objWebDriver, objWebElement);
-						blnHidden = true;
 						blnAssert = true;
 					}
+					blnStatus = true;
 					break;
 				case "value":
 					if (blnSet == false) {
@@ -569,7 +750,9 @@ public class Evinrude {
 						elementVerifyValue(objStep, objWebDriver, objWebElement);
 						blnAssert = true;
 					}
+					objStep.put("strStatus", "pass");
 					coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
+					blnStatus = true;
 					break;
 				case "visible":
 					if (blnSet == false) {
@@ -578,10 +761,11 @@ public class Evinrude {
 					}
 					if (blnAssert == false) {
 						elementVisible(objStep, objWebDriver, objWebElement);
-						blnVisible = true;
 						blnAssert = true;
 					}
+					objStep.put("strStatus", "pass");
 					coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
+					blnStatus = true;
 					break;
 				case "enabled":
 					if (blnSet == false) {
@@ -590,12 +774,12 @@ public class Evinrude {
 					}
 					if (blnAssert == false) {
 						elementVisible(objStep, objWebDriver, objWebElement);
-						blnVisible = true;
 						elementEnabled(objStep, objWebDriver, objWebElement);
-						// blnVisible = true;
 						blnAssert = true;
 					}
+					objStep.put("strStatus", "pass");
 					coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
+					blnStatus = true;
 					break;
 				case "disabled":
 					if (blnSet == false) {
@@ -604,12 +788,12 @@ public class Evinrude {
 					}
 					if (blnAssert == false) {
 						elementVisible(objStep, objWebDriver, objWebElement);
-						blnVisible = true;
 						elementDisabled(objWebElement);
-						// blnVisible = true;
 						blnAssert = true;
 					}
+					objStep.put("strStatus", "pass");
 					coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
+					blnStatus = true;
 					break;
 				}// the end of switch (strAssert.toLowerCase())
 				blnStatus = true;
@@ -627,8 +811,6 @@ public class Evinrude {
 				blnExit = true;
 			} catch (ElementNotHiddenException e) {
 				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
-				// blnSet = true;
-				// blnHidden = false;
 				blnAssert = false;
 			} catch (ValueNotMatchedException e) {
 				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
@@ -638,33 +820,27 @@ public class Evinrude {
 				blnSet = true;
 				blnAssert = false;
 			} catch (ElementNotDisabledException e) {
-				blnDisabled = false;
 				blnAssert = false;
 				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
 			} finally {
 				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeSetSync);
-				System.out.println("elementSetSync finally intMillisecondsWaited = " + intMillisecondsWaited);
+				System.out.println("elementSetSync finally MillisecondsWaited = " + intMillisecondsWaited);
 				if (blnExit == true) {
-					System.out.println("elementSetSync finally blnExit = true");
 					return false;
 				}
 				if (intMillisecondsWaited <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
 					if (blnStatus == true) {
-						System.out.println("elementSetSync finally blnStatus = " + blnStatus);
-						objStep.put("strStatus", "pass");
+						//objStep.put("strStatus", "pass");
 						return true;
 					} else if (blnStatus == false) {
-
 						if (blnFound == false) {
 							blnVisible = false;
 							blnEnabled = false;
-							// blnAssert = false;
+							blnAssert = false;
 							blnSet = false;
-							blnHidden = false;
 						}
 					}
 				} else {
-					System.out.println("elementSetSync finally blnStatus = " + blnStatus);
 					if (blnStatus == true) {
 						objStep.put("strStatus", "pass");
 						return true;
@@ -683,20 +859,6 @@ public class Evinrude {
 			}// the end of try
 		}// the end of While
 	}// the end of elementSetSync
-
-	public static String elementVerifyValue(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ValueNotMatchedException, ElementTagNameNotSupportedException {
-		long lngStartTimeElementVerify = System.currentTimeMillis();
-		String strGetValue = "";
-		String strActualValue = "";
-		String strValueExpected = objStep.get("strInputValue").toString();
-		try {
-			strGetValue = elementGet(objStep, objWebDriver, objWebElement);
-			strActualValue = verifyMatch(strGetValue, strValueExpected);
-		} finally {
-			System.out.println("elementVerifyValue finally strValueActual = " + strGetValue + " strValueExpected = " + strValueExpected + " intMillisecondsWaited = " + (int) (System.currentTimeMillis() - lngStartTimeElementVerify));
-		}
-		return strActualValue;
-	}// the end of elementVerifyValue
 
 	@SuppressWarnings("unchecked")
 	public static Boolean elementVerifyValueSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
@@ -754,7 +916,7 @@ public class Evinrude {
 					return false;
 				}
 				if (blnStatus == true) {
-					System.out.println("elementVerifyValueSync finally blnStatus = " + blnStatus);
+					// System.out.println("elementVerifyValueSync finally blnStatus = " + blnStatus);
 					objStep.put("strOutputValue", strActualValue);
 					objStep.put("strStatus", "pass");
 					if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
@@ -791,6 +953,47 @@ public class Evinrude {
 			}// the end of try
 		}// the end of While
 	}// the end of elementVerifyValueSync
+
+	public static String elementVerifyValue(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ValueNotMatchedException, ElementTagNameNotSupportedException {
+		long lngStartTimeElementVerify = System.currentTimeMillis();
+		String strGetValue = "";
+		String strActualValue = "";
+		String strValueExpected = objStep.get("strInputValue").toString();
+		try {
+			strGetValue = elementGet(objStep, objWebDriver, objWebElement);
+			strActualValue = verifyMatch(strGetValue, strValueExpected);
+		} finally {
+			System.out.println("elementVerifyValue finally strGetValue = {" + strGetValue + "} strValueExpected = {" + strValueExpected + "} intMillisecondsWaited = " + (int) (System.currentTimeMillis() - lngStartTimeElementVerify));
+		}
+		return strActualValue;
+	}// the end of elementVerifyValue
+
+	public static String verifyMatch(String strActual, String strExpected) throws ValueNotMatchedException {
+		long lngStartTimeVerifyMatch = System.currentTimeMillis();
+		try {
+			if (strExpected.toLowerCase().startsWith("re:")) {
+				String strPattern = strExpected.substring(3);
+				System.out.println("verifyMatch RegularExpressionMatch = " + RegularExpressionMatch(strPattern, strActual));
+				return RegularExpressionMatch(strPattern, strActual);
+			} else {
+				if (strExpected.equals(strActual)) {
+					return strActual;
+				} else {
+					throw new ValueNotMatchedException("verifyMatch did not match strActual = {" + strActual + "} strExpected = {" + strExpected + "}");
+				}
+			}
+		} finally {
+			System.out.println("verifyMatch strActual = {" + strActual + "} strExpected = {" + strExpected + "} MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeVerifyMatch));
+		}
+	}// the end of VerifyMatch
+
+	public static String RegularExpressionMatch(String strPattern, String strActualValue) {
+		Pattern objPattern = Pattern.compile(strPattern);
+		Matcher objMatcher = objPattern.matcher(strActualValue);
+		objMatcher.matches();
+		String strMatchedString = objMatcher.group(0);
+		return strMatchedString;
+	} // the end of RegularExpressionMatch
 
 	public static Boolean elementVisibleSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
 		Long lngStartTimeVisibleSync = System.currentTimeMillis();
@@ -1148,332 +1351,6 @@ public class Evinrude {
 		}
 		return data;
 	}// the end of ClipboardGet
-
-	public static void elementSet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementTagNameNotSupportedException, ElementNotSetException {
-		long lngStartTimeElementSet = System.currentTimeMillis();
-		JavascriptExecutor objJavascriptExecutor = null;
-		Boolean blnSet = false;
-		if (objWebElement != null) {
-			objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
-		}
-		try {
-			System.out.println(objStep.get("strTagType").toString().toLowerCase());
-			long lngStartTimeSwitchSet = System.currentTimeMillis();
-			switch (objStep.get("strTagType").toString().toLowerCase()) {
-			case "input_button":
-			case "input_submit":
-			case "input_reset":
-			case "input_image":
-			case "tr":
-			case "td":
-			case "div":
-			case "span":
-			case "img":
-			case "button":
-			case "a":
-			case "h1":
-			case "h2":
-			case "h3":
-			case "h4":
-			case "h5":
-			case "h6":
-			case "p":
-				blnSet = true;
-				objWebElement.click();
-				// objJavascriptExecutor.executeScript("arguments[0].focus();",
-				// objWebElement);
-				// objJavascriptExecutor.executeScript("arguments[0].click();",
-				// objWebElement);
-				// objJavascriptExecutor.executeScript("arguments[0].blur();",
-				// objWebElement);
-				break;
-			case "input_text":
-			case "input_password":
-			case "textarea":
-			case "input_email":
-				blnSet = true;
-				// Actions builder = new Actions(objWebDriver);
-				// // Action action1 =
-				// builder.click(objWebElement).sendKeys(Keys.CONTROL +
-				// "a").sendKeys(Keys.DELETE).sendKeys(strInputValue).moveToElement(objWebElement,
-				// -1, -1).click().build();
-				// // action1.perform();
-				// if (objWebElement.getAttribute("value").trim().isEmpty() ==
-				// false) {
-				// Action action1 =
-				// builder.click(objWebElement).sendKeys(Keys.CONTROL +
-				// "a").sendKeys(Keys.DELETE).build();
-				// action1.perform();
-				// // objWebElement.click();
-				// // objWebElement.sendKeys(Keys.CONTROL + "a");
-				// // objWebElement.sendKeys(Keys.DELETE);
-				// // //objWebElement.clear();
-				// }
-				// objWebElement.sendKeys(objStep.get("strInputValue").toString());
-				// Action action = builder.moveToElement(objWebElement, -1,
-				// -1).click().build();
-				// action.perform();
-
-				// executor.executeScript("arguments[0].value = 'tegan';",
-				// objWebElement);
-				// JavascriptExecutor executor27 = (JavascriptExecutor)
-				// objWebDriver;
-				objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
-				objJavascriptExecutor.executeScript("arguments[0].value = '';", objWebElement);
-				objJavascriptExecutor.executeScript("arguments[0].value = '" + objStep.get("strInputValue").toString() + "';", objWebElement);
-				objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
-				System.out.println("onchange before");
-				try {
-					// ((JavascriptExecutor)
-					// objWebDriver).executeScript("arguments[0].onchange();",
-					// objWebElement);
-					objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
-				} catch (WebDriverException e) {
-					System.out.println("elementSet = " + e.toString());
-				}
-				System.out.println("onchange after");
-				// executor.executeScript("$(arguments[0]).change();",
-				// objWebElement);
-				// SeleneseCommand Selenium = (SeleneseCommand) objWebDriver;
-				// Selenium.FireEvent(objWebElement.toString(),"onchange");
-				// Selenium.fireEvent(objWebElement, "onchange");
-				// // jQuery
-				// selenium.runScript("$('#MyInputElement').trigger('change')");
-				//
-				// // Vanilla JavaScript
-				// document.getElementById('MyInputElement').onchange();
-				// objWebElement.sendKeys(Keys.TAB);
-				// Actions builder = new Actions(objWebDriver);
-				// Point imageCoordinates =new Point(0, 0);
-				// Mouse mouse = ((HasInputDevices) objWebDriver).getMouse();
-				// mouse.mouseMove(imageCoordinates);
-				// mouse.click(imageCoordinates);
-				break;
-			// /simulate(document.getElementById("btn"), "click", { pointerX:
-			// 123, pointerY: 321 })
-			case "input_radio":
-				blnSet = true;
-				// objWebElement.click();
-				objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
-				objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
-				objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
-				try {
-					// ((JavascriptExecutor) objWebDriver).executeScript("arguments[0].onchange();", objWebElement);
-					objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
-				} catch (WebDriverException e) {
-					System.out.println("elementSet = " + e.toString());
-				}
-				break;
-			case "input_checkbox":
-				blnSet = true;
-				System.out.println("elementSet IT'S A input_checkbox" + (System.currentTimeMillis() - lngStartTimeSwitchSet));
-				// System.out.println("objWebElement.isSelected() = " + objWebElement.isSelected());
-				switch (objStep.get("strInputValue").toString().toLowerCase()) {
-				case "<on>":
-					long lngStartTimeisSelected = System.currentTimeMillis();
-					if (objWebElement.isSelected() == false) {
-						System.out.println("elementSet objWebElement.isSelected()" + (System.currentTimeMillis() - lngStartTimeisSelected));
-						long lngStartTimeclick = System.currentTimeMillis();
-						// Actions builder1 = new Actions(objWebDriver);
-						// // Action action1 =
-						// builder1.click(objWebElement).build();
-						// // action1.perform();
-						//
-						// Action action1 =
-						// builder1.moveToElement(objWebElement).click().build();
-						// action1.perform();
-						// // objWebElement.click();
-						// System.out.println("elementSet objWebElement.click()"
-						// + (System.currentTimeMillis() - lngStartTimeclick));
-						// ((JavascriptExecutor)
-						// objWebDriver).executeScript("arguments[0].scrollIntoView(true);",
-						// objWebElement);
-						// JavascriptExecutor executor = (JavascriptExecutor)
-						// objWebDriver;
-						// executor.executeScript("window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
-						// ( function x() { //do something & return value } )()
-						// executor.executeScript("arguments[0].scrollIntoView(false);",
-						// objWebElement);
-						// JavascriptExecutor executor2 = (JavascriptExecutor)
-						// objWebDriver;
-						// executor2.executeScript("arguments[0].click();",
-						// objWebElement);
-						objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
-						objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
-						objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
-						try {
-							// ((JavascriptExecutor)
-							// objWebDriver).executeScript("arguments[0].onchange();",
-							// objWebElement);
-							objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
-						} catch (WebDriverException e) {
-							System.out.println("elementSet = " + e.toString());
-						}
-						System.out.println("elementSet JavascriptExecutor" + (System.currentTimeMillis() - lngStartTimeclick));
-					}
-					break;
-				case "<off>":
-					blnSet = true;
-					if (objWebElement.isSelected() == true) {
-						// objWebElement.click();
-						objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
-						objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
-						objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
-						try {
-							// ((JavascriptExecutor)
-							// objWebDriver).executeScript("arguments[0].onchange();",
-							// objWebElement);
-							objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
-						} catch (WebDriverException e) {
-							System.out.println("elementSet = " + e.toString());
-						}
-					}
-					break;
-				}// the end of switch (strInputValue.toLowerCase())
-				break;
-			case "select":
-				// objWebElement.click();
-				int intOptionsEach;
-				// JavascriptExecutor executor3 = (JavascriptExecutor)
-				// objWebDriver;
-				// this works use it
-				long lngStartTimeElementOptionCount = System.currentTimeMillis();
-				String strOptions = (String) objJavascriptExecutor.executeScript("var txt = '';var x = arguments[0];var i;for (i = 0; i < x.length; i++)" + "{txt = txt + '|' + x.options[i].text;}" + "return txt;", objWebElement);
-				// System.out.println("strOptions = " + strOptions +
-				// " intMillisecondsWaited = " + (System.currentTimeMillis() -
-				// lngStartTimeElementOptionCount));
-				strOptions = strOptions.substring(1);
-				// System.out.println("strOptions = " + strOptions +
-				// " intMillisecondsWaited = " + (System.currentTimeMillis() -
-				// lngStartTimeElementOptionCount));
-				String[] arrOptions;
-				arrOptions = strOptions.split("\\|");
-				// arrOptions = strOptions.split("|");
-				// System.out.println("arrOptions.length = " +
-				// arrOptions.length);
-				// blnFound = False
-				// System.out.println("elementSet IT'S A SELECT");
-				// Select objSelect = new Select((WebElement) objWebElement);
-				// JavascriptExecutor js = (JavascriptExecutor)driver();
-				// js.executeScript("document.getElementById("actionTypeList").selectedIndex=1");
-				// selenium.fireEvent("actionTypeList","change");
-				for (intOptionsEach = 0; intOptionsEach < arrOptions.length; intOptionsEach++) {
-					// System.out.println("elementSet dropdown.getOptions() " +
-					// intOptionsEach + " =  " +
-					// arrOptions[intOptionsEach].toString());
-					if (arrOptions[intOptionsEach].toString().equals(objStep.get("strInputValue").toString())) {
-						blnSet = true;
-						// objSelect.selectByIndex(intOptionsEach);
-						// executor3.executeScript("arguments[0].options.index="
-						// + intOptionsEach + ";", objWebElement);
-						objJavascriptExecutor.executeScript("arguments[0].selectedIndex=" + intOptionsEach + ";", objWebElement);
-						try {
-							objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
-						} catch (WebDriverException e) {
-							System.out.println("elementSet = " + e.toString());
-						}
-						// element.onchange();
-						// if ("createEvent" in document) {
-						// var evt = document.createEvent("HTMLEvents");
-						// evt.initEvent("change", false, true);
-						// element.dispatchEvent(evt);
-						// }
-						// else
-						// element.fireEvent("onchange");
-						break;
-					}
-				}
-				// // objSelect.selectByVisibleText("DVC Pay With Cash");
-				// List<WebElement> options = objSelect.getOptions();
-				//
-				// for (WebElement el : options) {
-				// System.out.println(el.getText());
-				// }
-				// .options[3].text;
-				// System.out.println("elementSet dropdown.getOptions().size() = "
-				// + objSelect.getOptions().size());
-				// for (intOptionsEach = 0; intOptionsEach <
-				// objSelect.getOptions().size(); intOptionsEach++) {
-				// System.out.println("elementSet dropdown.getOptions() " +
-				// intOptionsEach + " =  " +
-				// objSelect.getOptions().get(intOptionsEach).getText());
-				// if
-				// (objSelect.getOptions().get(intOptionsEach).getText().equals(objStep.get("strInputValue").toString()))
-				// {
-				// objSelect.selectByIndex(intOptionsEach);
-				// break;
-				// }
-				// }
-				break;
-			case "table":
-				// Set objWebElement = gobjWebElement.AsTable
-				break;
-			case "alert":
-				blnSet = true;
-				Alert alert = objWebDriver.switchTo().alert();
-				System.out.println(alert.getText()); // Print Alert popup
-				System.out.println(objStep.get("strAttributeValues").toString().toLowerCase());
-				switch (objStep.get("strAttributeValues").toString().toLowerCase()) {
-				case "text":
-					alert.sendKeys(objStep.get("strInputValue").toString());
-					break;
-				case "accept":
-					alert.accept(); // Close Alert popup
-					break;
-				case "dismiss":
-					alert.dismiss();// Close Alert popup
-					break;
-				}
-				break;
-			default:
-				throw new ElementTagNameNotSupportedException("Element tag not supported");
-			}// the end of switch (strTagName.toLowerCase())
-
-			if (blnSet == true) {
-				//Thread.sleep(1000); 
-				long lngStartTimeElementSetJQueryAJAXCallsHaveCompleted = System.currentTimeMillis();
-				((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
-
-				//((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
-
-				System.out.println("elementSet document.readyState MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return document.readyState"));
-
-				// wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfAllElementsLocatedBy(objWebElement)));
-				// System.out.println("elementSet finally jQueryAJAXCallsHaveCompleted = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
-
-				// IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.00));
-				// wait.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
-
-				System.out.println("elementSet jQueryAJAXCallsHaveCompleted MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSetJQueryAJAXCallsHaveCompleted));
-			}
-
-		} catch (Exception e) {
-			System.out.println("elementSet Exception = " + e.toString());
-		} finally {
-			if (blnSet == false) {
-				throw new ElementNotSetException("Element not set");
-			}
-			System.out.println("elementSet finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet));
-		}
-	}// the end of elementSet
-
-	public static ExpectedCondition<Boolean> angularHasFinishedProcessing() {
-		return new ExpectedCondition<Boolean>() {
-			@Override
-			public Boolean apply(WebDriver driver) {
-				return Boolean.valueOf(((JavascriptExecutor) driver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)").toString());
-			}
-		};
-	}
-
-	public static ExpectedCondition<Boolean> jQueryAJAXCallsHaveCompleted() {
-		return new ExpectedCondition<Boolean>() {
-			@Override
-			public Boolean apply(WebDriver driver) {
-				return (Boolean) ((JavascriptExecutor) driver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
-			}
-		};
-	}
 
 	// public static Boolean elementVerifyValue(String strTagName, WebElement
 	// objWebElement, String strValueExpected) throws
@@ -2072,35 +1949,6 @@ public class Evinrude {
 	// 'EndFile
 	// '******************************************************************************
 	// End Function '==> WebObjectEnabled
-
-	public static String verifyMatch(String strActual, String strExpected) throws ValueNotMatchedException {
-		long lngStartTimeVerifyMatch = System.currentTimeMillis();
-		try {
-			if (strExpected.toLowerCase().startsWith("re:")) {
-				String strPattern = strExpected.substring(3);
-				System.out.println("verifyMatch RegularExpressionMatch = " + RegularExpressionMatch(strPattern, strActual));
-				return RegularExpressionMatch(strPattern, strActual);
-			} else {
-				if (strExpected.equals(strActual)) {
-					System.out.println("verifyMatch matched strActual = " + strActual);
-					return strActual;
-				} else {
-					System.out.println("verifyMatch strActual = {" + strActual + "} strExpected = {" + strExpected + "}");
-					throw new ValueNotMatchedException("verifyMatch did not match strActual = {" + strActual + "} strExpected = {" + strExpected + "}");
-				}
-			}
-		} finally {
-			System.out.println("verifyMatch finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeVerifyMatch));
-		}
-	}// the end of VerifyMatch
-
-	public static String RegularExpressionMatch(String strPattern, String strActualValue) {
-		Pattern objPattern = Pattern.compile(strPattern);
-		Matcher objMatcher = objPattern.matcher(strActualValue);
-		objMatcher.matches();
-		String strMatchedString = objMatcher.group(0);
-		return strMatchedString;
-	} // the end of RegularExpressionMatch
 
 	public static String elementGet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementTagNameNotSupportedException {
 		long lngStartTimeElementGet = System.currentTimeMillis();

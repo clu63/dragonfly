@@ -3,7 +3,7 @@
 	[
 		{
 			"strAction": "launch",
-			"strTagName": "ie",
+			"strTagName": "chrome",
 			"strAttributeNames": "",
 			"strAttributeValues": "",
 			"strInputValue": "http://www.golfnow.com/",
@@ -149,7 +149,7 @@
 		},
 
 		{
-			"strAction": "set",
+			"strAction": "break",
 			"strTagName": "input",
 			"strAttributeNames": "id|type",
 			"strAttributeValues": "ctl00_TemplateContainer_ctl03_txtFromDate|text",
