@@ -61,7 +61,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"intLoop": "500"
 		},
 
 		{
@@ -82,7 +82,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"intLoop": "500"
 		},
 
 		{
@@ -103,7 +103,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"intLoop": "500"
 		},
 
 		{
@@ -124,7 +124,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"intLoop": "500"
 		},
 
 		{
@@ -132,7 +132,7 @@
 			"strTagName": "select",
 			"strAttributeNames": "id",
 			"strAttributeValues": "ctl00_TemplateContainer_ctl03_ddlFacilites",
-			"strInputValue": "- All Courses -",
+			"strInputValue": "Disney's Oak Trail",
 			"strLogicalName": "Coarse",
 			"intMillisecondsToWait": "",
 			"blnOptional": "",
@@ -145,11 +145,11 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"intLoop": "500"
 		},
 
 		{
-			"strAction": "break",
+			"strAction": "set",
 			"strTagName": "input",
 			"strAttributeNames": "id|type",
 			"strAttributeValues": "ctl00_TemplateContainer_ctl03_txtFromDate|text",
@@ -233,7 +233,7 @@
 		},
 
 		{
-			"strAction": "break",
+			"strAction": "set",
 			"strTagName": "input",
 			"strAttributeNames": "id|type",
 			"strAttributeValues": "ctl00_TemplateContainer_ctl03_btnSearch|submit",

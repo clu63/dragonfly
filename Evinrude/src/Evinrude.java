@@ -250,10 +250,10 @@ public class Evinrude {
 			// String strTestPath = "Data/public/local_size_Visibility.json";
 			// String strTestPath = "Data/public/public_w3c_Visibility.json";
 			// String strTestPath = "Data/public/public_mercury_tours.json";
-			// String strTestPath = "Data/public/public_ranorex.json";
+			String strTestPath = "Data/public/public_ranorex.json";
 			// String strTestPath = "Data/public/public_w3c_fireevents.json"
 			// String strTestPath = "Data/public/public_w3c_fireevents.json";
-			String strTestPath = "Data/public/public_GolfNow.json";
+			// String strTestPath = "Data/public/public_GolfNow.json";
 			Object objParser = parser.parse(new FileReader(strTestPath));
 			objJsonFile = (JSONObject) objParser;
 			objTestSteps = (JSONArray) objJsonFile.get("steps");
@@ -286,10 +286,12 @@ public class Evinrude {
 				if (objStep.get("blnExitOnFail").toString().trim().length() == 0) {
 					objStep.put("blnExitOnFail", "true");
 				}
+				if (objStep.get("intLoop").toString().trim().length() == 0) {
+					objStep.put("intLoop", "0");
+				}
 				objStep.put("strCurrentWindowHandle", strCurrentWindowHandle);
 				objStep.put("strType", "");
 				objStep.put("strScreenshotFilePath", strResultsPath + strImagesPath);
-				// System.out.println("strScreenshotFilePath = " + objStep.get("strScreenshotFilePath").toString());
 				objStep.put("strStatus", "info");
 				objStep.put("intFrame", intFrame);
 
@@ -340,8 +342,8 @@ public class Evinrude {
 						// TODO create a browserLaunchSync to manage reporting and sync
 						objWebDriver = browserLaunch(objStep);
 						blnPass = Boolean.parseBoolean(objStep.get("blnStatus").toString());
-						long lngStartTimedocumenttitle = System.currentTimeMillis();
-						System.out.println("main objWebDriver.toString = " + objWebDriver.toString() + " " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
+						// long lngStartTimedocumenttitle = System.currentTimeMillis();
+						// System.out.println("main objWebDriver.toString = " + objWebDriver.toString() + " " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
 						break;
 					case "close":
 						objWebDriver.close();
@@ -393,9 +395,9 @@ public class Evinrude {
 				}// the end of if (strInputValue != "<skip>")
 				if (objStep.get("strOutputLinkName").toString().trim().length() != 0) {
 					objLinks.put(objStep.get("strOutputLinkName").toString(), objStep.get("strOutputValue").toString());
-					System.out.println(objStep.get("strOutputLinkName").toString());
-					System.out.println(objLinks.get(objStep.get("strOutputLinkName").toString()).toString());
-					System.out.println(objStep.get("strOutputValue").toString());
+					// System.out.println(objStep.get("strOutputLinkName").toString());
+					// System.out.println(objLinks.get(objStep.get("strOutputLinkName").toString()).toString());
+					// System.out.println(objStep.get("strOutputValue").toString());
 				}
 			}// for intStep
 				// TODO confirm the exceptions to catch in main some may need to be removed
@@ -407,17 +409,18 @@ public class Evinrude {
 			System.out.println("main - " + e.toString());
 		} finally {
 			// TODO review how end of run is determined for reporting and cleanup
-			if (intStep == objTestSteps.size() || blnPass == false || objStep.get("strAction").toString().toLowerCase().equals("break")) {
-				writeJsonToHtml(objTestSteps, strResultsPath + "StepsWithDefaults.html");
-				writeReportToHtml(objTestSteps, strResultsPath + "Report.html");
-				writeJsonToFile(objJsonFile, strResultsPath + "StepsAfterRun.json");
-				if (objWebDriver.toString().contains("InternetExplorerDriver")) {
-					killWindowsProcess("taskkill /F /IM IEDriverServer.exe");
-				}
+			// if (intStep == objTestSteps.size() || blnPass == false || objStep.get("strAction").toString().toLowerCase().equals("break")) {
+			writeJsonToHtml(objTestSteps, strResultsPath + "StepsWithDefaults.html");
+			writeReportToHtml(objTestSteps, strResultsPath + "Report.html");
+			writeJsonToFile(objJsonFile, strResultsPath + "StepsAfterRun.json");
+			if (objWebDriver.toString().contains("InternetExplorerDriver")) {
+				killWindowsProcess("taskkill /F /IM IEDriverServer.exe");
 			}
+			// }
 		}// the end of try
 	}// the end of Main
 
+	@SuppressWarnings("unchecked")
 	public static Boolean elementGetSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
 		Long lngStartTimeGetSync = System.currentTimeMillis();
 		Integer intMillisecondsWaited = null;
@@ -511,7 +514,6 @@ public class Evinrude {
 			objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
 		}
 		try {
-			// System.out.println(objStep.get("strTagType").toString().toLowerCase());
 			switch (objStep.get("strTagType").toString().toLowerCase()) {
 			case "input_button":
 			case "input_submit":
@@ -638,7 +640,7 @@ public class Evinrude {
 			}// the end of switch (strTagName.toLowerCase())
 
 			if (blnSet == true) {
-				Thread.sleep(1000);
+				Thread.sleep(Integer.parseInt(objStep.get("intLoop").toString()));
 				long lngStartTimeElementSetJQueryAJAXCallsHaveCompleted = System.currentTimeMillis();
 				((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
 
@@ -699,17 +701,14 @@ public class Evinrude {
 			try {
 				if (blnFound == false) {
 					objWebElement = elementFind(objStep, objWebDriver);
-					System.out.println("elementSetSync - elementFind");
 					blnFound = true;
 				}
 				if (blnVisible == false) {
 					elementVisible(objStep, objWebDriver, objWebElement);
-					System.out.println("elementSetSync - elementVisible");
 					blnVisible = true;
 				}
 				if (blnEnabled == false) {
 					elementEnabled(objStep, objWebDriver, objWebElement);
-					System.out.println("elementSetSync - elementEnabled");
 					blnEnabled = true;
 				}
 				switch (objStep.get("strAssert").toString().toLowerCase()) {
@@ -729,9 +728,9 @@ public class Evinrude {
 					blnStatus = true;
 					break;
 				case "hidden":
-					objStep.put("strStatus", "pass");
-					coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
 					if (blnSet == false) {
+						objStep.put("strStatus", "pass");
+						coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
 						elementSet(objStep, objWebDriver, objWebElement);
 						blnSet = true;
 					}
@@ -830,7 +829,7 @@ public class Evinrude {
 				}
 				if (intMillisecondsWaited <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
 					if (blnStatus == true) {
-						//objStep.put("strStatus", "pass");
+						// objStep.put("strStatus", "pass");
 						return true;
 					} else if (blnStatus == false) {
 						if (blnFound == false) {
@@ -1264,7 +1263,7 @@ public class Evinrude {
 				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
 				elementCoordinates(objStep, objWebDriver, null);
 				coordinateHighlightScreenshot(objStep, "window", objWebDriver, null, objStep);
-				objStep.put("blnStatus", "true");
+				objStep.put("blnStatus", true);
 				objWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
 				// objWebDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
 				return objWebDriver;
@@ -1332,7 +1331,7 @@ public class Evinrude {
 			System.out.println("browserLaunch " + e.toString());
 		} finally {
 
-			windowFocus(objWebDriver);
+			// windowFocus(objWebDriver);
 			Long lngEndTimeBrowserLaunch = System.currentTimeMillis();
 			objStep.put("strStepDuration", (lngEndTimeBrowserLaunch - lngStartTimeBrowserLaunch));
 			System.out.println("browserLaunch finally intMillisecondsWaited = " + objStep.get("strStepDuration").toString());
@@ -1351,32 +1350,6 @@ public class Evinrude {
 		}
 		return data;
 	}// the end of ClipboardGet
-
-	// public static Boolean elementVerifyValue(String strTagName, WebElement
-	// objWebElement, String strValueExpected) throws
-	// ElementValueNotVerifiedException {
-	// String strValueActual = "";
-	// try {
-	// strValueActual = elementGet(objWebElement);
-	// } catch (ElementTagNameNotSupportedException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// System.out.println("elementVerifyValue strValueActual = " +
-	// strValueActual);
-	// if (strValueActual == null) {
-	// throw new ElementValueNotVerifiedException("Element value not verified");
-	// } else {
-	// System.out.println("elementVerifyValue strValueActual = " +
-	// strValueActual + " elementVerifyValue strValueExpected = " +
-	// strValueExpected);
-	// if (verifyMatch(strValueActual, strValueExpected) != null) {
-	// return true;
-	// } else {
-	// throw new ElementValueNotVerifiedException("Element value not verified");
-	// }
-	// }
-	// } // the end of elementVerifyValue
 
 	public boolean isAlertPresent(WebDriver driver) {
 		try {
@@ -1484,7 +1457,7 @@ public class Evinrude {
 				// System.out.println("elementFind lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
 				// System.out.println("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
 
-				System.out.println("objStep.get(\"inFrame\") = " + Integer.parseInt(objStep.get("intFrame").toString()));
+				// System.out.println("objStep.get(\"inFrame\") = " + Integer.parseInt(objStep.get("intFrame").toString()));
 				if (strCurrentWindowHandle.equals(strWindowHandle)) {
 					blnSwitch = true;
 				} else {
@@ -1704,10 +1677,10 @@ public class Evinrude {
 
 	@SuppressWarnings("unchecked")
 	public static void elementCoordinates(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
-		long lngStartTimeElementAbsoluteCoordinatesAncestor = System.currentTimeMillis();
+		long lngStartTimeElementCoordinates = System.currentTimeMillis();
 		try {
 			int intScrollbar = 0;
-			long lngStartTimeManageWindow = System.currentTimeMillis();
+			// long lngStartTimeManageWindow = System.currentTimeMillis();
 			Point objWebDriverPoint = objWebDriver.manage().window().getPosition();
 			int intBrowserOuterX = objWebDriverPoint.x;
 			int intBrowserOuterY = objWebDriverPoint.y;
@@ -1753,8 +1726,10 @@ public class Evinrude {
 				// System.out.println("elementCoordinates intElementScreenX = " + intElementScreenX);
 				// System.out.println("elementCoordinates intElementScreenY = " + intElementScreenY);
 			}
+		} catch (Exception e) {
+			System.out.println(e.toString());
 		} finally {
-			System.out.println("elementCoordinates finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementAbsoluteCoordinatesAncestor));
+			System.out.println("elementCoordinates finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementCoordinates));
 		}
 	}// the end of elementCoordinates
 
@@ -1764,17 +1739,16 @@ public class Evinrude {
 			// TODO Alert complete
 			if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
 				try {
-					@SuppressWarnings("unused")
+					// @SuppressWarnings("unused")
 					Alert alert = objWebDriver.switchTo().alert();
 					System.out.println("elementVisible alert passed");
 					// System.out.println(objWebDriver.manage().window().getPosition());
 					// System.out.println(objWebDriver.manage().window().getSize());
 					return true;
-				} // try
-				catch (NoAlertPresentException e) {
+				} catch (NoAlertPresentException e) {
 					System.out.println(e.toString());
 					throw new ElementNotVisibleException("Alert popup was not found.");
-				} // catch
+				}
 			}
 			if (objWebElement.isDisplayed()) {
 				elementCoordinates(objStep, objWebDriver, objWebElement);
@@ -1800,11 +1774,10 @@ public class Evinrude {
 					// System.out.println(objWebDriver.manage().window().getPosition());
 					// System.out.println(objWebDriver.manage().window().getSize());
 					return true;
-				} // try
-				catch (NoAlertPresentException e) {
+				} catch (NoAlertPresentException e) {
 					System.out.println(e.toString());
 					throw new ElementNotHiddenException("Alert popup was not found.");
-				} // catch
+				}
 			}
 			if (objWebElement.isDisplayed() == false) {
 				return true;
@@ -1950,6 +1923,7 @@ public class Evinrude {
 	// '******************************************************************************
 	// End Function '==> WebObjectEnabled
 
+	@SuppressWarnings("finally")
 	public static String elementGet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementTagNameNotSupportedException {
 		long lngStartTimeElementGet = System.currentTimeMillis();
 		String strElementGet = "";
@@ -2011,7 +1985,7 @@ public class Evinrude {
 				throw new ElementTagNameNotSupportedException("Element tag not supported");
 			}
 		} finally {
-			System.out.println("ElementGet finally strElementGet = " + strElementGet + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementGet));
+			System.out.println("ElementGet finally strElementGet = {" + strElementGet + "} MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementGet));
 			return strElementGet;
 		}
 	} // the end of ElementGet
@@ -2035,13 +2009,17 @@ public class Evinrude {
 
 	@SuppressWarnings({ "serial", "unchecked" })
 	public static void coordinateHighlightScreenshot(final JSONObject objStepHighlightArea, final String strHighlightArea, final WebDriver objWebDriver, final WebElement objWebElement, JSONObject objStep) {
+		System.out.println("coordinateHighlightScreenshot start");
+
 		long lngStartTimeCoordinateHighlightScreenshot = System.currentTimeMillis();
 		JFrame objJFrame = new JFrame() {
 			{
+				System.out.println("coordinateHighlightScreenshot before Rectangle objHighlightArea");
 				Rectangle objHighlightArea = new Rectangle(0, 0, 0, 0);
 				if (Boolean.parseBoolean(objStepHighlightArea.get("blnHighlight").toString()) == true) {
 					int intThickness = 5;
 					Color objColor2 = null;
+					System.out.println("coordinateHighlightScreenshot before color switch");
 					switch (objStepHighlightArea.get("strStatus").toString().toLowerCase()) {
 					case "pass":
 						if (objStepHighlightArea.get("strAction").toString().toLowerCase().equals("set") && objStepHighlightArea.get("strAssert").toString().toLowerCase().equals("off")) {
@@ -2347,49 +2325,268 @@ public class Evinrude {
 		}
 	}// the end of writeJsonToHtml
 
-	public static void writeReportToHtml(JSONArray objTestSteps, String file) {
+	public static void writeReportToHtml(JSONArray objTestSteps, String strFile) {
+		long lngStartTimeWriteReportToHtml = System.currentTimeMillis();
 		String strScreenshotFilePath = "";
-		StringBuilder builder = new StringBuilder();
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file));) {
-			builder.append("<!DOCTYPE html>");
-			builder.append("<html lang=\"en\">");
-			builder.append("<head><title>Run Results</title></head>");
-			builder.append("<body>");
+		StringBuilder objStringBuilder = new StringBuilder();
+		BufferedWriter objBufferedWriter = null;
+		try {
+			objBufferedWriter = new BufferedWriter(new FileWriter(strFile));
+			objStringBuilder.append("<!DOCTYPE html>");
+			objStringBuilder.append("<html lang=\"en\">");
+			objStringBuilder.append("<head><title>Run Results</title></head>");
+			objStringBuilder.append("<body>");
 			for (int intTestStepRow = 0; intTestStepRow < objTestSteps.size(); intTestStepRow++) {
 				JSONObject objStep = (JSONObject) objTestSteps.get(intTestStepRow);
-				builder.append("<div id=step_" + intTestStepRow + ">");
-				builder.append("<TABLE border=1 width=100% height=10%>");
-				builder.append("<TR>");
-				builder.append("<TD width= 100px align=center valign=middle>Expected</TD>");
-				builder.append("<TD align=left valign=middle>" + objStep.get("strAction").toString() + "</TD>");
-				builder.append("</TR>");
-				builder.append("<TR>");
-				builder.append("<TD align=center valign=middle>Actual</TD>");
-				builder.append("<TD align=left valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
-				builder.append("</TR>");
-				builder.append("</TABLE> ");
+				objStringBuilder.append("<div id=step_" + intTestStepRow + ">");
+				objStringBuilder.append("<TABLE border=1 width=100% height=10%>");
+				objStringBuilder.append("<TR>");
+				objStringBuilder.append("<TD width= 100px align=center valign=middle>Expected</TD>");
+				// objStringBuilder.append("<TD align=left valign=middle>" + objStep.get("strAction").toString() + "</TD>");
+				objStringBuilder.append("<TD align=left valign=middle>" + createStepExpected(objStep) + "</TD>");
+
+				objStringBuilder.append("</TR>");
+				objStringBuilder.append("<TR>");
+				objStringBuilder.append("<TD align=center valign=middle>Actual</TD>");
+				objStringBuilder.append("<TD align=left valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
+				objStringBuilder.append("</TR>");
+				objStringBuilder.append("</TABLE> ");
 				if (objStep.get("strScreenshotFilePath").toString().trim().length() != 0) {
 					strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString().replaceAll("\\\\\\\\", "\\");
-					builder.append("<IMG alt=\"ReporterScreenShot_1\" src=\"" + strScreenshotFilePath + "\" width=1100 height=700> ");
+					objStringBuilder.append("<IMG alt=\"ReporterScreenShot_1\" src=\"" + strScreenshotFilePath + "\" width=1100 height=700> ");
 				}
 				// System.out.println("writeReportToHtml strScreenshotFilePath = " + objStep.get("strScreenshotFilePath").toString());
-				builder.append("</div>");
-				builder.append("<br>");
-				builder.append("<br>");
+				objStringBuilder.append("</div>");
+				objStringBuilder.append("<br>");
+				objStringBuilder.append("<br>");
 				if (objStep.get("strAction").toString().toLowerCase().equals("break")) {
 					break;
 				}
 			}
-			builder.append("</body>");
-			builder.append("</html>");
-			String html = builder.toString();
-			System.out.println(file);
-			bw.write(html);
 		} catch (Exception e) {
 			System.out.println("writeReportToHtml - " + e.toString());
-			System.out.println(builder.toString());
+			System.out.println(objStringBuilder.toString());
+		} finally {
+			objStringBuilder.append("</body>");
+			objStringBuilder.append("</html>");
+			// System.out.println(objStringBuilder.toString());
+			try {
+				String strHTML = objStringBuilder.toString();
+				System.out.println(strHTML);
+				objBufferedWriter.write(strHTML);
+				objBufferedWriter.close();
+			} catch (Exception e2) {
+				System.out.println("writeReportToHtml - IOException" + e2.getMessage());
+			}
+			System.out.println("writeReportToHtml finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeWriteReportToHtml));
 		}
 	}// the end of writeReportToHtml
+
+	public static String createStepExpected(JSONObject objStep) {
+		String strAction = objStep.get("strAction").toString();
+		String intMillisecondsToWait = objStep.get("intMillisecondsToWait").toString();
+		String strInputValue = objStep.get("strInputValue").toString();
+		String strTagName = objStep.get("strTagName").toString();
+		String strObjectName = objStep.get("strAttributeValues").toString();
+		switch (strAction.toLowerCase()) {
+		case "launch":
+			// strStepName = CreateStepDataTableRow & "set " & ObjectName & " " & strObjectMicClass & " to value {" & strParameterValue & "} then expect navigation" & " within " & intWait & " seconds"
+			return strAction;
+		case "close":
+			return strAction;
+		case "get":
+			// strStepName = CreateStepDataTableRow & "get " & ObjectName & " " & strObjectMicClass & " actual value" & " within " & intWait & " seconds"
+			return strAction;
+		case "set":
+			return "set " + strObjectName + " " + strTagName + " to value {" + strInputValue + "}" + " within " + intMillisecondsToWait + " milliseconds";
+		case "verify":
+			// strStepName = CreateStepDataTableRow & "verify " & ObjectName & " " & strObjectMicClass & " value is equal to {" & strParameterValue & "}" & " within " & intWait & " seconds"
+			return strAction;
+		case "sync_visible":
+			// strStepName = CreateStepDataTableRow & "sync until " & ObjectName & " " & strObjectMicClass & " is visible within " & intWait & " seconds"
+			return strAction;
+		case "sync_hidden":
+			// strStepName = CreateStepDataTableRow & "sync until " & ObjectName & " " & strObjectMicClass & " is hidden within " & intWait & " seconds"
+			return strAction;
+		case "sync_enabled":
+			// strStepName = CreateStepDataTableRow & "sync until " & ObjectName & " " & strObjectMicClass & " is enabled within " & intWait & " seconds"
+			return strAction;
+		case "sync_disabled":
+			// strStepName = CreateStepDataTableRow & "sync until " & ObjectName & " " & strObjectMicClass & " is disabled within " & intWait & " seconds"
+			return strAction;
+		case "break":
+		default:
+			return strAction;
+		}
+	}
+
+	public static String createStepActual(JSONArray objTestSteps) {
+		return null;
+
+	}
+
+	// Function DetailsHTML(objObjectDetailsHTML, strStepAction, strStepParameterName, strActualReturn, intWaited)
+	// On Error Resume Next
+	// strObjectToString = objObjectDetailsHTML.GetTOProperty("TestObjGenType")
+	// strToString = strStepParameterName & " " & strObjectToString
+	// strInputParameterValue = strParameterValue
+	// strOutputParameterValueHTML = FormatHTML(strOutputParameterValue)
+	// strInputParameterValueHTML = FormatHTML(strInputParameterValue)
+	// strActualReturnHTML = FormatHTML(strActualReturn)
+	// Select Case UCase(strStepAction)
+	// Case "DEFAULT"
+	// DetailsHTML = "The <b>" & strToString & " </b> default value is {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>}."
+	// strDetailsNoHTML = "The expected " & strToString & " default value is " & strOutputParameterValue& "."
+	// Case "CLICKED"
+	// DetailsHTML = "The expected <b>" & strToString & "</b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} was clicked."
+	// strDetailsNoHTML = "The expected " & strToString & "  value {" & strInputParameterValue & "} was clicked."
+	// Case "EXPECTED"
+	// DetailsHTML = "The expected <b>" & strToString & "</b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} was not verified.<BR>The actual value was {<b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & ">" & strActualReturnHTML & "</FONT></b>}."
+	// strDetailsNoHTML = "The expected " & strToString & " value {" & strInputParameterValue & "} was not verified.  The actual value was {" & strActualReturn & "}."
+	// Case "EXPECTEDTOOLTIP"
+	// DetailsHTML = "The expected <b>" & strToString & "</b>  tooltip value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} was not verified.<BR>The actual value was {<b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & ">" & strActualReturnHTML & "</FONT></b>}."
+	// strDetailsNoHTML = "The expected " & strToString & " tooltip value {" & strInputParameterValue & "} was not verified.  The actual value was {" & strActualReturn & "}."
+	// Case "FIND"
+	// DetailsHTML = "The expected <b>" & strToString & "</b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b><b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & "></FONT></b>} was found."
+	// strDetailsNoHTML = "The expected " & strToString & "  value {" & strOutputParameterValue & "} was found."
+	// Case "NOTFOUND"
+	// DetailsHTML = "The expected <b>" & strToString & "</b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b><b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & "></FONT></b>} was not found."
+	// strDetailsNoHTML = "The expected " & strToString & " value {" & strOutputParameterValue & "} was not found."
+	// Case "VERIFY"
+	// DetailsHTML = "The expected <b>" & strToString & "</b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b><b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & "></FONT></b>} was verified."
+	// strDetailsNoHTML = "The expected " & strToString & " value {" & strOutputParameterValue & "} was verified."
+	// Case "VERIFYTOOLTIP"
+	// DetailsHTML = "The expected <b>" & strToString & "</b> tooltip value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b><b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & "></FONT></b>} was verified."
+	// strDetailsNoHTML = "The expected " & strToString & " tooltip value {" & strOutputParameterValue & "} was verified."
+	// Case "GET"
+	// DetailsHTML = "The <b>" & strToString & " </b> actual value is {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>}."
+	// strDetailsNoHTML = "The " & strToString & " actual value is {" & strOutputParameterValue & "}"
+	// Case "GETTOOLTIP"
+	// DetailsHTML = "The <b>" & strToString & " </b> tooltip actual value is {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>}."
+	// strDetailsNoHTML = "The " & strToString & " tooltip actual value is {" & strOutputParameterValue & "}"
+	// Case "SET"
+	// DetailsHTML = "The expected <b>" & strToString & " </b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} was set."
+	// strDetailsNoHTML = "The expected " & strToString & " value {" & strInputParameterValue & "} was set."
+	// Case "PERSISTED"
+	// DetailsHTML = "The expected <b>" & strToString & " </b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} persisted."
+	// strDetailsNoHTML = "The expected " & strToString & " value {" & strOutputParameterValue & "} persisted."
+	// Case "PASSWORD"
+	// DetailsHTML = "The <b>" & strToString & " </b> password value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} was set."
+	// strDetailsNoHTML = "The " & strToString & " password value {" & strOutputParameterValue & "} was set."
+	// Case "NOTPERSISTED"
+	// DetailsHTML = "The expected <b>" & strToString & " </b> value  {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} did not persist.<BR>The actual value {<b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & ">" & strActualReturnHTML & "</FONT></b>} was displayed."
+	// strDetailsNoHTML = "The expected " & strToString & " value {" & strInputParameterValue & "} did not persist.  The actual value {" & strActualReturn & "} was displayed."
+	// Case "EXIST"
+	// DetailsHTML = "The expected <b>" & strToString & "</b> exists."
+	// strDetailsNoHTML = "The expected " & strToString & " exists."
+	// Case "NOTEXIST"
+	// DetailsHTML = "The expected <b>" & strToString & "</b> does not exist after " & intWaited & " milliseconds."
+	// strDetailsNoHTML = "The expected " & strToString & " does not exist after " & intWaited & " milliseconds."
+	// Case "NOTEXISTTOOLTIP"
+	// DetailsHTML = "The expected <b>" & strToString & "</b> tooltip does not exist after " & intWaited & " milliseconds."
+	// strDetailsNoHTML = "The expected " & strToString & " tooltip does not exist after " & intWaited & " milliseconds."
+	// Case "INVISIBLE"
+	// DetailsHTML = "The expected <b>" & strToString & "</b> <b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & "></FONT></b> is invisible."
+	// strDetailsNoHTML = "The expected " & strToString & " is invisible."
+	// Case "ENABLED"
+	// DetailsHTML = "The expected <b>" & strToString & "</b> <b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & "></FONT></b> is enabled."
+	// strDetailsNoHTML = "The expected " & strToString & " is enabled."
+	// Case "DISABLED"
+	// DetailsHTML = "The expected <b>" & strToString & "</b> <b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & "></FONT></b> is disabled."
+	// strDetailsNoHTML = "The expected " & strToString & " is disabled."
+	// Case "VISIBLE"
+	// DetailsHTML = "The expected <b>" & strToString & "</b> <b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & "></FONT></b> is visible."
+	// strDetailsNoHTML = "The expected " & strToString & " is visible."
+	// Case "HIDDEN"
+	// DetailsHTML = "The expected <b>" & strToString & "</b> <b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & "></FONT></b> is hidden."
+	// strDetailsNoHTML = "The expected " & strToString & " is hidden."
+	// Case "SYNCNOTEXISTS"
+	// DetailsHTML = "The expected <b>" & strToString & "</b></b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} does not exist after " & intWaited & " milliseconds."
+	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} does not exist after " & intWaited & " milliseconds."
+	// Case "SYNCEXISTS"
+	// DetailsHTML = "The expected <b>" & strToString & "</b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} exists after " & intWaited & " milliseconds."
+	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} exists after " & intWaited & " milliseconds."
+	// Case "SYNCCLOSED"
+	// DetailsHTML = "The expected <b>" & strToString & "</b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} closed after " & intWaited & " milliseconds."
+	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} closed after " & intWaited & " milliseconds."
+	// Case "SYNCNOTCLOSED"
+	// DetailsHTML = "The expected <b>" & strToString & "</b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} did not close after " & intWaited & " milliseconds."
+	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} did not close after " & intWaited & " milliseconds."
+	// Case "SYNCHIDDEN"
+	// DetailsHTML = "The expected <b>" & strToString & "</b></b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} does not exist after " & intWaited & " milliseconds."
+	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} does not exist after " & intWaited & " milliseconds."
+	// Case "SYNCVISIBLE"
+	// DetailsHTML = "The expected <b>" & strToString & "</b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} exists after " & intWaited & " milliseconds."
+	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} exists after " & intWaited & " milliseconds."
+	// Case "SYNCOPTIONAL"
+	// DetailsHTML = "The expected <b>" & strToString & "</b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} sync is optional after " & intWaited & " milliseconds."
+	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} exists after " & intWaited & " milliseconds."
+	// Case "SYNCDISABLED"
+	// DetailsHTML = "The expected <b>" & strToString & "</b></b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} does not exist after " & intWaited & " milliseconds."
+	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} does not exist after " & intWaited & " milliseconds."
+	// Case "SYNCENABLED"
+	// DetailsHTML = "The expected <b>" & strToString & "</b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} exists after " & intWaited & " milliseconds."
+	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} exists after " & intWaited & " milliseconds."
+	// Case "NAVIGATE"
+	// DetailsHTML = "The expected <b>" & strToString & " </b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} was set.<BR>No validation performed due to navigation."
+	// strDetailsNoHTML = "The expected " & strToString & " value {" & strOutputParameterValue & "} was set. No validation performed due to navigation."
+	// Case "KEYSTROKE"
+	// DetailsHTML = "The expected <b>" & strToString & "</b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} was pressed."
+	// strDetailsNoHTML = "The expected " & strToString & "  value {" & strInputParameterValue & "} was pressed."
+	// Case "NOTINLIST"
+	// DetailsHTML = "The list item {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} does not exist in the <b>" & strStepParameterName & "</b> list field.<BR>Please confirm the input value against the actual list values {<b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & ">" & strActualReturnHTML & "</FONT></b>} is available for this field."
+	// strDetailsNoHTML = "The list item {" & strInputParameterValue & "} does not exist in the " & strParameterName & " list field.  Please confirm the input value against the actual list values {" & strActualReturn & "} is available for this field."
+	// End Select
+	// DetailsHTML = "<DIV align=" & Chr(34) & "left" & Chr(34) & ">" & DetailsHTML & "</DIV>"
+	// On Error GoTo 0
+	// End Function
+
+	// Function CreateStepDataTableRow()
+	// CreateStepDataTableRow = "Step " & intDataTableStep & " row " & intDataTableRow & " "
+	// End Function
+	//
+	//
+	// Function CreateStepNameGetToolTip()
+	// strStepName = CreateStepDataTableRow & "get " & ObjectName & " " & strObjectMicClass & " tooltip value" & " within " & intWait & " seconds"
+	// CreateStepNameGetToolTip = strStepName
+	// End Function
+	//
+	// Function CreateStepNameVerifyToolTip()
+	// strStepName = CreateStepDataTableRow & "verify " & ObjectName & " " & strObjectMicClass & " tooltip value is equal to {" & strParameterValue & "}" & " within " & intWait & " seconds"
+	// CreateStepNameVerifyToolTip = strStepName
+	// End Function
+	//
+	// Function CreateStepNameExistsToolTip()
+	// strStepName = CreateStepDataTableRow & "verify " & ObjectName & " " & strObjectMicClass & " tooltip value exists within " & intWait & " seconds"
+	// CreateStepNameExistsToolTip = strStepName
+	// End Function
+	//
+	//
+	// Function CreateStepNameSetClicked()
+	// strStepName = CreateStepDataTableRow & "set " & ObjectName & " " & strObjectMicClass & " to value {Clicked}" & " within " & intWait & " seconds"
+	// CreateStepNameSetClicked = strStepName
+	// End Function
+	//
+	// Function CreateStepNameSetPassword()
+	// strStepName = CreateStepDataTableRow & "set " & ObjectName & " " & strObjectMicClass & " to password value {" & strParameterValue & "}" & " within " & intWait & " seconds"
+	// CreateStepNameSetPassword = strStepName
+	// End Function
+	//
+	// Function CreateStepNameVerifyObjectState()
+	// strStepName = CreateStepDataTableRow & "verify " & ObjectName & " " & strObjectMicClass & " object state is  {" & strParameterValue & "}" & " within " & intWait & " seconds"
+	// CreateStepNameVerifyObjectState = strStepName
+	// End Function
+	//
+	// Function CreateStepNameSync()
+	// strStepName = CreateStepDataTableRow & "sync " & ObjectName & " " & strObjectMicClass & " within " & intWait & " seconds"
+	// CreateStepNameSync = strStepName
+	// End Function
+	//
+	// Function CreateStepNameSyncOptional()
+	// strStepName = CreateStepDataTableRow & "sync optional " & ObjectName & " " & strObjectMicClass & " within " & intWait & " seconds"
+	// CreateStepNameSyncOptional = strStepName
+	// End Function
+	//
 
 	public static void writeJsonToFile(JSONObject objJsonFile, String file) {
 		try {
