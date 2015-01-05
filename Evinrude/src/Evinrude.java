@@ -1376,7 +1376,7 @@ public class Evinrude {
 		} // catch
 	}
 
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings({ "unchecked", "unused" })
 	public static WebElement elementFind(JSONObject objStep, WebDriver objWebDriver) throws ElementNotFoundException, MultipleElementsFoundException {
 		long lngStartTimeElementFind = System.currentTimeMillis();
 		// objWebDriver.manage().timeouts().implicitlyWait(10, TimeUnit.NANOSECONDS);
@@ -1393,17 +1393,16 @@ public class Evinrude {
 			List<WebElement> objTagNameCollection = new ArrayList<WebElement>();
 			String strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
 			strTagName = objStep.get("strTagName").toString().toLowerCase();
-			// System.out.println("elementFind strTagName = " + strTagName);
 			String arrAttributeNames[] = objStep.get("strAttributeNames").toString().split("\\|", -1);
 			String arrAttributeValues[] = objStep.get("strAttributeValues").toString().split("\\|", -1);
 			String strXpathAttributesTemp = "";
 			String strXpathAttributes = "";
+			String strWindowHandle = "";
 			if (strTagName.toLowerCase().equals("alert")) {
 				// TODO elementFind finish alert handling --- will need to consider issue where objWebDriver no longer exists maybe place this after setting window
 				objStep.put("strTagType", "alert");
 				return isAlertPresent2(objWebDriver);
 			}
-			// System.out.println("elementFind before strXpath");
 			for (int intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
 				strXpathAttributesTemp = "";
 				switch (arrAttributeNames[intAttributeEach].toLowerCase()) {
@@ -1446,19 +1445,35 @@ public class Evinrude {
 			System.out.println("elementFind before loop strCurrentWindowHandle = " + strCurrentWindowHandle);
 
 			Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
-			// System.out.println("arrHandles.length = " + arrHandles.length);
+			System.out.println("elementFind arrHandles.length = " + arrHandles.length);
+
+			for (int i = arrHandles.length - 1; i >= 0; i--) {
+				// System.out.println(stack.get(i));
+				System.out.println("elementFind arrHandles[i] = " + arrHandles[i].toString());
+			}
+			// if (arrHandles.length == 2) {
+			// System.out.println("elementFind arrHandles[0] = " +arrHandles[0].toString());
+			// System.out.println("elementFind arrHandles[1] = " +arrHandles[1].toString());
+			// }
+			//
+			// if (arrHandles.length == 1) {
+			// System.out.println("elementFind arrHandles[0] = " +arrHandles[0].toString());
+			// }
+
 			for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0; intHandlesEach--) {
-				String strWindowHandle = arrHandles[intHandlesEach].toString();
-				// System.out.println("elementFind strCurrentWindowHandle = " +
-				// strCurrentWindowHandle);
-				// System.out.println("elementFind winHandle = " + winHandle);
+				strWindowHandle = arrHandles[intHandlesEach].toString();
+
 				long lngStartTimeSwitchTo = System.currentTimeMillis();
 				// objWebDriver.switchTo().window(strWindowHandle);
-				// System.out.println("elementFind lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
-				// System.out.println("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
+				System.out.println("elementFind intHandlesEach = " + intHandlesEach);
 
-				// System.out.println("objStep.get(\"inFrame\") = " + Integer.parseInt(objStep.get("intFrame").toString()));
-				if (strCurrentWindowHandle.equals(strWindowHandle)) {
+				System.out.println("elementFind lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
+				//
+				System.out.println("elementFind objStep.get(\"inFrame\") = " + Integer.parseInt(objStep.get("intFrame").toString()));
+
+				System.out.println("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
+				System.out.println("elementFind strWindowHandle = " + strWindowHandle);
+				if (!strCurrentWindowHandle.equals(strWindowHandle)) {
 					blnSwitch = true;
 				} else {
 					if (Integer.parseInt(objStep.get("intFrame").toString()) >= 0) {
@@ -1468,6 +1483,7 @@ public class Evinrude {
 				if (blnSwitch == true) {
 					objWebDriver.switchTo().window(strWindowHandle);
 					System.out.println("elementFind Switched = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
+					System.out.println("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
 					objStep.put("intFrame", -1);
 				}
 
@@ -1526,8 +1542,7 @@ public class Evinrude {
 					// objFrameCollection.addAll(objWebDriver.findElements(By.tagName("iframe")));
 					intFramesCount = objFrameCollection.size();
 					System.out.println("elementFind objFrameCollection = " + intFramesCount + " MillisecondsWaitedIframe " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
-					// if (intFramesCount >= 1) {
-					// intFramesCount = intFramesCount + 1;
+					// if (intFramesCount >= 1) {intFramesCount = intFramesCount + 1;
 					// System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
 					// }
 					for (int intFramesEach = 0; intFramesEach < intFramesCount; intFramesEach++) {
@@ -1603,7 +1618,6 @@ public class Evinrude {
 					// System.out.println("main JavascriptExecutor strTitle  = " + strTitle + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
 
 					// System.out.println("strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
-
 					// System.out.println("objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
 
 					objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
@@ -1617,8 +1631,7 @@ public class Evinrude {
 					}
 					return objWebElement;
 				default:
-					// System.out.println("elementFind - Element properties did not return a unique element, try again with more attributes.  "
-					// + objWebElementCollection.size());
+					// System.out.println("elementFind - Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
 					throw new MultipleElementsFoundException("Element properties did not return an element, try refining attributes");
 				}// the end of switch (objWebElementCollection.size())
 			}// the end of for win Handles
@@ -2390,30 +2403,23 @@ public class Evinrude {
 		String strObjectName = objStep.get("strAttributeValues").toString();
 		switch (strAction.toLowerCase()) {
 		case "launch":
-			// strStepName = CreateStepDataTableRow & "set " & ObjectName & " " & strObjectMicClass & " to value {" & strParameterValue & "} then expect navigation" & " within " & intWait & " seconds"
-			return strAction;
+			return "Launch " + strTagName + " browser to url {" + strInputValue + "} then expect navigation" + " within " + intMillisecondsToWait + " milliseconds";
 		case "close":
-			return strAction;
+			return "Close " + strTagName + " browser within " + intMillisecondsToWait + " milliseconds";
 		case "get":
-			// strStepName = CreateStepDataTableRow & "get " & ObjectName & " " & strObjectMicClass & " actual value" & " within " & intWait & " seconds"
-			return strAction;
+			return "Get " + strObjectName + " " + strTagName + " actual value" + " within " + intMillisecondsToWait + " milliseconds";
 		case "set":
-			return "set " + strObjectName + " " + strTagName + " to value {" + strInputValue + "}" + " within " + intMillisecondsToWait + " milliseconds";
+			return "Set " + strObjectName + " " + strTagName + " to value {" + strInputValue + "}" + " within " + intMillisecondsToWait + " milliseconds";
 		case "verify":
-			// strStepName = CreateStepDataTableRow & "verify " & ObjectName & " " & strObjectMicClass & " value is equal to {" & strParameterValue & "}" & " within " & intWait & " seconds"
-			return strAction;
+			return "Verify " + strObjectName + " " + strTagName + " value is equal to {" + strInputValue + "}" + " within " + intMillisecondsToWait + " milliseconds";
 		case "sync_visible":
-			// strStepName = CreateStepDataTableRow & "sync until " & ObjectName & " " & strObjectMicClass & " is visible within " & intWait & " seconds"
-			return strAction;
+			return "Sync until " + strObjectName + " " + strTagName + " is visible within " + intMillisecondsToWait + " milliseconds";
 		case "sync_hidden":
-			// strStepName = CreateStepDataTableRow & "sync until " & ObjectName & " " & strObjectMicClass & " is hidden within " & intWait & " seconds"
-			return strAction;
+			return "Sync until " + strObjectName + " " + strTagName + " is hidden within " + intMillisecondsToWait + " milliseconds";
 		case "sync_enabled":
-			// strStepName = CreateStepDataTableRow & "sync until " & ObjectName & " " & strObjectMicClass & " is enabled within " & intWait & " seconds"
-			return strAction;
+			return "Sync until " + strObjectName + " " + strTagName + " is enabled within " + intMillisecondsToWait + " milliseconds";
 		case "sync_disabled":
-			// strStepName = CreateStepDataTableRow & "sync until " & ObjectName & " " & strObjectMicClass & " is disabled within " & intWait & " seconds"
-			return strAction;
+			return "Sync until " + strObjectName + " " + strTagName + " is disabled within " + intMillisecondsToWait + " milliseconds";
 		case "break":
 		default:
 			return strAction;
