@@ -250,10 +250,10 @@ public class Evinrude {
 			// String strTestPath = "Data/public/local_size_Visibility.json";
 			// String strTestPath = "Data/public/public_w3c_Visibility.json";
 			// String strTestPath = "Data/public/public_mercury_tours.json";
-			String strTestPath = "Data/public/public_ranorex.json";
+			// String strTestPath = "Data/public/public_ranorex.json";
 			// String strTestPath = "Data/public/public_w3c_fireevents.json"
 			// String strTestPath = "Data/public/public_w3c_fireevents.json";
-			// String strTestPath = "Data/public/public_GolfNow.json";
+			String strTestPath = "Data/public/public_GolfNow.json";
 			Object objParser = parser.parse(new FileReader(strTestPath));
 			objJsonFile = (JSONObject) objParser;
 			objTestSteps = (JSONArray) objJsonFile.get("steps");
@@ -514,6 +514,13 @@ public class Evinrude {
 			objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
 		}
 		try {
+
+			// System.out.println("elementSet ctl00_ScriptManager1_HiddenField value = " + objWebDriver.findElement(By.id("ctl00_ScriptManager1_HiddenField")).getAttribute("value"));
+			// System.out.println("elementSet __EVENTTARGET value = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
+			// System.out.println("elementSet __EVENTARGUMENT value = " + objWebDriver.findElement(By.id("__EVENTARGUMENT")).getAttribute("value"));
+			// System.out.println("elementSet __LASTFOCUS value = " + objWebDriver.findElement(By.id("__LASTFOCUS")).getAttribute("value"));
+			// System.out.println("elementSet __VIEWSTATE value = " + objWebDriver.findElement(By.id("__VIEWSTATE")).getAttribute("value"));
+
 			switch (objStep.get("strTagType").toString().toLowerCase()) {
 			case "input_button":
 			case "input_submit":
@@ -640,7 +647,36 @@ public class Evinrude {
 			}// the end of switch (strTagName.toLowerCase())
 
 			if (blnSet == true) {
-				Thread.sleep(Integer.parseInt(objStep.get("intLoop").toString()));
+
+				// System.out.println("elementSet ctl00_ScriptManager1_HiddenField value = " + objWebDriver.findElement(By.id("ctl00_ScriptManager1_HiddenField")).getAttribute("value"));
+				// System.out.println("elementSet __EVENTTARGET value = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
+				// System.out.println("elementSet __EVENTARGUMENT value = " + objWebDriver.findElement(By.id("__EVENTARGUMENT")).getAttribute("value"));
+				// System.out.println("elementSet __LASTFOCUS value = " + objWebDriver.findElement(By.id("__LASTFOCUS")).getAttribute("value"));
+				// System.out.println("elementSet __VIEWSTATE value = " + objWebDriver.findElement(By.id("__VIEWSTATE")).getAttribute("value"));
+
+				long lngStartTimeElementSet__EVENTTARGET = System.currentTimeMillis();
+				while (true) {
+					try {
+						System.out.println("elementSet __EVENTTARGET value = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
+						if (objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value").equals("")) {
+							break;
+						}
+					} catch (StaleElementReferenceException e) {
+						System.out.println("elementSet StaleElementReferenceException = " + e.toString());
+					}
+				}
+				System.out.println("elementSet lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
+
+				// <input type="hidden" name="ctl00_ScriptManager1_HiddenField" id="ctl00_ScriptManager1_HiddenField" value="" />
+				// <input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+				// <input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+				// <input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+				// <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value=
+
+				// Thread.sleep(Integer.parseInt(objStep.get("intLoop").toString()));
+
+				// Thread.sleep(10000);
+
 				long lngStartTimeElementSetJQueryAJAXCallsHaveCompleted = System.currentTimeMillis();
 				((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
 
@@ -832,12 +868,12 @@ public class Evinrude {
 						// objStep.put("strStatus", "pass");
 						return true;
 					} else if (blnStatus == false) {
-						if (blnFound == false) {
-							blnVisible = false;
-							blnEnabled = false;
-							blnAssert = false;
-							blnSet = false;
-						}
+						// if (blnFound == false) {
+						// blnVisible = false;
+						// blnEnabled = false;
+						// blnAssert = false;
+						// blnSet = false;
+						// }
 					}
 				} else {
 					if (blnStatus == true) {
@@ -911,11 +947,11 @@ public class Evinrude {
 				if (blnExit == true) {
 					System.out.println("elementVerifyValueSync finally blnExit = true");
 					objStep.put("strStatus", "fail");
-					coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
+					coordinateHighlightScreenshot(objStep, "screen", objWebDriver, objWebElement, objStep);
 					return false;
 				}
 				if (blnStatus == true) {
-					// System.out.println("elementVerifyValueSync finally blnStatus = " + blnStatus);
+					System.out.println("elementVerifyValueSync finally blnStatus = " + blnStatus);
 					objStep.put("strOutputValue", strActualValue);
 					objStep.put("strStatus", "pass");
 					if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
@@ -934,14 +970,24 @@ public class Evinrude {
 						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
 							objStep.put("strOutputValue", strActualValue);
 							objStep.put("strStatus", "warning");
-							coordinateHighlightScreenshot(objStep, "screen", objWebDriver, objWebElement, objStep);
+							if (blnFound == false || blnVisible == false) {
+								coordinateHighlightScreenshot(objStep, "screen", objWebDriver, objWebElement, objStep);
+							} else {
+								System.out.println("elementVerifyValueSync finally coordinateHighlightScreenshot element ");
+								coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
+							}
 							return true;
 						} else {
 							objStep.put("strOutputValue", strActualValue);
 							objStep.put("strStatus", "fail");
 
 							if (blnValueNotMatched == false) {
-								coordinateHighlightScreenshot(objStep, "screen", objWebDriver, objWebElement, objStep);
+								if (blnFound == false || blnVisible == false) {
+									coordinateHighlightScreenshot(objStep, "screen", objWebDriver, objWebElement, objStep);
+								} else {
+									coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
+								}
+
 							} else {
 								coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
 							}
