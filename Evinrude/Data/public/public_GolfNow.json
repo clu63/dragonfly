@@ -3,7 +3,7 @@
 	[
 		{
 			"strAction": "launch",
-			"strTagName": "firefox",
+			"strTagName": "chrome",
 			"strAttributeNames": "",
 			"strAttributeValues": "",
 			"strInputValue": "http://www.golfnow.com/",
@@ -61,7 +61,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": "500"
+			"intLoop": ""
 		},
 
 		{
@@ -82,7 +82,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": "500"
+			"intLoop": ""
 		},
 
 		{
@@ -103,7 +103,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": "500"
+			"intLoop": ""
 		},
 
 		{
@@ -124,7 +124,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": "500"
+			"intLoop": ""
 		},
 
 		{
@@ -145,7 +145,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": "500"
+			"intLoop": ""
 		},
 
 		{
@@ -280,7 +280,7 @@
 			"strAttributeNames": "text|index",
 			"strAttributeValues": "Book|1",
 			"strInputValue": "",
-			"strLogicalName": "Search Tee Times 2",
+			"strLogicalName": "Book",
 			"intMillisecondsToWait": "",
 			"blnOptional": "",
 			"strAssert": "",

@@ -247,6 +247,8 @@ public class Evinrude {
 		new File(strResultsPath + strImagesPath).mkdirs();
 		// System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
+			//String strTestPath = "Data/internal/drms_book.json";
+			// String strTestPath = "Data/internal/DVC_Book.json";
 			// String strTestPath = "Data/public/local_size_Visibility.json";
 			// String strTestPath = "Data/public/public_w3c_Visibility.json";
 			// String strTestPath = "Data/public/public_mercury_tours.json";
@@ -510,11 +512,15 @@ public class Evinrude {
 		long lngStartTimeElementSet = System.currentTimeMillis();
 		JavascriptExecutor objJavascriptExecutor = null;
 		Boolean blnSet = false;
+		String strOuterHTML = "";
 		if (objWebElement != null) {
 			objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
 		}
 		try {
-
+			long lngStartTimeOuterHTML = System.currentTimeMillis();
+			strOuterHTML = objWebElement.getAttribute("outerHTML");
+			System.out.println("elementSet outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeOuterHTML));
+			System.out.println(strOuterHTML);
 			// System.out.println("elementSet ctl00_ScriptManager1_HiddenField value = " + objWebDriver.findElement(By.id("ctl00_ScriptManager1_HiddenField")).getAttribute("value"));
 			// System.out.println("elementSet __EVENTTARGET value = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
 			// System.out.println("elementSet __EVENTARGUMENT value = " + objWebDriver.findElement(By.id("__EVENTARGUMENT")).getAttribute("value"));
@@ -653,20 +659,20 @@ public class Evinrude {
 				// System.out.println("elementSet __EVENTARGUMENT value = " + objWebDriver.findElement(By.id("__EVENTARGUMENT")).getAttribute("value"));
 				// System.out.println("elementSet __LASTFOCUS value = " + objWebDriver.findElement(By.id("__LASTFOCUS")).getAttribute("value"));
 				// System.out.println("elementSet __VIEWSTATE value = " + objWebDriver.findElement(By.id("__VIEWSTATE")).getAttribute("value"));
-
-				long lngStartTimeElementSet__EVENTTARGET = System.currentTimeMillis();
-				while (true) {
-					try {
-						System.out.println("elementSet __EVENTTARGET value = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
-						if (objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value").equals("")) {
-							break;
+				if (strOuterHTML.contains("__doPostBack")) {
+					long lngStartTimeElementSet__EVENTTARGET = System.currentTimeMillis();
+					while (true) {
+						try {
+							System.out.println("elementSet __EVENTTARGET value = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
+							if (objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value").equals("")) {
+								break;
+							}
+						} catch (StaleElementReferenceException e) {
+							System.out.println("elementSet StaleElementReferenceException = " + e.toString());
 						}
-					} catch (StaleElementReferenceException e) {
-						System.out.println("elementSet StaleElementReferenceException = " + e.toString());
 					}
+					System.out.println("elementSet lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
 				}
-				System.out.println("elementSet lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
-
 				// <input type="hidden" name="ctl00_ScriptManager1_HiddenField" id="ctl00_ScriptManager1_HiddenField" value="" />
 				// <input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
 				// <input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
