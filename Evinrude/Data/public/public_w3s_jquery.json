@@ -1,0 +1,137 @@
+{
+	"steps": 
+	[
+		{
+			"strAction": "launch",
+			"strTagName": "chrome",
+			"strAttributeNames": "",
+			"strAttributeValues": "",
+			"strInputValue": "http://www.w3schools.com/jquery/tryit.asp?filename=tryjquery_fadein",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		},
+
+		{
+			"strAction": "set",
+			"strTagName": "button",
+			"strAttributeNames": "index",
+			"strAttributeValues": "1",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		},
+
+		{
+			"strAction": "set",
+			"strTagName": "button",
+			"strAttributeNames": "text",
+			"strAttributeValues": "Click to fade in boxes",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		},
+
+		{
+			"strAction": "sync_visible",
+			"strTagName": "div",
+			"strAttributeNames": "id",
+			"strAttributeValues": "div1",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		},
+
+		{
+			"strAction": "sync_visible",
+			"strTagName": "div",
+			"strAttributeNames": "id",
+			"strAttributeValues": "div2",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		},
+
+		{
+			"strAction": "sync_visible",
+			"strTagName": "div",
+			"strAttributeNames": "id",
+			"strAttributeValues": "div3",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		}
+	],
+
+	"link": 
+	[
+		{
+			
+		}
+	]
+}

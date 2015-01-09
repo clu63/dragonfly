@@ -247,15 +247,16 @@ public class Evinrude {
 		new File(strResultsPath + strImagesPath).mkdirs();
 		// System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
-			//String strTestPath = "Data/internal/drms_book.json";
-			// String strTestPath = "Data/internal/DVC_Book.json";
+			// String strTestPath = "Data/public/local_jqueryFade.json";
+			
 			// String strTestPath = "Data/public/local_size_Visibility.json";
-			// String strTestPath = "Data/public/public_w3c_Visibility.json";
+			// String strTestPath = "Data/public/public_w3s_Visibility.json";
 			// String strTestPath = "Data/public/public_mercury_tours.json";
 			// String strTestPath = "Data/public/public_ranorex.json";
-			// String strTestPath = "Data/public/public_w3c_fireevents.json"
-			// String strTestPath = "Data/public/public_w3c_fireevents.json";
-			String strTestPath = "Data/public/public_GolfNow.json";
+			// String strTestPath = "Data/public/public_w3s_FireEvents.json"
+			String strTestPath = "Data/public/public_w3s_JqueryAnimate.json";
+			// String strTestPath = "Data/public/public_w3s_jquery.json";
+			// String strTestPath = "Data/public/public_GolfNow.json";
 			Object objParser = parser.parse(new FileReader(strTestPath));
 			objJsonFile = (JSONObject) objParser;
 			objTestSteps = (JSONArray) objJsonFile.get("steps");
@@ -521,12 +522,6 @@ public class Evinrude {
 			strOuterHTML = objWebElement.getAttribute("outerHTML");
 			System.out.println("elementSet outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeOuterHTML));
 			System.out.println(strOuterHTML);
-			// System.out.println("elementSet ctl00_ScriptManager1_HiddenField value = " + objWebDriver.findElement(By.id("ctl00_ScriptManager1_HiddenField")).getAttribute("value"));
-			// System.out.println("elementSet __EVENTTARGET value = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
-			// System.out.println("elementSet __EVENTARGUMENT value = " + objWebDriver.findElement(By.id("__EVENTARGUMENT")).getAttribute("value"));
-			// System.out.println("elementSet __LASTFOCUS value = " + objWebDriver.findElement(By.id("__LASTFOCUS")).getAttribute("value"));
-			// System.out.println("elementSet __VIEWSTATE value = " + objWebDriver.findElement(By.id("__VIEWSTATE")).getAttribute("value"));
-
 			switch (objStep.get("strTagType").toString().toLowerCase()) {
 			case "input_button":
 			case "input_submit":
@@ -654,11 +649,12 @@ public class Evinrude {
 
 			if (blnSet == true) {
 
-				// System.out.println("elementSet ctl00_ScriptManager1_HiddenField value = " + objWebDriver.findElement(By.id("ctl00_ScriptManager1_HiddenField")).getAttribute("value"));
-				// System.out.println("elementSet __EVENTTARGET value = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
-				// System.out.println("elementSet __EVENTARGUMENT value = " + objWebDriver.findElement(By.id("__EVENTARGUMENT")).getAttribute("value"));
-				// System.out.println("elementSet __LASTFOCUS value = " + objWebDriver.findElement(By.id("__LASTFOCUS")).getAttribute("value"));
-				// System.out.println("elementSet __VIEWSTATE value = " + objWebDriver.findElement(By.id("__VIEWSTATE")).getAttribute("value"));
+				// browser.wait_for_condition("selenium.browserbot.getCurrentWindow().jQuery.active === 0;", '30000')
+
+				System.out.println("elementSet document.readyState MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return document.readyState"));
+
+				// Thread.sleep(Integer.parseInt(objStep.get("intLoop").toString()));
+
 				if (strOuterHTML.contains("__doPostBack")) {
 					long lngStartTimeElementSet__EVENTTARGET = System.currentTimeMillis();
 					while (true) {
@@ -672,16 +668,72 @@ public class Evinrude {
 						}
 					}
 					System.out.println("elementSet lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
+				}// the end of (strOuterHTML.contains("__doPostBack"))
+
+				long lngStartTimeElementSetJQueryActive = System.currentTimeMillis();
+				while (true) {
+					try {
+						System.out.println("elementSet both = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
+						// System.out.println("elementSet window.jQuery = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery);"));
+						System.out.println("elementSet jQuery.active = " + ((JavascriptExecutor) objWebDriver).executeScript("return (jQuery.active);"));
+
+					} catch (Exception e) {
+						System.out.println("elementSet jQuery Exception = " + e.toString());
+					}
+
+					if (System.currentTimeMillis() - lngStartTimeElementSetJQueryActive > 100) {
+						break;
+					}
+
 				}
-				// <input type="hidden" name="ctl00_ScriptManager1_HiddenField" id="ctl00_ScriptManager1_HiddenField" value="" />
-				// <input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
-				// <input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
-				// <input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
-				// <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value=
 
-				// Thread.sleep(Integer.parseInt(objStep.get("intLoop").toString()));
+				long lngStartTimeElementSetJQueryAnimate = System.currentTimeMillis();
+				while (true) {
+					long lngElementsAnimated = 0;
+					try {
 
-				// Thread.sleep(10000);
+						lngElementsAnimated = (long) ((JavascriptExecutor) objWebDriver).executeScript("return $(\":animated\").length");
+
+						System.out.println("elementSet JQueryAnimate = " + lngElementsAnimated);
+
+						// System.out.println("elementSet JQueryAnimate = " + ((JavascriptExecutor) objWebDriver).executeScript("return $(\":animated\").length"));
+
+					} catch (Exception e) {
+						System.out.println("elementSet jQuery Exception = " + e.toString());
+					}
+
+					if (lngElementsAnimated == 0) {
+						break;
+					}
+
+					if (System.currentTimeMillis() - lngStartTimeElementSetJQueryAnimate > 5000) {
+						break;
+					}
+
+				}
+
+				// "return $(":animated").length"
+				// "return $('#{0}').is(':animated')"
+
+				// long lngStartTimeElementSetJQueryAJAXCallsHaveCompleted = System.currentTimeMillis();
+				// System.out.println("elementVisible jQuery.active MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
+				// // ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
+				// System.out.println("elementVisible document.readyState MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return document.readyState"));
+				// long lngStartTimeElementSet__EVENTTARGET = System.currentTimeMillis();
+				// while (((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);")!=null) {
+				//
+				//
+				// // try {
+				// // System.out.println("elementVisible jQuery.active = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
+				// // blnJquery = (Boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
+				// // if (blnJquery == false) {
+				// // break;
+				// // }
+				// // } catch (Exception e) {
+				// // System.out.println("elementVisible Exception = " + e.toString());
+				// // }
+				// }// the end of
+				// System.out.println("elementVisible lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
 
 				long lngStartTimeElementSetJQueryAJAXCallsHaveCompleted = System.currentTimeMillis();
 				((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
@@ -697,7 +749,7 @@ public class Evinrude {
 				// wait.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
 
 				System.out.println("elementSet jQueryAJAXCallsHaveCompleted MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSetJQueryAJAXCallsHaveCompleted));
-			}
+			}// the end of if (blnSet == true)
 
 		} catch (Exception e) {
 			System.out.println("elementSet Exception = " + e.toString());
@@ -708,6 +760,56 @@ public class Evinrude {
 			System.out.println("elementSet finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet));
 		}
 	}// the end of elementSet
+
+	// public class Wait
+	// {
+	// private const bool Debug = true;
+	// private const int ImplicitWaitInSeconds = 30;
+	//
+	// private readonly IWebDriver _driver;
+	//
+	// public Wait(IWebDriver webDriver)
+	// {
+	// _driver = webDriver;
+	// }
+	//
+	// public void Until(Func<IWebDriver, bool> waitCondition, int timeoutInSeconds = Constants.ImplicitWaitInSeconds)
+	// {
+	// var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(timeoutInSeconds));
+	// wait.Until(waitCondition);
+	// }
+	//
+	// public void UntilAnimationIsDone(string elementId, int timeoutInSeconds = ImplicitWaitInSeconds)
+	// {
+	// Until(driver =>
+	// {
+	// var javaScriptExecutor = (IJavaScriptExecutor)driver;
+	// var isAnimated = javaScriptExecutor
+	// .ExecuteScript(string.Format("return $('#{0}').is(':animated')", elementId))
+	// .ToString().ToLower();
+	//
+	// if (Debug)
+	// Console.WriteLine(string.Format("Element: '{0}' Is Animated: {1}", elementId, isAnimated));
+	//
+	// // return true when finished animating
+	// return !bool.Parse(isAnimated);
+	// }, timeoutInSeconds);
+	// }
+	// }
+
+	// internal static void WaitForAllAjaxCalls(this ISelenium selenium, IWebDriver driver, int timeout = 40)
+	// {
+	// Stopwatch sw = new Stopwatch();
+	// sw.Start();
+	// while (true)
+	// {
+	// if (sw.Elapsed.Seconds > timeout) throw new Exception("Timeout");
+	// var ajaxIsComplete = (bool)driver.ExecuteScript("return jQuery.active == 0");
+	// if (ajaxIsComplete)
+	// break;
+	// Thread.Sleep(100);
+	// }
+	// }
 
 	public static ExpectedCondition<Boolean> angularHasFinishedProcessing() {
 		return new ExpectedCondition<Boolean>() {
@@ -1800,6 +1902,7 @@ public class Evinrude {
 
 	public static boolean elementVisible(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementNotVisibleException {
 		long lngStartTimeElementVisible = System.currentTimeMillis();
+		Boolean blnJquery = false;
 		try {
 			// TODO Alert complete
 			if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
@@ -1816,6 +1919,26 @@ public class Evinrude {
 				}
 			}
 			if (objWebElement.isDisplayed()) {
+				// // long lngStartTimeElementSetJQueryAJAXCallsHaveCompleted = System.currentTimeMillis();
+				// // System.out.println("elementVisible jQuery.active MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
+				// // // ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
+				// // System.out.println("elementVisible document.readyState MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return document.readyState"));
+				// long lngStartTimeElementSet__EVENTTARGET = System.currentTimeMillis();
+				// // while (((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);")!=null) {
+				// //
+				// //
+				// // // try {
+				// // // System.out.println("elementVisible jQuery.active = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
+				// // // blnJquery = (Boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
+				// // // if (blnJquery == false) {
+				// // // break;
+				// // // }
+				// // // } catch (Exception e) {
+				// // // System.out.println("elementVisible Exception = " + e.toString());
+				// // // }
+				// // }
+				// System.out.println("elementVisible lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
+
 				elementCoordinates(objStep, objWebDriver, objWebElement);
 				return true;
 			} else {
