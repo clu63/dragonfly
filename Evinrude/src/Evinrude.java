@@ -20,6 +20,7 @@
 //TODO check for StaleElementReferenceException included
 
 import com.opera.core.systems.*;
+import com.opera.core.systems.scope.protos.SystemInputProtos.MouseInfo.MouseButton;
 import com.thoughtworks.selenium.Wait;
 
 import java.awt.AWTException;
@@ -54,6 +55,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 
+//import org.apache.bcel.generic.Select;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -75,14 +77,27 @@ import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
+//import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+//import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+
+//import java.util.Collections;
+//import java.util.Set;
+//
+//import org.openqa.selenium.JavascriptExecutor;
+//import org.openqa.selenium.WebDriver;
+//import org.openqa.selenium.interactions.Action;
+//import org.openqa.selenium.interactions.Actions;
+
+import com.google.common.collect.ImmutableSet;
+
+//import com.google.inject.Inject;
 
 public class Evinrude {
 
@@ -275,7 +290,7 @@ public class Evinrude {
 		new File(strResultsPath + strImagesPath).mkdirs();
 		// System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
-			String strTestPath = "Data/public/local_jqueryFade.json";
+			// String strTestPath = "Data/public/local_jqueryFade.json";
 			// String strTestPath = "Data/public/local_size_Visibility.json";
 			// String strTestPath = "Data/public/public_mercury_tours.json";
 			// String strTestPath = "Data/public/public_ranorex.json";
@@ -284,6 +299,7 @@ public class Evinrude {
 			// String strTestPath = "Data/public/public_w3s_jquery.json";
 			// String strTestPath = "Data/public/public_w3s_AngularJs.json";
 			// String strTestPath = "Data/public/public_w3s_Visibility.json";
+			String strTestPath = "Data/public/public_AngularJS_Calculator.json";
 			// String strTestPath = "Data/public/public_GolfNow.json";
 			Object objParser = parser.parse(new FileReader(strTestPath));
 			objJsonFile = (JSONObject) objParser;
@@ -825,19 +841,19 @@ public class Evinrude {
 	// }
 	// }// the end of elementSet
 
-	public static void elementSet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementTagNameNotSupportedException, ElementNotSetException {
+	public static void elementSet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement, String strOuterHTML) throws ElementTagNameNotSupportedException, ElementNotSetException {
 		long lngStartTimeElementSet = System.currentTimeMillis();
 		JavascriptExecutor objJavascriptExecutor = null;
 		Boolean blnSet = false;
-		String strOuterHTML = "";
+		// String strOuterHTML = "";
 		if (objWebElement != null) {
 			objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
 		}
 		try {
 			long lngStartTimeOuterHTML = System.currentTimeMillis();
-			strOuterHTML = objWebElement.getAttribute("outerHTML");
-			System.out.println("elementSet outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeOuterHTML));
-			System.out.println(strOuterHTML);
+			// strOuterHTML = objWebElement.getAttribute("outerHTML");
+			// System.out.println("elementSet outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeOuterHTML));
+			// System.out.println(strOuterHTML);
 			switch (objStep.get("strTagType").toString().toLowerCase()) {
 			case "input_button":
 			case "input_submit":
@@ -858,37 +874,59 @@ public class Evinrude {
 			case "h6":
 			case "p":
 				blnSet = true;
+				objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
+				// objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
 				objWebElement.click();
+				objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
 				// objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
 				// objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
 				// objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
 				break;
 			case "input_text":
+				// blnSet = true;
+				// // http://codepen.io/xmlilley/pen/KwKqqj
+				// objWebElement.sendKeys(objStep.get("strInputValue").toString());
+				// break;
 			case "input_password":
 			case "textarea":
 			case "input_email":
 				blnSet = true;
 				objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
 				objJavascriptExecutor.executeScript("arguments[0].value = '';", objWebElement);
-				objJavascriptExecutor.executeScript("arguments[0].value = '" + objStep.get("strInputValue").toString() + "';", objWebElement);
+				objWebElement.sendKeys(objStep.get("strInputValue").toString());
 				objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
-				System.out.println("onchange before");
-				try {
-					objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
-				} catch (WebDriverException e) {
-					System.out.println("elementSet = " + e.toString());
-				}
 				break;
+
+			// //objWebElement.click();
+			// objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
+			// objJavascriptExecutor.executeScript("arguments[0].value = '';", objWebElement);
+			// objJavascriptExecutor.executeScript("arguments[0].value = '" + objStep.get("strInputValue").toString() + "';", objWebElement);
+			// // objJavascriptExecutor.executeScript("arguments[0].onkeydown();", objWebElement);
+			// // objJavascriptExecutor.executeScript("arguments[0].onkeyup();", objWebElement);
+			// objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
+			// System.out.println("onchange before");
+			// if (strOuterHTML.toLowerCase().contains("onchange")) {
+			// try {
+			// objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
+			// } catch (WebDriverException e) {
+			// System.out.println("elementSet = " + e.toString());
+			// }
+			// }
+			// break;
 			case "input_radio":
 				blnSet = true;
 				objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
-				objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
+				// objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
+				objWebElement.click();
 				objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
-				try {
-					objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
-				} catch (WebDriverException e) {
-					System.out.println("elementSet = " + e.toString());
-				}
+				// if (strOuterHTML.toLowerCase().contains("onchange")) {
+				// try {
+				// objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
+				//
+				// } catch (WebDriverException e) {
+				// System.out.println("elementSet = " + e.toString());
+				// }
+				// }
 				break;
 			case "input_checkbox":
 				blnSet = true;
@@ -896,26 +934,32 @@ public class Evinrude {
 				case "<on>":
 					if (objWebElement.isSelected() == false) {
 						objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
-						objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
+						// objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
+						objWebElement.click();
 						objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
-						try {
-							objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
-						} catch (WebDriverException e) {
-							System.out.println("elementSet = " + e.toString());
-						}
+						// if (strOuterHTML.toLowerCase().contains("onchange")) {
+						// try {
+						// objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
+						// } catch (WebDriverException e) {
+						// System.out.println("elementSet = " + e.toString());
+						// }
+						// }
 					}
 					break;
 				case "<off>":
 					blnSet = true;
 					if (objWebElement.isSelected() == true) {
 						objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
-						objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
+						// objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
+						objWebElement.click();
 						objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
-						try {
-							objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
-						} catch (WebDriverException e) {
-							System.out.println("elementSet = " + e.toString());
-						}
+						// if (strOuterHTML.toLowerCase().contains("onchange")) {
+						// try {
+						// objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
+						// } catch (WebDriverException e) {
+						// System.out.println("elementSet = " + e.toString());
+						// }
+						// }
 					}
 					break;
 				}// the end of switch (strInputValue.toLowerCase())
@@ -929,12 +973,18 @@ public class Evinrude {
 				for (intOptionsEach = 0; intOptionsEach < arrOptions.length; intOptionsEach++) {
 					if (arrOptions[intOptionsEach].toString().equals(objStep.get("strInputValue").toString())) {
 						blnSet = true;
-						objJavascriptExecutor.executeScript("arguments[0].selectedIndex=" + intOptionsEach + ";", objWebElement);
-						try {
-							objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
-						} catch (WebDriverException e) {
-							System.out.println("elementSet = " + e.toString());
-						}
+						Select objSelect = new Select(objWebElement);
+						objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
+						objSelect.selectByIndex(intOptionsEach);
+						objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
+						// objJavascriptExecutor.executeScript("arguments[0].selectedIndex=" + intOptionsEach + ";", objWebElement);
+						// if (strOuterHTML.toLowerCase().contains("onchange")) {
+						// try {
+						// objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
+						// } catch (WebDriverException e) {
+						// System.out.println("elementSet = " + e.toString());
+						// }
+						// }
 						break;
 					}
 				}
@@ -972,20 +1022,30 @@ public class Evinrude {
 		}
 	}// the end of elementSet
 
+	public static void waitForAngularRequestsToFinish(JavascriptExecutor driver) {
+		driver.executeAsyncScript("var callback = arguments[arguments.length - 1];" + "angular.element(document.body).injector().get('$browser').notifyWhenNoOutstandingRequests(callback);");
+	}
+
 	public static void SetSyncComplete(WebDriver objWebDriver, String strOuterHTML) throws DoPostBackNotCompleteException, JQueryAjaxNotCompleteException, JQueryAnimationNotCompleteException, AngularJsNotCompleteException {
-		// boolean blnResult = true;
+		WaitForReadyState(objWebDriver);
+		JavascriptExecutor objJavascriptExecutor = null;
+		objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
+		waitForAngularRequestsToFinish(objJavascriptExecutor);
+		boolean blnEventTarget = false;
 		if (strOuterHTML.contains("__doPostBack")) {
 			long lngStartTimeElementSet__EVENTTARGET = System.currentTimeMillis();
 			try {
-				System.out.println("elementSet __EVENTTARGET value = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
-				if (!objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value").equals("")) {
-					// blnResult = false;
-					throw new AngularJsNotCompleteException("");
-				}
+				System.out.println("SetSyncComplete __EVENTTARGET value = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
+				blnEventTarget = !objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value").equals("");
 			} catch (Exception e) {
-				System.out.println("elementSet Exception = " + e.toString());
+				System.out.println("SetSyncComplete Exception = " + e.toString());
 			}
-			System.out.println("elementSet lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
+			System.out.println("SetSyncComplete blnEventTarget = " + blnEventTarget);
+			if (blnEventTarget == true) {
+				// blnResult = false;
+				throw new AngularJsNotCompleteException("");
+			}
+			System.out.println("SetSyncComplete lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
 		}// the end of (strOuterHTML.contains("__doPostBack"))
 		long lngStartTimeElementSetJQueryActive = System.currentTimeMillis();
 		boolean blnJquery = false;
@@ -995,15 +1055,16 @@ public class Evinrude {
 			blnJquery = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null);");
 			if (blnJquery == true) {
 				lngJqueryActive = (long) ((JavascriptExecutor) objWebDriver).executeScript("return (jQuery.active);");
-				System.out.println("elementSet lngJqueryActive = " + lngJqueryActive);
+				System.out.println("SetSyncComplete lngJqueryActive = " + lngJqueryActive);
 				// System.out.println("elementSet both = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
-				if (lngJqueryActive > 0) {
-					// blnResult = false;
-					throw new JQueryAjaxNotCompleteException("");
-				}
+
 			}
 		} catch (Exception e) {
-			System.out.println("elementSet JqueryActive Exception = " + e.toString());
+			System.out.println("SetSyncComplete JqueryActive Exception = " + e.toString());
+		}
+		if (lngJqueryActive > 0) {
+			// blnResult = false;
+			throw new JQueryAjaxNotCompleteException("");
 		}
 		// long lngStartTimeElementSetJQueryAnimate = System.currentTimeMillis();
 		long lngElementsAnimated = 0;
@@ -1012,38 +1073,38 @@ public class Evinrude {
 			blnJqueryExist = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null);");
 			if (blnJqueryExist == true) {
 				lngElementsAnimated = (long) ((JavascriptExecutor) objWebDriver).executeScript("return $(\":animated\").length");
-				System.out.println("elementSet JQueryAnimate = " + lngElementsAnimated);
-				// System.out.println("elementSet JQueryAnimate = " + ((JavascriptExecutor) objWebDriver).executeScript("return $(\":animated\").length"));
-				if (lngElementsAnimated > 0) {
-					// blnResult = false;
-					throw new JQueryAnimationNotCompleteException("");
-				}
+				System.out.println("SetSyncComplete JQueryAnimate = " + lngElementsAnimated);
+				// System.out.println("SetSyncComplete JQueryAnimate = " + ((JavascriptExecutor) objWebDriver).executeScript("return $(\":animated\").length"));
 			}
 		} catch (Exception e) {
-			System.out.println("elementSet JQueryAnimate Exception = " + e.toString());
+			System.out.println("SetSyncComplete JQueryAnimate Exception = " + e.toString());
+		}
+		if (lngElementsAnimated > 0) {
+			// blnResult = false;
+			throw new JQueryAnimationNotCompleteException("");
 		}
 		long lngStartTimeElementSetAngularJS = System.currentTimeMillis();
 		boolean blnAngularJs = false;
 		long lngAngularJsInjectorActive = 0;
 		try {
 			blnAngularJs = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null);");
-			System.out.println("elementSet blnAngularJs = " + blnAngularJs);
+			System.out.println("SetSyncComplete blnAngularJs = " + blnAngularJs);
 			// boolean blnAngularJs2 = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular == null);");
 			// System.out.println("elementSet blnAngularJs2 = " + blnAngularJs2);
 			if (blnAngularJs == true) {
 				lngAngularJsInjectorActive = (long) ((JavascriptExecutor) objWebDriver).executeScript("return (angular.element(document).injector().get(‘$http’).pendingRequests.length);");
-				System.out.println("elementSet lngJqueryActive = " + lngAngularJsInjectorActive);
-				if (lngAngularJsInjectorActive > 0) {
-					// blnResult = false;
-					throw new AngularJsNotCompleteException("");
-				}
+				System.out.println("SetSyncComplete lngJqueryActive = " + lngAngularJsInjectorActive);
 			}
 			// boolean blnAngularJsInjector = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (angular.element(document).injector() != null);");
 			// System.out.println("elementSet blnAngularJsInjector = " + blnAngularJsInjector);
 			// blnAngularJS = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
 			// System.out.println("elementSet blnAngularJS = " + blnAngularJS);
 		} catch (Exception e) {
-			System.out.println("elementSet AngularJS Exception = " + e.toString());
+			System.out.println("SetSyncComplete AngularJS Exception = " + e.toString());
+		}
+		if (lngAngularJsInjectorActive > 0) {
+			// blnResult = false;
+			throw new AngularJsNotCompleteException("");
 		}
 		// if (blnResult == true) {
 		// return true;
@@ -1137,11 +1198,15 @@ public class Evinrude {
 		Boolean blnExit = false;
 		Boolean blnAssert = false;
 		Boolean blnSetSync = false;
+		String strOuterHTML = "";
 		objStep.put("strOutputValue", objStep.get("strInputValue").toString());
 		while (true) {
 			try {
 				if (blnFound == false) {
 					objWebElement = elementFind(objStep, objWebDriver);
+					strOuterHTML = objWebElement.getAttribute("outerHTML");
+					System.out.println("elementSetSync outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+					System.out.println(strOuterHTML);
 					blnFound = true;
 				}
 				if (blnVisible == false) {
@@ -1156,18 +1221,18 @@ public class Evinrude {
 				case "off":
 					objStep.put("strStatus", "pass");
 					// TODO complete Alert Set, move or consider how to handle assert
-					if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-						coordinateHighlightScreenshot(objStep, "screen", objWebDriver, null, objStep);
-					} else {
-						coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
-					}
 					if (blnSet == false) {
-						elementSet(objStep, objWebDriver, objWebElement);
+						if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
+							coordinateHighlightScreenshot(objStep, "screen", objWebDriver, null, objStep);
+						} else {
+							coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
+						}
+						elementSet(objStep, objWebDriver, objWebElement, strOuterHTML);
 						blnSet = true;
 						blnAssert = true;
 					}
 					if (blnSetSync == false) {
-						SetSyncComplete(objWebDriver, objWebElement.getAttribute("outerHTML"));
+						SetSyncComplete(objWebDriver, strOuterHTML);
 						blnSetSync = true;
 					}
 					blnStatus = true;
@@ -1176,11 +1241,11 @@ public class Evinrude {
 					if (blnSet == false) {
 						objStep.put("strStatus", "pass");
 						coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
-						elementSet(objStep, objWebDriver, objWebElement);
+						elementSet(objStep, objWebDriver, objWebElement, strOuterHTML);
 						blnSet = true;
 					}
 					if (blnSetSync == false) {
-						SetSyncComplete(objWebDriver, objWebElement.getAttribute("outerHTML"));
+						SetSyncComplete(objWebDriver, strOuterHTML);
 						blnSetSync = true;
 					}
 					if (blnAssert == false) {
@@ -1191,11 +1256,11 @@ public class Evinrude {
 					break;
 				case "value":
 					if (blnSet == false) {
-						elementSet(objStep, objWebDriver, objWebElement);
+						elementSet(objStep, objWebDriver, objWebElement, strOuterHTML);
 						blnSet = true;
 					}
 					if (blnSetSync == false) {
-						SetSyncComplete(objWebDriver, objWebElement.getAttribute("outerHTML"));
+						SetSyncComplete(objWebDriver, strOuterHTML);
 						blnSetSync = true;
 					}
 					if (blnAssert == false) {
@@ -1208,11 +1273,11 @@ public class Evinrude {
 					break;
 				case "visible":
 					if (blnSet == false) {
-						elementSet(objStep, objWebDriver, objWebElement);
+						elementSet(objStep, objWebDriver, objWebElement, strOuterHTML);
 						blnSet = true;
 					}
 					if (blnSetSync == false) {
-						SetSyncComplete(objWebDriver, objWebElement.getAttribute("outerHTML"));
+						SetSyncComplete(objWebDriver, strOuterHTML);
 						blnSetSync = true;
 					}
 					if (blnAssert == false) {
@@ -1225,11 +1290,11 @@ public class Evinrude {
 					break;
 				case "enabled":
 					if (blnSet == false) {
-						elementSet(objStep, objWebDriver, objWebElement);
+						elementSet(objStep, objWebDriver, objWebElement, strOuterHTML);
 						blnSet = true;
 					}
 					if (blnSetSync == false) {
-						SetSyncComplete(objWebDriver, objWebElement.getAttribute("outerHTML"));
+						SetSyncComplete(objWebDriver, strOuterHTML);
 						blnSetSync = true;
 					}
 					if (blnAssert == false) {
@@ -1243,11 +1308,11 @@ public class Evinrude {
 					break;
 				case "disabled":
 					if (blnSet == false) {
-						elementSet(objStep, objWebDriver, objWebElement);
+						elementSet(objStep, objWebDriver, objWebElement, strOuterHTML);
 						blnSet = true;
 					}
 					if (blnSetSync == false) {
-						SetSyncComplete(objWebDriver, objWebElement.getAttribute("outerHTML"));
+						SetSyncComplete(objWebDriver, strOuterHTML);
 						blnSetSync = true;
 					}
 					if (blnAssert == false) {
@@ -1298,13 +1363,6 @@ public class Evinrude {
 					if (blnStatus == true) {
 						// objStep.put("strStatus", "pass");
 						return true;
-					} else if (blnStatus == false) {
-						// if (blnFound == false) {
-						// blnVisible = false;
-						// blnEnabled = false;
-						// blnAssert = false;
-						// blnSet = false;
-						// }
 					}
 				} else {
 					if (blnStatus == true) {
@@ -3272,5 +3330,208 @@ public class Evinrude {
 		System.out.println("getLocation().y:=  " + objWebElement.getSize().width);
 		System.out.println("src:=  " + objWebElement.getAttribute("src"));
 	} // the end of webElementAttributes
+
+	// public class JavascriptActions extends Actions {
+	//
+	// final protected WebDriver webDriver;
+	//
+	// final protected JavascriptExecutor javascriptExecutor;
+	//
+	// @Inject
+	// public JavascriptActions(WebDriver webDriver) {
+	// super(webDriver);
+	// this.webDriver = webDriver;
+	// javascriptExecutor = (JavascriptExecutor) webDriver;
+	// }
+	//
+	// public JavascriptActions click(JQuery target) {
+	// mouseClick(target, MouseButton.LEFT);
+	// return this;
+	// }
+	//
+	// public JavascriptActions ctrlCopy(JQuery target) {
+	// int keyCode = Keycode.C.intValue();
+	// ctrlKeyDown(target, keyCode);
+	// ctrlKeyUp(target, keyCode);
+	// return this;
+	// }
+	//
+	// public JavascriptActions ctrlCut(JQuery target) {
+	// int keyCode = Keycode.X.intValue();
+	// ctrlKeyDown(target, keyCode);
+	// ctrlKeyUp(target, keyCode);
+	// return this;
+	// }
+	//
+	// public JavascriptActions ctrlPaste(JQuery target) {
+	// int keyCode = Keycode.V.intValue();
+	// ctrlKeyDown(target, keyCode);
+	// ctrlKeyUp(target, keyCode);
+	// return this;
+	// }
+	//
+	// public JavascriptActions ctrlD(JQuery target) {
+	// int keyCode = Keycode.D.intValue();
+	// ctrlKeyDown(target, keyCode);
+	// ctrlKeyUp(target, keyCode);
+	// return this;
+	// }
+	//
+	// public JavascriptActions ctrlDelete(JQuery target) {
+	// int keyCode = Keycode.DELETE.intValue();
+	// ctrlKeyDown(target, keyCode);
+	// ctrlKeyUp(target, keyCode);
+	// return this;
+	// }
+	//
+	// public JavascriptActions ctrlFontBold(JQuery target) {
+	// int keyCode = Keycode.B.intValue();
+	// ctrlKeyDown(target, keyCode);
+	// ctrlKeyUp(target, keyCode);
+	// return this;
+	// }
+	//
+	// public JavascriptActions ctrlFontItalic(JQuery target) {
+	// int keyCode = Keycode.I.intValue();
+	// ctrlKeyDown(target, keyCode);
+	// ctrlKeyUp(target, keyCode);
+	// return this;
+	// }
+	//
+	// public JavascriptActions ctrlFontUnderline(JQuery target) {
+	// int keyCode = Keycode.U.intValue();
+	// ctrlKeyDown(target, keyCode);
+	// ctrlKeyUp(target, keyCode);
+	// return this;
+	// }
+	//
+	// public JavascriptActions enter(JQuery target) {
+	// int keyCode = Keycode.ENTER.intValue();
+	// keyDown(target, keyCode);
+	// keyUp(target, keyCode);
+	// return this;
+	// }
+	//
+	// public JavascriptActions esc(JQuery target) {
+	// int keyCode = Keycode.ESC.intValue();
+	// keyDown(target, keyCode);
+	// keyUp(target, keyCode);
+	// return this;
+	// }
+	//
+	// public JavascriptActions delete(JQuery target) {
+	// int keyCode = Keycode.DELETE.intValue();
+	// keyDown(target, keyCode);
+	// keyUp(target, keyCode);
+	// return this;
+	// }
+	//
+	// public JavascriptActions ctrlKeyDown(JQuery target, int combinationKeyCode) {
+	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.KEYDOWN, combinationKeyCode, MouseButton.IGNORE, new CompundKey[] { CompundKey.CTRL }, 0, 0)));
+	// return this;
+	// }
+	//
+	// public JavascriptActions ctrlKeyUp(JQuery target, int combinationKeyCode) {
+	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.KEYUP, combinationKeyCode, MouseButton.IGNORE, new CompundKey[] { CompundKey.CTRL }, 0, 0)));
+	// return this;
+	// }
+	//
+	// public JavascriptActions shiftKeyUp(JQuery target, int combinationKeyCode) {
+	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.KEYUP, combinationKeyCode, MouseButton.IGNORE, new CompundKey[] { CompundKey.SHIFT }, 0, 0)));
+	// return this;
+	// }
+	//
+	// public JavascriptActions shiftKeyDown(JQuery target, int combinationKeyCode) {
+	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.KEYDOWN, combinationKeyCode, MouseButton.IGNORE, new CompundKey[] { CompundKey.SHIFT }, 0, 0)));
+	// return this;
+	// }
+	//
+	// public JavascriptActions mouseDown(JQuery target, MouseButton type, CompundKey... compundKeys) {
+	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.MOUSEDOWN, -1, type, compundKeys, 0, 0)));
+	// return this;
+	// }
+	//
+	// public JavascriptActions mouseUp(JQuery target, MouseButton type, CompundKey... compundKeys) {
+	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.MOUSEUP, -1, type, compundKeys, 0, 0)));
+	// return this;
+	// }
+	//
+	// public JavascriptActions mouseClick(JQuery target, MouseButton type, CompundKey... compundKeys) {
+	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.CLICK, -1, type, compundKeys, 0, 0)));
+	// return this;
+	// }
+	//
+	// public JavascriptActions contextClick(JQuery target) {
+	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.CONTEXTMENU, -1, MouseButton.RIGHT, null, 0, 0)));
+	// return this;
+	// }
+	//
+	// public JavascriptActions mouseOver(JQuery target, MouseButton type) {
+	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.MOUSEOVER, -1, type, null, 0, 0)));
+	// return this;
+	// }
+	//
+	// public JavascriptActions mouseMove(JQuery target, MouseButton type) {
+	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.MOUSEMOVE, -1, type, null, 0, 0)));
+	// return this;
+	// }
+	//
+	// public JavascriptActions mouseMove(JQuery target, MouseButton type, int xOffset, int yOffset) {
+	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.MOUSEMOVE, -1, type, null, xOffset, yOffset)));
+	// return this;
+	// }
+	//
+	// public JavascriptActions mouseMove(int xOffset, int yOffset, JQuery target, MouseButton type) {
+	// return this;
+	// }
+	//
+	// public JavascriptActions keyDown(JQuery target, int keyCode) {
+	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.KEYDOWN, keyCode, MouseButton.IGNORE, null, 0, 0)));
+	// return this;
+	// }
+	//
+	// public JavascriptActions keyUp(JQuery target, int keyCode) {
+	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.KEYUP, keyCode, MouseButton.IGNORE, null, 0, 0)));
+	// return this;
+	// }
+	//
+	// private String triggerEventScript(JQuery target, EventType eventType, int combinationKeyCode, MouseButton type, CompundKey[] compundKeys, int xOffset, int yOffset) {
+	// final String eventName = eventType.toString();
+	// Set<CompundKey> keys = compundKeys == null ? Collections.EMPTY_SET : ImmutableSet.copyOf(compundKeys);
+	//
+	// String script = "var evt = jq.Event('%eventName');" + " evt.keyCode = %evtKeyCode; evt.metaKey = %evtMetaKey; evt.ctrlKey = %evtCtrlKey; evt.shiftKey = %evtShiftKey;" + " evt.which = %evtWhich;" + "jq(%domTarget).trigger(evt);";
+	//
+	// script = script.replace("%domTarget", target.elementScript());
+	// script = script.replace("%eventName", eventName);
+	// if (combinationKeyCode < 0)
+	// script = script.replace("evt.keyCode = %evtKeyCode;", "");
+	// else
+	// script = script.replace("%evtKeyCode", "" + combinationKeyCode);
+	// int which = type.getWhich();
+	// if (which < 0) {
+	// script = script.replace("evt.which = %evtWhich;", "");
+	// } else {
+	// String offsetScript = "var ofs = " + target.zk().revisedOffsetScript();
+	// script = script.replace("%evtWhich;", "" + which + "; " + offsetScript + " evt.pageX=ofs[0]+" + xOffset + ";evt.pageY=ofs[1]+" + yOffset + ";evt.clientX=ofs[0]+ " + xOffset + ";evt.clientY=ofs[1]+ " + yOffset + ";");
+	// }
+	// boolean ctrlKey = keys.contains(CompundKey.CTRL), shiftKey = keys.contains(CompundKey.SHIFT);
+	// script = script.replace("%evtCtrlKey", Boolean.valueOf(ctrlKey).toString());
+	// script = script.replace("%evtShiftKey", Boolean.valueOf(shiftKey).toString());
+	// script = script.replace("%evtMetaKey", Boolean.valueOf(ctrlKey || shiftKey).toString());
+	// return script;
+	// }
+	//
+	// private class ScriptAction implements Action {
+	// String script;
+	//
+	// public ScriptAction(String script) {
+	// this.script = script;
+	// }
+	//
+	// public void perform() {
+	// javascriptExecutor.executeScript(script);
+	// }
+	// }
+	// }
 
 } // the end of Evinrude
