@@ -297,7 +297,7 @@ public class Evinrude {
 			// String strTestPath = "Data/public/public_w3s_FireEvents.json"
 			// String strTestPath = "Data/public/public_w3s_JqueryAnimate.json";
 			// String strTestPath = "Data/public/public_w3s_jquery.json";
-			// String strTestPath = "Data/public/public_w3s_AngularJs.json";
+			//String strTestPath = "Data/public/public_w3s_AngularJs.json";
 			// String strTestPath = "Data/public/public_w3s_Visibility.json";
 			String strTestPath = "Data/public/public_AngularJS_Calculator.json";
 			// String strTestPath = "Data/public/public_GolfNow.json";
@@ -873,6 +873,7 @@ public class Evinrude {
 			case "h5":
 			case "h6":
 			case "p":
+			case "li":
 				blnSet = true;
 				objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
 				// objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
@@ -1028,9 +1029,9 @@ public class Evinrude {
 
 	public static void SetSyncComplete(WebDriver objWebDriver, String strOuterHTML) throws DoPostBackNotCompleteException, JQueryAjaxNotCompleteException, JQueryAnimationNotCompleteException, AngularJsNotCompleteException {
 		WaitForReadyState(objWebDriver);
-		JavascriptExecutor objJavascriptExecutor = null;
-		objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
-		waitForAngularRequestsToFinish(objJavascriptExecutor);
+//		JavascriptExecutor objJavascriptExecutor = null;
+//		objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
+//		waitForAngularRequestsToFinish(objJavascriptExecutor);
 		boolean blnEventTarget = false;
 		if (strOuterHTML.contains("__doPostBack")) {
 			long lngStartTimeElementSet__EVENTTARGET = System.currentTimeMillis();
@@ -1091,10 +1092,10 @@ public class Evinrude {
 			System.out.println("SetSyncComplete blnAngularJs = " + blnAngularJs);
 			// boolean blnAngularJs2 = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular == null);");
 			// System.out.println("elementSet blnAngularJs2 = " + blnAngularJs2);
-			if (blnAngularJs == true) {
+			//if (blnAngularJs == true) {
 				lngAngularJsInjectorActive = (long) ((JavascriptExecutor) objWebDriver).executeScript("return (angular.element(document).injector().get(‘$http’).pendingRequests.length);");
 				System.out.println("SetSyncComplete lngJqueryActive = " + lngAngularJsInjectorActive);
-			}
+			//}
 			// boolean blnAngularJsInjector = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (angular.element(document).injector() != null);");
 			// System.out.println("elementSet blnAngularJsInjector = " + blnAngularJsInjector);
 			// blnAngularJS = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
@@ -2521,6 +2522,7 @@ public class Evinrude {
 			case "h5":
 			case "h6":
 			case "p":
+			case "li":
 				strElementGet = objWebElement.getText();
 				break;
 			case "input_text":

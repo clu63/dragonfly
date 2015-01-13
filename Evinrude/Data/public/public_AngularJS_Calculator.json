@@ -3,10 +3,31 @@
 	[
 		{
 			"strAction": "launch",
-			"strTagName": "ie",
+			"strTagName": "chrome",
 			"strAttributeNames": "",
 			"strAttributeValues": "",
 			"strInputValue": "http://juliemr.github.io/protractor-demo/",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		},
+
+		{
+			"strAction": "verify",
+			"strTagName": "h3",
+			"strAttributeNames": "index",
+			"strAttributeValues": "1",
+			"strInputValue": "Super Calculator",
 			"strLogicalName": "",
 			"intMillisecondsToWait": "",
 			"blnOptional": "",
@@ -107,11 +128,11 @@
 		},
 
 		{
-			"strAction": "get",
+			"strAction": "verify",
 			"strTagName": "h2",
 			"strAttributeNames": "index",
 			"strAttributeValues": "1",
-			"strInputValue": "",
+			"strInputValue": "-45",
 			"strLogicalName": "",
 			"intMillisecondsToWait": "",
 			"blnOptional": "",
