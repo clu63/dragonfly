@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+/* img { */
+/*     width: 0px; */
+/* height: 0px; */
+/* } */
+h1.hidden {
+	visibility: hidden;
+}
+
+img.normal {
+	height: auto;
+}
+
+img.big {
+	height: 120px;
+}
+
+img.hiddensize {
+	height: 0px;
+	width: 0px;
+}
+
+img.visibilityhidden {
+	visibility: hidden;
+}
+
+img.displaynone {
+	display: none;
+}
+
+img.displayinline {
+	display: inline;
+}
+
+img.displayblock {
+	display: block;
+}
+
+p.ex {
+	height: 100px;
+	width: 100px;
+}
+</style>
+</head>
+<body>
+
+	<h1 id="TextVisible">This is a visible heading</h1>
+	<h1 id="ClassTextHidden" class="hidden">This is a hidden heading</h1>
+	<p>Notice that the hidden heading still takes up space.</p>
+	<br>
+	<img id="HiddenSize" src="smiley.gif" alt="Smiley face Hidden" width="0" height="0">
+	<br>
+	<img id="VisibleSize" src="smiley.gif" alt="Smiley face Visible" width="75" height="75">
+	<br>
+	<img id="ClassHiddenSize" class="hiddensize" src="smiley.gif" alt="Smiley face ClassHiddenSize">
+	<br>
+	<img id="ClassVisibleSizeAuto" class="normal" src="smiley.gif">
+	<br>
+	<img id="ClassVisibleSizeBig" class="big" src="smiley.gif">
+	<br>
+	<img id="ClassVisibilityHidden" class="visibilityhidden" src="smiley.gif">
+	<br>
+	<img id="ClassDisplayNone" class="displaynone" src="smiley.gif">
+
+
+	<p class="ex">The height and width of this paragraph is 100px.</p>
+	<p>This is a paragraph with no height and width specified.</p>
+	<p>This is also a paragraph with no height and width specified.</p>
+</body>
+</html>
