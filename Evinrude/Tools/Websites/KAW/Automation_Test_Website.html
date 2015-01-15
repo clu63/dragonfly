@@ -2,161 +2,161 @@
 <html>
 <head>
 <title>Test Automation Website</title>
-<script> 
+<script type="text/javascript">
+	function show_alert() {
+		alert("I am an alert box!");
+	}
 
-function show_alert()
-{
-	alert("I am an alert box!");
-}
-function alert_Selected()
-{
-	
-	var select = document.getElementById("select1");
-	var selection=select.options[select.selectedIndex].innerHTML;
-	
-	
-	
-	alert(selection);
-}
+	function alert_Selected() {
+		var select = document.getElementById("select1");
+		var selection = select.options[select.selectedIndex].innerHTML;
+		alert(selection);
+	}
 
-function turnOff()
-{
-	document.getElementById("textbox").disabled = true;
-	document.getElementById("pwd").disabled = true;
-	document.getElementById("r1").disabled = true;
-	document.getElementById("r2").disabled = true;
-	document.getElementById("g1").disabled = true;
-	document.getElementById("g2").disabled = true;
-	document.getElementById("check1").disabled = true;
-	document.getElementById("check2").disabled = true;
-	document.getElementById("reset").disabled = true;
-	document.getElementById("submit").disabled = true;
-	document.getElementById("select1").disabled = true;
-	document.getElementById("select2").disabled = true;
-	document.getElementById("textarea").disabled = true;
-	document.getElementById("b1").disabled = true;
-	document.getElementById("b2").disabled = true;
-	document.getElementById("link5").disabled = true;
-	document.getElementById("link").onclick = function()
-		{
+	function turnOff() {
+		document.getElementById("textbox").disabled = true;
+		document.getElementById("pwd").disabled = true;
+		document.getElementById("r1").disabled = true;
+		document.getElementById("r2").disabled = true;
+		document.getElementById("g1").disabled = true;
+		document.getElementById("g2").disabled = true;
+		document.getElementById("check1").disabled = true;
+		document.getElementById("check2").disabled = true;
+		document.getElementById("reset").disabled = true;
+		document.getElementById("submit").disabled = true;
+		document.getElementById("select1").disabled = true;
+		document.getElementById("select2").disabled = true;
+		document.getElementById("textarea").disabled = true;
+		document.getElementById("b1").disabled = true;
+		document.getElementById("b2").disabled = true;
+		document.getElementById("link5").disabled = true;
+		document.getElementById("link").onclick = function() {
 			return false;
 		}
- 
-	document.getElementById("link1").onclick = function()
-		{
-			return false;
-		}
- 
-	document.getElementById("link2").onclick = function()
-		{
-			return false;
-		}
- 
-	document.getElementById("link3").onclick = function()
-		{
-			return false;
-		}
- 
-	document.getElementById("link4").onclick = function()
-		{
-			return false;
-		}
-        document.getElementById("flower6").disabled = true;
-}
- 
-function turnOn()
-{
-	document.getElementById("textbox").disabled = false;
-	document.getElementById("pwd").disabled = false;
-	document.getElementById("r1").disabled = false;
-	document.getElementById("r2").disabled = false;
-	document.getElementById("g1").disabled = false;
-	document.getElementById("g2").disabled = false;
-	document.getElementById("check1").disabled = false;
-	document.getElementById("check2").disabled = false;
-	document.getElementById("reset").disabled = false;
-	document.getElementById("submit").disabled = false;
-	document.getElementById("select1").disabled = false;
-	document.getElementById("select2").disabled = false;
-	document.getElementById("textarea").disabled = false;
-	document.getElementById("b1").disabled = false;
-	document.getElementById("b2").disabled = false;
-	document.getElementById("link5").disabled = false;
-	document.getElementById("link").onclick = function()
-		{
-			return true;
-		}
-	document.getElementById("link1").onclick = function()
-		{
-			return true;
-		}
-	document.getElementById("link2").onclick = function()
-		{
-			return true;
-		}
-	document.getElementById("link3").onclick = function()
-		{
-			return true;
-		}
-	document.getElementById("link4").onclick = function()
-		{
-			return true;
-		}
-        document.getElementById("flower6").disabled = false;
-}
 
-function show_confirm()
-{
-var r=confirm("Press a button");
-if (r==true)
-  {
-  alert("You pressed OK!");
-  }
-else
-  {
-  alert("You pressed Cancel!");
-  }
-}
+		document.getElementById("link1").onclick = function() {
+			return false;
+		}
 
-function show_prompt()
-{
-var name=prompt("Please enter your name","Harry Potter");
-if (name!=null && name!="")
-  {
-  document.write("<p>Hello " + name + "! How are you today?</p>");
-  }
-}
+		document.getElementById("link2").onclick = function() {
+			return false;
+		}
 
+		document.getElementById("link3").onclick = function() {
+			return false;
+		}
+
+		document.getElementById("link4").onclick = function() {
+			return false;
+		}
+		document.getElementById("flower6").disabled = true;
+	}
+
+	function turnOn() {
+		document.getElementById("textbox").disabled = false;
+		document.getElementById("pwd").disabled = false;
+		document.getElementById("r1").disabled = false;
+		document.getElementById("r2").disabled = false;
+		document.getElementById("g1").disabled = false;
+		document.getElementById("g2").disabled = false;
+		document.getElementById("check1").disabled = false;
+		document.getElementById("check2").disabled = false;
+		document.getElementById("reset").disabled = false;
+		document.getElementById("submit").disabled = false;
+		document.getElementById("select1").disabled = false;
+		document.getElementById("select2").disabled = false;
+		document.getElementById("textarea").disabled = false;
+		document.getElementById("b1").disabled = false;
+		document.getElementById("b2").disabled = false;
+		document.getElementById("link5").disabled = false;
+		document.getElementById("link").onclick = function() {
+			return true;
+		}
+		document.getElementById("link1").onclick = function() {
+			return true;
+		}
+		document.getElementById("link2").onclick = function() {
+			return true;
+		}
+		document.getElementById("link3").onclick = function() {
+			return true;
+		}
+		document.getElementById("link4").onclick = function() {
+			return true;
+		}
+		document.getElementById("flower6").disabled = false;
+	}
+
+	function show_confirm() {
+		var r = confirm("Press a button");
+		if (r == true) {
+			alert("You pressed OK!");
+		} else {
+			alert("You pressed Cancel!");
+		}
+	}
+
+	function show_prompt() {
+		var name = prompt("Please enter your name", "Harry Potter");
+		if (name != null && name != "") {
+			document.write("<p>Hello " + name + "! How are you today?</p>");
+		}
+	}
 </script>
 </head>
 <body>
-	<h1>Enable buttons</h1>
-	<button onclick='turnOff();'>Off</button>
-	<button onClick='turnOn();'>On</button>
-
+	<br />
+	<h2>HTML headings</h2>
+	<hr>
+	<h1 onclick="show_alert()">h1</h1>
+	<h2>h2</h2>
+	<h3>h3</h3>
+	<h4>h4</h4>
+	<h5>h5</h5>
+	<h6>h6</h6>
+	<br />
+	<h2>paragraph</h2>
+	<hr>
+	<p id="p1">This is paragraph 1.</p>
+	<p id="p2">This is paragraph 2.</p>
+	<p id="p3">This is paragraph 3.</p>
+	<br />
+	<h2>Enable buttons</h2>
+	<hr>
+	<button id="button_off" onclick="turnOff()">Off</button>
+	<button id="button_on" onclick="turnOn()">On</button>
+	<br />
+	<br />
+	<br />
+	<br />
 	<h2>Form Controls</h2>
+	<hr>
 	<form method="POST" action="index.html">
 		Text Box: <input type="text" name="textbox" /><br /> Password: <input type="password" name="pwd" /><br /> <input type="radio" id="g1" name="radios1" value="grouped1" /> grouped 1 Label <input type="radio" id="g2" name="radios1" value="grouped2" /> grouped 2 Label<br /> <input type="radio" id="g3" name="radios4" value="" /> No Value Label 1 <input type="radio" id="g4" name="radios4" value="" /> No Value Label 1<br /> <input type="radio" id="r1" name="radios2" value="Radio1" /> radio 1 <input type="radio" id="r2" name="radios3" value="Radio2" /> radio 2<br /> <input type="checkbox" name="check1" value="Check1" /> I have a bike<br /> <input type="checkbox" name="check2" value="Check2" /> I have a car<br /> <input type="hidden" name="test" value="yeah" /> <input
 			type="reset" name="reset" value="Reset"
 		/> <input type="submit" name="submit" value="Submit" />
 	</form>
-
+	<br />
 	<h2>Button</h2>
+	<hr>
 	<button name="b1" type="button" onclick='window.location ="./SupportingFiles/page2.html"'>Click for Page2</button>
-	<input type="button" name="b2" value="WOW" onClick='document.getElementById(' ')' />
-
+	<input type="button" name="b2" value="WOW" />
+	<br />
 	<h2>Links</h2>
-	<a href="./SupportingFiles/page2.html" name="link" onMouseOver="document.getElementById('frame_link').style.visibility='hidden'" onMouseOut="document.getElementById('frame_link').style.visibility='visible'">Link_Page2</a>
-	<a href="./frames.html" name="frame_link">Frames Page</a>
-
+	<hr>
+	<a id="link" href="./SupportingFiles/page2.html" onmouseover="document.getElementById('frame_link').style.visibility='hidden'" onmouseout="document.getElementById('frame_link').style.visibility='visible'">Link_Page2</a>
+	<a id="frame_link" href="./frames.html">Frames Page</a>
+	<br />
 	<h2>Dialog</h2>
+	<hr>
 	<input type="button" onclick="show_alert()" value="Show alert box" />
 	<input type="button" onclick="show_confirm()" value="Show confirm box" />
 	<input type="button" onclick="show_prompt()" value="Show prompt box" />
 	<input type="button" onclick="window.open('./SupportingFiles/index.htm','popup','width=600,height=700,scrollbars=yes,resizable=yes,toolbar=no,directories=no,location=no,menubar=no,status=no,left=50,top=0'); return false" value="Popup Window" />
-
+	<br />
 	<h2>Tables</h2>
-	<table border=1>
+	<hr>
+	<table border="1">
 		<thead>
 			<tr>
 				<th>links</th>
@@ -166,19 +166,19 @@ if (name!=null && name!="")
 		</thead>
 		<tbody>
 			<tr>
-				<td><a href="./SupportingFiles/page2.html" name="link1">Link1</a></td>
+				<td><a id="link1" href="./SupportingFiles/page2.html">Link1</a></td>
 				<td><span>span cell</span></td>
 				<td><div>div cell</div></td>
 			</tr>
 			<tr>
-				<td><a href="./SupportingFiles/page2.html" name="link2">Link2</a></td>
+				<td><a id="link2" href="./SupportingFiles/page2.html">Link2</a></td>
 				<td><input type="checkbox" name="check10" value="Check10" />yeah!!</td>
 				<td><input type="radio" id="g1" name="radios10" value="grouped10" /> grouped 10 <input type="radio" id="g2" name="radios10" value="grouped20" /> grouped 20</td>
 			</tr>
 			<tr>
-				<td><a href="./SupportingFiles/page2.html" name="link3">Link3</a></td>
+				<td><a id="link3" href="./SupportingFiles/page2.html">Link3</a></td>
 				<td>
-					<table border=1>
+					<table border="1">
 						<tr>
 							<td>blah</td>
 							<td>blah2</td>
@@ -190,13 +190,11 @@ if (name!=null && name!="")
 		</tbody>
 		<tfoot>
 			<tr>
-				<td colspan=3>footer</td>
+				<td colspan="3">footer</td>
 			</tr>
 		</tfoot>
 	</table>
-
 	<br />
-
 	<table cellspacing="0" border="1" id="table2">
 		<tr>
 			<th>Link</th>
@@ -247,14 +245,16 @@ if (name!=null && name!="")
 			<td><input type="text" id="t5"></td>
 		</tr>
 	</table>
-
+	<br />
 	<h2>Images</h2>
-	<img src="./SupportingFiles/flower1.jpg" width="129" height="131" border="0" alt="" name="flower6" onClick="alert('hi!');">
-	<a href="./SupportingFiles/page2.html" name="link4"><img src="./SupportingFiles/flower3.png" width="129" height="131" border="0" alt="" name="flower"></a>
+	<hr>
+	<img src="./SupportingFiles/flower1.jpg" width="129" height="131" border="0" alt="" name="flower6" onclick="alert('hi!');">
+	<a id="link4" href="./SupportingFiles/page2.html"><img src="./SupportingFiles/flower3.png" width="129" height="131" border="0" alt="" name="flower"></a>
 	<br />
 	<input type="image" src="./SupportingFiles/flower2.jpg" name="link5" onclick='window.location ="./SupportingFiles/page3.html"'>
-
+	<br />
 	<h2>Select</h2>
+	<hr>
 	<select id="select1" name="select1" onchange="alert_Selected()">
 		<option value=""></option>
 		<option value="volvo">Volvo</option>
@@ -262,15 +262,15 @@ if (name!=null && name!="")
 		<option value="mercedes">Mercedes</option>
 		<option value="audi">Audi</option>
 	</select>
-
 	<select id="select2" name="select2" multiple>
 		<option value="volvo">Volvo</option>
 		<option value="saab">Saab</option>
 		<option value="mercedes">Mercedes</option>
 		<option value="audi">Audi</option>
 	</select>
-
+	<br />
 	<h2>Object</h2>
+	<hr>
 	<object classid="clsid:F08DF954-8592-11D1-B16A-00C0F0283628" id="Slider1" width="100" height="50">
 		<param name="BorderStyle" value="1" />
 		<param name="MousePointer" value="0" />
@@ -278,8 +278,9 @@ if (name!=null && name!="")
 		<param name="Min" value="0" />
 		<param name="Max" value="10" />
 	</object>
-
+	<br />
 	<h2>Textarea</h2>
+	<hr>
 	<textarea name="textarea" rows="10" cols="60">
 Here is a bunch of text that doesn't mean much of anything! 
 </textarea>
