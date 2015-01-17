@@ -291,7 +291,7 @@ public class Evinrude {
 		// System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
 			String strTestPath = "Data/public/local_ATW.json";
-			//String strTestPath = "Data/public/local_ATW_frames.json";
+			// String strTestPath = "Data/public/local_ATW_frames.json";
 			// String strTestPath = "Data/public/public_SeaWorld.json";
 			// String strTestPath = "Data/public/local_jqueryFade.json";
 			// String strTestPath = "Data/public/local_size_Visibility.json";
@@ -2023,6 +2023,7 @@ public class Evinrude {
 					System.out.println("elementFind Switched = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
 					System.out.println("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
 					objStep.put("intFrame", -1);
+					objWebDriver.manage().window().maximize();
 				}
 
 				// }
@@ -2138,6 +2139,9 @@ public class Evinrude {
 							break;
 						}
 					}
+				} else if (objWebElementCollection.size() == 1) {
+					break;
+
 				}// the end of if (objWebElementCollection.size() == 0) {
 			}// the end of for win Handles
 			switch (objWebElementCollection.size()) {
