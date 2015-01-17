@@ -290,6 +290,8 @@ public class Evinrude {
 		new File(strResultsPath + strImagesPath).mkdirs();
 		// System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
+			String strTestPath = "Data/public/local_KAW_frames.json";
+			// String strTestPath = "Data/public/public_SeaWorld.json";
 			// String strTestPath = "Data/public/local_jqueryFade.json";
 			// String strTestPath = "Data/public/local_size_Visibility.json";
 			// String strTestPath = "Data/public/public_mercury_tours.json";
@@ -297,9 +299,9 @@ public class Evinrude {
 			// String strTestPath = "Data/public/public_w3s_FireEvents.json"
 			// String strTestPath = "Data/public/public_w3s_JqueryAnimate.json";
 			// String strTestPath = "Data/public/public_w3s_jquery.json";
-			//String strTestPath = "Data/public/public_w3s_AngularJs.json";
+			// String strTestPath = "Data/public/public_w3s_AngularJs.json";
 			// String strTestPath = "Data/public/public_w3s_Visibility.json";
-			String strTestPath = "Data/public/public_AngularJS_Calculator.json";
+			// String strTestPath = "Data/public/public_AngularJS_Calculator.json";
 			// String strTestPath = "Data/public/public_GolfNow.json";
 			Object objParser = parser.parse(new FileReader(strTestPath));
 			objJsonFile = (JSONObject) objParser;
@@ -1029,9 +1031,9 @@ public class Evinrude {
 
 	public static void SetSyncComplete(WebDriver objWebDriver, String strOuterHTML) throws DoPostBackNotCompleteException, JQueryAjaxNotCompleteException, JQueryAnimationNotCompleteException, AngularJsNotCompleteException {
 		WaitForReadyState(objWebDriver);
-//		JavascriptExecutor objJavascriptExecutor = null;
-//		objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
-//		waitForAngularRequestsToFinish(objJavascriptExecutor);
+		// JavascriptExecutor objJavascriptExecutor = null;
+		// objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
+		// waitForAngularRequestsToFinish(objJavascriptExecutor);
 		boolean blnEventTarget = false;
 		if (strOuterHTML.contains("__doPostBack")) {
 			long lngStartTimeElementSet__EVENTTARGET = System.currentTimeMillis();
@@ -1092,10 +1094,10 @@ public class Evinrude {
 			System.out.println("SetSyncComplete blnAngularJs = " + blnAngularJs);
 			// boolean blnAngularJs2 = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular == null);");
 			// System.out.println("elementSet blnAngularJs2 = " + blnAngularJs2);
-			//if (blnAngularJs == true) {
-				lngAngularJsInjectorActive = (long) ((JavascriptExecutor) objWebDriver).executeScript("return (angular.element(document).injector().get(‘$http’).pendingRequests.length);");
-				System.out.println("SetSyncComplete lngJqueryActive = " + lngAngularJsInjectorActive);
-			//}
+			// if (blnAngularJs == true) {
+			lngAngularJsInjectorActive = (long) ((JavascriptExecutor) objWebDriver).executeScript("return (angular.element(document).injector().get(‘$http’).pendingRequests.length);");
+			System.out.println("SetSyncComplete lngJqueryActive = " + lngAngularJsInjectorActive);
+			// }
 			// boolean blnAngularJsInjector = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (angular.element(document).injector() != null);");
 			// System.out.println("elementSet blnAngularJsInjector = " + blnAngularJsInjector);
 			// blnAngularJS = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
@@ -1984,7 +1986,6 @@ public class Evinrude {
 			System.out.println("elementFind arrHandles.length = " + arrHandles.length);
 
 			for (int i = arrHandles.length - 1; i >= 0; i--) {
-				// System.out.println(stack.get(i));
 				System.out.println("elementFind arrHandles[i] = " + arrHandles[i].toString());
 			}
 			// if (arrHandles.length == 2) {
@@ -2136,47 +2137,47 @@ public class Evinrude {
 							break;
 						}
 					}
-				}
-
-				switch (objWebElementCollection.size()) {
-				case 0:
-					// System.out.println("elementFind - Element properties did not return an element, try refining attributes.");
-					throw new ElementNotFoundException("Element properties did not return an element, try refining attributes");
-				case 1:
-					// System.out.println(objWebElementCollection.get(0));
-					objWebElement = objWebElementCollection.get(0);
-					// long lngStartTimeGetXpath = System.currentTimeMillis();
-					// System.out.println("xpath = " + getElementXPath(objWebDriver, objWebElement) + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeGetXpath));
-
-					// TODO add title and url to each element found in the objStep json
-					// JavascriptExecutor js = (JavascriptExecutor) objWebDriver;
-					// String strTitle = (String) js.executeScript("return document.title");
-					// System.out.println("main JavascriptExecutor strTitle  = " + strTitle + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
-
-					// System.out.println("strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
-					// System.out.println("objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
-
-					objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-					if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
-						if (objStep.get("strType").toString().toLowerCase().length() == 0) {
-							objStep.put("strType", objWebElement.getAttribute("type"));
-						}
-						objStep.put("strTagType", "input_" + objStep.get("strType").toString());
-					} else {
-						objStep.put("strTagType", objStep.get("strTagName").toString());
-					}
-					return objWebElement;
-				default:
-					// System.out.println("elementFind - Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
-					throw new MultipleElementsFoundException("Element properties did not return an element, try refining attributes");
-				}// the end of switch (objWebElementCollection.size())
+				}// the end of if (objWebElementCollection.size() == 0) {
 			}// the end of for win Handles
+			switch (objWebElementCollection.size()) {
+			case 0:
+				// System.out.println("elementFind - Element properties did not return an element, try refining attributes.");
+				throw new ElementNotFoundException("Element properties did not return an element, try refining attributes");
+			case 1:
+				// System.out.println(objWebElementCollection.get(0));
+				objWebElement = objWebElementCollection.get(0);
+				// long lngStartTimeGetXpath = System.currentTimeMillis();
+				// System.out.println("xpath = " + getElementXPath(objWebDriver, objWebElement) + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeGetXpath));
+
+				// TODO add title and url to each element found in the objStep json
+				// JavascriptExecutor js = (JavascriptExecutor) objWebDriver;
+				// String strTitle = (String) js.executeScript("return document.title");
+				// System.out.println("main JavascriptExecutor strTitle  = " + strTitle + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
+
+				// System.out.println("strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
+				// System.out.println("objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
+
+				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
+				if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
+					if (objStep.get("strType").toString().toLowerCase().length() == 0) {
+						objStep.put("strType", objWebElement.getAttribute("type"));
+					}
+					objStep.put("strTagType", "input_" + objStep.get("strType").toString());
+				} else {
+					objStep.put("strTagType", objStep.get("strTagName").toString());
+				}
+				return objWebElement;
+			default:
+				// System.out.println("elementFind - Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
+				throw new MultipleElementsFoundException("Element properties did not return an element, try refining attributes");
+			}// the end of switch (objWebElementCollection.size())
+
 		} catch (NoSuchFrameException e) {
 			throw new ElementNotFoundException("elementFind " + e.toString());
 		} finally {
 			System.out.println("elementFind finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementFind));
 		}
-		return null;
+		// return null;
 	}// the end of elementFind
 
 	public static String getElementXPath(WebDriver driver, WebElement element) {
