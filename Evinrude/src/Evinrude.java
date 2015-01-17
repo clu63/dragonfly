@@ -290,7 +290,8 @@ public class Evinrude {
 		new File(strResultsPath + strImagesPath).mkdirs();
 		// System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
-			String strTestPath = "Data/public/local_KAW_frames.json";
+			String strTestPath = "Data/public/local_ATW.json";
+			//String strTestPath = "Data/public/local_ATW_frames.json";
 			// String strTestPath = "Data/public/public_SeaWorld.json";
 			// String strTestPath = "Data/public/local_jqueryFade.json";
 			// String strTestPath = "Data/public/local_size_Visibility.json";

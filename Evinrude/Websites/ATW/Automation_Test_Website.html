@@ -1,0 +1,429 @@
+<!doctype html>
+<html>
+<head>
+<title>Test Automation Website</title>
+<script type="text/javascript">
+	function show_alert() {
+		alert("I am an alert box!");
+	}
+
+	function alert_Selected(strSelected) {
+		var select = document.getElementById(strSelected);
+		var selection = select.options[select.selectedIndex].innerHTML;
+		alert(selection);
+	}
+
+	function alert_with_text(text) {
+		alert(text);
+	}
+
+	function disableElementsForm() {
+		document.getElementById("text").disabled = true;
+		document.getElementById("password").disabled = true;
+		document.getElementById("radio_1").disabled = true;
+		document.getElementById("radio_2").disabled = true;
+		document.getElementById("radio_group_1").disabled = true;
+		document.getElementById("radio_group_2").disabled = true;
+		document.getElementById("radio_group_3").disabled = true;
+		document.getElementById("radio_group_4").disabled = true;
+		document.getElementById("checkbox_1").disabled = true;
+		document.getElementById("checkbox_2").disabled = true;
+		document.getElementById("reset").disabled = true;
+		document.getElementById("submit").disabled = true;
+	}
+
+	function disableElements() {
+		// 		document.getElementById("text").disabled = true;
+		// 		document.getElementById("password").disabled = true;
+		// 		document.getElementById("radio_1").disabled = true;
+		// 		document.getElementById("radio_2").disabled = true;
+		// 		document.getElementById("radio_group_1").disabled = true;
+		// 		document.getElementById("radio_group_2").disabled = true;
+		// 		document.getElementById("checkbox_1").disabled = true;
+		// 		document.getElementById("checkbox_2").disabled = true;
+		// 		document.getElementById("reset").disabled = true;
+		// 		document.getElementById("submit").disabled = true;
+		// 		document.getElementById("select1").disabled = true;
+		// 		document.getElementById("select2").disabled = true;
+		// 		document.getElementById("textarea").disabled = true;
+		// 		document.getElementById("b1").disabled = true;
+		// 		document.getElementById("b2").disabled = true;
+		// 		document.getElementById("image3").disabled = true;
+		// 		document.getElementById("link").onclick = function() {
+		// 			return false;
+		// 		}
+
+		// 		document.getElementById("link1").onclick = function() {
+		// 			return false;
+		// 		}
+
+		// 		document.getElementById("link2").onclick = function() {
+		// 			return false;
+		// 		}
+
+		// 		document.getElementById("link3").onclick = function() {
+		// 			return false;
+		// 		}
+
+		// 		document.getElementById("image2").onclick = function() {
+		// 			return false;
+		// 		}
+		document.getElementById("image1").disabled = true;
+	}
+
+	function enableElementsForm() {
+		document.getElementById("text").disabled = false;
+		document.getElementById("password").disabled = false;
+		document.getElementById("radio_1").disabled = false;
+		document.getElementById("radio_2").disabled = false;
+		document.getElementById("radio_group_1").disabled = false;
+		document.getElementById("radio_group_2").disabled = false;
+		document.getElementById("radio_group_3").disabled = false;
+		document.getElementById("radio_group_4").disabled = false;
+		document.getElementById("checkbox_1").disabled = false;
+		document.getElementById("checkbox_2").disabled = false;
+		document.getElementById("reset").disabled = false;
+		document.getElementById("submit").disabled = false;
+	}
+
+	function enableElements() {
+		document.getElementById("text").disabled = false;
+		document.getElementById("password").disabled = false;
+		document.getElementById("radio_1").disabled = false;
+		document.getElementById("radio_2").disabled = false;
+		document.getElementById("radio_group_1").disabled = false;
+		document.getElementById("radio_group_2").disabled = false;
+		document.getElementById("checkbox_1").disabled = false;
+		document.getElementById("checkbox_2").disabled = false;
+		document.getElementById("reset").disabled = false;
+		document.getElementById("submit").disabled = false;
+		document.getElementById("select1").disabled = false;
+		document.getElementById("select2").disabled = false;
+		document.getElementById("textarea").disabled = false;
+		document.getElementById("b1").disabled = false;
+		document.getElementById("b2").disabled = false;
+		document.getElementById("image3").disabled = false;
+		document.getElementById("link").onclick = function() {
+			return true;
+		}
+		document.getElementById("link1").onclick = function() {
+			return true;
+		}
+		document.getElementById("link2").onclick = function() {
+			return true;
+		}
+		document.getElementById("link3").onclick = function() {
+			return true;
+		}
+		document.getElementById("image2").onclick = function() {
+			return true;
+		}
+		document.getElementById("image1").disabled = false;
+	}
+
+	function show_confirm() {
+		var r = confirm("Press a button");
+		if (r == true) {
+			alert("You pressed OK!");
+		} else {
+			alert("You pressed Cancel!");
+		}
+	}
+
+	function show_prompt() {
+		var name = prompt("Please enter your name", "Harry Potter");
+		if (name != null && name != "") {
+			document.write("<p>Hello " + name + "! How are you today?</p>");
+		}
+	}
+</script>
+</head>
+<body>
+	<br>
+	<h2>
+		html <span style="color: green">&lt;h1-h6&gt;</span> tags
+	</h2>
+	<h1 onclick="alert_with_text('h1')">h1</h1>
+	<h2 onclick="alert_with_text('h2')">h2</h2>
+	<h3 onclick="alert_with_text('h3')">h3</h3>
+	<h4 onclick="alert_with_text('h4')">h4</h4>
+	<h5 onclick="alert_with_text('h5')">h5</h5>
+	<h6 onclick="alert_with_text('h6')">h6</h6>
+	<hr>
+	<br>
+	<h2>
+		html <span style="color: green">&lt;p&gt;</span> tag
+	</h2>
+	<p id="p1" onclick="alert_with_text('p1')">This is paragraph 1.</p>
+	<p id="p2" onclick="alert_with_text('p2')">This is paragraph 2.</p>
+	<p id="p3" onclick="alert_with_text('p3')">This is paragraph 3.</p>
+	<hr>
+	<br>
+	<h2>
+		html <span style="color: green">&lt;b&gt;</span> tag
+	</h2>
+	<b id="b" onclick="alert_with_text('b')">this is bold text</b>
+	<hr>
+	<br>
+	<h2>Form Controls</h2>
+	<form method="POST" action="./SupportingFiles/submitted.html">
+		text: 
+		<input type="text" id="text" name="textbox" /> 
+&nbsp;
+&nbsp;
+		password: 
+		<input type="password" id="password" name="password" />
+&nbsp;
+&nbsp;
+		email: 
+		<input type="email" id="email" name="email" />
+		<br>
+		<input type="radio" id="radio_group_1"name="radio1" value="grouped1" /> 
+		radio_group_1 
+		<input type="radio" id="radio_group_2" name="radio1" value="grouped2" />
+		radio_group_2
+		<br> 
+		<input type="radio" id="radio_group_3" name="radio2" value="" />
+		radio_group_3 No Value
+		<input type="radio" id="radio_group_4" name="radio2" value="" /> 
+		radio_group_4 No Value
+		<br>
+		<input type="radio" id="radio_1" name="radio3" value="Radio1" /> 
+		radio 1 
+		<input type="radio" id="radio_2" name="radio4" value="Radio2" />
+		radio 2
+		<br>
+		<input type="checkbox" id="checkbox_1" name="check1" value="Check1" />
+		checkbox_1
+		<br>
+		<input type="checkbox" id="checkbox_2" name="check2" value="Check2" />
+		checkbox_2
+		<br>
+		<br> 
+		<input type="hidden" id="hidden" name="hidden" value="yeah" /> 
+		<input type="reset" id="reset" name="reset" value="Reset"/>
+		<input type="submit" id="submit" name="submit" value="Submit" />
+	</form>
+	<br>
+	<h3>Enable buttons</h3>
+	<button id="button_disable" onclick="disableElementsForm()">Disable</button>
+	<button id="button_enable" onclick="enableElementsForm()">Enable</button>
+	<hr>
+	<br>
+	<h2>
+		html <span style="color: green">&lt;button&gt;</span> tag
+	</h2>
+	<button name="b1" type="button" onclick='window.location ="./SupportingFiles/page2.html"'>Click for Page2</button>
+	<input type="button" name="b2" value="WOW"></input>
+	<hr>
+	<br>
+	<h2>
+		html <span style="color: green">&lt;a&gt;</span> tag
+	</h2>
+	<a id="link" href="./SupportingFiles/page2.html" onmouseover="document.getElementById('frame_link').style.visibility='hidden'" onmouseout="document.getElementById('frame_link').style.visibility='visible'">Link_Page2</a>
+	<br>
+	<a id="frame_link" href="./SupportingFiles/frames.html">Frames Page</a>
+	<br>
+	<a id="element_hidden" href="./SupportingFiles/element_hidden.html">Element Hidden Page</a>
+	<hr>
+	<br>
+	<h2>Dialog</h2>
+	<input type="button" id="show_alert" onclick="show_alert()" value="Show alert box" />
+	<input type="button" id="show_confirm" onclick="show_confirm()" value="Show confirm box" />
+	<input type="button" id="show_prompt" onclick="show_prompt()" value="Show prompt box" />
+	<input type="button" id="window_open" onclick="window.open('./SupportingFiles/page2.html','popup','width=600,height=700,scrollbars=yes,resizable=yes,toolbar=no,directories=no,location=no,menubar=no,status=no,left=50,top=0'); return false" value="Popup Window" />
+	<hr>
+	<br>
+	<h2>
+		html <span style="color: green">&lt;li&gt;</span> tag
+	</h2>
+	<p>An ordered list:</p>
+	<ol>
+		<li id="li_Coffee" onclick="alert_with_text('Coffee')">Coffee</li>
+		<li id="li_Tea" onclick="alert_with_text('Tea')">Tea</li>
+		<li id="li_Milk" onclick="alert_with_text('Milk')">Milk</li>
+	</ol>
+
+	<p>An unordered list:</p>
+	<ul>
+		<li id="li_Banana" onclick="alert_with_text('Banana')">Banana</li>
+		<li id="li_Apple" onclick="alert_with_text('Apple')">Apple</li>
+		<li id="li_Orange" onclick="alert_with_text('Orange')">Orange</li>
+		<li id="li_Grape" onclick="alert_with_text('Grape')">Grape</li>
+	</ul>
+	<hr>
+	<br>
+	<h2>
+		html <span style="color: green">&lt;table, th, tr, td&gt;</span> tags
+	</h2>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>links</th>
+				<th>Row 1</th>
+				<th>Row 2</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><a id="link1" href="./SupportingFiles/page2.html">Link1</a></td>
+				<td><span>span cell</span></td>
+				<td><div>div cell</div></td>
+			</tr>
+			<tr>
+				<td><a id="link2" href="./SupportingFiles/page2.html">Link2</a></td>
+				<td><input type="checkbox" name="check10" value="Check10" />yeah!!</td>
+				<td><input type="radio" id="g1" name="radios10" value="grouped10" /> grouped 10 <input type="radio" id="g2" name="radios10" value="grouped20" /> grouped 20</td>
+			</tr>
+			<tr>
+				<td><a id="link3" href="./SupportingFiles/page2.html">Link3</a></td>
+				<td>
+					<table border="1">
+						<tr>
+							<td>blah</td>
+							<td>blah2</td>
+						</tr>
+					</table>
+				</td>
+				<td>Text6</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="3">footer</td>
+			</tr>
+		</tfoot>
+	</table>
+	<br>
+	<table cellspacing="0" border="1" id="table2">
+		<tr>
+			<th>Link</th>
+			<th>Checkbox</th>
+			<th>Radios</th>
+			<th>Text</th>
+			<th>Button</th>
+			<th>Textbox</th>
+		</tr>
+		<tr>
+			<td><a href="./SupportingFiles/page2.html">Select</a></td>
+			<td><input type="checkbox" id="c1" value="c1">C1</td>
+			<td><input type="radio" id="r1" name="r1" value="r1">R1</td>
+			<td>T1</td>
+			<td><input type="button" id="b1" value="b1"></td>
+			<td><input type="text" id="t1"></td>
+		</tr>
+		<tr>
+			<td><a href="./SupportingFiles/page2.html">Select</a></td>
+			<td><input type="checkbox" id="c2" value="c2">C2</td>
+			<td><input type="radio" id="r2" name="r2" value="r2">R2</td>
+			<td>T2</td>
+			<td><input type="button" id="b2" value="b2"></td>
+			<td><input type="text" id="t2"></td>
+		</tr>
+		<tr>
+			<td><a href="./SupportingFiles/page2.html">Select</a></td>
+			<td><input type="checkbox" id="c3" value="c3">C3</td>
+			<td><input type="radio" id="r3" name="r3" value="r3">R3</td>
+			<td>T3</td>
+			<td><input type="button" id="b3" value="b3"></td>
+			<td><input type="text" id="t3"></td>
+		</tr>
+		<tr>
+			<td><a href="./SupportingFiles/page2.html">Select</a></td>
+			<td><input type="checkbox" value="c4">C4</td>
+			<td><input type="radio" name="r4" value="r4">R4</td>
+			<td>T4</td>
+			<td><input type="button" value="b4"></td>
+			<td><input type="text" id="t4"></td>
+		</tr>
+		<tr>
+			<td><a href="./SupportingFiles/page2.html">Select</a></td>
+			<td><input type="checkbox" value="c5">C5</td>
+			<td><input type="radio" name="r5" value="r5">R5</td>
+			<td>T5</td>
+			<td><input type="button" value="b5"></td>
+			<td><input type="text" id="t5"></td>
+		</tr>
+	</table>
+	<hr>
+	<br>
+	<h2>
+		html <span style="color: green">&lt;img&gt;</span> tag
+	</h2>
+	<img id="image1" name="flower1" src="./SupportingFiles/flower1.jpg" width="150" height="150" border="0" alt="" onclick="alert('hi!');">
+	<a id="image2" name="flower3" href="./SupportingFiles/page2.html"><img src="./SupportingFiles/flower3.png" width="150" height="150" border="0" alt="flower3"></a>
+	<br>
+	<input id="image3" name="flower2" type="image" src="./SupportingFiles/flower2.jpg" onclick='window.location ="./SupportingFiles/page3.html"'>
+	<hr>
+	<br>
+	<h2>
+		html <span style="color: green">&lt;select&gt;</span> tag
+	</h2>
+	<select id="select1" name="select1" onchange="alert_Selected('select1')">
+		<option value=""></option>
+		<option value="ford">Ford</option>
+		<option value="volvo">Volvo</option>
+		<option value="saab">Saab</option>
+		<option value="mercedes">Mercedes</option>
+		<option value="audi">Audi</option>
+	</select>
+	<select id="select2" name="select2" onchange="alert_Selected('select2')" multiple>
+		<option value="mickey">Mickey</option>
+		<option value="minnie">Minnie</option>
+		<option value="donald">Donald</option>
+		<option value="daisy">Daisy</option>
+		<option value="goofy">Goofy</option>
+		<option value="pluto">Pluto</option>
+	</select>
+	<hr>
+	<br>
+	<h2>
+		html <span style="color: green">&lt;object&gt;</span> tag
+	</h2>
+	<object classid="clsid:F08DF954-8592-11D1-B16A-00C0F0283628" id="Slider1" width="100" height="50">
+		<param name="BorderStyle" value="1" />
+		<param name="MousePointer" value="0" />
+		<param name="Enabled" value="1" />
+		<param name="Min" value="0" />
+		<param name="Max" value="10" />
+	</object>
+	<hr>
+	<br>
+	<h2>
+		html <span style="color: green">&lt;textarea&gt;</span> tag
+	</h2>
+	<textarea name="textarea" rows="10" cols="60">Here is a bunch of text that doesn't mean much of anything!</textarea>
+	<hr>
+	<br>
+	<h2>
+		html <span style="color: green">&lt;iframe&gt;</span> tag
+	</h2>
+	<iframe src="./SupportingFiles/element_hidden.html">
+		<p>Your browser does not support iframes.</p>
+	</iframe>
+	<hr>
+	<br>
+	<h2>
+		html <span style="color: green">&lt;video&gt;</span> tag
+	</h2>
+	<video width="320" height="240" controls>
+		<source src="./SupportingFiles/movie.mp4" type="video/mp4">
+		<source src="./SupportingFiles/movie.ogg" type="video/ogg">
+		Your browser does not support the video tag.
+	</video>
+	<hr>
+	<br>
+	<h2>
+		html <span style="color: green">&lt;span&gt;</span> tag
+	</h2>
+	<span id="span"> this is a span</span>
+	<hr>
+	<br>
+	<h2>
+		html <span style="color: green">&lt;div&gt;</span> tag
+	</h2>
+	<div id="div">ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg</div>
+	<hr>
+	<br>
+</body>
+</html>
