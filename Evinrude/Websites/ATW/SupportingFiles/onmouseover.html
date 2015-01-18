@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+<title>Mouseover Menus</title>
+<body onclick="hideMenus()">
+	<font face="Verdana,Tahoma,Helvetica,sans-serif"> <font size="+1"><b>Mouseover Menus</b></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:history.go(-1)"> Go Back </a><br> <br>
+		<table border="0" cellspacing="0" cellpadding="5" bgcolor="#C0FFC0">
+			<tr>
+
+				<td><b><a onmouseover="showMenu(1)" onmouseout="startTimer()" style="cursor: pointer">Menu 1</a>&nbsp;&nbsp;&nbsp;&nbsp;</b><br>
+					<div class="popupMenu" id="menu_1" style="display: none;">
+						<table border="0" cellspacing="0" cellpadding="0">
+							<tr id="opt_a">
+								<td><a onmouseover="hiLite('a')" onmouseout="unLite('a')" onclick="optClick('a')">Option A</a></td>
+							</tr>
+							<tr id="opt_b">
+								<td><a onmouseover="hiLite('b')" onmouseout="unLite('b')" onclick="optClick('b')">Option B</a></td>
+							</tr>
+							<tr id="opt_c">
+								<td><a onmouseover="hiLite('c')" onmouseout="unLite('c')" onclick="optClick('c')">Option C</a></td>
+							</tr>
+						</table>
+					</div></td>
+
+				<td><b><a onmouseover="showMenu(2)" onmouseout="startTimer()" style="cursor: pointer">Menu 2</a>&nbsp;&nbsp;&nbsp;&nbsp;</b><br>
+
+					<div class="popupMenu" id="menu_2" style="display: none;">
+						<table border="0" cellspacing="0" cellpadding="0">
+							<tr id="opt_d">
+								<td><a onmouseover="hiLite('d')" onmouseout="unLite('d')" onclick="optClick('d')">Option D</a></td>
+							</tr>
+							<tr id="opt_e">
+								<td><a onmouseover="hiLite('e')" onmouseout="unLite('e')" onclick="optClick('e')">Option E</a></td>
+							</tr>
+							<tr id="opt_f">
+								<td><a onmouseover="hiLite('f')" onmouseout="unLite('f')" onclick="optClick('f')">Option F</a></td>
+							</tr>
+						</table>
+					</div></td>
+
+				<td><b><a onmouseover="showMenu(3)" onmouseout="startTimer()" style="cursor: pointer">Menu 3</a>&nbsp;&nbsp;&nbsp;&nbsp;</b><br>
+					<div class="popupMenu" id="menu_3" style="display: none;">
+						<table border="0" cellspacing="0" cellpadding="0">
+							<tr id="opt_g">
+								<td><a onmouseover="hiLite('g')" onmouseout="unLite('g')" onclick="optClick('g')">Option G</a></td>
+							</tr>
+							<tr id="opt_h">
+								<td><a onmouseover="hiLite('h')" onmouseout="unLite('h')" onclick="optClick('h')">Option H</a></td>
+							</tr>
+							<tr id="opt_i">
+								<td><a onmouseover="hiLite('i')" onmouseout="unLite('i')" onclick="optClick('i')">Option I</a></td>
+							</tr>
+						</table>
+					</div></td>
+
+			</tr>
+		</table>
+
+
+	</font>
+</body>
+</html>
+
+
+<script language="JavaScript" type="text/javascript">
+	var timerId = 0;
+
+	function clearTimer() {
+		if (timerId != 0) {
+			clearTimeout(timerId);
+			timerId = 0;
+		}
+	}
+
+	function startTimer() {
+		clearTimer();
+		timerId = setTimeout('timerId=0;hideMenus()', 2000);
+	}
+
+	function showMenu(menuNum) {
+		clearTimer();
+		hideMenus();
+		document.getElementById('menu_' + menuNum).style.display = "";
+	}
+
+	function hideMenus() {
+
+		var i = 1;
+
+		while (document.getElementById('menu_' + i)) {
+			document.getElementById('menu_' + i).style.display = "none";
+			i++;
+		}
+	}
+
+	function hiLite(theOption) {
+		clearTimer();
+		document.getElementById('opt_' + theOption).style.background = '#9090FF';
+	}
+
+	function unLite(theOption) {
+		startTimer();
+		document.getElementById('opt_' + theOption).style.background = '#D0D0FF';
+	}
+
+	function optClick(theOption) {
+		unLite(theOption);
+		clearTimer();
+		hideMenus();
+		alert('You clicked option ' + theOption.toUpperCase() + '.');
+	}
+</script>
+
+
+<style type="text/css">
+.popupMenu {
+	font-family: Verdana, Tahoma, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #111111;
+	position: absolute;
+	top: 72px;
+	border: 1px;
+	padding: 3px;
+	z-index: 16;
+	background-color: #D0D0FF;
+	cursor: pointer;
+}
+</style>

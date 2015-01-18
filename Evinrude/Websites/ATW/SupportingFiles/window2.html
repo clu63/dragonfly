@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+<title>Window1</title>
+<script type="text/javascript">
+	function closeWin() {
+		this.close();
+	}
+</script>
+</head>
+<body>
+	<h1 id="window2_title">Window 2</h1>
+	<br>
+	<br>
+	<input type="button" id="closeWin" onclick="closeWin()" value="Close Window" />
+	<br>
+	<br>
+	<input type="button" id="window_open" onclick="window.open('.window2.html','popup','width=600,height=700,scrollbars=yes,resizable=yes,toolbar=no,directories=no,location=no,menubar=no,status=no,left=50,top=0'); return false" value="Popup Window" />
+	
+</body>
+</html>

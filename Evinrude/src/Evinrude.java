@@ -422,6 +422,10 @@ public class Evinrude {
 					case "sync_disabled":
 						blnPass = elementDisabledSync(objStep, objWebDriver, objWebElement);
 						break;
+					case "mouse_over":
+						blnPass = elementOnMouseOverSync(objStep, objWebDriver, objWebElement);
+						break;
+
 					case "break":
 						break;
 					default:
@@ -844,6 +848,62 @@ public class Evinrude {
 	// }
 	// }// the end of elementSet
 
+	public static void elementOnMouseOver(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
+		System.out.println("elementOnMouseOverSync - " + objWebElement.toString());
+		JavascriptExecutor objJavascriptExecutor = null;
+		if (objWebElement != null) {
+			objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
+		}
+		objJavascriptExecutor.executeScript("arguments[0].onmouseover();", objWebElement);
+	}
+
+	public static boolean elementOnMouseOverSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
+		long lngStartTimeOnMouseOverSync = System.currentTimeMillis();
+
+		Boolean blnFound = false;
+		Boolean blnVisible = false;
+		Boolean blnEnabled = false;
+		Boolean blnOnMouseOver = false;
+		Boolean blnStatus = false;
+		while (true) {
+			try {
+				if (blnFound == false) {
+					objWebElement = elementFind(objStep, objWebDriver);
+					blnFound = true;
+				}
+				if (blnVisible == false) {
+					elementVisible(objStep, objWebDriver, objWebElement);
+					blnVisible = true;
+				}
+				if (blnEnabled == false) {
+					elementEnabled(objStep, objWebDriver, objWebElement);
+					blnEnabled = true;
+				}
+				if (blnOnMouseOver == false) {
+					elementOnMouseOver(objStep, objWebDriver, objWebElement);
+					// objStep.put("strOutputValue", strGetValue);
+					blnOnMouseOver = true;
+				}
+				blnStatus = true;
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
+				blnFound = false;
+				System.out.println("elementOnMouseOverSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeOnMouseOverSync));
+			} catch (ElementNotVisibleException e) {
+				blnVisible = false;
+				System.out.println("elementOnMouseOverSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeOnMouseOverSync));
+			} catch (ElementNotEnabledException e) {
+				blnEnabled = false;
+				System.out.println("elementOnMouseOverSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeOnMouseOverSync));
+			} finally {
+				if (blnStatus == true) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+	}
+
 	public static void elementSet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement, String strOuterHTML) throws ElementTagNameNotSupportedException, ElementNotSetException {
 		long lngStartTimeElementSet = System.currentTimeMillis();
 		JavascriptExecutor objJavascriptExecutor = null;
@@ -881,7 +941,7 @@ public class Evinrude {
 				objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
 				// objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
 				objWebElement.click();
-				objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
+				// ///objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
 				// objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
 				// objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
 				// objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
@@ -1031,7 +1091,7 @@ public class Evinrude {
 	}
 
 	public static void SetSyncComplete(WebDriver objWebDriver, String strOuterHTML) throws DoPostBackNotCompleteException, JQueryAjaxNotCompleteException, JQueryAnimationNotCompleteException, AngularJsNotCompleteException {
-		WaitForReadyState(objWebDriver);
+		// WaitForReadyState(objWebDriver);
 		// JavascriptExecutor objJavascriptExecutor = null;
 		// objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
 		// waitForAngularRequestsToFinish(objJavascriptExecutor);
@@ -3213,30 +3273,30 @@ public class Evinrude {
 				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementCollectionTable " + intCount);
 				// System.out.println("text:=  " + objWebElementEach.);
 				System.out.println("getTagName:= '" + row.getTagName() + "'");
-				System.out.println("tag_type:= '" + row.getTagName() + "_" + row.getAttribute("type") + "'");
-				System.out.println("TagName:= '" + row.getAttribute("TagName") + "'");
-				System.out.println("type:= '" + row.getAttribute("type") + "'");
-				System.out.println("Type:= '" + row.getAttribute("Type") + "'");
-				System.out.println("TYPE:= '" + row.getAttribute("TYPE") + "'");
-				System.out.println("id:= '" + row.getAttribute("id") + "'");
-				System.out.println("name:= '" + row.getAttribute("name") + "'");
-				System.out.println("text:= '" + row.getAttribute("text") + "'");
+				// System.out.println("tag_type:= '" + row.getTagName() + "_" + row.getAttribute("type") + "'");
+				// System.out.println("TagName:= '" + row.getAttribute("TagName") + "'");
+				// System.out.println("type:= '" + row.getAttribute("type") + "'");
+				// System.out.println("Type:= '" + row.getAttribute("Type") + "'");
+				// System.out.println("TYPE:= '" + row.getAttribute("TYPE") + "'");
+				// System.out.println("id:= '" + row.getAttribute("id") + "'");
+				// System.out.println("name:= '" + row.getAttribute("name") + "'");
+				// System.out.println("text:= '" + row.getAttribute("text") + "'");
 				System.out.println("getText:= '" + row.getText() + "'");
-				System.out.println("innerText:= '" + row.getAttribute("innerText") + "'");
-				System.out.println("outerText:= '" + row.getAttribute("outerText") + "'");
-				System.out.println("innerHTML:= '" + row.getAttribute("innerHTML") + "'");
+				// System.out.println("innerText:= '" + row.getAttribute("innerText") + "'");
+				// System.out.println("outerText:= '" + row.getAttribute("outerText") + "'");
+				// System.out.println("innerHTML:= '" + row.getAttribute("innerHTML") + "'");
 				System.out.println("outerHTML:= '" + row.getAttribute("outerHTML") + "'");
-				System.out.println("uniqueID:= '" + row.getAttribute("uniqueID") + "'");
-				System.out.println("class:= '" + row.getAttribute("class") + "'");
-				System.out.println("href:= '" + row.getAttribute("href") + "'");
-				System.out.println("NameProp:= '" + row.getAttribute("NameProp") + "'");
-				System.out.println("isDisplayed:= '" + row.isDisplayed() + "'");
-				System.out.println("isEnabled:= '" + row.isEnabled() + "'");
-				System.out.println("getLocation().x:= '" + row.getLocation().x + "'");
-				System.out.println("getLocation().y:= '" + row.getLocation().y + "'");
-				System.out.println("getSize().height:= '" + row.getSize().height + "'");
-				System.out.println("getSize().width:= '" + row.getSize().width + "'");
-				System.out.println("src:= '" + row.getAttribute("src") + "'");
+				// System.out.println("uniqueID:= '" + row.getAttribute("uniqueID") + "'");
+				// System.out.println("class:= '" + row.getAttribute("class") + "'");
+				// System.out.println("href:= '" + row.getAttribute("href") + "'");
+				// System.out.println("NameProp:= '" + row.getAttribute("NameProp") + "'");
+				// System.out.println("isDisplayed:= '" + row.isDisplayed() + "'");
+				// System.out.println("isEnabled:= '" + row.isEnabled() + "'");
+				// System.out.println("getLocation().x:= '" + row.getLocation().x + "'");
+				// System.out.println("getLocation().y:= '" + row.getLocation().y + "'");
+				// System.out.println("getSize().height:= '" + row.getSize().height + "'");
+				// System.out.println("getSize().width:= '" + row.getSize().width + "'");
+				// System.out.println("src:= '" + row.getAttribute("src") + "'");
 				// if (objCollectionJS.size() > 0) {
 				//
 				// JavascriptExecutor objJavascriptExecutor = null;
