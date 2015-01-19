@@ -233,6 +233,10 @@ public class Evinrude {
 		return strURL;
 	}// the end of data_EnvironmentURL
 
+	public String data_localWebsiteFilePath(String strWebsite) {
+		return "file:///" + System.getProperty("user.dir").replaceAll("\\\\", "/") + "/Websites/" + strWebsite;
+	}// the end of data_localWebsiteFilePath
+
 	public static String OSType() {
 		String os = System.getProperty("os.name").toLowerCase();
 		if (os.contains("win")) {
@@ -261,6 +265,7 @@ public class Evinrude {
 	public static void main(String[] args) {
 		WebDriver objWebDriver = null;
 		WebElement objWebElement;
+		String strTestPath = "";
 		boolean blnPass = false;
 		JSONParser parser = new JSONParser();
 		JSONObject objJsonFile = null;
@@ -290,20 +295,20 @@ public class Evinrude {
 		new File(strResultsPath + strImagesPath).mkdirs();
 		// System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
-			String strTestPath = "Data/public/local_ATW.json";
-			// String strTestPath = "Data/public/local_ATW_frames.json";
-			// String strTestPath = "Data/public/public_SeaWorld.json";
-			// String strTestPath = "Data/public/local_jqueryFade.json";
-			// String strTestPath = "Data/public/local_size_Visibility.json";
-			// String strTestPath = "Data/public/public_mercury_tours.json";
-			// String strTestPath = "Data/public/public_ranorex.json";
-			// String strTestPath = "Data/public/public_w3s_FireEvents.json"
-			// String strTestPath = "Data/public/public_w3s_JqueryAnimate.json";
-			// String strTestPath = "Data/public/public_w3s_jquery.json";
-			// String strTestPath = "Data/public/public_w3s_AngularJs.json";
-			// String strTestPath = "Data/public/public_w3s_Visibility.json";
-			// String strTestPath = "Data/public/public_AngularJS_Calculator.json";
-			// String strTestPath = "Data/public/public_GolfNow.json";
+			strTestPath = "Data/public/local_ATW.json";
+			// strTestPath = "Data/public/local_ATW_frames.json";
+			// strTestPath = "Data/public/public_SeaWorld.json";
+			// strTestPath = "Data/public/local_jqueryFade.json";
+			// strTestPath = "Data/public/local_size_Visibility.json";
+			// strTestPath = "Data/public/local_AngularJS_Calculator.json";
+			// strTestPath = "Data/public/public_mercury_tours.json";
+			// strTestPath = "Data/public/public_ranorex.json";
+			// strTestPath = "Data/public/public_w3s_FireEvents.json"
+			// strTestPath = "Data/public/public_w3s_JqueryAnimate.json";
+			// strTestPath = "Data/public/public_w3s_jquery.json";
+			// strTestPath = "Data/public/public_w3s_AngularJs.json";
+			// strTestPath = "Data/public/public_w3s_Visibility.json";
+			// strTestPath = "Data/public/public_GolfNow.json";
 			Object objParser = parser.parse(new FileReader(strTestPath));
 			objJsonFile = (JSONObject) objParser;
 			objTestSteps = (JSONArray) objJsonFile.get("steps");
@@ -515,17 +520,6 @@ public class Evinrude {
 				if (blnExit == true) {
 					System.out.println("elementGetSync finally blnExit = true");
 					objStep.put("strStatus", "fail");
-					// if
-					// (objStep.get("strTagName").toString().toLowerCase().equals("alert"))
-					// {
-					// coordinateHighlightScreenshot(objStep, "screen",
-					// Color.GREEN, "screen", objWebDriver, null, objStep);
-					//
-					// } else {
-					// coordinateHighlightScreenshot(objStep, "element",
-					// Color.GREEN, "screen", objWebDriver, objWebElement,
-					// objStep);
-					// }
 					coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
 					return false;
 				}
@@ -1091,7 +1085,10 @@ public class Evinrude {
 	}
 
 	public static void SetSyncComplete(WebDriver objWebDriver, String strOuterHTML) throws DoPostBackNotCompleteException, JQueryAjaxNotCompleteException, JQueryAnimationNotCompleteException, AngularJsNotCompleteException {
-		// WaitForReadyState(objWebDriver);
+		if (isAlertPresent(objWebDriver) == true) {
+			return;
+		}
+		WaitForReadyState(objWebDriver);
 		// JavascriptExecutor objJavascriptExecutor = null;
 		// objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
 		// waitForAngularRequestsToFinish(objJavascriptExecutor);
@@ -1950,23 +1947,23 @@ public class Evinrude {
 		return data;
 	}// the end of ClipboardGet
 
-	public boolean isAlertPresent(WebDriver driver) {
+	public static boolean isAlertPresent(WebDriver objWebDriver) {
 		try {
-			driver.switchTo().alert();
+			//objWebDriver.switchTo().alert();
+			Alert alert = objWebDriver.switchTo().alert();
 			return true;
-		} // try
-		catch (NoAlertPresentException Ex) {
+		} catch (NoAlertPresentException e) {
 			return false;
-		} // catch
+		}
 	}// the end of isAlertPresent()
 
 	public static WebElement isAlertPresent2(WebDriver objWebDriver) throws ElementNotFoundException {
 		try {
 
-			@SuppressWarnings("unused")
 			Alert alert = objWebDriver.switchTo().alert();
-			System.out.println("this is the alert switch to which did not fail");
-			return null;
+
+			System.out.println("isAlertPresent2 - alert switch to which did not fail:  " + alert.toString());
+			return (WebElement) alert;
 		} // try
 		catch (NoAlertPresentException e) {
 			System.out.println("this is the alert switch to which did fail");
@@ -2001,6 +1998,10 @@ public class Evinrude {
 				// TODO elementFind finish alert handling --- will need to consider issue where objWebDriver no longer exists maybe place this after setting window
 				objStep.put("strTagType", "alert");
 				return isAlertPresent2(objWebDriver);
+			}
+			if (strTagName.toLowerCase().equals("title")) {
+				objStep.put("strTagType", "title");
+				return null;
 			}
 			for (int intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
 				strXpathAttributesTemp = "";
@@ -2350,43 +2351,34 @@ public class Evinrude {
 
 	public static boolean elementVisible(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementNotVisibleException {
 		long lngStartTimeElementVisible = System.currentTimeMillis();
-		Boolean blnJquery = false;
+		// Boolean blnJquery = false;
 		try {
 			// TODO Alert complete
+			if (objStep.get("strTagName").toString().toLowerCase().equals("title")) {
+				return true;
+			}
 			if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-				try {
-					// @SuppressWarnings("unused")
-					Alert alert = objWebDriver.switchTo().alert();
-					System.out.println("elementVisible alert passed");
-					// System.out.println(objWebDriver.manage().window().getPosition());
-					// System.out.println(objWebDriver.manage().window().getSize());
+
+				if (isAlertPresent(objWebDriver) == true) {
 					return true;
-				} catch (NoAlertPresentException e) {
-					System.out.println(e.toString());
+				} else {
 					throw new ElementNotVisibleException("Alert popup was not found.");
 				}
+
+				// try {
+				// // @SuppressWarnings("unused")
+				// Alert alert = objWebDriver.switchTo().alert();
+				// System.out.println("elementVisible alert passed");
+				// // System.out.println(objWebDriver.manage().window().getPosition());
+				// // System.out.println(objWebDriver.manage().window().getSize());
+				// return true;
+				// } catch (NoAlertPresentException e) {
+				// System.out.println(e.toString());
+				// throw new ElementNotVisibleException("Alert popup was not found.");
+				// }
+
 			}
 			if (objWebElement.isDisplayed()) {
-				// // long lngStartTimeElementSetJQueryAJAXCallsHaveCompleted = System.currentTimeMillis();
-				// // System.out.println("elementVisible jQuery.active MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
-				// // // ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
-				// // System.out.println("elementVisible document.readyState MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return document.readyState"));
-				// long lngStartTimeElementSet__EVENTTARGET = System.currentTimeMillis();
-				// // while (((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);")!=null) {
-				// //
-				// //
-				// // // try {
-				// // // System.out.println("elementVisible jQuery.active = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
-				// // // blnJquery = (Boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
-				// // // if (blnJquery == false) {
-				// // // break;
-				// // // }
-				// // // } catch (Exception e) {
-				// // // System.out.println("elementVisible Exception = " + e.toString());
-				// // // }
-				// // }
-				// System.out.println("elementVisible lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
-
 				elementCoordinates(objStep, objWebDriver, objWebElement);
 				return true;
 			} else {
@@ -2403,17 +2395,24 @@ public class Evinrude {
 		try {
 			// TODO Alert complete
 			if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-				try {
-					@SuppressWarnings("unused")
-					Alert alert = objWebDriver.switchTo().alert();
-					System.out.println("elementVisible alert passed");
-					// System.out.println(objWebDriver.manage().window().getPosition());
-					// System.out.println(objWebDriver.manage().window().getSize());
+
+				if (isAlertPresent(objWebDriver) == false) {
 					return true;
-				} catch (NoAlertPresentException e) {
-					System.out.println(e.toString());
+				} else {
 					throw new ElementNotHiddenException("Alert popup was not found.");
 				}
+
+				// try {
+				// @SuppressWarnings("unused")
+				// Alert alert = objWebDriver.switchTo().alert();
+				// System.out.println("elementVisible alert passed");
+				// // System.out.println(objWebDriver.manage().window().getPosition());
+				// // System.out.println(objWebDriver.manage().window().getSize());
+				// return true;
+				// } catch (NoAlertPresentException e) {
+				// System.out.println(e.toString());
+				// throw new ElementNotHiddenException("Alert popup was not found.");
+				// }
 			}
 			if (objWebElement.isDisplayed() == false) {
 				return true;
@@ -2434,17 +2433,24 @@ public class Evinrude {
 		try {
 			// TODO Alert complete
 			if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-				try {
-					Alert alert = objWebDriver.switchTo().alert();
-					// System.out.println(objWebDriver.manage().window().getPosition());
-					// System.out.println(objWebDriver.manage().window().getSize());
+
+				if (isAlertPresent(objWebDriver) == true) {
 					return true;
-				} // try
-				catch (NoAlertPresentException e) {
-					// return false;
-					System.out.println(e.toString());
+				} else {
 					throw new ElementNotEnabledException("Alert popup was not found.");
-				} // catch
+				}
+
+				// try {
+				// Alert alert = objWebDriver.switchTo().alert();
+				// // System.out.println(objWebDriver.manage().window().getPosition());
+				// // System.out.println(objWebDriver.manage().window().getSize());
+				// return true;
+				// } // try
+				// catch (NoAlertPresentException e) {
+				// // return false;
+				// System.out.println(e.toString());
+				// throw new ElementNotEnabledException("Alert popup was not found.");
+				// } // catch
 			}
 			if (objWebElement.isEnabled()) {
 				return true;
@@ -2565,6 +2571,9 @@ public class Evinrude {
 		String strElementGet = "";
 		try {
 			switch (objStep.get("strTagType").toString().toLowerCase()) {
+			case "title":
+				strElementGet = objWebDriver.getTitle();
+				break;
 			case "img":
 				strElementGet = objWebElement.getAttribute("src");
 				break;
@@ -2725,6 +2734,14 @@ public class Evinrude {
 		int intY = 0;
 		int intWidth = 0;
 		int intHeight = 0;
+
+		if (objWebDriver == null) {
+			strAreaObjectName = "screen";
+		}
+		if (objStep.containsKey("intElementScreenX") == false) {
+			strAreaObjectName = "screen";
+		}
+
 		try {
 			switch (strAreaObjectName.toLowerCase()) {
 			case "screen":
