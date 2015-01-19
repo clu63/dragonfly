@@ -295,7 +295,8 @@ public class Evinrude {
 		new File(strResultsPath + strImagesPath).mkdirs();
 		// System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
-			strTestPath = "Data/public/local_ATW.json";
+			strTestPath = "Data/public/local_ATW_AlertPopups.json";
+			// strTestPath = "Data/public/local_ATW.json";
 			// strTestPath = "Data/public/local_ATW_frames.json";
 			// strTestPath = "Data/public/public_SeaWorld.json";
 			// strTestPath = "Data/public/local_jqueryFade.json";
@@ -1265,9 +1266,15 @@ public class Evinrude {
 			try {
 				if (blnFound == false) {
 					objWebElement = elementFind(objStep, objWebDriver);
-					strOuterHTML = objWebElement.getAttribute("outerHTML");
-					System.out.println("elementSetSync outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeSetSync));
-					System.out.println(strOuterHTML);
+					System.out.println("elementSetSync elementFind over");
+					if (objWebElement != null) {
+						strOuterHTML = objWebElement.getAttribute("outerHTML");
+						System.out.println(strOuterHTML);
+						System.out.println("elementSetSync outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+
+					}
+					System.out.println("elementSetSync strOuterHTML over");
+
 					blnFound = true;
 				}
 				if (blnVisible == false) {
@@ -1949,7 +1956,7 @@ public class Evinrude {
 
 	public static boolean isAlertPresent(WebDriver objWebDriver) {
 		try {
-			//objWebDriver.switchTo().alert();
+			// objWebDriver.switchTo().alert();
 			Alert alert = objWebDriver.switchTo().alert();
 			return true;
 		} catch (NoAlertPresentException e) {
@@ -1963,7 +1970,8 @@ public class Evinrude {
 			Alert alert = objWebDriver.switchTo().alert();
 
 			System.out.println("isAlertPresent2 - alert switch to which did not fail:  " + alert.toString());
-			return (WebElement) alert;
+			// return (WebElement) alert;
+			return null;
 		} // try
 		catch (NoAlertPresentException e) {
 			System.out.println("this is the alert switch to which did fail");
