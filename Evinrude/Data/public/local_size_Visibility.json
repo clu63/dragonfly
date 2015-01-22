@@ -23,7 +23,7 @@
 		},
 
 		{
-			"strAction": " sync_visible",
+			"strAction": "sync_visible",
 			"strTagName": "body",
 			"strAttributeNames": "index",
 			"strAttributeValues": "1",
