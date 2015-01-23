@@ -449,12 +449,13 @@ public class Evinrude {
 					// System.out.println("main strCurrentWindowHandle = " + strCurrentWindowHandle);
 					// } else {
 					// TODO call webElementCollectionTable cover all cases of fails
-					if (objStep.get("strStatus").toString() == "fail") {
-						if (Boolean.parseBoolean(objStep.get("blnExitOnFail").toString()) == true) {
-							webElementCollectionTable(objStep.get("strTagName").toString(), objWebDriver);
-							break;
-						}
-					}
+					// System.out.println(objStep.get("strStatus").toString());
+					// if (objStep.get("strStatus").toString() == "fail") {
+					// if (Boolean.parseBoolean(objStep.get("blnExitOnFail").toString()) == true) {
+					// webElementCollectionTable(objStep.get("strTagName").toString(), objWebDriver);
+					// break;
+					// }
+					// }
 					// }// the end of if (blnPass == true)
 				}// the end of if (strInputValue != "<skip>")
 				if (objStep.get("strOutputLinkName").toString().trim().length() != 0) {
@@ -463,6 +464,14 @@ public class Evinrude {
 					// System.out.println(objLinks.get(objStep.get("strOutputLinkName").toString()).toString());
 					// System.out.println(objStep.get("strOutputValue").toString());
 				}
+				System.out.println(objStep.get("strStatus").toString());
+				if (objStep.get("strStatus").toString() == "fail") {
+					if (Boolean.parseBoolean(objStep.get("blnExitOnFail").toString()) == true) {
+						webElementCollectionTable(objStep.get("strTagName").toString(), objWebDriver);
+						break;
+					}
+				}
+
 			}// for intStep
 				// TODO confirm the exceptions to catch in main some may need to be removed
 		} catch (IOException e) {
@@ -520,43 +529,34 @@ public class Evinrude {
 				System.out.println("elementGetSync - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeGetSync));
 				blnExit = true;
 			} finally {
-				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeGetSync);
-				System.out.println("elementGetSync finally intMillisecondsWaited = " + intMillisecondsWaited);
 				if (blnExit == true) {
-					System.out.println("elementGetSync finally blnExit = true");
 					objStep.put("strStatus", "fail");
+				} else {
+					if (blnStatus == true) {
+						objStep.put("strStatus", "pass");
+						blnExit = true;
+					} else if (blnStatus == false) {
+						if ((int) (System.currentTimeMillis() - lngStartTimeGetSync) <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
+							if (blnFound == false) {
+								blnVisible = false;
+								blnGet = false;
+							}
+						} else {
+							if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
+								objStep.put("strStatus", "warning");
+								blnExit = true;
+							} else {
+								objStep.put("strStatus", "fail");
+								blnExit = true;
+							}
+						}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
+					}// the end of if (blnStatus == true)
+				}
+				if (blnExit == true) {
 					coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+					System.out.println("elementGetSync finally intMillisecondsWaited = " + (int) (System.currentTimeMillis() - lngStartTimeGetSync));
 					return;
 				}
-				if (blnStatus == true) {
-					System.out.println("elementGetSync finally blnStatus = " + blnStatus);
-					objStep.put("strStatus", "pass");
-					coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-
-					// if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-					// coordinateHighlightScreenshot(objStep, "screen", objWebDriver, null, objStep);
-					// } else {
-					// coordinateHighlightScreenshot(objStep, "element", objWebDriver, objWebElement, objStep);
-					// }
-					return;
-				} else if (blnStatus == false) {
-					if (intMillisecondsWaited <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
-						if (blnFound == false) {
-							blnVisible = false;
-							blnGet = false;
-						}
-					} else {
-						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
-							objStep.put("strStatus", "warning");
-							coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-							return;
-						} else {
-							objStep.put("strStatus", "fail");
-							coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-							return;
-						}
-					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
-				}// the end of if (blnStatus == true)
 			}// the end of try
 		}// the end of While
 	}// the end of elementGetSync
@@ -2560,17 +2560,17 @@ public class Evinrude {
 			switch (objStep.get("strTagType").toString().toLowerCase()) {
 			case "title":
 				strElementGet = objWebDriver.getTitle();
-				break;
+				return strElementGet;
 			case "img":
 				strElementGet = objWebElement.getAttribute("src");
-				break;
+				return strElementGet;
 			case "input_button":
 			case "input_submit":
 			case "input_reset":
 			case "input_image":
 			case "button":
 				strElementGet = objWebElement.getAttribute("value").trim();
-				break;
+				return strElementGet;
 			case "a":
 			case "th":
 			case "tr":
@@ -2586,13 +2586,13 @@ public class Evinrude {
 			case "p":
 			case "li":
 				strElementGet = objWebElement.getText();
-				break;
+				return strElementGet;
 			case "input_text":
 			case "input_password":
 			case "textarea":
 			case "input_email":
 				strElementGet = objWebElement.getAttribute("value");
-				break;
+				return strElementGet;
 			case "input_radio":
 			case "input_checkbox":
 				if (objWebElement.isSelected() == false) {
@@ -2600,26 +2600,26 @@ public class Evinrude {
 				} else {
 					strElementGet = "<on>";
 				}
-				break;
+				return strElementGet;
 			case "select":
 				JavascriptExecutor objExecutor = (JavascriptExecutor) objWebDriver;
 				strElementGet = (String) objExecutor.executeScript("var select = arguments[0];var selection=select.options[select.selectedIndex].innerHTML;return selection;", objWebElement);
 				strElementGet = strElementGet.trim();
-				break;
+				return strElementGet;
 			case "table":
 				strElementGet = objWebElement.getText();
-				break;
+				return strElementGet;
 			case "alert":
 				Alert alert = objWebDriver.switchTo().alert();
 				strElementGet = alert.getText();
-				break;
+				return strElementGet;
 			default:
 				strElementGet = "elementGet tag not supported";
 				throw new ElementTagNameNotSupportedException("Element tag not supported");
 			}
 		} finally {
 			System.out.println("ElementGet finally strElementGet = {" + strElementGet + "} MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementGet));
-			return strElementGet;
+			// return strElementGet;
 		}
 	} // the end of ElementGet
 
