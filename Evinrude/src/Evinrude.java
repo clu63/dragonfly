@@ -500,6 +500,7 @@ public class Evinrude {
 	@SuppressWarnings("unchecked")
 	public static void elementGetSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
 		Long lngStartTimeGetSync = System.currentTimeMillis();
+		Long lngEndTimeElementGetSync = (long) 0;
 		// Integer intMillisecondsWaited = null;
 		Boolean blnFound = false;
 		Boolean blnVisible = false;
@@ -558,7 +559,15 @@ public class Evinrude {
 				}
 				if (blnExit == true) {
 					coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-					System.out.println("elementGetSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngStartTimeGetSync));
+
+					lngEndTimeElementGetSync = System.currentTimeMillis();
+
+					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngStartTimeGetSync));
+					objStep.put("strStepDuration", (lngEndTimeElementGetSync - lngStartTimeGetSync));
+					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngEndTimeElementGetSync));
+
+					System.out.println("elementGetSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
+
 					return;
 				}
 			}// the end of try
