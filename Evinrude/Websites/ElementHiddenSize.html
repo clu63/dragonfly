@@ -3,10 +3,10 @@
 <head>
 <title>Element Hidden</title>
 <style>
-/* img { */
-/*     width: 0px; */
+/*  img {  */
+/*     width: 0px;  */
 /* height: 0px; */
-/* } */
+/*  }  */
 h1.hidden {
 	visibility: hidden;
 }
@@ -47,12 +47,14 @@ p.ex {
 </style>
 </head>
 <body>
-	<input type="file" style="width: 750px" id="fileToLoad">
+	<input type="file" style="width: 0px" id="fileToLoad">
 	<h1 id="TextVisible">This is a visible heading</h1>
 	<h1 id="ClassTextHidden" class="hidden">This is a hidden heading</h1>
 	<p  id="p_1" >Notice that the hidden heading still takes up space.</p>
+	<p  id="p_2" style="width: 0px" >Size hidden heading still takes up space.</p>
+	
 	<br>
-	<img id="HiddenSize" src="smiley.gif" alt="Smiley face Hidden" width="0" height="0">
+	<img id="HiddenSize" src="smiley.gif" alt="Smiley face Hidden" style="width: 0px" style="height: 0px" >
 	<br>
 	<img id="VisibleSize" src="smiley.gif" alt="Smiley face Visible" width="75" height="75">
 	<br>

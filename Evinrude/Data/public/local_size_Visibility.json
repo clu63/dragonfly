@@ -72,7 +72,7 @@
 			"strInputValue": "",
 			"strLogicalName": "",
 			"intMillisecondsToWait": "1000",
-			"blnOptional": "",
+			"blnOptional": "true",
 			"strAssert": "",
 			"blnPleaseWait": "",
 			"blnHighlight": "",
