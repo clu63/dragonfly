@@ -410,7 +410,7 @@ public class Evinrude {
 						objWebDriver.quit();
 						// blnPass = true;
 						objStep.put("strStatus", "pass");
-						coordinateHighlightScreenshot(objStep, "", objWebDriver, null, objStep);
+						coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
 						break;
 					case "get":
 						elementGetSync(objStep, objWebDriver, objWebElement);
@@ -425,18 +425,17 @@ public class Evinrude {
 						elementVisibleSync(objStep, objWebDriver, objWebElement);
 						break;
 					case "sync_hidden":
-						blnPass = elementHiddenSync(objStep, objWebDriver, objWebElement);
+						elementHiddenSync(objStep, objWebDriver, objWebElement);
 						break;
 					case "sync_enabled":
-						blnPass = elementEnabledSync(objStep, objWebDriver, objWebElement);
+						elementEnabledSync(objStep, objWebDriver, objWebElement);
 						break;
 					case "sync_disabled":
-						blnPass = elementDisabledSync(objStep, objWebDriver, objWebElement);
+						elementDisabledSync(objStep, objWebDriver, objWebElement);
 						break;
 					case "mouse_over":
-						blnPass = elementOnMouseOverSync(objStep, objWebDriver, objWebElement);
+						elementOnMouseOverSync(objStep, objWebDriver, objWebElement);
 						break;
-
 					case "break":
 						break;
 					default:
@@ -499,9 +498,8 @@ public class Evinrude {
 
 	@SuppressWarnings("unchecked")
 	public static void elementGetSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
-		Long lngStartTimeGetSync = System.currentTimeMillis();
-		Long lngEndTimeElementGetSync = (long) 0;
-		// Integer intMillisecondsWaited = null;
+		Long lngTimeStart = System.currentTimeMillis();
+		Long lngTimeEnd = null;
 		Boolean blnFound = false;
 		Boolean blnVisible = false;
 		Boolean blnGet = false;
@@ -526,12 +524,12 @@ public class Evinrude {
 				blnStatus = true;
 			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
-				System.out.println("elementGetSync - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeGetSync));
+				System.out.println("elementGetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementNotVisibleException e) {
 				blnVisible = false;
-				System.out.println("elementGetSync - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeGetSync));
+				System.out.println("elementGetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementTagNameNotSupportedException e) {
-				System.out.println("elementGetSync - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeGetSync));
+				System.out.println("elementGetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				blnExit = true;
 			} finally {
 				if (blnExit == true) {
@@ -541,7 +539,7 @@ public class Evinrude {
 						objStep.put("strStatus", "pass");
 						blnExit = true;
 					} else if (blnStatus == false) {
-						if ((int) (System.currentTimeMillis() - lngStartTimeGetSync) <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
+						if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
 							if (blnFound == false) {
 								blnVisible = false;
 								blnGet = false;
@@ -558,309 +556,17 @@ public class Evinrude {
 					}// the end of if (blnStatus == true)
 				}
 				if (blnExit == true) {
-					coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-
-					lngEndTimeElementGetSync = System.currentTimeMillis();
-
-					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngStartTimeGetSync));
-					objStep.put("strStepDuration", (lngEndTimeElementGetSync - lngStartTimeGetSync));
-					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngEndTimeElementGetSync));
-
+					coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+					lngTimeEnd = System.currentTimeMillis();
+					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
+					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
+					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
 					System.out.println("elementGetSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
-
 					return;
 				}
 			}// the end of try
 		}// the end of While
 	}// the end of elementGetSync
-
-	// public static void elementSet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementTagNameNotSupportedException, ElementNotSetException {
-	// long lngStartTimeElementSet = System.currentTimeMillis();
-	// JavascriptExecutor objJavascriptExecutor = null;
-	// Boolean blnSet = false;
-	// String strOuterHTML = "";
-	// if (objWebElement != null) {
-	// objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
-	// }
-	// try {
-	// long lngStartTimeOuterHTML = System.currentTimeMillis();
-	// strOuterHTML = objWebElement.getAttribute("outerHTML");
-	// System.out.println("elementSet outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeOuterHTML));
-	// System.out.println(strOuterHTML);
-	// switch (objStep.get("strTagType").toString().toLowerCase()) {
-	// case "input_button":
-	// case "input_submit":
-	// case "input_reset":
-	// case "input_image":
-	// case "tr":
-	// case "td":
-	// case "div":
-	// case "span":
-	// case "img":
-	// case "button":
-	// case "a":
-	// case "h1":
-	// case "h2":
-	// case "h3":
-	// case "h4":
-	// case "h5":
-	// case "h6":
-	// case "p":
-	// blnSet = true;
-	// objWebElement.click();
-	// // objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
-	// // objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
-	// // objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
-	// break;
-	// case "input_text":
-	// case "input_password":
-	// case "textarea":
-	// case "input_email":
-	// blnSet = true;
-	// objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
-	// objJavascriptExecutor.executeScript("arguments[0].value = '';", objWebElement);
-	// objJavascriptExecutor.executeScript("arguments[0].value = '" + objStep.get("strInputValue").toString() + "';", objWebElement);
-	// objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
-	// System.out.println("onchange before");
-	// try {
-	// objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
-	// } catch (WebDriverException e) {
-	// System.out.println("elementSet = " + e.toString());
-	// }
-	// break;
-	// case "input_radio":
-	// blnSet = true;
-	// objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
-	// objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
-	// objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
-	// try {
-	// objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
-	// } catch (WebDriverException e) {
-	// System.out.println("elementSet = " + e.toString());
-	// }
-	// break;
-	// case "input_checkbox":
-	// blnSet = true;
-	// switch (objStep.get("strInputValue").toString().toLowerCase()) {
-	// case "<on>":
-	// if (objWebElement.isSelected() == false) {
-	// objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
-	// objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
-	// objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
-	// try {
-	// objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
-	// } catch (WebDriverException e) {
-	// System.out.println("elementSet = " + e.toString());
-	// }
-	// }
-	// break;
-	// case "<off>":
-	// blnSet = true;
-	// if (objWebElement.isSelected() == true) {
-	// objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
-	// objJavascriptExecutor.executeScript("arguments[0].click();", objWebElement);
-	// objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
-	// try {
-	// objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
-	// } catch (WebDriverException e) {
-	// System.out.println("elementSet = " + e.toString());
-	// }
-	// }
-	// break;
-	// }// the end of switch (strInputValue.toLowerCase())
-	// break;
-	// case "select":
-	// int intOptionsEach;
-	// String strOptions = (String) objJavascriptExecutor.executeScript("var txt = '';var x = arguments[0];var i;for (i = 0; i < x.length; i++)" + "{txt = txt + '|' + x.options[i].text;}" + "return txt;", objWebElement);
-	// strOptions = strOptions.substring(1);
-	// String[] arrOptions;
-	// arrOptions = strOptions.split("\\|");
-	// for (intOptionsEach = 0; intOptionsEach < arrOptions.length; intOptionsEach++) {
-	// if (arrOptions[intOptionsEach].toString().equals(objStep.get("strInputValue").toString())) {
-	// blnSet = true;
-	// objJavascriptExecutor.executeScript("arguments[0].selectedIndex=" + intOptionsEach + ";", objWebElement);
-	// try {
-	// objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
-	// } catch (WebDriverException e) {
-	// System.out.println("elementSet = " + e.toString());
-	// }
-	// break;
-	// }
-	// }
-	// break;
-	// case "table":
-	// // Set objWebElement = gobjWebElement.AsTable
-	// break;
-	// case "alert":
-	// blnSet = true;
-	// Alert alert = objWebDriver.switchTo().alert();
-	// System.out.println(alert.getText()); // Print Alert popup
-	// System.out.println(objStep.get("strAttributeValues").toString().toLowerCase());
-	// switch (objStep.get("strAttributeValues").toString().toLowerCase()) {
-	// case "text":
-	// alert.sendKeys(objStep.get("strInputValue").toString());
-	// break;
-	// case "accept":
-	// alert.accept(); // Close Alert popup
-	// break;
-	// case "dismiss":
-	// alert.dismiss();// Close Alert popup
-	// break;
-	// }
-	// break;
-	// default:
-	// throw new ElementTagNameNotSupportedException("Element tag not supported");
-	// }// the end of switch (strTagName.toLowerCase())
-	// if (blnSet == true) {
-	// System.out.println("elementSet document.readyState MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return document.readyState"));
-	// // Thread.sleep(Integer.parseInt(objStep.get("intLoop").toString()));
-	// if (strOuterHTML.contains("__doPostBack")) {
-	// long lngStartTimeElementSet__EVENTTARGET = System.currentTimeMillis();
-	// while (true) {
-	// try {
-	// System.out.println("elementSet __EVENTTARGET value = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
-	// if (objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value").equals("")) {
-	// break;
-	// }
-	// } catch (StaleElementReferenceException e) {
-	// System.out.println("elementSet StaleElementReferenceException = " + e.toString());
-	// }
-	// if (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET > Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
-	// break;
-	// }
-	// }
-	// System.out.println("elementSet lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
-	// }// the end of (strOuterHTML.contains("__doPostBack"))
-	// // browser.wait_for_condition("selenium.browserbot.getCurrentWindow().jQuery.active === 0;", '30000')
-	// long lngStartTimeElementSetJQueryActive = System.currentTimeMillis();
-	// while (true) {
-	// boolean blnJquery = false;
-	// long lngJqueryActive = 0;
-	// try {
-	//
-	// System.out.println("elementSet blnJquery = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null);"));
-	// blnJquery = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null);");
-	// if (blnJquery == true) {
-	//
-	// lngJqueryActive = (long) ((JavascriptExecutor) objWebDriver).executeScript("return (jQuery.active);");
-	// System.out.println("elementSet lngJqueryActive = " + lngJqueryActive);
-	// // System.out.println("elementSet both = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
-	// }
-	// } catch (Exception e) {
-	// System.out.println("elementSet JqueryActive Exception = " + e.toString());
-	// }
-	// if (lngJqueryActive == 0) {
-	// break;
-	// }
-	// if (System.currentTimeMillis() - lngStartTimeElementSetJQueryActive > Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
-	// break;
-	// }
-	// }
-	// long lngStartTimeElementSetJQueryAnimate = System.currentTimeMillis();
-	// while (true) {
-	// long lngElementsAnimated = 0;
-	// boolean blnJqueryExist = false;
-	// try {
-	// blnJqueryExist = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null);");
-	// if (blnJqueryExist == true) {
-	// lngElementsAnimated = (long) ((JavascriptExecutor) objWebDriver).executeScript("return $(\":animated\").length");
-	// System.out.println("elementSet JQueryAnimate = " + lngElementsAnimated);
-	// // System.out.println("elementSet JQueryAnimate = " + ((JavascriptExecutor) objWebDriver).executeScript("return $(\":animated\").length"));
-	// }
-	//
-	// } catch (Exception e) {
-	// System.out.println("elementSet JQueryAnimate Exception = " + e.toString());
-	// }
-	// if (lngElementsAnimated == 0) {
-	// break;
-	// }
-	// if (System.currentTimeMillis() - lngStartTimeElementSetJQueryAnimate > Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
-	// break;
-	// }
-	// }
-	// long lngStartTimeElementSetAngularJS = System.currentTimeMillis();
-	// while (true) {
-	// boolean blnAngularJs = false;
-	// long lngAngularJsInjectorActive = 0;
-	// try {
-	// blnAngularJs = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null);");
-	// System.out.println("elementSet blnAngularJs = " + blnAngularJs);
-	//
-	// // boolean blnAngularJs2 = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular == null);");
-	// // System.out.println("elementSet blnAngularJs2 = " + blnAngularJs2);
-	// if (blnAngularJs == true) {
-	// lngAngularJsInjectorActive = (long) ((JavascriptExecutor) objWebDriver).executeScript("return (angular.element(document).injector().get(‘$http’).pendingRequests.length);");
-	// System.out.println("elementSet lngJqueryActive = " + lngAngularJsInjectorActive);
-	// }
-	// // boolean blnAngularJsInjector = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (angular.element(document).injector() != null);");
-	// // System.out.println("elementSet blnAngularJsInjector = " + blnAngularJsInjector);
-	//
-	// // break;
-	// // blnAngularJS = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
-	//
-	// // System.out.println("elementSet blnAngularJS = " + blnAngularJS);
-	// } catch (Exception e) {
-	// System.out.println("elementSet AngularJS Exception = " + e.toString());
-	// }
-	// if (lngAngularJsInjectorActive == 0) {
-	// break;
-	// }
-	// if (System.currentTimeMillis() - lngStartTimeElementSetAngularJS > Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
-	// break;
-	// }
-	// }
-	//
-	// // ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
-	// //
-	//
-	// // "return $(":animated").length"
-	// // "return $('#{0}').is(':animated')"
-	//
-	// // long lngStartTimeElementSetJQueryAJAXCallsHaveCompleted = System.currentTimeMillis();
-	// // System.out.println("elementVisible jQuery.active MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
-	// // // ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
-	// // System.out.println("elementVisible document.readyState MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return document.readyState"));
-	// // long lngStartTimeElementSet__EVENTTARGET = System.currentTimeMillis();
-	// // while (((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);")!=null) {
-	// //
-	// //
-	// // // try {
-	// // // System.out.println("elementVisible jQuery.active = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
-	// // // blnJquery = (Boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
-	// // // if (blnJquery == false) {
-	// // // break;
-	// // // }
-	// // // } catch (Exception e) {
-	// // // System.out.println("elementVisible Exception = " + e.toString());
-	// // // }
-	// // }// the end of
-	// // System.out.println("elementVisible lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
-	//
-	// // long lngStartTimeElementSetJQueryAJAXCallsHaveCompleted = System.currentTimeMillis();
-	// // ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
-	//
-	// // ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
-	//
-	// // System.out.println("elementSet document.readyState MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return document.readyState"));
-	//
-	// // wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfAllElementsLocatedBy(objWebElement)));
-	// // System.out.println("elementSet finally jQueryAJAXCallsHaveCompleted = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
-	//
-	// // IWait<IWebDriver> wait = new OpenQA.Selenium.Support.UI.WebDriverWait(driver, TimeSpan.FromSeconds(30.00));
-	// // wait.Until(driver1 => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
-	//
-	// // System.out.println("elementSet jQueryAJAXCallsHaveCompleted MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSetJQueryAJAXCallsHaveCompleted));
-	// }// the end of if (blnSet == true)
-	//
-	// } catch (Exception e) {
-	// System.out.println("elementSet Exception = " + e.toString());
-	// } finally {
-	// if (blnSet == false) {
-	// throw new ElementNotSetException("Element not set");
-	// }
-	// System.out.println("elementSet finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet));
-	// }
-	// }// the end of elementSet
 
 	public static void elementOnMouseOver(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
 		System.out.println("elementOnMouseOverSync - " + objWebElement.toString());
@@ -871,14 +577,16 @@ public class Evinrude {
 		objJavascriptExecutor.executeScript("arguments[0].onmouseover();", objWebElement);
 	}
 
-	public static boolean elementOnMouseOverSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
-		long lngStartTimeOnMouseOverSync = System.currentTimeMillis();
-
+	@SuppressWarnings("unchecked")
+	public static void elementOnMouseOverSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
+		Long lngTimeStart = System.currentTimeMillis();
+		Long lngTimeEnd = null;
 		Boolean blnFound = false;
 		Boolean blnVisible = false;
 		Boolean blnEnabled = false;
 		Boolean blnOnMouseOver = false;
 		Boolean blnStatus = false;
+		Boolean blnExit = false;
 		while (true) {
 			try {
 				if (blnFound == false) {
@@ -895,29 +603,49 @@ public class Evinrude {
 				}
 				if (blnOnMouseOver == false) {
 					elementOnMouseOver(objStep, objWebDriver, objWebElement);
-					// objStep.put("strOutputValue", strGetValue);
 					blnOnMouseOver = true;
 				}
 				blnStatus = true;
-				coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
 			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
-				System.out.println("elementOnMouseOverSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeOnMouseOverSync));
+				System.out.println("elementOnMouseOverSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementNotVisibleException e) {
 				blnVisible = false;
-				System.out.println("elementOnMouseOverSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeOnMouseOverSync));
+				System.out.println("elementOnMouseOverSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementNotEnabledException e) {
 				blnEnabled = false;
-				System.out.println("elementOnMouseOverSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeOnMouseOverSync));
+				System.out.println("elementOnMouseOverSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
 				if (blnStatus == true) {
-					return true;
-				} else {
-					return false;
+					objStep.put("strStatus", "pass");
+					blnExit = true;
+				} else if (blnStatus == false) {
+					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
+						if (blnFound == false) {
+							blnOnMouseOver = false;
+						}
+					} else {
+						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
+							objStep.put("strStatus", "warning");
+							blnExit = true;
+						} else {
+							objStep.put("strStatus", "fail");
+							blnExit = true;
+						}
+					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
+				}// the end of if (blnStatus == true)
+				if (blnExit == true) {
+					coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+					lngTimeEnd = System.currentTimeMillis();
+					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
+					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
+					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
+					System.out.println("elementOnMouseOverSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
+					return;
 				}
 			}
 		}
-	}
+	}// the end of elementOnMouseOverSync
 
 	public static void elementSet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement, String strOuterHTML) throws ElementTagNameNotSupportedException, ElementNotSetException {
 		long lngStartTimeElementSet = System.currentTimeMillis();
@@ -1273,8 +1001,8 @@ public class Evinrude {
 
 	@SuppressWarnings("unchecked")
 	public static void elementSetSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
-		Long lngStartTimeSetSync = System.currentTimeMillis();
-		Integer intMillisecondsWaited = null;
+		Long lngTimeStart = System.currentTimeMillis();
+		Long lngTimeEnd = null;
 		Boolean blnFound = false;
 		Boolean blnVisible = false;
 		Boolean blnEnabled = false;
@@ -1293,7 +1021,7 @@ public class Evinrude {
 					if (objWebElement != null) {
 						strOuterHTML = objWebElement.getAttribute("outerHTML");
 						System.out.println(strOuterHTML);
-						System.out.println("elementSetSync outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+						System.out.println("elementSetSync outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 					}
 					System.out.println("elementSetSync strOuterHTML over");
 
@@ -1313,9 +1041,9 @@ public class Evinrude {
 					// TODO complete Alert Set, move or consider how to handle assert
 					if (blnSet == false) {
 						// if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-						// coordinateHighlightScreenshot(objStep, "", objWebDriver, null, objStep);
+						// coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
 						// } else {
-						coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+						coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
 						// }
 						elementSet(objStep, objWebDriver, objWebElement, strOuterHTML);
 						blnSet = true;
@@ -1330,7 +1058,7 @@ public class Evinrude {
 				case "hidden":
 					if (blnSet == false) {
 						objStep.put("strStatus", "pass");
-						coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+						coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
 						elementSet(objStep, objWebDriver, objWebElement, strOuterHTML);
 						blnSet = true;
 					}
@@ -1358,7 +1086,7 @@ public class Evinrude {
 						blnAssert = true;
 					}
 					objStep.put("strStatus", "pass");
-					coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+					coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
 					blnStatus = true;
 					break;
 				case "visible":
@@ -1375,7 +1103,7 @@ public class Evinrude {
 						blnAssert = true;
 					}
 					objStep.put("strStatus", "pass");
-					coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+					coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
 					blnStatus = true;
 					break;
 				case "enabled":
@@ -1393,7 +1121,7 @@ public class Evinrude {
 						blnAssert = true;
 					}
 					objStep.put("strStatus", "pass");
-					coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+					coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
 					blnStatus = true;
 					break;
 				case "disabled":
@@ -1411,28 +1139,28 @@ public class Evinrude {
 						blnAssert = true;
 					}
 					objStep.put("strStatus", "pass");
-					coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+					coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
 					blnStatus = true;
 					break;
 				}// the end of switch (strAssert.toLowerCase())
 				blnStatus = true;
 			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
-				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+				System.out.println("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementNotVisibleException e) {
 				blnVisible = false;
-				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+				System.out.println("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementNotEnabledException e) {
 				blnEnabled = false;
-				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+				System.out.println("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementTagNameNotSupportedException e) {
-				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+				System.out.println("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				blnExit = true;
 			} catch (ElementNotHiddenException e) {
-				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+				System.out.println("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				blnAssert = false;
 			} catch (ValueNotMatchedException e) {
-				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+				System.out.println("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				blnFound = false;
 				blnAssert = false;
 			} catch (ElementNotSetException e) {
@@ -1440,37 +1168,39 @@ public class Evinrude {
 				blnAssert = false;
 			} catch (ElementNotDisabledException e) {
 				blnAssert = false;
-				System.out.println("elementSetSync - " + e.toString() + "  lngStartTimeSetSync = " + (System.currentTimeMillis() - lngStartTimeSetSync));
+				System.out.println("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (DoPostBackNotCompleteException | JQueryAjaxNotCompleteException | JQueryAnimationNotCompleteException | AngularJsNotCompleteException e) {
 				blnSetSync = false;
 			} finally {
-				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeSetSync);
-				System.out.println("elementSetSync finally MillisecondsWaited = " + intMillisecondsWaited);
 				if (blnExit == true) {
-				}
-				if (intMillisecondsWaited <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
-					if (blnStatus == true) {
-						blnExit = true;
-					}
 				} else {
-					if (blnStatus == true) {
-						objStep.put("strStatus", "pass");
-						blnExit = true;
-					} else if (blnStatus == false) {
-						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
-							objStep.put("strStatus", "warning");
-							coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
+						if (blnStatus == true) {
 							blnExit = true;
-						} else {
-							objStep.put("strStatus", "fail");
-							coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-							blnExit = false;
+						}
+					} else {
+						if (blnStatus == true) {
+							objStep.put("strStatus", "pass");
+							blnExit = true;
+						} else if (blnStatus == false) {
+							if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
+								objStep.put("strStatus", "warning");
+								coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+								blnExit = true;
+							} else {
+								objStep.put("strStatus", "fail");
+								coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+								blnExit = false;
+							}
 						}
 					}
 				}
 				if (blnExit == true) {
-					coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-					System.out.println("elementSetSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngStartTimeSetSync));
+					lngTimeEnd = System.currentTimeMillis();
+					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
+					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
+					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
+					System.out.println("elementSetSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
 			}// the end of try
@@ -1529,7 +1259,7 @@ public class Evinrude {
 				if (blnExit == true) {
 					System.out.println("elementVerifyValueSync finally blnExit = true");
 					objStep.put("strStatus", "fail");
-					coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+					coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
 					return false;
 				}
 				if (blnStatus == true) {
@@ -1537,9 +1267,9 @@ public class Evinrude {
 					objStep.put("strOutputValue", strActualValue);
 					objStep.put("strStatus", "pass");
 					// if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-					// coordinateHighlightScreenshot(objStep, "", objWebDriver, null, objStep);
+					// coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
 					// } else {
-					coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+					coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
 					// }
 					return true;
 				} else if (blnStatus == false) {
@@ -1553,10 +1283,10 @@ public class Evinrude {
 							objStep.put("strOutputValue", strActualValue);
 							objStep.put("strStatus", "warning");
 							if (blnFound == false || blnVisible == false) {
-								coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+								coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
 							} else {
 								System.out.println("elementVerifyValueSync finally coordinateHighlightScreenshot element ");
-								coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+								coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
 							}
 							return true;
 						} else {
@@ -1565,13 +1295,13 @@ public class Evinrude {
 
 							if (blnValueNotMatched == false) {
 								if (blnFound == false || blnVisible == false) {
-									coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+									coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
 								} else {
-									coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+									coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
 								}
 
 							} else {
-								coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+								coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
 							}
 							return false;
 						}
@@ -1624,11 +1354,12 @@ public class Evinrude {
 
 	@SuppressWarnings("unchecked")
 	public static void elementVisibleSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
-		Long lngStartTimeVisibleSync = System.currentTimeMillis();
-		Integer intMillisecondsWaited = null;
+		Long lngTimeStart = System.currentTimeMillis();
+		Long lngTimeEnd = null;
 		Boolean blnFound = false;
 		Boolean blnVisible = false;
 		Boolean blnStatus = false;
+		Boolean blnExit = false;
 		while (true) {
 			try {
 				if (blnFound == false) {
@@ -1643,45 +1374,54 @@ public class Evinrude {
 			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException | ElementNotVisibleException e) {
 				blnFound = false;
 				blnVisible = false;
-				System.out.println("elementVisibleSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeVisibleSync));
+				System.out.println("elementVisibleSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
-				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeVisibleSync);
-				System.out.println("elementVisibleSync finally intMillisecondsWaited = " + intMillisecondsWaited);
 				if (blnStatus == true) {
 					System.out.println("elementVisibleSync finally blnStatus = " + blnStatus);
 					objStep.put("strStatus", "pass");
-					coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-					return;
+					// coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+					blnExit = true;
 				} else if (blnStatus == false) {
-					if (intMillisecondsWaited <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
+					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
 						if (blnFound == false) {
 							blnVisible = false;
 						}
 					} else {
 						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
 							objStep.put("strStatus", "warning");
-							coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-							return;
+							// coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+							blnExit = true;
 						} else {
 							objStep.put("strStatus", "fail");
-							coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-							return;
+							// coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+							blnExit = true;
 						}
 					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
+				if (blnExit == true) {
+					coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+					lngTimeEnd = System.currentTimeMillis();
+					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
+					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
+					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
+					System.out.println("elementVisibleSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
+					return;
+				}
 			}// the end of try
 		}// the end of While
 	}// the end of elementVisibleSync
 
-	public static Boolean elementHiddenSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
-		Long lngStartTimeHiddenSync = System.currentTimeMillis();
-		Integer intMillisecondsWaited = null;
+	@SuppressWarnings("unchecked")
+	public static void elementHiddenSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
+		Long lngTimeStart = System.currentTimeMillis();
+		Long lngTimeEnd = null;
 		Boolean blnFound = false;
 		Boolean blnHidden = false;
 		Boolean blnStatus = false;
+		Boolean blnExit = false;
 		while (true) {
 			try {
-				System.out.println("elementHiddenSync - blnFound = " + blnFound);
+				// System.out.println("elementHiddenSync - blnFound = " + blnFound);
 				if (blnFound == false) {
 					objWebElement = elementFind(objStep, objWebDriver);
 					blnFound = true;
@@ -1694,22 +1434,19 @@ public class Evinrude {
 			} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException | ElementNotFoundException e) {
 				blnFound = true;
 				blnHidden = true;
-				System.out.println("elementHiddenSync - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeHiddenSync));
+				System.out.println("elementHiddenSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (MultipleElementsFoundException | ElementNotHiddenException e) {
 				blnFound = false;
 				blnHidden = false;
-				System.out.println("elementHiddenSync - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeHiddenSync));
+				System.out.println("elementHiddenSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
-				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeHiddenSync);
-				System.out.println("elementHiddenSync finally intMillisecondsWaited = " + intMillisecondsWaited);
 				if (blnStatus == true) {
-					System.out.println("elementHiddenSync finally blnStatus = " + blnStatus);
 					objStep.put("strStatus", "pass");
 					elementCoordinates(objStep, objWebDriver, null);
-					coordinateHighlightScreenshot(objStep, "", objWebDriver, null, objStep);
-					return true;
+					// coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
+					blnExit = true;
 				} else if (blnStatus == false) {
-					if (intMillisecondsWaited <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
+					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
 						if (blnFound == false) {
 							blnHidden = false;
 						}
@@ -1717,26 +1454,37 @@ public class Evinrude {
 						elementCoordinates(objStep, objWebDriver, objWebElement);
 						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
 							objStep.put("strStatus", "warning");
-							coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-							return true;
+							// coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+							blnExit = true;
 						} else {
 							objStep.put("strStatus", "fail");
-							coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-							return false;
+							// coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+							blnExit = true;
 						}
 					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
+				if (blnExit == true) {
+					coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+					lngTimeEnd = System.currentTimeMillis();
+					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
+					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
+					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
+					System.out.println("elementHiddenSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
+					return;
+				}
 			}// the end of try
 		}// the end of While
 	}// the end of elementHiddenSync
 
-	public static Boolean elementEnabledSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
-		Long lngStartTimeEnabledSync = System.currentTimeMillis();
-		Integer intMillisecondsWaited = null;
+	@SuppressWarnings("unchecked")
+	public static void elementEnabledSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
+		Long lngTimeStart = System.currentTimeMillis();
+		Long lngTimeEnd = null;
 		Boolean blnFound = false;
 		Boolean blnVisible = false;
 		Boolean blnEnabled = false;
 		Boolean blnStatus = false;
+		Boolean blnExit = false;
 		while (true) {
 			try {
 				if (blnFound == false) {
@@ -1756,49 +1504,54 @@ public class Evinrude {
 				blnFound = false;
 				blnVisible = false;
 				blnEnabled = false;
-				System.out.println("elementEnabledSync - " + e.toString() + " MillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeEnabledSync));
+				System.out.println("elementEnabledSync - " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementNotEnabledException e) {
 				blnEnabled = false;
-				System.out.println("elementEnabledSync - " + e.toString() + " MillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeEnabledSync));
+				System.out.println("elementEnabledSync - " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
-				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeEnabledSync);
-				System.out.println("elementEnabledSync finally MillisecondsWaited = " + intMillisecondsWaited);
 				if (blnStatus == true) {
-					System.out.println("elementEnabledSync finally blnStatus = " + blnStatus);
 					objStep.put("strStatus", "pass");
-					coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-					return true;
+					// coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+					blnExit = true;
 				} else if (blnStatus == false) {
-					if (intMillisecondsWaited <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
+					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
 						if (blnFound == false) {
 							blnEnabled = false;
 						}
 					} else {
 						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
 							objStep.put("strStatus", "warning");
-							coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-							return true;
+							// coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+							blnExit = true;
 						} else {
 							objStep.put("strStatus", "fail");
-							coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-							return false;
+							// coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+							blnExit = true;
 						}
 					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
+				if (blnExit == true) {
+					coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+					lngTimeEnd = System.currentTimeMillis();
+					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
+					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
+					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
+					System.out.println("elementEnabledSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
+					return;
+				}
 			}// the end of try
 		}// the end of While
 	}// the end of elementEnabledSync
 
 	@SuppressWarnings("unchecked")
-	public static Boolean elementDisabledSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
-		Long lngStartTimeDisabledSync = System.currentTimeMillis();
-		objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngStartTimeDisabledSync));
-		objStep.put("strStatus", "");
-		Integer intMillisecondsWaited = null;
+	public static void elementDisabledSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
+		Long lngTimeStart = System.currentTimeMillis();
+		Long lngTimeEnd = null;
 		Boolean blnFound = false;
 		Boolean blnVisible = false;
 		Boolean blnDisabled = false;
 		Boolean blnStatus = false;
+		Boolean blnExit = false;
 		while (true) {
 			try {
 				if (blnFound == false) {
@@ -1818,41 +1571,38 @@ public class Evinrude {
 				blnFound = false;
 				blnVisible = false;
 				blnDisabled = false;
-				System.out.println("elementDisabledSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeDisabledSync));
+				System.out.println("elementDisabledSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementNotDisabledException e) {
 				blnDisabled = false;
-				System.out.println("elementDisabledSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngStartTimeDisabledSync));
+				System.out.println("elementDisabledSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
-				intMillisecondsWaited = (int) (System.currentTimeMillis() - lngStartTimeDisabledSync);
 				if (blnStatus == true) {
 					objStep.put("strStatus", "pass");
-					coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
-				}
-				if (blnStatus == true) {
-					if (intMillisecondsWaited > Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
+					blnExit = true;
+				} else if (blnStatus == false) {
+					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objStep.get("intMillisecondsToWait").toString())) {
+						if (blnFound == false) {
+							blnDisabled = false;
+						}
+					} else {
 						if (Boolean.parseBoolean(objStep.get("blnOptional").toString()) == true) {
 							objStep.put("strStatus", "warning");
-							coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+							blnExit = true;
 						} else {
 							objStep.put("strStatus", "fail");
-							coordinateHighlightScreenshot(objStep, "", objWebDriver, objWebElement, objStep);
+							blnExit = true;
 						}
-					}// the end of if (intMillisecondsWaited > intMillisecondsToWait)
+					}// the end of if (intMillisecondsWaited <= intMillisecondsToWait)
 				}// the end of if (blnStatus == true)
-				if (objStep.get("strStatus").toString() != "") {
-					Long lngMillisecondsWaited = System.currentTimeMillis();
-					objStep.put("strStepDuration", (lngMillisecondsWaited - lngStartTimeDisabledSync));
-					System.out.println("browserLaunch finally intMillisecondsWaited = " + objStep.get("strStepDuration").toString());
-					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngMillisecondsWaited));
-					System.out.println("elementDisabledSync finally blnStatus = " + blnStatus);
+				if (blnExit == true) {
+					coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
+					lngTimeEnd = System.currentTimeMillis();
+					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
+					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
+					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
+					System.out.println("elementDisabledSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
+					return;
 				}
-				if (objStep.get("strStatus").toString().equals("pass")) {
-					return true;
-				}
-				if (objStep.get("strStatus").toString().equals("fail")) {
-					return false;
-				}
-				System.out.println("elementDisabledSync finally intMillisecondsWaited = " + intMillisecondsWaited);
 			}// the end of try
 		}// the end of While
 	}// the end of elementDisabledSync
@@ -1877,7 +1627,7 @@ public class Evinrude {
 				myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL).build().perform();
 				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
 				elementCoordinates(objStep, objWebDriver, null);
-				coordinateHighlightScreenshot(objStep, "", objWebDriver, null, objStep);
+				coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
 				objStep.put("blnStatus", true);
 				return objWebDriver;
 			case "ie":
@@ -1891,7 +1641,7 @@ public class Evinrude {
 				objWebDriver.manage().window().maximize();
 				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
 				elementCoordinates(objStep, objWebDriver, null);
-				coordinateHighlightScreenshot(objStep, "", objWebDriver, null, objStep);
+				coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
 				objStep.put("blnStatus", true);
 				objWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
 				// objWebDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
@@ -1918,7 +1668,7 @@ public class Evinrude {
 				objWebDriver.manage().window().maximize();
 				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
 				elementCoordinates(objStep, objWebDriver, null);
-				coordinateHighlightScreenshot(objStep, "", objWebDriver, null, objStep);
+				coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
 				objStep.put("blnStatus", true);
 				return objWebDriver;
 			case "safari":
@@ -1927,7 +1677,7 @@ public class Evinrude {
 				objWebDriver.manage().window().maximize();
 				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
 				elementCoordinates(objStep, objWebDriver, null);
-				coordinateHighlightScreenshot(objStep, "", objWebDriver, null, objStep);
+				coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
 				objStep.put("blnStatus", true);
 				return objWebDriver;
 			case "opera":
@@ -1944,7 +1694,7 @@ public class Evinrude {
 				// objWebDriver.manage().window().setSize(dim);
 				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
 				elementCoordinates(objStep, objWebDriver, null);
-				coordinateHighlightScreenshot(objStep, "", objWebDriver, null, objStep);
+				coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
 				objStep.put("blnStatus", true);
 				return objWebDriver;
 				// // WebDriver objWebDriver;
@@ -2489,7 +2239,7 @@ public class Evinrude {
 				throw new ElementNotHiddenException("Element is displayed.");
 			}// the end of if (objWebElement.isDisplayed())
 		} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException e) {
-			System.out.println("elementHidden - " + e.toString() + "  lngStartTimeHiddenSync = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
+			System.out.println("elementHidden - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
 			return true;
 		} finally {
 			System.out.println("elementHidden finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
@@ -2709,7 +2459,7 @@ public class Evinrude {
 	}// the end of syncTime
 
 	@SuppressWarnings({ "serial", "unchecked" })
-	public static void coordinateHighlightScreenshot(final JSONObject objStepHighlightArea, final String strHighlightArea, final WebDriver objWebDriver, final WebElement objWebElement, JSONObject objStep) {
+	public static void coordinateHighlightScreenshot(final JSONObject objStepHighlightArea, final WebDriver objWebDriver, final WebElement objWebElement, JSONObject objStep) {
 		System.out.println("coordinateHighlightScreenshot start");
 
 		long lngStartTimeCoordinateHighlightScreenshot = System.currentTimeMillis();
