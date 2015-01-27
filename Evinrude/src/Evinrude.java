@@ -256,7 +256,6 @@ public class Evinrude {
 		WebDriver objWebDriver = null;
 		WebElement objWebElement;
 		String strTestPath = "";
-		boolean blnPass = false;
 		JSONParser parser = new JSONParser();
 		JSONObject objJsonFile = null;
 		JSONArray objTestSteps = null;
@@ -285,15 +284,16 @@ public class Evinrude {
 		new File(strResultsPath + strImagesPath).mkdirs();
 		// System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
+			strTestPath = "Data/public/local_ATW_window.json";
 			// strTestPath = "Data/public/local_ATW_AlertPopups.json";
-			//strTestPath = "Data/public/local_ATW.json";
+			// strTestPath = "Data/public/local_ATW.json";
 			// strTestPath = "Data/public/local_ATW_frames.json";
 			// strTestPath = "Data/public/public_SeaWorld.json";
 			// strTestPath = "Data/public/local_jqueryFade.json";
 			// strTestPath = "Data/public/local_size_Visibility.json";
 			// strTestPath = "Data/public/local_AngularJS_Calculator.json";
 			// strTestPath = "Data/public/public_mercury_tours.json";
-			 strTestPath = "Data/public/public_ranorex.json";
+			// strTestPath = "Data/public/public_ranorex.json";
 			// strTestPath = "Data/public/public_w3s_FireEvents.json"
 			// strTestPath = "Data/public/public_w3s_JqueryAnimate.json";
 			// strTestPath = "Data/public/public_w3s_jquery.json";
@@ -308,7 +308,6 @@ public class Evinrude {
 			writeJsonToHtml(objTestSteps, strResultsPath + "StepsOriginal.html");
 			for (intStep = 0; intStep < objTestSteps.size(); intStep++) {
 				objWebElement = null;
-				blnPass = false;
 				objStep = (JSONObject) objTestSteps.get(intStep);
 				String strInputValue = objStep.get("strInputValue").toString();
 				if (strInputValue.toLowerCase().startsWith("<link>") == true) {
@@ -453,9 +452,6 @@ public class Evinrude {
 				}// the end of if (strInputValue != "<skip>")
 				if (objStep.get("strOutputLinkName").toString().trim().length() != 0) {
 					objLinks.put(objStep.get("strOutputLinkName").toString(), objStep.get("strOutputValue").toString());
-					// System.out.println(objStep.get("strOutputLinkName").toString());
-					// System.out.println(objLinks.get(objStep.get("strOutputLinkName").toString()).toString());
-					// System.out.println(objStep.get("strOutputValue").toString());
 				}
 				System.out.println(objStep.get("strStatus").toString());
 				if (objStep.get("strStatus").toString() == "fail") {
@@ -464,7 +460,6 @@ public class Evinrude {
 						break;
 					}
 				}
-
 			}// for intStep
 				// TODO confirm the exceptions to catch in main some may need to be removed
 		} catch (IOException e) {
@@ -475,8 +470,7 @@ public class Evinrude {
 			System.out.println("main - " + e.toString());
 		} finally {
 			// TODO review how end of run is determined for reporting and cleanup
-			// if (intStep == objTestSteps.size() || blnPass == false || objStep.get("strAction").toString().toLowerCase().equals("break")) {
-			writeJsonToHtml(objTestSteps, strResultsPath + "StepsWithDefaults.html");
+				writeJsonToHtml(objTestSteps, strResultsPath + "StepsWithDefaults.html");
 			writeReportToHtml(objTestSteps, strResultsPath + "Report.html");
 			writeJsonToFile(objJsonFile, strResultsPath + "StepsAfterRun.json");
 			if (objWebDriver.toString().contains("InternetExplorerDriver")) {
@@ -646,6 +640,8 @@ public class Evinrude {
 			objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
 		}
 		try {
+			// objWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+			// objWebDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
 			long lngStartTimeOuterHTML = System.currentTimeMillis();
 			// strOuterHTML = objWebElement.getAttribute("outerHTML");
 			// System.out.println("elementSet outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeOuterHTML));
@@ -822,93 +818,102 @@ public class Evinrude {
 	}
 
 	public static void SetSyncComplete(WebDriver objWebDriver, String strOuterHTML) throws DoPostBackNotCompleteException, JQueryAjaxNotCompleteException, JQueryAnimationNotCompleteException, AngularJsNotCompleteException {
-		long lngStartTimeElementSet = System.currentTimeMillis();
-		if (isAlertPresent(objWebDriver) == true) {
-			// Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
-			// System.out.println("elementFind arrHandles.length = " + arrHandles.length);
-			return;
-		}
-		WaitForReadyState(objWebDriver);
-		// JavascriptExecutor objJavascriptExecutor = null;
-		// objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
-		// waitForAngularRequestsToFinish(objJavascriptExecutor);
-		boolean blnEventTarget = false;
-		if (strOuterHTML.contains("__doPostBack")) {
-			long lngStartTimeElementSet__EVENTTARGET = System.currentTimeMillis();
-			try {
-				System.out.println("SetSyncComplete __EVENTTARGET value = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
-				blnEventTarget = !objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value").equals("");
-			} catch (Exception e) {
-				System.out.println("SetSyncComplete Exception = " + e.toString());
+		System.out.println("SetSyncComplete Start");
+		long lngTimeStart = System.currentTimeMillis();
+		try {
+			System.out.println("SetSyncComplete isAlertPresent Start");
+			if (isAlertPresent(objWebDriver) == true) {
+				// Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
+				// System.out.println("elementFind arrHandles.length = " + arrHandles.length);
+				return;
 			}
-			System.out.println("SetSyncComplete blnEventTarget = " + blnEventTarget);
-			if (blnEventTarget == true) {
+			System.out.println("SetSyncComplete isAlertPresent complete");
+			WaitForReadyState(objWebDriver);
+			// JavascriptExecutor objJavascriptExecutor = null;
+			// objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
+			// waitForAngularRequestsToFinish(objJavascriptExecutor);
+			boolean blnEventTarget = false;
+			if (strOuterHTML.contains("__doPostBack")) {
+				long lngStartTimeElementSet__EVENTTARGET = System.currentTimeMillis();
+				try {
+					System.out.println("SetSyncComplete __EVENTTARGET value = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
+					blnEventTarget = !objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value").equals("");
+				} catch (Exception e) {
+					System.out.println("SetSyncComplete Exception = " + e.toString());
+				}
+				System.out.println("SetSyncComplete blnEventTarget = " + blnEventTarget);
+				if (blnEventTarget == true) {
+					// blnResult = false;
+					throw new AngularJsNotCompleteException("");
+				}
+				System.out.println("SetSyncComplete lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
+			}// the end of (strOuterHTML.contains("__doPostBack"))
+			long lngStartTimeElementSetJQueryActive = System.currentTimeMillis();
+			boolean blnJquery = false;
+			long lngJqueryActive = 0;
+			try {
+				// System.out.println("elementSet blnJquery = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null);"));
+				blnJquery = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null);");
+				if (blnJquery == true) {
+					lngJqueryActive = (long) ((JavascriptExecutor) objWebDriver).executeScript("return (jQuery.active);");
+					System.out.println("SetSyncComplete lngJqueryActive = " + lngJqueryActive);
+					// System.out.println("elementSet both = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
+
+				}
+			} catch (Exception e) {
+				System.out.println("SetSyncComplete JqueryActive Exception = " + e.toString());
+			}
+			if (lngJqueryActive > 0) {
+				// blnResult = false;
+				throw new JQueryAjaxNotCompleteException("");
+			}
+			// long lngStartTimeElementSetJQueryAnimate = System.currentTimeMillis();
+			long lngElementsAnimated = 0;
+			boolean blnJqueryExist = false;
+			try {
+				blnJqueryExist = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null);");
+				if (blnJqueryExist == true) {
+					lngElementsAnimated = (long) ((JavascriptExecutor) objWebDriver).executeScript("return $(\":animated\").length");
+					System.out.println("SetSyncComplete JQueryAnimate = " + lngElementsAnimated);
+					// System.out.println("SetSyncComplete JQueryAnimate = " + ((JavascriptExecutor) objWebDriver).executeScript("return $(\":animated\").length"));
+				}
+			} catch (Exception e) {
+				System.out.println("SetSyncComplete JQueryAnimate Exception = " + e.toString());
+			}
+			if (lngElementsAnimated > 0) {
+				// blnResult = false;
+				throw new JQueryAnimationNotCompleteException("");
+			}
+			long lngStartTimeElementSetAngularJS = System.currentTimeMillis();
+			boolean blnAngularJs = false;
+			long lngAngularJsInjectorActive = 0;
+			try {
+				blnAngularJs = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null);");
+				System.out.println("SetSyncComplete blnAngularJs = " + blnAngularJs);
+				// boolean blnAngularJs2 = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular == null);");
+				// System.out.println("elementSet blnAngularJs2 = " + blnAngularJs2);
+				// if (blnAngularJs == true) {
+				lngAngularJsInjectorActive = (long) ((JavascriptExecutor) objWebDriver).executeScript("return (angular.element(document).injector().get(‘$http’).pendingRequests.length);");
+				System.out.println("SetSyncComplete lngJqueryActive = " + lngAngularJsInjectorActive);
+				// }
+				// boolean blnAngularJsInjector = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (angular.element(document).injector() != null);");
+				// System.out.println("elementSet blnAngularJsInjector = " + blnAngularJsInjector);
+				// blnAngularJS = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
+				// System.out.println("elementSet blnAngularJS = " + blnAngularJS);
+			} catch (Exception e) {
+				System.out.println("SetSyncComplete AngularJS Exception = " + e.toString());
+			}
+			if (lngAngularJsInjectorActive > 0) {
 				// blnResult = false;
 				throw new AngularJsNotCompleteException("");
 			}
-			System.out.println("SetSyncComplete lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
-		}// the end of (strOuterHTML.contains("__doPostBack"))
-		long lngStartTimeElementSetJQueryActive = System.currentTimeMillis();
-		boolean blnJquery = false;
-		long lngJqueryActive = 0;
-		try {
-			// System.out.println("elementSet blnJquery = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null);"));
-			blnJquery = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null);");
-			if (blnJquery == true) {
-				lngJqueryActive = (long) ((JavascriptExecutor) objWebDriver).executeScript("return (jQuery.active);");
-				System.out.println("SetSyncComplete lngJqueryActive = " + lngJqueryActive);
-				// System.out.println("elementSet both = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
 
-			}
-		} catch (Exception e) {
-			System.out.println("SetSyncComplete JqueryActive Exception = " + e.toString());
-		}
-		if (lngJqueryActive > 0) {
-			// blnResult = false;
-			throw new JQueryAjaxNotCompleteException("");
-		}
-		// long lngStartTimeElementSetJQueryAnimate = System.currentTimeMillis();
-		long lngElementsAnimated = 0;
-		boolean blnJqueryExist = false;
-		try {
-			blnJqueryExist = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null);");
-			if (blnJqueryExist == true) {
-				lngElementsAnimated = (long) ((JavascriptExecutor) objWebDriver).executeScript("return $(\":animated\").length");
-				System.out.println("SetSyncComplete JQueryAnimate = " + lngElementsAnimated);
-				// System.out.println("SetSyncComplete JQueryAnimate = " + ((JavascriptExecutor) objWebDriver).executeScript("return $(\":animated\").length"));
-			}
-		} catch (Exception e) {
-			System.out.println("SetSyncComplete JQueryAnimate Exception = " + e.toString());
-		}
-		if (lngElementsAnimated > 0) {
-			// blnResult = false;
-			throw new JQueryAnimationNotCompleteException("");
-		}
-		long lngStartTimeElementSetAngularJS = System.currentTimeMillis();
-		boolean blnAngularJs = false;
-		long lngAngularJsInjectorActive = 0;
-		try {
-			blnAngularJs = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null);");
-			System.out.println("SetSyncComplete blnAngularJs = " + blnAngularJs);
-			// boolean blnAngularJs2 = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular == null);");
-			// System.out.println("elementSet blnAngularJs2 = " + blnAngularJs2);
-			// if (blnAngularJs == true) {
-			lngAngularJsInjectorActive = (long) ((JavascriptExecutor) objWebDriver).executeScript("return (angular.element(document).injector().get(‘$http’).pendingRequests.length);");
-			System.out.println("SetSyncComplete lngJqueryActive = " + lngAngularJsInjectorActive);
-			// }
-			// boolean blnAngularJsInjector = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (angular.element(document).injector() != null);");
-			// System.out.println("elementSet blnAngularJsInjector = " + blnAngularJsInjector);
-			// blnAngularJS = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
-			// System.out.println("elementSet blnAngularJS = " + blnAngularJS);
-		} catch (Exception e) {
-			System.out.println("SetSyncComplete AngularJS Exception = " + e.toString());
-		}
-		if (lngAngularJsInjectorActive > 0) {
-			// blnResult = false;
-			throw new AngularJsNotCompleteException("");
-		}
-		System.out.println("SetSyncComplete MillisecondsWaited = " + (int) (System.currentTimeMillis() - lngStartTimeElementSet));
+		} catch (NoSuchWindowException e) {
+			System.out.println("SetSyncComplete - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 
+		} finally {
+			System.out.println("SetSyncComplete finally Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngTimeStart));
+		}
 		// if (blnResult == true) {
 		// return true;
 		// } else {
@@ -916,70 +921,11 @@ public class Evinrude {
 		// }
 	}
 
-	// public class Wait
-	// {
-	// private const bool Debug = true;
-	// private const int ImplicitWaitInSeconds = 30;
-	//
-	// private readonly IWebDriver _driver;
-	//
-	// public Wait(IWebDriver webDriver)
-	// {
-	// _driver = webDriver;
-	// }
-	//
-	// public void Until(Func<IWebDriver, bool> waitCondition, int timeoutInSeconds = Constants.ImplicitWaitInSeconds)
-	// {
-	// var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(timeoutInSeconds));
-	// wait.Until(waitCondition);
-	// }
-	//
-	// public void UntilAnimationIsDone(string elementId, int timeoutInSeconds = ImplicitWaitInSeconds)
-	// {
-	// Until(driver =>
-	// {
-	// var javaScriptExecutor = (IJavaScriptExecutor)driver;
-	// var isAnimated = javaScriptExecutor
-	// .ExecuteScript(string.Format("return $('#{0}').is(':animated')", elementId))
-	// .ToString().ToLower();
-	//
-	// if (Debug)
-	// Console.WriteLine(string.Format("Element: '{0}' Is Animated: {1}", elementId, isAnimated));
-	//
-	// // return true when finished animating
-	// return !bool.Parse(isAnimated);
-	// }, timeoutInSeconds);
-	// }
-	// }
-
-	// internal static void WaitForAllAjaxCalls(this ISelenium selenium, IWebDriver driver, int timeout = 40)
-	// {
-	// Stopwatch sw = new Stopwatch();
-	// sw.Start();
-	// while (true)
-	// {
-	// if (sw.Elapsed.Seconds > timeout) throw new Exception("Timeout");
-	// var ajaxIsComplete = (bool)driver.ExecuteScript("return jQuery.active == 0");
-	// if (ajaxIsComplete)
-	// break;
-	// Thread.Sleep(100);
-	// }
-	// }
-
 	public static ExpectedCondition<Boolean> angularHasFinishedProcessing() {
 		return new ExpectedCondition<Boolean>() {
 			@Override
 			public Boolean apply(WebDriver driver) {
 				return Boolean.valueOf(((JavascriptExecutor) driver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)").toString());
-			}
-		};
-	}
-
-	public static ExpectedCondition<Boolean> jQueryAJAXCallsHaveCompleted() {
-		return new ExpectedCondition<Boolean>() {
-			@Override
-			public Boolean apply(WebDriver driver) {
-				return (Boolean) ((JavascriptExecutor) driver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);");
 			}
 		};
 	}
@@ -1597,11 +1543,6 @@ public class Evinrude {
 				objWebDriver.manage().window().maximize();
 				Actions myAction = new Actions(objWebDriver);
 				myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL).build().perform();
-				// objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-				// elementCoordinates(objStep, objWebDriver, null);
-				// coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
-				// objStep.put("blnStatus", true);
-				// return objWebDriver;
 				break;
 			case "ie":
 				desiredCapabilities = DesiredCapabilities.internetExplorer();
@@ -1611,13 +1552,8 @@ public class Evinrude {
 				objWebDriver.get(objStep.get("strInputValue").toString());
 				// objWebDriver.navigate().to(objStep.get("strInputValue").toString());
 				objWebDriver.manage().window().maximize();
-				// objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-				// elementCoordinates(objStep, objWebDriver, null);
-				// coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
-				// objStep.put("blnStatus", true);
 				// objWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
 				// // objWebDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
-				// return objWebDriver;
 				break;
 			case "chrome":
 				switch (OSType()) {
@@ -1634,39 +1570,22 @@ public class Evinrude {
 				objWebDriver = new ChromeDriver();
 				objWebDriver.get(objStep.get("strInputValue").toString());
 				objWebDriver.manage().window().maximize();
-				// objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-				// elementCoordinates(objStep, objWebDriver, null);
-				// coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
-				// objStep.put("blnStatus", true);
-				// return objWebDriver;
 				break;
 			case "safari":
 				objWebDriver = new SafariDriver();
 				objWebDriver.get(objStep.get("strInputValue").toString());
 				objWebDriver.manage().window().maximize();
-				// objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-				// elementCoordinates(objStep, objWebDriver, null);
-				// coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
-				// objStep.put("blnStatus", true);
-				// return objWebDriver;
 				break;
 			case "opera":
 				// TODO OperaDriver setup latest driver and test
 				// desiredCapabilities = DesiredCapabilities.internetExplorer();
 				// desiredCapabilities.setJavascriptEnabled(true);
-				// System.setProperty("webdriver.opera.driver",
-				// "C:\\Selenium\\ChromeDriver\\chromedriver_win32\\chromedriver.exe");
 				objWebDriver = new OperaDriver();
 				objWebDriver.get(objStep.get("strInputValue").toString());
 				// objWebDriver.manage().window().maximize();
 				// objWebDriver.manage().window().setPosition(new Point(0, 0));
 				// Dimension dim = new Dimension(1382, 754);
 				// objWebDriver.manage().window().setSize(dim);
-				// objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-				// elementCoordinates(objStep, objWebDriver, null);
-				// coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
-				// objStep.put("blnStatus", true);
-				// return objWebDriver;
 				// // WebDriver objWebDriver;
 				// Selenium selenium;
 				// objWebDriver = new OperaDriver();
@@ -1708,14 +1627,19 @@ public class Evinrude {
 	}// the end of ClipboardGet
 
 	public static boolean isAlertPresent(WebDriver objWebDriver) {
+		System.out.println("isAlertPresent Start");
 		try {
 			// objWebDriver.switchTo().alert();
 			// System.out.println(objWebDriver.getTitle());
 			// System.out.println(objWebDriver.manage().window().getPosition());
 			// System.out.println(objWebDriver.manage().window().getSize());
+			objWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
 			Alert alert = objWebDriver.switchTo().alert();
 			return true;
 		} catch (NoAlertPresentException e) {
+			return false;
+		} catch (Exception e) {
+			System.out.println("isAlertPresent " + e.toString());
 			return false;
 		}
 	}// the end of isAlertPresent()
@@ -2047,72 +1971,25 @@ public class Evinrude {
 		}
 	}// the end of elementFind
 
-	public static String getElementXPath(WebDriver driver, WebElement element) {
-		return (String) ((JavascriptExecutor) driver).executeScript("gPt=function(c){if(c.id!==''){return'id(\"'+c.id+'\")'}if(c===document.body){return c.tagName}var a=0;var e=c.parentNode.childNodes;for(var b=0;b<e.length;b++){var d=e[b];if(d===c){return gPt(c.parentNode)+'/'+c.tagName+'['+(a+1)+']'}if(d.nodeType===1&&d.tagName===c.tagName){a++}}};return gPt(arguments[0]).toLowerCase();", element);
+	public static String getElementXPath(WebDriver objWebDriver, WebElement objWebElement) {
+		return (String) ((JavascriptExecutor) objWebDriver).executeScript("gPt=function(c){if(c.id!==''){return'id(\"'+c.id+'\")'}if(c===document.body){return c.tagName}var a=0;var e=c.parentNode.childNodes;for(var b=0;b<e.length;b++){var d=e[b];if(d===c){return gPt(c.parentNode)+'/'+c.tagName+'['+(a+1)+']'}if(d.nodeType===1&&d.tagName===c.tagName){a++}}};return gPt(arguments[0]).toLowerCase();", objWebElement);
 	}
-
-	// public String GetElementXPath(WebElement element, WebDriver driver)
-	// {
-	// return (String) ((JavascriptExecutor) driver).executeScript(
-	// "getXPath=function(node)" +
-	// "{" +
-	// "if (node.id !== '')" +
-	// "{" +
-	// "return '//' + node.tagName.toLowerCase() + '[@id=\"' + node.id + '\"]'"
-	// +
-	// "}" +
-	//
-	// "if (node === document.body)" +
-	// "{" +
-	// "return node.tagName.toLowerCase()" +
-	// "}" +
-	//
-	// "var nodeCount = 0;" +
-	// "var childNodes = node.parentNode.childNodes;" +
-	//
-	// "for (var i=0; i<childNodes.length; i++)" +
-	// "{" +
-	// "var currentNode = childNodes[i];" +
-	//
-	// "if (currentNode === node)" +
-	// "{" +
-	// return getXPath(node.parentNode) +
-	// '/' + node.tagName.toLowerCase() +
-	// '[' + (nodeCount+1) + ']'" +
-	// "}" +
-	//
-	// "if (currentNode.nodeType === 1 && " +
-	// "currentNode.tagName.toLowerCase() === node.tagName.toLowerCase())" +
-	// "{" +
-	// "nodeCount++" +
-	// "}" +
-	// "}" +
-	// "};" +
-	//
-	// "return getXPath(arguments[0]);", element);
-	// }
 
 	@SuppressWarnings("unchecked")
 	public static void elementCoordinates(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
 		long lngStartTimeElementCoordinates = System.currentTimeMillis();
 		try {
 			int intScrollbar = 0;
-			// long lngStartTimeManageWindow = System.currentTimeMillis();
 			Point objWebDriverPoint = objWebDriver.manage().window().getPosition();
 			int intBrowserOuterX = objWebDriverPoint.x;
 			int intBrowserOuterY = objWebDriverPoint.y;
 			Dimension objWebDriverDimension = objWebDriver.manage().window().getSize();
 			int intBrowserOuterWidth = objWebDriverDimension.width;
 			int intBrowserOuterHeight = objWebDriverDimension.height;
-			// System.out.println("elementCoordinates intBrowserOuterX, Y  intBrowserOuterWidth, Height = " + objWebDriverPoint + " " + objWebDriverDimension + " " + (System.currentTimeMillis() - lngStartTimeManageWindow));
 			objStep.put("intBrowserOuterX", intBrowserOuterX);
 			objStep.put("intBrowserOuterY", intBrowserOuterY);
 			objStep.put("intBrowserOuterWidth", intBrowserOuterWidth);
 			objStep.put("intBrowserOuterHeight", intBrowserOuterHeight);
-			// System.out.println("elementCoordinates intBrowserOuterX = " + intBrowserOuterX);
-			// System.out.println("elementCoordinates intBrowserOuterY = " + intBrowserOuterY);
-			// System.out.println("elementCoordinates intBrowserOuterWidth = " + intBrowserOuterWidth);
-			// System.out.println("elementCoordinates intBrowserOuterHeight = " + intBrowserOuterHeight);
 			if (objWebElement != null) {
 				Coordinates objElementCoordinates = ((Locatable) objWebElement).getCoordinates();
 				Point objElementPoint = objElementCoordinates.inViewPort();
@@ -2128,20 +2005,13 @@ public class Evinrude {
 				int intBrowserInnerHeight = Integer.parseInt(objStep.get("intBrowserInnerHeight").toString());
 				int intElementX = Integer.parseInt(objStep.get("intElementX").toString());
 				int intElementY = Integer.parseInt(objStep.get("intElementY").toString());
-				int intElementWidth = Integer.parseInt(objStep.get("intElementWidth").toString());
-				int intElementHeight = Integer.parseInt(objStep.get("intElementHeight").toString());
-				// System.out.println("elementCoordinates intElementX = " + intElementX);
-				// System.out.println("elementCoordinates intElementY = " + intElementY);
-				// System.out.println("elementCoordinates intElementWidth = " + intElementWidth);
-				// System.out.println("elementCoordinates intElementHeight = " + intElementHeight);
+				// int intElementWidth = Integer.parseInt(objStep.get("intElementWidth").toString());
+				// int intElementHeight = Integer.parseInt(objStep.get("intElementHeight").toString());
 				int intWindowBorder = (int) ((intBrowserOuterWidth - intBrowserInnerWidth - intScrollbar) / 2);
 				int intElementScreenX = ((intBrowserOuterX + intElementX) + intWindowBorder);
 				int intElementScreenY = (int) ((intBrowserOuterY + intElementY) + (intBrowserOuterHeight - intBrowserInnerHeight) - intWindowBorder);
 				objStep.put("intElementScreenX", intElementScreenX);
 				objStep.put("intElementScreenY", intElementScreenY);
-				// System.out.println("elementCoordinates intWindowBorder = " + intWindowBorder);
-				// System.out.println("elementCoordinates intElementScreenX = " + intElementScreenX);
-				// System.out.println("elementCoordinates intElementScreenY = " + intElementScreenY);
 			}
 		} catch (Exception e) {
 			System.out.println(e.toString());
@@ -2883,9 +2753,136 @@ public class Evinrude {
 		}
 	}
 
-	public static String createStepActual(JSONArray objTestSteps) {
-		return null;
+	public static String createStepActual(JSONObject objStep) {
+		String DetailsHTML = "";
+		String strDetailsNoHTML = "";
+		String strStepDetails = objStep.get("strAttributeValues").toString();
+		String strOutputParameterValue = "";
+		String strInputParameterValueHTML = "";
+		String strInputParameterValue = "";
+		String strActualReturn = "";
+		String strActualReturnHTML = "";
+		String strStepParameterName = "";
+		String intWaited = "";
+		String strParameterName = "";
 
+		// strObjectToString = objObjectDetailsHTML.GetTOProperty("TestObjGenType")
+		String strToString = "";// strStepParameterName & " " & strObjectToString
+		// strInputParameterValue = strParameterValue
+		String strOutputParameterValueHTML = "";
+		// strInputParameterValueHTML = FormatHTML(strInputParameterValue)
+		// strActualReturnHTML = FormatHTML(strActualReturn)
+
+		switch (strStepDetails.toUpperCase()) {
+		case "launch":
+
+		case "DEFAULT":
+			DetailsHTML = "The <b>" + strToString + " </b> default value is {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>}.";
+			strDetailsNoHTML = "The expected " + strToString + " default value is " + strOutputParameterValue + ".";
+		case "CLICKED":
+			DetailsHTML = "The expected <b>" + strToString + "</b>  value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was clicked.";
+			strDetailsNoHTML = "The expected " + strToString + "  value {" + strInputParameterValue + "} was clicked.";
+		case "EXPECTED":
+			DetailsHTML = "The expected <b>" + strToString + "</b>  value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was not verified.<BR>The actual value was {<b><FONT COLOR='FF0000'>" + strActualReturnHTML + "</FONT></b>}.";
+			strDetailsNoHTML = "The expected " + strToString + " value {" + strInputParameterValue + "} was not verified.  The actual value was {" + strActualReturn + "}.";
+		case "EXPECTEDTOOLTIP":
+			DetailsHTML = "The expected <b>" + strToString + "</b>  tooltip value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was not verified.<BR>The actual value was {<b><FONT COLOR='FF0000'>" + strActualReturnHTML + "</FONT></b>}.";
+			strDetailsNoHTML = "The expected " + strToString + " tooltip value {" + strInputParameterValue + "} was not verified.  The actual value was {" + strActualReturn + "}.";
+		case "FIND":
+			DetailsHTML = "The expected <b>" + strToString + "</b>  value {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was found.";
+			strDetailsNoHTML = "The expected " + strToString + "  value {" + strOutputParameterValue + "} was found.";
+		case "NOTFOUND":
+			DetailsHTML = "The expected <b>" + strToString + "</b>  value {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was not found.";
+			strDetailsNoHTML = "The expected " + strToString + " value {" + strOutputParameterValue + "} was not found.";
+		case "VERIFY":
+			DetailsHTML = "The expected <b>" + strToString + "</b>  value {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was verified.";
+			strDetailsNoHTML = "The expected " + strToString + " value {" + strOutputParameterValue + "} was verified.";
+		case "VERIFYTOOLTIP":
+			DetailsHTML = "The expected <b>" + strToString + "</b> tooltip value {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was verified.";
+			strDetailsNoHTML = "The expected " + strToString + " tooltip value {" + strOutputParameterValue + "} was verified.";
+		case "GET":
+			DetailsHTML = "The <b>" + strToString + " </b> actual value is {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>}.";
+			strDetailsNoHTML = "The " + strToString + " actual value is {" + strOutputParameterValue + "}";
+		case "GETTOOLTIP":
+			DetailsHTML = "The <b>" + strToString + " </b> tooltip actual value is {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>}.";
+			strDetailsNoHTML = "The " + strToString + " tooltip actual value is {" + strOutputParameterValue + "}";
+		case "SET":
+			DetailsHTML = "The expected <b>" + strToString + " </b>  value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was set.";
+			strDetailsNoHTML = "The expected " + strToString + " value {" + strInputParameterValue + "} was set.";
+		case "PERSISTED":
+			DetailsHTML = "The expected <b>" + strToString + " </b>  value {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} persisted.";
+			strDetailsNoHTML = "The expected " + strToString + " value {" + strOutputParameterValue + "} persisted.";
+		case "PASSWORD":
+			DetailsHTML = "The <b>" + strToString + " </b> password value {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} was set.";
+			strDetailsNoHTML = "The " + strToString + " password value {" + strOutputParameterValue + "} was set.";
+		case "NOTPERSISTED":
+			DetailsHTML = "The expected <b>" + strToString + " </b> value  {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} did not persist.<BR>The actual value {<b><FONT COLOR='FF0000'>" + strActualReturnHTML + "</FONT></b>} was displayed.";
+			strDetailsNoHTML = "The expected " + strToString + " value {" + strInputParameterValue + "} did not persist.  The actual value {" + strActualReturn + "} was displayed.";
+		case "EXIST":
+			DetailsHTML = "The expected <b>" + strToString + "</b> exists.";
+			strDetailsNoHTML = "The expected " + strToString + " exists.";
+		case "NOTEXIST":
+			DetailsHTML = "The expected <b>" + strToString + "</b> does not exist after " + intWaited + " milliseconds.";
+			strDetailsNoHTML = "The expected " + strToString + " does not exist after " + intWaited + " milliseconds.";
+		case "NOTEXISTTOOLTIP":
+			DetailsHTML = "The expected <b>" + strToString + "</b> tooltip does not exist after " + intWaited + " milliseconds.";
+			strDetailsNoHTML = "The expected " + strToString + " tooltip does not exist after " + intWaited + " milliseconds.";
+		case "INVISIBLE":
+			DetailsHTML = "The expected <b>" + strToString + "</b> <b><FONT COLOR='008000'></FONT></b> is invisible.";
+			strDetailsNoHTML = "The expected " + strToString + " is invisible.";
+		case "ENABLED":
+			DetailsHTML = "The expected <b>" + strToString + "</b> <b><FONT COLOR='008000'></FONT></b> is enabled.";
+			strDetailsNoHTML = "The expected " + strToString + " is enabled.";
+		case "DISABLED":
+			DetailsHTML = "The expected <b>" + strToString + "</b> <b><FONT COLOR='008000'></FONT></b> is disabled.";
+			strDetailsNoHTML = "The expected " + strToString + " is disabled.";
+		case "VISIBLE":
+			DetailsHTML = "The expected <b>" + strToString + "</b> <b><FONT COLOR='008000'></FONT></b> is visible.";
+			strDetailsNoHTML = "The expected " + strToString + " is visible.";
+		case "HIDDEN":
+			DetailsHTML = "The expected <b>" + strToString + "</b> <b><FONT COLOR='008000'></FONT></b> is hidden.";
+			strDetailsNoHTML = "The expected " + strToString + " is hidden.";
+		case "SYNCNOTEXISTS":
+			DetailsHTML = "The expected <b>" + strToString + "</b></b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} does not exist after " + intWaited + " milliseconds.";
+			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} does not exist after " + intWaited + " milliseconds.";
+		case "SYNCEXISTS":
+			DetailsHTML = "The expected <b>" + strToString + "</b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} exists after " + intWaited + " milliseconds.";
+			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} exists after " + intWaited + " milliseconds.";
+		case "SYNCCLOSED":
+			DetailsHTML = "The expected <b>" + strToString + "</b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} closed after " + intWaited + " milliseconds.";
+			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} closed after " + intWaited + " milliseconds.";
+		case "SYNCNOTCLOSED":
+			DetailsHTML = "The expected <b>" + strToString + "</b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} did not close after " + intWaited + " milliseconds.";
+			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} did not close after " + intWaited + " milliseconds.";
+		case "SYNCHIDDEN":
+			DetailsHTML = "The expected <b>" + strToString + "</b></b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} does not exist after " + intWaited + " milliseconds.";
+			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} does not exist after " + intWaited + " milliseconds.";
+		case "SYNCVISIBLE":
+			DetailsHTML = "The expected <b>" + strToString + "</b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} exists after " + intWaited + " milliseconds.";
+			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} exists after " + intWaited + " milliseconds.";
+		case "SYNCOPTIONAL":
+			DetailsHTML = "The expected <b>" + strToString + "</b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} sync is optional after " + intWaited + " milliseconds.";
+			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} exists after " + intWaited + " milliseconds.";
+		case "SYNCDISABLED":
+			DetailsHTML = "The expected <b>" + strToString + "</b></b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} does not exist after " + intWaited + " milliseconds.";
+			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} does not exist after " + intWaited + " milliseconds.";
+		case "SYNCENABLED":
+			DetailsHTML = "The expected <b>" + strToString + "</b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} exists after " + intWaited + " milliseconds.";
+			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} exists after " + intWaited + " milliseconds.";
+		case "NAVIGATE":
+			DetailsHTML = "The expected <b>" + strToString + " </b>  value {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} was set.<BR>No validation performed due to navigation.";
+			strDetailsNoHTML = "The expected " + strToString + " value {" + strOutputParameterValue + "} was set. No validation performed due to navigation.";
+		case "KEYSTROKE":
+			DetailsHTML = "The expected <b>" + strToString + "</b>  value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was pressed.";
+			strDetailsNoHTML = "The expected " + strToString + "  value {" + strInputParameterValue + "} was pressed.";
+		case "NOTINLIST":
+			DetailsHTML = "The list item {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} does not exist in the <b>" + strStepParameterName + "</b> list field.<BR>Please confirm the input value against the actual list values {<b><FONT COLOR='FF0000'>" + strActualReturnHTML;
+			// "</FONT></b>} is available for this field."
+			strDetailsNoHTML = "The list item {" + strInputParameterValue + "} does not exist in the " + strParameterName + " list field.  Please confirm the input value against the actual list values {" + strActualReturn + "} is available for this field.";
+
+			DetailsHTML = "<DIV align='left/>" + DetailsHTML + "</DIV>";
+		}
+		return null;
 	}
 
 	// Function DetailsHTML(objObjectDetailsHTML, strStepAction, strStepParameterName, strActualReturn, intWaited)
@@ -2902,8 +2899,7 @@ public class Evinrude {
 	// strDetailsNoHTML = "The expected " & strToString & " default value is " & strOutputParameterValue& "."
 	// Case "CLICKED"
 	// DetailsHTML = "The expected <b>" & strToString & "</b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} was clicked."
-	// strDetailsNoHTML = "The expected " & strToString & "  value {" & strInputParameterValue & "} was clicked."
-	// Case "EXPECTED"
+	// strDetailsNoHTML = "The expected " & strToString & "  value {" & strInputParameterValue & "} was clickecase / Case "EXPECTED"
 	// DetailsHTML = "The expected <b>" & strToString & "</b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} was not verified.<BR>The actual value was {<b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & ">" & strActualReturnHTML & "</FONT></b>}."
 	// strDetailsNoHTML = "The expected " & strToString & " value {" & strInputParameterValue & "} was not verified.  The actual value was {" & strActualReturn & "}."
 	// Case "EXPECTEDTOOLTIP"
