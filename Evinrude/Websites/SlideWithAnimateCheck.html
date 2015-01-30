@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script> 
+$(document).ready(function(){
+  $("#flip").click(function(){
+    $("#GEORGE").slideDown(5000);
+  });
+  $("#stop").click(function(){
+   alert($("#GEORGE").is(':animated'));
+  });
+});
+</script>
+ 
+<style> 
+#GEORGE,#flip
+{
+padding:5px;
+text-align:center;
+background-color:#e5eecc;
+border:solid 1px #c3c3c3;
+}
+#GEORGE
+{
+padding:50px;
+display:none;
+}
+</style>
+</head>
+<body>
+ 
+<button id="stop">Stop sliding</button>
+<div id="flip">Click to slide down panel</div>
+<div id="GEORGE">Hello world!</div>
+
+</body>
+</html>

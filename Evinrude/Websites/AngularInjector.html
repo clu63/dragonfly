@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>AngularJS Example:  - jsFiddle demo by johnoscott</title>
+  
+  <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/angular.js/1.0.3/angular.min.js'></script>
+  
+  <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+  
+  
+  <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+  
+    
+      <link rel="stylesheet" type="text/css" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css">
+    
+  
+  <style type='text/css'>
+    #clock { /* Style apply to element with id="clock" */
+        font: bold 24pt sans; /* Use a big bold font */
+        background: #ddf; /* On a light bluish-gray background */
+        padding: 10px; /* Surround it with some space */
+        border: solid black 2px; /* And a solid black border */
+        border-radius: 10px; /* Round the corners (where supported) */
+    }
+    #clock.odd {
+        background: #ff4500; /* On a light bluish-gray background */
+    }
+  </style>
+  
+
+
+<script type='text/javascript'>//<![CDATA[ 
+
+
+function MainCtrl($scope) {
+    $scope.ticks = 0;
+
+    $scope.setTicks = function(t) {
+        // console.log("MainCntl.setTicks: " + t);
+        $scope.ticks = t;
+    }
+};
+
+
+var timer = {
+        elapsed : 0,
+        period : 1000,
+        intervalTimer : null,
+        start : function (f) {
+            // http://stackoverflow.com/questions/1276137/how-to-pass-an-array-object-to-the-setinterval-function
+            var that = {timer : this, callback : f}; // create closure for setInterval
+            this.intervalTimer = window.setInterval(function () {
+                that.timer.elapsed += 1;
+                // console.log("interval: " + that.timer.elapsed);
+                that.callback(that.timer.elapsed);
+            }, this.period)
+        },
+        stop : function () {
+            if (this.intervalTimer) {
+                window.clearInterval(this.intervalTimer);
+                this.intervalTimer = null;
+            }
+        },
+        isRunning : function () {
+            return !this.intervalTimer
+        }
+    };
+
+    document.addEventListener("DOMContentLoaded", init, false);
+
+    function init() {
+
+       timer.start(function(elapsed){
+           var elt = document.getElementById("timerValue");
+           elt.innerText = elapsed;
+
+           updateAngularModel(elapsed);
+       })
+
+    }
+
+    function updateAngularModel(newTicks) {
+
+    /*
+     Call Angular JS from legacy code
+
+     http://stackoverflow.com/questions/10490570/call-angular-js-from-legacy-code
+
+    Interop from outside of angular to angular is same as debugging angular application or integrating with third party library.
+            For any DOM element you can do this:
+    • angular.element(domElement).scope() to get the current scope for the element
+    • angular.element(domElement).injector() to get the current app injector
+    • angular.element(domElement).controller() to get a hold of the ng-controller instance.
+    From the injector you can get a hold of any service in angular application. Similarly from the scope you can invoke any methods which have been published to it.
+    Keep in mind that any changes to the angular model or any method invocations on the scope need to be wrapped in $apply() like this:
+        $scope.$apply(function(){
+            // perform any model changes or method invocations here on angular app.
+        });
+
+    */
+
+        // get scope from the DOM element
+        e = document.getElementById('myAngularApp');
+        scope = angular.element(e).scope();
+        // update the model with a wrap in $apply(fn) which will refresh the view for us
+        scope.$apply(function(){
+            scope.setTicks(newTicks);
+        });
+
+    }
+
+//]]>  
+
+</script>
+
+
+</head>
+<body>
+  <!-- 
+
+-->
+
+
+<h1>Angular Outside Update Test</h1>
+
+<p>A timer external to the Angular scope attempts to update the model.</p>
+
+<fieldset id="myAngularApp" title="Angular Scope" ng-app ng-controller="MainCtrl">
+    <h2>Angular Scope</h2>
+
+    <p>Model Ticks: <span id="clock" ng-class="{odd:ticks%2}">{{ticks}}</span> </p><!-- The ticks gets inserted here -->
+
+    <p>Bound Ticks: <input type=text ng-model="ticks" placeholder="Waiting for input"/></p>
+
+</fieldset>
+
+<!-- End Angular scope -->
+
+<p></p>
+
+<fieldset>
+    <h2>Outside (No Angular Scope)</h2>
+    External Ticks : <span id="timerValue">-</span>
+    <button onclick="timer.stop();">Stop</button>
+
+</fieldset>
+  
+</body>
+
+
+</html>
+
