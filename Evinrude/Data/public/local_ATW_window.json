@@ -3,7 +3,7 @@
 	[
 		{
 			"strAction": "launch",
-			"strTagName": "chrome",
+			"strTagName": "firefox",
 			"strAttributeNames": "",
 			"strAttributeValues": "",
 			"strInputValue": "ATW/Automation_Test_Website.html",

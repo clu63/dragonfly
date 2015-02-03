@@ -3,7 +3,7 @@
 	[
 		{
 			"strAction": "launch",
-			"strTagName": "ie",
+			"strTagName": "firefox",
 			"strAttributeNames": "",
 			"strAttributeValues": "",
 			"strInputValue": "ElementHiddenSize.html",

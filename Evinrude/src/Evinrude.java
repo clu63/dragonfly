@@ -284,13 +284,13 @@ public class Evinrude {
 		new File(strResultsPath + strImagesPath).mkdirs();
 		// System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
-			strTestPath = "Data/public/local_ATW_window.json";
+			//strTestPath = "Data/public/local_ATW_window.json";
 			// strTestPath = "Data/public/local_ATW_AlertPopups.json";
 			// strTestPath = "Data/public/local_ATW.json";
 			// strTestPath = "Data/public/local_ATW_frames.json";
 			// strTestPath = "Data/public/public_SeaWorld.json";
 			// strTestPath = "Data/public/local_jqueryFade.json";
-			// strTestPath = "Data/public/local_size_Visibility.json";
+			 strTestPath = "Data/public/local_size_Visibility.json";
 			// strTestPath = "Data/public/local_AngularJS_Calculator.json";
 			// strTestPath = "Data/public/public_mercury_tours.json";
 			// strTestPath = "Data/public/public_ranorex.json";
@@ -2642,6 +2642,7 @@ public class Evinrude {
 		StringBuilder objStringBuilder = new StringBuilder();
 		BufferedWriter objBufferedWriter = null;
 		String strColor = "";
+		String strStatusIcon = "";
 		try {
 			objBufferedWriter = new BufferedWriter(new FileWriter(strFile));
 			objStringBuilder.append("<!DOCTYPE html>");
@@ -2659,26 +2660,35 @@ public class Evinrude {
 				case "pass":
 					if (objStep.get("strAction").toString().toLowerCase().equals("set") && objStep.get("strAssert").toString().toLowerCase().equals("off")) {
 						strColor = "blue";
+						strStatusIcon="<span style=\"font-weight:bold;font-size:60px;color:blue\">&#10043</span>";
 					} else {
 						strColor = "green";
+						strStatusIcon="<span style=\"font-weight:bold;font-size:60px;color:green\">&#10003</span>";
 					}
 					break;
 				case "fail":
 					strColor = "red";
+					strStatusIcon="<span style=\"font-weight:bold;font-size:60px;color:red\">&#10007</span>";
 					break;
 				case "warning":
 					strColor = "yellow";
+					strStatusIcon="<span style=\"font-weight:bold;font-size:60px;color:orange\">!</span>";
 					break;
 				case "info":
 					strColor = "megenta";
 					break;
 				}
+				
+					
 				String strStartTimestamp = objStep.get("strStartTimestamp").toString();
 				String strStepDuration = objStep.get("strStepDuration").toString();
 				String strEndTimestamp = objStep.get("strEndTimestamp").toString();
 
-				objStringBuilder.append("<TD rowspan=\"2\" width=75px align=center valign=middle>Step " + intTestStepRow + "</TD>");
-				objStringBuilder.append("<TD style=\"background-color:" + strColor + ";color:black\" rowspan=\"2\" width=75px align=center valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
+				objStringBuilder.append("<TD rowspan=\"2\" width=60px align=center valign=middle>Step " + intTestStepRow + "</TD>");
+				objStringBuilder.append("<TD rowspan=\"2\" width=35px align=center valign=middle>" + strStatusIcon + "</TD>");
+				//objStringBuilder.append("<TD style=\"background-color:" + strColor + ";color:black\" rowspan=\"2\" width=75px align=center valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
+				//objStringBuilder.append("<TD style=\"color:" + strColor + ";\" rowspan=\"2\" width=75px align=center valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
+				objStringBuilder.append("<TD rowspan=\"2\" width=60px align=center valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
 				objStringBuilder.append("<TD width= 75px align=center valign=middle>Expected</TD>");
 				// objStringBuilder.append("<TD align=left valign=middle>" + objStep.get("strAction").toString() + "</TD>");
 				objStringBuilder.append("<TD align=left valign=middle>" + createStepExpected(objStep) + "</TD>");
