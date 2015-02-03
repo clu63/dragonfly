@@ -3,7 +3,7 @@
 	[
 		{
 			"strAction": "launch",
-			"strTagName": "safari",
+			"strTagName": "ie",
 			"strAttributeNames": "",
 			"strAttributeValues": "",
 			"strInputValue": "ATW/Automation_Test_Website.html",
@@ -27,7 +27,7 @@
 			"strTagName": "body",
 			"strAttributeNames": "index",
 			"strAttributeValues": "1",
-			"strInputValue": "",
+			"strInputValue": "<skip>",
 			"strLogicalName": "",
 			"intMillisecondsToWait": "",
 			"blnOptional": "",

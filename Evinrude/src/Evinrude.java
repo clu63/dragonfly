@@ -286,11 +286,11 @@ public class Evinrude {
 		try {
 			//strTestPath = "Data/public/local_ATW_window.json";
 			// strTestPath = "Data/public/local_ATW_AlertPopups.json";
-			// strTestPath = "Data/public/local_ATW.json";
+			 strTestPath = "Data/public/local_ATW.json";
 			// strTestPath = "Data/public/local_ATW_frames.json";
 			// strTestPath = "Data/public/public_SeaWorld.json";
 			// strTestPath = "Data/public/local_jqueryFade.json";
-			 strTestPath = "Data/public/local_size_Visibility.json";
+			// strTestPath = "Data/public/local_size_Visibility.json";
 			// strTestPath = "Data/public/local_AngularJS_Calculator.json";
 			// strTestPath = "Data/public/public_mercury_tours.json";
 			// strTestPath = "Data/public/public_ranorex.json";
@@ -470,7 +470,7 @@ public class Evinrude {
 			System.out.println("main - " + e.toString());
 		} finally {
 			// TODO review how end of run is determined for reporting and cleanup
-				writeJsonToHtml(objTestSteps, strResultsPath + "StepsWithDefaults.html");
+			writeJsonToHtml(objTestSteps, strResultsPath + "StepsWithDefaults.html");
 			writeReportToHtml(objTestSteps, strResultsPath + "Report.html");
 			writeJsonToFile(objJsonFile, strResultsPath + "StepsAfterRun.json");
 			if (objWebDriver.toString().contains("InternetExplorerDriver")) {
@@ -2660,39 +2660,38 @@ public class Evinrude {
 				case "pass":
 					if (objStep.get("strAction").toString().toLowerCase().equals("set") && objStep.get("strAssert").toString().toLowerCase().equals("off")) {
 						strColor = "blue";
-						strStatusIcon="<span style=\"font-weight:bold;font-size:60px;color:blue\">&#10043</span>";
+						strStatusIcon = "<span style=\"font-weight:bold;font-size:60px;color:blue\">&#10043</span>";
 					} else {
 						strColor = "green";
-						strStatusIcon="<span style=\"font-weight:bold;font-size:60px;color:green\">&#10003</span>";
+						strStatusIcon = "<span style=\"font-weight:bold;font-size:60px;color:green\">&#10003</span>";
 					}
 					break;
 				case "fail":
 					strColor = "red";
-					strStatusIcon="<span style=\"font-weight:bold;font-size:60px;color:red\">&#10007</span>";
+					strStatusIcon = "<span style=\"font-weight:bold;font-size:60px;color:red\">&#10007</span>";
 					break;
 				case "warning":
-					strColor = "yellow";
-					strStatusIcon="<span style=\"font-weight:bold;font-size:60px;color:orange\">!</span>";
+					strColor = "gold";
+					strStatusIcon = "<span style=\"font-weight:bold;font-size:60px;color:gold\">!</span>";
 					break;
 				case "info":
-					strColor = "megenta";
+					strColor = "magenta";
 					break;
 				}
-				
-					
+
 				String strStartTimestamp = objStep.get("strStartTimestamp").toString();
 				String strStepDuration = objStep.get("strStepDuration").toString();
 				String strEndTimestamp = objStep.get("strEndTimestamp").toString();
 
 				objStringBuilder.append("<TD rowspan=\"2\" width=60px align=center valign=middle>Step " + intTestStepRow + "</TD>");
 				objStringBuilder.append("<TD rowspan=\"2\" width=35px align=center valign=middle>" + strStatusIcon + "</TD>");
-				//objStringBuilder.append("<TD style=\"background-color:" + strColor + ";color:black\" rowspan=\"2\" width=75px align=center valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
-				//objStringBuilder.append("<TD style=\"color:" + strColor + ";\" rowspan=\"2\" width=75px align=center valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
+				// objStringBuilder.append("<TD style=\"background-color:" + strColor + ";color:black\" rowspan=\"2\" width=75px align=center valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
+				// objStringBuilder.append("<TD style=\"color:" + strColor + ";\" rowspan=\"2\" width=75px align=center valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
 				objStringBuilder.append("<TD rowspan=\"2\" width=60px align=center valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
 				objStringBuilder.append("<TD width= 75px align=center valign=middle>Expected</TD>");
 				// objStringBuilder.append("<TD align=left valign=middle>" + objStep.get("strAction").toString() + "</TD>");
 				objStringBuilder.append("<TD align=left valign=middle>" + createStepExpected(objStep) + "</TD>");
-				objStringBuilder.append("<TD rowspan=\"2\" width=150px align=left valign=middle>StartTime:" + strStartTimestamp + "<br>EndTime: " + strEndTimestamp + "<br>ElapsedTime: " + strStepDuration + "</TD>");
+				objStringBuilder.append("<TD rowspan=\"2\" width=150px align=left valign=middle>Start:" + strStartTimestamp + "<br>End: " + strEndTimestamp + "<br>Duration: " + strStepDuration + " ms</TD>");
 
 				objStringBuilder.append("</TR>");
 				objStringBuilder.append("<TR>");
@@ -2737,26 +2736,28 @@ public class Evinrude {
 		String intMillisecondsToWait = objStep.get("intMillisecondsToWait").toString();
 		String strInputValue = objStep.get("strInputValue").toString();
 		String strTagName = objStep.get("strTagName").toString();
-		String strObjectName = objStep.get("strAttributeValues").toString();
+		String strObjectName = objStep.get("strAttributeNames").toString() + "=" + objStep.get("strAttributeValues").toString();
 		switch (strAction.toLowerCase()) {
 		case "launch":
-			return "Launch " + strTagName + " browser to url {" + strInputValue + "} then expect navigation" + " within " + intMillisecondsToWait + " milliseconds";
+			return "Launch {" + strTagName + "} browser to url {" + strInputValue + "} then expect navigation within {" + intMillisecondsToWait + "} milliseconds";
 		case "close":
-			return "Close " + strTagName + " browser within " + intMillisecondsToWait + " milliseconds";
+			return "Close {" + strTagName + "} browser within {" + intMillisecondsToWait + "} milliseconds";
 		case "get":
-			return "Get " + strObjectName + " " + strTagName + " actual value" + " within " + intMillisecondsToWait + " milliseconds";
+			return "Get {" + strTagName + "} tag with attributes {" + strObjectName + "} value" + " within {" + intMillisecondsToWait + "} milliseconds";
 		case "set":
-			return "Set " + strObjectName + " " + strTagName + " to value {" + strInputValue + "}" + " within " + intMillisecondsToWait + " milliseconds";
+			return "Set  {" + strTagName + "} tag with attributes {" + strObjectName + "} to value {" + strInputValue + "}" + " within " + intMillisecondsToWait + "} milliseconds";
 		case "verify":
-			return "Verify " + strObjectName + " " + strTagName + " value is equal to {" + strInputValue + "}" + " within " + intMillisecondsToWait + " milliseconds";
+			return "Verify  {" + strTagName + "} tag with attributes {" + strObjectName + "} value is equal to {" + strInputValue + "}" + " within " + intMillisecondsToWait + "} milliseconds";
+		case "mouse_over":
+			return "Mouse over  {" + strTagName + "} tag with attributes {" + strObjectName + "} within " + intMillisecondsToWait + "} milliseconds";
 		case "sync_visible":
-			return "Sync until " + strObjectName + " " + strTagName + " is visible within " + intMillisecondsToWait + " milliseconds";
+			return "Sync until  {" + strTagName + "} tag with attributes {" + strObjectName + "} is visible within {" + intMillisecondsToWait + "} milliseconds";
 		case "sync_hidden":
-			return "Sync until " + strObjectName + " " + strTagName + " is hidden within " + intMillisecondsToWait + " milliseconds";
+			return "Sync until  {" + strTagName + "} tag with attributes {" + strObjectName + "} is hidden within {" + intMillisecondsToWait + "} milliseconds";
 		case "sync_enabled":
-			return "Sync until " + strObjectName + " " + strTagName + " is enabled within " + intMillisecondsToWait + " milliseconds";
+			return "Sync until  {" + strTagName + "} tag with attributes {" + strObjectName + "} is enabled within {" + intMillisecondsToWait + "} milliseconds";
 		case "sync_disabled":
-			return "Sync until " + strObjectName + " " + strTagName + " is disabled within " + intMillisecondsToWait + " milliseconds";
+			return "Sync until  {" + strTagName + "} tag with attributes {" + strObjectName + "} is disabled within {" + intMillisecondsToWait + "} milliseconds";
 		case "break":
 		default:
 			return strAction;
