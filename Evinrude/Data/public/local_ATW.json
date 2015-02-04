@@ -3,7 +3,7 @@
 	[
 		{
 			"strAction": "launch",
-			"strTagName": "ie",
+			"strTagName": "chrome",
 			"strAttributeNames": "",
 			"strAttributeValues": "",
 			"strInputValue": "ATW/Automation_Test_Website.html",

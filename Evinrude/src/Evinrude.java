@@ -284,9 +284,9 @@ public class Evinrude {
 		new File(strResultsPath + strImagesPath).mkdirs();
 		// System.out.println("ClipboardGet = " + ClipboardGet());
 		try {
-			//strTestPath = "Data/public/local_ATW_window.json";
+			// strTestPath = "Data/public/local_ATW_window.json";
 			// strTestPath = "Data/public/local_ATW_AlertPopups.json";
-			 strTestPath = "Data/public/local_ATW.json";
+			strTestPath = "Data/public/local_ATW.json";
 			// strTestPath = "Data/public/local_ATW_frames.json";
 			// strTestPath = "Data/public/public_SeaWorld.json";
 			// strTestPath = "Data/public/local_jqueryFade.json";
@@ -390,14 +390,10 @@ public class Evinrude {
 					case "launch":
 						// TODO create a browserLaunchSync to manage reporting and sync
 						objWebDriver = browserLaunch(objStep);
-						// blnPass = Boolean.parseBoolean(objStep.get("blnStatus").toString());
-						// long lngStartTimedocumenttitle = System.currentTimeMillis();
-						// System.out.println("main objWebDriver.toString = " + objWebDriver.toString() + " " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
 						break;
 					case "close":
 						objWebDriver.close();
 						objWebDriver.quit();
-						// blnPass = true;
 						objStep.put("strStatus", "pass");
 						coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
 						break;
@@ -453,7 +449,7 @@ public class Evinrude {
 				if (objStep.get("strOutputLinkName").toString().trim().length() != 0) {
 					objLinks.put(objStep.get("strOutputLinkName").toString(), objStep.get("strOutputValue").toString());
 				}
-				System.out.println(objStep.get("strStatus").toString());
+				// System.out.println(objStep.get("strStatus").toString());
 				if (objStep.get("strStatus").toString() == "fail") {
 					if (Boolean.parseBoolean(objStep.get("blnExitOnFail").toString()) == true) {
 						webElementCollectionTable(objStep.get("strTagName").toString(), objWebDriver);
