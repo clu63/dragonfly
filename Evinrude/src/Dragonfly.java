@@ -432,24 +432,10 @@ public class Dragonfly {
 					}// the end of if (strAction.toLowerCase().equals("break"))
 					strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
 					intFrame = Integer.parseInt(objStep.get("intFrame").toString());
-
-					// if (blnPass == true) {
-					// System.out.println("main strCurrentWindowHandle = " + strCurrentWindowHandle);
-					// } else {
-					// TODO call webElementCollectionTable cover all cases of fails
-					// System.out.println(objStep.get("strStatus").toString());
-					// if (objStep.get("strStatus").toString() == "fail") {
-					// if (Boolean.parseBoolean(objStep.get("blnExitOnFail").toString()) == true) {
-					// webElementCollectionTable(objStep.get("strTagName").toString(), objWebDriver);
-					// break;
-					// }
-					// }
-					// }// the end of if (blnPass == true)
 				}// the end of if (strInputValue != "<skip>")
 				if (objStep.get("strOutputLinkName").toString().trim().length() != 0) {
 					objLinks.put(objStep.get("strOutputLinkName").toString(), objStep.get("strOutputValue").toString());
 				}
-				// System.out.println(objStep.get("strStatus").toString());
 				if (objStep.get("strStatus").toString() == "fail") {
 					if (Boolean.parseBoolean(objStep.get("blnExitOnFail").toString()) == true) {
 						webElementCollectionTable(objStep.get("strTagName").toString(), objWebDriver);
