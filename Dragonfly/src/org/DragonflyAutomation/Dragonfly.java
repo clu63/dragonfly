@@ -243,17 +243,9 @@ public class Dragonfly {
 			Runtime.getRuntime().exec(strProcessToKill);
 		} catch (IOException e) {
 			// TODO killWindowsProcess Auto-generated catch block
-			System.out.println("killWindowsProcess " + e.toString());
+			logger("killWindowsProcess " + e.toString());
 		}
 	}
-
-	// public
-	// StringBuilder sb = new StringBuilder(some_appropriate_size);
-	// sb.append("select id1, ");
-	// sb.append(id2);
-	// sb.append(" from ");
-	// sb.append(table);
-	// return sb.toString();
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
@@ -270,7 +262,6 @@ public class Dragonfly {
 		int intFrame = -1;
 		String strResultsPath = "";
 		String strImagesPath = "";
-		//Dragonfly objLog = new Dragonfly();
 		logger("Working Directory = " + System.getProperty("user.dir"));
 		switch (OSType()) {
 		case "Windows":
@@ -287,7 +278,7 @@ public class Dragonfly {
 		}
 		new File(strResultsPath).mkdirs();
 		new File(strResultsPath + strImagesPath).mkdirs();
-		// System.out.println("ClipboardGet = " + ClipboardGet());
+		// logger("ClipboardGet = " + ClipboardGet());
 		try {
 			// strTestPath = "Data/public/local_ATW_window.json";
 			// strTestPath = "Data/public/local_ATW_AlertPopups.json";
@@ -397,6 +388,7 @@ public class Dragonfly {
 						objWebDriver = browserLaunch(objStep);
 						break;
 					case "close":
+						// TODO create a browserCloseSync to manage reporting and sync close
 						objWebDriver.close();
 						objWebDriver.quit();
 						objStep.put("strStatus", "pass");
@@ -496,12 +488,12 @@ public class Dragonfly {
 				blnStatus = true;
 			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
-				System.out.println("elementGetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementGetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementNotVisibleException e) {
 				blnVisible = false;
-				System.out.println("elementGetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementGetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementTagNameNotSupportedException e) {
-				System.out.println("elementGetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementGetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				blnExit = true;
 			} finally {
 				if (blnExit == true) {
@@ -533,7 +525,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
-					System.out.println("elementGetSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
+					logger("elementGetSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
 			}// the end of try
@@ -541,7 +533,7 @@ public class Dragonfly {
 	}// the end of elementGetSync
 
 	public static void elementOnMouseOver(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
-		System.out.println("elementOnMouseOverSync - " + objWebElement.toString());
+		logger("elementOnMouseOverSync - " + objWebElement.toString());
 		JavascriptExecutor objJavascriptExecutor = null;
 		if (objWebElement != null) {
 			objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
@@ -580,13 +572,13 @@ public class Dragonfly {
 				blnStatus = true;
 			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
-				System.out.println("elementOnMouseOverSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementOnMouseOverSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementNotVisibleException e) {
 				blnVisible = false;
-				System.out.println("elementOnMouseOverSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementOnMouseOverSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementNotEnabledException e) {
 				blnEnabled = false;
-				System.out.println("elementOnMouseOverSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementOnMouseOverSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
 				if (blnStatus == true) {
 					objStep.put("strStatus", "pass");
@@ -612,7 +604,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
-					System.out.println("elementOnMouseOverSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
+					logger("elementOnMouseOverSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
 			}
@@ -632,8 +624,8 @@ public class Dragonfly {
 			// objWebDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
 			long lngStartTimeOuterHTML = System.currentTimeMillis();
 			// strOuterHTML = objWebElement.getAttribute("outerHTML");
-			// System.out.println("elementSet outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeOuterHTML));
-			// System.out.println(strOuterHTML);
+			// logger("elementSet outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeOuterHTML));
+			// logger(strOuterHTML);
 			switch (objStep.get("strTagType").toString().toLowerCase()) {
 			case "a":
 			case "button":
@@ -682,12 +674,12 @@ public class Dragonfly {
 			// // objJavascriptExecutor.executeScript("arguments[0].onkeydown();", objWebElement);
 			// // objJavascriptExecutor.executeScript("arguments[0].onkeyup();", objWebElement);
 			// objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
-			// System.out.println("onchange before");
+			// logger("onchange before");
 			// if (strOuterHTML.toLowerCase().contains("onchange")) {
 			// try {
 			// objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
 			// } catch (WebDriverException e) {
-			// System.out.println("elementSet = " + e.toString());
+			// logger("elementSet = " + e.toString());
 			// }
 			// }
 			// break;
@@ -702,7 +694,7 @@ public class Dragonfly {
 				// objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
 				//
 				// } catch (WebDriverException e) {
-				// System.out.println("elementSet = " + e.toString());
+				// logger("elementSet = " + e.toString());
 				// }
 				// }
 				break;
@@ -719,7 +711,7 @@ public class Dragonfly {
 						// try {
 						// objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
 						// } catch (WebDriverException e) {
-						// System.out.println("elementSet = " + e.toString());
+						// logger("elementSet = " + e.toString());
 						// }
 						// }
 					}
@@ -735,7 +727,7 @@ public class Dragonfly {
 						// try {
 						// objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
 						// } catch (WebDriverException e) {
-						// System.out.println("elementSet = " + e.toString());
+						// logger("elementSet = " + e.toString());
 						// }
 						// }
 					}
@@ -760,7 +752,7 @@ public class Dragonfly {
 						// try {
 						// objJavascriptExecutor.executeScript("arguments[0].onchange();", objWebElement);
 						// } catch (WebDriverException e) {
-						// System.out.println("elementSet = " + e.toString());
+						// logger("elementSet = " + e.toString());
 						// }
 						// }
 						break;
@@ -774,8 +766,8 @@ public class Dragonfly {
 				blnSet = true;
 				Alert alert = objWebDriver.switchTo().alert();
 
-				System.out.println(alert.getText()); // Print Alert popup
-				System.out.println(objStep.get("strAttributeValues").toString().toLowerCase());
+				logger(alert.getText()); // Print Alert popup
+				logger(objStep.get("strAttributeValues").toString().toLowerCase());
 				switch (objStep.get("strAttributeValues").toString().toLowerCase()) {
 				case "text":
 					alert.sendKeys(objStep.get("strInputValue").toString());
@@ -792,12 +784,12 @@ public class Dragonfly {
 				throw new ElementTagNameNotSupportedException("Element tag not supported");
 			}// the end of switch (strTagName.toLowerCase())
 		} catch (Exception e) {
-			System.out.println("elementSet Exception = " + e.toString());
+			logger("elementSet Exception = " + e.toString());
 		} finally {
 			if (blnSet == false) {
 				throw new ElementNotSetException("Element not set");
 			}
-			System.out.println("elementSet finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet));
+			logger("elementSet finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet));
 		}
 	}// the end of elementSet
 
@@ -806,16 +798,16 @@ public class Dragonfly {
 	}
 
 	public static void SetSyncComplete(WebDriver objWebDriver, String strOuterHTML) throws DoPostBackNotCompleteException, JQueryAjaxNotCompleteException, JQueryAnimationNotCompleteException, AngularJsNotCompleteException {
-		System.out.println("SetSyncComplete Start");
+		logger("SetSyncComplete Start");
 		long lngTimeStart = System.currentTimeMillis();
 		try {
-			System.out.println("SetSyncComplete isAlertPresent Start");
+			logger("SetSyncComplete isAlertPresent Start");
 			if (isAlertPresent(objWebDriver) == true) {
 				// Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
-				// System.out.println("elementFind arrHandles.length = " + arrHandles.length);
+				// logger("elementFind arrHandles.length = " + arrHandles.length);
 				return;
 			}
-			System.out.println("SetSyncComplete isAlertPresent complete");
+			logger("SetSyncComplete isAlertPresent complete");
 			WaitForReadyState(objWebDriver);
 			// JavascriptExecutor objJavascriptExecutor = null;
 			// objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
@@ -824,32 +816,32 @@ public class Dragonfly {
 			if (strOuterHTML.contains("__doPostBack")) {
 				long lngStartTimeElementSet__EVENTTARGET = System.currentTimeMillis();
 				try {
-					System.out.println("SetSyncComplete __EVENTTARGET value = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
+					logger("SetSyncComplete __EVENTTARGET value = " + objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
 					blnEventTarget = !objWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value").equals("");
 				} catch (Exception e) {
-					System.out.println("SetSyncComplete Exception = " + e.toString());
+					logger("SetSyncComplete Exception = " + e.toString());
 				}
-				System.out.println("SetSyncComplete blnEventTarget = " + blnEventTarget);
+				logger("SetSyncComplete blnEventTarget = " + blnEventTarget);
 				if (blnEventTarget == true) {
 					// blnResult = false;
 					throw new AngularJsNotCompleteException("");
 				}
-				System.out.println("SetSyncComplete lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
+				logger("SetSyncComplete lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
 			}// the end of (strOuterHTML.contains("__doPostBack"))
 			long lngStartTimeElementSetJQueryActive = System.currentTimeMillis();
 			boolean blnJquery = false;
 			long lngJqueryActive = 0;
 			try {
-				// System.out.println("elementSet blnJquery = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null);"));
+				// logger("elementSet blnJquery = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null);"));
 				blnJquery = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null);");
 				if (blnJquery == true) {
 					lngJqueryActive = (long) ((JavascriptExecutor) objWebDriver).executeScript("return (jQuery.active);");
-					System.out.println("SetSyncComplete lngJqueryActive = " + lngJqueryActive);
-					// System.out.println("elementSet both = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
+					logger("SetSyncComplete lngJqueryActive = " + lngJqueryActive);
+					// logger("elementSet both = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
 
 				}
 			} catch (Exception e) {
-				System.out.println("SetSyncComplete JqueryActive Exception = " + e.toString());
+				logger("SetSyncComplete JqueryActive Exception = " + e.toString());
 			}
 			if (lngJqueryActive > 0) {
 				// blnResult = false;
@@ -862,11 +854,11 @@ public class Dragonfly {
 				blnJqueryExist = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null);");
 				if (blnJqueryExist == true) {
 					lngElementsAnimated = (long) ((JavascriptExecutor) objWebDriver).executeScript("return $(\":animated\").length");
-					System.out.println("SetSyncComplete JQueryAnimate = " + lngElementsAnimated);
-					// System.out.println("SetSyncComplete JQueryAnimate = " + ((JavascriptExecutor) objWebDriver).executeScript("return $(\":animated\").length"));
+					logger("SetSyncComplete JQueryAnimate = " + lngElementsAnimated);
+					// logger("SetSyncComplete JQueryAnimate = " + ((JavascriptExecutor) objWebDriver).executeScript("return $(\":animated\").length"));
 				}
 			} catch (Exception e) {
-				System.out.println("SetSyncComplete JQueryAnimate Exception = " + e.toString());
+				logger("SetSyncComplete JQueryAnimate Exception = " + e.toString());
 			}
 			if (lngElementsAnimated > 0) {
 				// blnResult = false;
@@ -877,19 +869,19 @@ public class Dragonfly {
 			long lngAngularJsInjectorActive = 0;
 			try {
 				blnAngularJs = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null);");
-				System.out.println("SetSyncComplete blnAngularJs = " + blnAngularJs);
+				logger("SetSyncComplete blnAngularJs = " + blnAngularJs);
 				// boolean blnAngularJs2 = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular == null);");
-				// System.out.println("elementSet blnAngularJs2 = " + blnAngularJs2);
+				// logger("elementSet blnAngularJs2 = " + blnAngularJs2);
 				// if (blnAngularJs == true) {
 				lngAngularJsInjectorActive = (long) ((JavascriptExecutor) objWebDriver).executeScript("return (angular.element(document).injector().get(‘$http’).pendingRequests.length);");
-				System.out.println("SetSyncComplete lngJqueryActive = " + lngAngularJsInjectorActive);
+				logger("SetSyncComplete lngJqueryActive = " + lngAngularJsInjectorActive);
 				// }
 				// boolean blnAngularJsInjector = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (angular.element(document).injector() != null);");
-				// System.out.println("elementSet blnAngularJsInjector = " + blnAngularJsInjector);
+				// logger("elementSet blnAngularJsInjector = " + blnAngularJsInjector);
 				// blnAngularJS = (boolean) ((JavascriptExecutor) objWebDriver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)");
-				// System.out.println("elementSet blnAngularJS = " + blnAngularJS);
+				// logger("elementSet blnAngularJS = " + blnAngularJS);
 			} catch (Exception e) {
-				System.out.println("SetSyncComplete AngularJS Exception = " + e.toString());
+				logger("SetSyncComplete AngularJS Exception = " + e.toString());
 			}
 			if (lngAngularJsInjectorActive > 0) {
 				// blnResult = false;
@@ -897,10 +889,10 @@ public class Dragonfly {
 			}
 
 		} catch (NoSuchWindowException e) {
-			System.out.println("SetSyncComplete - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+			logger("SetSyncComplete - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 
 		} finally {
-			System.out.println("SetSyncComplete finally Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngTimeStart));
+			logger("SetSyncComplete finally Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngTimeStart));
 		}
 		// if (blnResult == true) {
 		// return true;
@@ -919,7 +911,7 @@ public class Dragonfly {
 	}
 
 	public static boolean WaitForReadyState(WebDriver objWebDriver) {
-		System.out.println("elementSet document.readyState MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return document.readyState"));
+		logger("elementSet document.readyState MillisecondsWaited = " + ((JavascriptExecutor) objWebDriver).executeScript("return document.readyState"));
 		return false;
 	}
 
@@ -941,13 +933,13 @@ public class Dragonfly {
 			try {
 				if (blnFound == false) {
 					objWebElement = elementFind(objStep, objWebDriver);
-					System.out.println("elementSetSync elementFind over");
+					logger("elementSetSync elementFind over");
 					if (objWebElement != null) {
 						strOuterHTML = objWebElement.getAttribute("outerHTML");
-						System.out.println(strOuterHTML);
-						System.out.println("elementSetSync outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+						logger(strOuterHTML);
+						logger("elementSetSync outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 					}
-					System.out.println("elementSetSync strOuterHTML over");
+					logger("elementSetSync strOuterHTML over");
 
 					blnFound = true;
 				}
@@ -1070,21 +1062,21 @@ public class Dragonfly {
 				blnStatus = true;
 			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
 				blnFound = false;
-				System.out.println("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementNotVisibleException e) {
 				blnVisible = false;
-				System.out.println("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementNotEnabledException e) {
 				blnEnabled = false;
-				System.out.println("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementTagNameNotSupportedException e) {
-				System.out.println("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				blnExit = true;
 			} catch (ElementNotHiddenException e) {
-				System.out.println("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				blnAssert = false;
 			} catch (ValueNotMatchedException e) {
-				System.out.println("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				blnFound = false;
 				blnAssert = false;
 			} catch (ElementNotSetException e) {
@@ -1092,7 +1084,7 @@ public class Dragonfly {
 				blnAssert = false;
 			} catch (ElementNotDisabledException e) {
 				blnAssert = false;
-				System.out.println("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (DoPostBackNotCompleteException | JQueryAjaxNotCompleteException | JQueryAnimationNotCompleteException | AngularJsNotCompleteException e) {
 				blnSetSync = false;
 			} finally {
@@ -1124,7 +1116,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
-					System.out.println("elementSetSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
+					logger("elementSetSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
 			}// the end of try
@@ -1162,12 +1154,12 @@ public class Dragonfly {
 				blnVisible = false;
 				blnVerified = false;
 				blnStatus = false;
-				System.out.println("elementVerifyValueSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementVerifyValueSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementNotVisibleException e) {
 				blnVisible = false;
-				System.out.println("elementVerifyValueSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementVerifyValueSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementTagNameNotSupportedException e) {
-				System.out.println("elementVerifyValueSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementVerifyValueSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
 				blnExit = true;
 			} catch (ValueNotMatchedException e) {
 				blnFound = false;
@@ -1175,14 +1167,14 @@ public class Dragonfly {
 				blnVerified = false;
 				blnStatus = false;
 				// blnValueNotMatched = false;
-				System.out.println("elementVerifyValueSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementVerifyValueSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
 				if (blnExit == true) {
 					objStep.put("strStatus", "fail");
 					blnExit = true;
 				}
 				if (blnStatus == true) {
-					System.out.println("elementVerifyValueSync finally blnStatus = " + blnStatus);
+					logger("elementVerifyValueSync finally blnStatus = " + blnStatus);
 					objStep.put("strOutputValue", strActualValue);
 					objStep.put("strStatus", "pass");
 					blnExit = true;
@@ -1210,7 +1202,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
-					System.out.println("elementVerifyValueSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
+					logger("elementVerifyValueSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
 			}// the end of try
@@ -1226,7 +1218,7 @@ public class Dragonfly {
 			strGetValue = elementGet(objStep, objWebDriver, objWebElement);
 			strActualValue = verifyMatch(strGetValue, strValueExpected);
 		} finally {
-			System.out.println("elementVerifyValue finally strGetValue = {" + strGetValue + "} strValueExpected = {" + strValueExpected + "} intMillisecondsWaited = " + (int) (System.currentTimeMillis() - lngStartTimeElementVerify));
+			logger("elementVerifyValue finally strGetValue = {" + strGetValue + "} strValueExpected = {" + strValueExpected + "} intMillisecondsWaited = " + (int) (System.currentTimeMillis() - lngStartTimeElementVerify));
 		}
 		return strActualValue;
 	}// the end of elementVerifyValue
@@ -1236,7 +1228,7 @@ public class Dragonfly {
 		try {
 			if (strExpected.toLowerCase().startsWith("re:")) {
 				String strPattern = strExpected.substring(3);
-				System.out.println("verifyMatch RegularExpressionMatch = " + RegularExpressionMatch(strPattern, strActual));
+				logger("verifyMatch RegularExpressionMatch = " + RegularExpressionMatch(strPattern, strActual));
 				return RegularExpressionMatch(strPattern, strActual);
 			} else {
 				if (strExpected.equals(strActual)) {
@@ -1246,7 +1238,7 @@ public class Dragonfly {
 				}
 			}
 		} finally {
-			System.out.println("verifyMatch strActual = {" + strActual + "} strExpected = {" + strExpected + "} MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeVerifyMatch));
+			logger("verifyMatch strActual = {" + strActual + "} strExpected = {" + strExpected + "} MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeVerifyMatch));
 		}
 	}// the end of VerifyMatch
 
@@ -1280,10 +1272,10 @@ public class Dragonfly {
 			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException | ElementNotVisibleException e) {
 				blnFound = false;
 				blnVisible = false;
-				System.out.println("elementVisibleSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementVisibleSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
 				if (blnStatus == true) {
-					System.out.println("elementVisibleSync finally blnStatus = " + blnStatus);
+					logger("elementVisibleSync finally blnStatus = " + blnStatus);
 					objStep.put("strStatus", "pass");
 					// coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
 					blnExit = true;
@@ -1310,7 +1302,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
-					System.out.println("elementVisibleSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
+					logger("elementVisibleSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
 			}// the end of try
@@ -1327,7 +1319,7 @@ public class Dragonfly {
 		Boolean blnExit = false;
 		while (true) {
 			try {
-				// System.out.println("elementHiddenSync - blnFound = " + blnFound);
+				// logger("elementHiddenSync - blnFound = " + blnFound);
 				if (blnFound == false) {
 					objWebElement = elementFind(objStep, objWebDriver);
 					blnFound = true;
@@ -1340,11 +1332,11 @@ public class Dragonfly {
 			} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException | ElementNotFoundException e) {
 				blnFound = true;
 				blnHidden = true;
-				System.out.println("elementHiddenSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementHiddenSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (MultipleElementsFoundException | ElementNotHiddenException e) {
 				blnFound = false;
 				blnHidden = false;
-				System.out.println("elementHiddenSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementHiddenSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
 				if (blnStatus == true) {
 					objStep.put("strStatus", "pass");
@@ -1375,7 +1367,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
-					System.out.println("elementHiddenSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
+					logger("elementHiddenSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
 			}// the end of try
@@ -1410,10 +1402,10 @@ public class Dragonfly {
 				blnFound = false;
 				blnVisible = false;
 				blnEnabled = false;
-				System.out.println("elementEnabledSync - " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementEnabledSync - " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementNotEnabledException e) {
 				blnEnabled = false;
-				System.out.println("elementEnabledSync - " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementEnabledSync - " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
 				if (blnStatus == true) {
 					objStep.put("strStatus", "pass");
@@ -1442,7 +1434,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
-					System.out.println("elementEnabledSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
+					logger("elementEnabledSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
 			}// the end of try
@@ -1477,10 +1469,10 @@ public class Dragonfly {
 				blnFound = false;
 				blnVisible = false;
 				blnDisabled = false;
-				System.out.println("elementDisabledSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementDisabledSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (ElementNotDisabledException e) {
 				blnDisabled = false;
-				System.out.println("elementDisabledSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
+				logger("elementDisabledSync - " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
 				if (blnStatus == true) {
 					objStep.put("strStatus", "pass");
@@ -1506,7 +1498,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
-					System.out.println("elementDisabledSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
+					logger("elementDisabledSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
 			}// the end of try
@@ -1585,7 +1577,7 @@ public class Dragonfly {
 				throw new BrowserDriverNotSupportedException("Browser '" + objStep.get("strTagName").toString() + "' not supported");
 			}
 		} catch (Exception e) {
-			System.out.println("browserLaunch " + e.toString());
+			logger("browserLaunch " + e.toString());
 		} finally {
 			// windowFocus(objWebDriver);
 			objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
@@ -1597,7 +1589,7 @@ public class Dragonfly {
 			objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 			objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 			objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
-			System.out.println("browserLaunch finally Milliseconds Waited = " + objStep.get("strStepDuration").toString());
+			logger("browserLaunch finally Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 			// return objWebDriver;
 		}
 		return objWebDriver;
@@ -1615,19 +1607,19 @@ public class Dragonfly {
 	}// the end of ClipboardGet
 
 	public static boolean isAlertPresent(WebDriver objWebDriver) {
-		System.out.println("isAlertPresent Start");
+		logger("isAlertPresent Start");
 		try {
 			// objWebDriver.switchTo().alert();
-			// System.out.println(objWebDriver.getTitle());
-			// System.out.println(objWebDriver.manage().window().getPosition());
-			// System.out.println(objWebDriver.manage().window().getSize());
+			// logger(objWebDriver.getTitle());
+			// logger(objWebDriver.manage().window().getPosition());
+			// logger(objWebDriver.manage().window().getSize());
 			objWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
 			Alert alert = objWebDriver.switchTo().alert();
 			return true;
 		} catch (NoAlertPresentException e) {
 			return false;
 		} catch (Exception e) {
-			System.out.println("isAlertPresent " + e.toString());
+			logger("isAlertPresent " + e.toString());
 			return false;
 		}
 	}// the end of isAlertPresent()
@@ -1637,13 +1629,13 @@ public class Dragonfly {
 
 			Alert alert = objWebDriver.switchTo().alert();
 
-			System.out.println("isAlertPresent2 - alert switch to which did not fail:  " + alert.toString());
+			logger("isAlertPresent2 - alert switch to which did not fail:  " + alert.toString());
 			// return (WebElement) alert;
 			return null;
 		} // try
 		catch (NoAlertPresentException e) {
-			System.out.println("this is the alert switch to which did fail");
-			System.out.println(e.toString());
+			logger("this is the alert switch to which did fail");
+			logger(e.toString());
 			throw new ElementNotFoundException("Alert popup was not found.");
 		} // catch
 	}
@@ -1758,22 +1750,22 @@ public class Dragonfly {
 				strXpathAttributes = "[" + strXpathAttributes + "]";
 			}
 			strXpath = "(//" + strTagName + strXpathAttributes + ")" + strIndex;
-			// System.out.println("elementFind strXpath = " + strXpath);
-			// System.out.println("elementFind before loop strCurrentWindowHandle = " + strCurrentWindowHandle);
+			// logger("elementFind strXpath = " + strXpath);
+			// logger("elementFind before loop strCurrentWindowHandle = " + strCurrentWindowHandle);
 
 			Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
-			// System.out.println("elementFind arrHandles.length = " + arrHandles.length);
+			// logger("elementFind arrHandles.length = " + arrHandles.length);
 
 			for (int i = arrHandles.length - 1; i >= 0; i--) {
-				System.out.println("elementFind arrHandles[i] = " + arrHandles[i].toString());
+				logger("elementFind arrHandles[i] = " + arrHandles[i].toString());
 			}
 			// if (arrHandles.length == 2) {
-			// System.out.println("elementFind arrHandles[0] = " +arrHandles[0].toString());
-			// System.out.println("elementFind arrHandles[1] = " +arrHandles[1].toString());
+			// logger("elementFind arrHandles[0] = " +arrHandles[0].toString());
+			// logger("elementFind arrHandles[1] = " +arrHandles[1].toString());
 			// }
 			//
 			// if (arrHandles.length == 1) {
-			// System.out.println("elementFind arrHandles[0] = " +arrHandles[0].toString());
+			// logger("elementFind arrHandles[0] = " +arrHandles[0].toString());
 			// }
 
 			for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0; intHandlesEach--) {
@@ -1781,11 +1773,11 @@ public class Dragonfly {
 
 				long lngStartTimeSwitchTo = System.currentTimeMillis();
 				// objWebDriver.switchTo().window(strWindowHandle);
-				// System.out.println("elementFind intHandlesEach = " + intHandlesEach);
-				// System.out.println("elementFind lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
-				// System.out.println("elementFind objStep.get(\"inFrame\") = " + Integer.parseInt(objStep.get("intFrame").toString()));
-				// System.out.println("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
-				// System.out.println("elementFind strWindowHandle = " + strWindowHandle);
+				// logger("elementFind intHandlesEach = " + intHandlesEach);
+				// logger("elementFind lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
+				// logger("elementFind objStep.get(\"inFrame\") = " + Integer.parseInt(objStep.get("intFrame").toString()));
+				// logger("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
+				// logger("elementFind strWindowHandle = " + strWindowHandle);
 				if (!strCurrentWindowHandle.equals(strWindowHandle)) {
 					blnSwitch = true;
 				} else {
@@ -1795,8 +1787,8 @@ public class Dragonfly {
 				}
 				if (blnSwitch == true) {
 					objWebDriver.switchTo().window(strWindowHandle);
-					// System.out.println("elementFind Switched = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
-					// System.out.println("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
+					// logger("elementFind Switched = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
+					// logger("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
 					objStep.put("intFrame", -1);
 					objWebDriver.manage().window().maximize();
 				}
@@ -1804,12 +1796,12 @@ public class Dragonfly {
 				// }
 				// if (strCurrentWindowHandle.equals(strWindowHandle) ||
 				// Integer.parseInt(objStep.get("intFrame").toString()) < 0) {
-				// System.out.println("elementFind No Switch = " +
+				// logger("elementFind No Switch = " +
 				// (System.currentTimeMillis() - lngStartTimeSwitchTo));
 				//
 				// } else {
 				// objWebDriver.switchTo().window(strWindowHandle);
-				// System.out.println("elementFind Switched = " +
+				// logger("elementFind Switched = " +
 				// (System.currentTimeMillis() - lngStartTimeSwitchTo));
 				// objStep.put("intFrame", -1);
 				// // blnSwitchWindow = true;
@@ -1820,27 +1812,27 @@ public class Dragonfly {
 				try {
 					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
 					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
-					// System.out.println("intBrowserInnerWidth = " + intBrowserInnerWidth);
-					// System.out.println("intBrowserInnerHeight = " + intBrowserInnerHeight);
+					// logger("intBrowserInnerWidth = " + intBrowserInnerWidth);
+					// logger("intBrowserInnerHeight = " + intBrowserInnerHeight);
 				} catch (WebDriverException e) {
 					throw new ElementNotFoundException("WebDriverException returned");
 				} catch (Exception e) {
-					// System.out.println("BodyoffsetHeight = " + e.toString());
+					// logger("BodyoffsetHeight = " + e.toString());
 					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetWidth;");
 					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetHeight;");
-					// System.out.println("BodyoffsetWidth = " + intBrowserInnerWidth);
-					// System.out.println("BodyoffsetHeight = " + intBrowserInnerHeight);
+					// logger("BodyoffsetWidth = " + intBrowserInnerWidth);
+					// logger("BodyoffsetHeight = " + intBrowserInnerHeight);
 				}
 				objStep.put("intBrowserInnerWidth", intBrowserInnerWidth);
 				objStep.put("intBrowserInnerHeight", intBrowserInnerHeight);
 
 				long lngStartTimegetElementsByTagName = System.currentTimeMillis();
 				List<WebElement> objCollectionJS = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
-				// System.out.println("elementFind objCollectionJS = " + objCollectionJS.size() + " strTagName = " + strTagName + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName));
+				// logger("elementFind objCollectionJS = " + objCollectionJS.size() + " strTagName = " + strTagName + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName));
 				if (objCollectionJS.size() > 0) {
 					long lngStartTimeByXpath = System.currentTimeMillis();
 					objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
-					// System.out.println("elementFind objWebElementCollection.size = " + objWebElementCollection.size() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeByXpath));
+					// logger("elementFind objWebElementCollection.size = " + objWebElementCollection.size() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeByXpath));
 				}
 
 				if (objWebElementCollection.size() == 0) {
@@ -1849,42 +1841,42 @@ public class Dragonfly {
 					// objFrameCollection = objWebDriver.findElements(By.tagName("frame"));
 					objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
 
-					// System.out.println("elementFind Frames = " + objFrameCollection.size() + " MillisecondsWaitedFrame " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+					// logger("elementFind Frames = " + objFrameCollection.size() + " MillisecondsWaitedFrame " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
 
 					objFrameCollection.addAll((List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('iframe');"));
 					// objFrameCollection.addAll(objWebDriver.findElements(By.tagName("iframe")));
 					intFramesCount = objFrameCollection.size();
-					// System.out.println("elementFind objFrameCollection = " + intFramesCount + " MillisecondsWaitedIframe " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+					// logger("elementFind objFrameCollection = " + intFramesCount + " MillisecondsWaitedIframe " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
 					// if (intFramesCount >= 1) {intFramesCount = intFramesCount + 1;
-					// System.out.println("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+					// logger("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
 					// }
 					for (int intFramesEach = 0; intFramesEach < intFramesCount; intFramesEach++) {
-						// System.out.println("elementFind intFramesEach = " + intFramesEach);
+						// logger("elementFind intFramesEach = " + intFramesEach);
 						// if (intFramesEach >= 0) {
 						long lngStartTimeSwitchToFrame = System.currentTimeMillis();
 						objWebDriver.switchTo().defaultContent();
 						objWebDriver.switchTo().frame(objFrameCollection.get(intFramesEach));
 						objStep.put("intFrame", intFramesEach);
-						System.out.println("elementFind frames objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeSwitchToFrame));
+						logger("elementFind frames objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeSwitchToFrame));
 						// }
 
 						long lngStartTimegetElementsByTagName2 = System.currentTimeMillis();
 						List<WebElement> objCollectionJS2 = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
-						System.out.println("elementFind objCollectionJS2 = " + objCollectionJS2.size() + " strTagName = " + strTagName + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName2));
+						logger("elementFind objCollectionJS2 = " + objCollectionJS2.size() + " strTagName = " + strTagName + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName2));
 
 						// long lngStartTimegetElementsByXpath = System.currentTimeMillis();
 						// List<WebElement> objCollectionJS = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElements(By.xpath('" + strXpath + "');");
-						// System.out.println("elementFind objCollectionJS = " + objCollectionJS.size() + " " + (System.currentTimeMillis() - lngStartTimegetElementsByXpath));
+						// logger("elementFind objCollectionJS = " + objCollectionJS.size() + " " + (System.currentTimeMillis() - lngStartTimegetElementsByXpath));
 						// jse.executeScript("document.getElement(By.xpath(\"//div[@class='btnContr']/input[@onclick='return cancel();']\")");
 
 						// long lngStartTimeTagName = System.currentTimeMillis();
 						// objTagNameCollection = objWebDriver.findElements(By.tagName(strTagName));
-						// System.out.println("elementFind objWebElementCollection.size = " + objTagNameCollection.size() + " MillisecondsWaitedTagName = " + (System.currentTimeMillis() - lngStartTimeTagName));
+						// logger("elementFind objWebElementCollection.size = " + objTagNameCollection.size() + " MillisecondsWaitedTagName = " + (System.currentTimeMillis() - lngStartTimeTagName));
 
 						// if (objCollectionJS.size() > 0) {
 						// long lngStartTimeByTagNameByXpath = System.currentTimeMillis();
 						// List<WebElement> objWebElementCollectionByTagNameByXpath = objCollectionJS.get(0).findElements(By.xpath(strXpath));
-						// System.out.println("elementFind objWebElementCollectionByTagNameByXpath.size = " + objWebElementCollectionByTagNameByXpath.size() + " MillisecondsWaitedTagName = " + (System.currentTimeMillis() - lngStartTimeByTagNameByXpath));
+						// logger("elementFind objWebElementCollectionByTagNameByXpath.size = " + objWebElementCollectionByTagNameByXpath.size() + " MillisecondsWaitedTagName = " + (System.currentTimeMillis() - lngStartTimeByTagNameByXpath));
 						// }
 
 						// if (objCollectionJS.size() > 0) {
@@ -1892,20 +1884,20 @@ public class Dragonfly {
 						// JavascriptExecutor objJavascriptExecutor = null;
 						// objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
 						// long lngStartTimeJS = System.currentTimeMillis();
-						// System.out.println("JS value = " + objJavascriptExecutor.executeScript("return arguments[0].value;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
+						// logger("JS value = " + objJavascriptExecutor.executeScript("return arguments[0].value;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
 						// lngStartTimeJS = System.currentTimeMillis();
-						// System.out.println("JS innerText = " + objJavascriptExecutor.executeScript("return arguments[0].innerText;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
+						// logger("JS innerText = " + objJavascriptExecutor.executeScript("return arguments[0].innerText;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
 						// lngStartTimeJS = System.currentTimeMillis();
-						// System.out.println("JS innerHTML = " + objJavascriptExecutor.executeScript("return arguments[0].innerHTML;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
+						// logger("JS innerHTML = " + objJavascriptExecutor.executeScript("return arguments[0].innerHTML;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
 						// lngStartTimeJS = System.currentTimeMillis();
-						// System.out.println("JS outerHTML = " + objJavascriptExecutor.executeScript("return arguments[0].outerHTML;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
+						// logger("JS outerHTML = " + objJavascriptExecutor.executeScript("return arguments[0].outerHTML;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
 						//
 						// }
 
 						if (objCollectionJS2.size() > 0) {
 							long lngStartTimeByXpath = System.currentTimeMillis();
 							objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
-							// System.out.println("elementFind objWebElementCollection.size = " + objWebElementCollection.size() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeByXpath));
+							// logger("elementFind objWebElementCollection.size = " + objWebElementCollection.size() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeByXpath));
 						}
 
 						if (objWebElementCollection.size() > 0) {
@@ -1920,22 +1912,22 @@ public class Dragonfly {
 			}// the end of for win Handles
 			switch (objWebElementCollection.size()) {
 			case 0:
-				// System.out.println("elementFind - Element properties did not return an element, try refining attributes.");
+				// logger("elementFind - Element properties did not return an element, try refining attributes.");
 				throw new ElementNotFoundException("Element properties did not return an element, try refining attributes");
 			case 1:
 				blnFound = true;
-				// System.out.println(objWebElementCollection.get(0));
+				// logger(objWebElementCollection.get(0));
 				objWebElement = objWebElementCollection.get(0);
 				// long lngStartTimeGetXpath = System.currentTimeMillis();
-				// System.out.println("xpath = " + getElementXPath(objWebDriver, objWebElement) + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeGetXpath));
+				// logger("xpath = " + getElementXPath(objWebDriver, objWebElement) + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeGetXpath));
 
 				// TODO add title and url to each element found in the objStep json
 				// JavascriptExecutor js = (JavascriptExecutor) objWebDriver;
 				// String strTitle = (String) js.executeScript("return document.title");
-				// System.out.println("main JavascriptExecutor strTitle  = " + strTitle + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
+				// logger("main JavascriptExecutor strTitle  = " + strTitle + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
 
-				// System.out.println("strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
-				// System.out.println("objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
+				// logger("strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
+				// logger("objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
 
 				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
 				if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
@@ -1948,14 +1940,14 @@ public class Dragonfly {
 				}
 				return objWebElement;
 			default:
-				// System.out.println("elementFind - Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
+				// logger("elementFind - Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
 				throw new MultipleElementsFoundException("Element properties did not return an element, try refining attributes");
 			}// the end of switch (objWebElementCollection.size())
 
 		} catch (NoSuchFrameException e) {
 			throw new ElementNotFoundException("elementFind " + e.toString());
 		} finally {
-			System.out.println("elementFind finally blnFound = " + blnFound + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementFind));
+			logger("elementFind finally blnFound = " + blnFound + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementFind));
 		}
 	}// the end of elementFind
 
@@ -1987,7 +1979,7 @@ public class Dragonfly {
 				objStep.put("intElementWidth", objElementDimension.width);
 				objStep.put("intElementHeight", objElementDimension.height);
 			}
-			System.out.println("elementCoordinates objStep.containsKey = " + objStep.containsKey("intElementX"));
+			logger("elementCoordinates objStep.containsKey = " + objStep.containsKey("intElementX"));
 			if (objStep.containsKey("intElementX")) {
 				int intBrowserInnerWidth = Integer.parseInt(objStep.get("intBrowserInnerWidth").toString());
 				int intBrowserInnerHeight = Integer.parseInt(objStep.get("intBrowserInnerHeight").toString());
@@ -2002,9 +1994,9 @@ public class Dragonfly {
 				objStep.put("intElementScreenY", intElementScreenY);
 			}
 		} catch (Exception e) {
-			System.out.println(e.toString());
+			logger(e.toString());
 		} finally {
-			System.out.println("elementCoordinates finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementCoordinates));
+			logger("elementCoordinates finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementCoordinates));
 		}
 	}// the end of elementCoordinates
 
@@ -2035,8 +2027,8 @@ public class Dragonfly {
 				// int intElementWidth = Integer.parseInt(objStep.get("intElementWidth").toString());
 				// int intElementHeight = Integer.parseInt(objStep.get("intElementHeight").toString());
 				//
-				// System.out.println("elementVisible intElementWidth = " + intElementWidth);
-				// System.out.println("elementVisible intElementHeight = " + intElementHeight);
+				// logger("elementVisible intElementWidth = " + intElementWidth);
+				// logger("elementVisible intElementHeight = " + intElementHeight);
 				//
 				// if (intElementWidth == 0 || intElementHeight == 0) {
 				// throw new ElementNotVisibleException("Element's heigh or width is 0");
@@ -2050,7 +2042,7 @@ public class Dragonfly {
 				throw new ElementNotVisibleException("Element isDisplayed failed");
 			}// the end of if (objWebElement.isDisplayed())
 		} finally {
-			System.out.println("elementVisible finally blnVisible = " + blnVisible + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTimeElementVisible));
+			logger("elementVisible finally blnVisible = " + blnVisible + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTimeElementVisible));
 		}
 	}// the end of elementVisible
 
@@ -2069,14 +2061,14 @@ public class Dragonfly {
 			if (objWebElement.isDisplayed() == false) {
 				return true;
 			} else {
-				System.out.println("elementHidden objWebElement.isDisplayed() = return false MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
+				logger("elementHidden objWebElement.isDisplayed() = return false MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
 				throw new ElementNotHiddenException("Element is displayed.");
 			}// the end of if (objWebElement.isDisplayed())
 		} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException e) {
-			System.out.println("elementHidden - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
+			logger("elementHidden - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
 			return true;
 		} finally {
-			System.out.println("elementHidden finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
+			logger("elementHidden finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
 		}
 	}// the end of elementHidden
 
@@ -2098,7 +2090,7 @@ public class Dragonfly {
 				throw new ElementNotEnabledException("elementEnabled - Element is not enabled");
 			}// the end of if (objWebElement.isEnabled())
 		} finally {
-			System.out.println("elementEnabled finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementEnabled));
+			logger("elementEnabled finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementEnabled));
 		}
 	}// the end of elementEnabled
 
@@ -2111,7 +2103,7 @@ public class Dragonfly {
 				return true;
 			}// the end of if (objWebElement.isEnabled())
 		} finally {
-			System.out.println("elementDisabled finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementDisabled));
+			logger("elementDisabled finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementDisabled));
 		}
 	}// the end of elementDisabled
 
@@ -2271,7 +2263,7 @@ public class Dragonfly {
 				throw new ElementTagNameNotSupportedException("Element tag not supported");
 			}
 		} finally {
-			System.out.println("ElementGet finally strElementGet = {" + strElementGet + "} MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementGet));
+			logger("ElementGet finally strElementGet = {" + strElementGet + "} MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementGet));
 		}
 	} // the end of ElementGet
 
@@ -2294,17 +2286,17 @@ public class Dragonfly {
 
 	@SuppressWarnings({ "serial", "unchecked" })
 	public static void coordinateHighlightScreenshot(final JSONObject objStepHighlightArea, final WebDriver objWebDriver, final WebElement objWebElement, JSONObject objStep) {
-		System.out.println("coordinateHighlightScreenshot start");
+		logger("coordinateHighlightScreenshot start");
 
 		long lngStartTimeCoordinateHighlightScreenshot = System.currentTimeMillis();
 		JFrame objJFrame = new JFrame() {
 			{
-				System.out.println("coordinateHighlightScreenshot before Rectangle objHighlightArea");
+				logger("coordinateHighlightScreenshot before Rectangle objHighlightArea");
 				Rectangle objHighlightArea = new Rectangle(0, 0, 0, 0);
 				if (Boolean.parseBoolean(objStepHighlightArea.get("blnHighlight").toString()) == true) {
 					int intThickness = 5;
 					Color objColor2 = null;
-					System.out.println("coordinateHighlightScreenshot before color switch");
+					logger("coordinateHighlightScreenshot before color switch");
 					switch (objStepHighlightArea.get("strStatus").toString().toLowerCase()) {
 					case "pass":
 						if (objStepHighlightArea.get("strAction").toString().toLowerCase().equals("set") && objStepHighlightArea.get("strAssert").toString().toLowerCase().equals("off")) {
@@ -2323,7 +2315,7 @@ public class Dragonfly {
 						objColor2 = Color.MAGENTA;
 						break;
 					}
-					System.out.println("coordinateHighlightScreenshot intThickness = " + intThickness);
+					logger("coordinateHighlightScreenshot intThickness = " + intThickness);
 					setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 					getRectangleAreaByName(objStepHighlightArea, intThickness, "", objHighlightArea, objWebDriver, objWebElement);
 					setBounds(objHighlightArea.x, objHighlightArea.y, objHighlightArea.width, objHighlightArea.height);
@@ -2348,10 +2340,10 @@ public class Dragonfly {
 				objThread.start();
 			} catch (AWTException e) {
 				// TODO handle coordinateHighlightScreenshot AWTException
-				System.out.println("coordinateHighlightScreenshot " + e.toString());
+				logger("coordinateHighlightScreenshot " + e.toString());
 			} catch (Exception e) {
 				// TODO handle coordinateHighlightScreenshot Exception
-				System.out.println("coordinateHighlightScreenshot " + e.toString());
+				logger("coordinateHighlightScreenshot " + e.toString());
 			}
 		}// the end of if (blnScreenshot == true)
 		if (Boolean.parseBoolean(objStep.get("blnHighlight").toString()) == true) {
@@ -2359,12 +2351,12 @@ public class Dragonfly {
 				Thread.sleep(intSleepMilliseconds);
 			} catch (InterruptedException e) {
 				// TODO handle coordinateHighlightScreenshot InterruptedException
-				System.out.println("coordinateHighlightScreenshot " + e.toString());
+				logger("coordinateHighlightScreenshot " + e.toString());
 			}
 			objJFrame.setVisible(false);
 			objJFrame.dispose();
 		}
-		System.out.println("coordinateHighlightScreenshot MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeCoordinateHighlightScreenshot));
+		logger("coordinateHighlightScreenshot MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeCoordinateHighlightScreenshot));
 	}// the end of coordinateHighlightScreenshot
 
 	public static void getRectangleAreaByName(JSONObject objStep, Integer intThickness, String strAreaObjectName, Rectangle objRectangleArea, WebDriver objWebDriver, WebElement objWebElement) {
@@ -2417,7 +2409,7 @@ public class Dragonfly {
 				break;
 			default:
 				// TODO add reporting for default
-				System.out.println("getRectangleAreaByName default screen, window, page and element not " + strAreaObjectName);
+				logger("getRectangleAreaByName default screen, window, page and element not " + strAreaObjectName);
 				break;
 			}
 		} finally {
@@ -2430,7 +2422,7 @@ public class Dragonfly {
 				intY = 0;
 			}
 			objRectangleArea.setBounds(intX, intY, intWidth, intHeight);
-			System.out.println("getRectangleAreaByName finally strAreaObjectName = " + strAreaObjectName.toLowerCase() + " objRectangleArea = " + objRectangleArea + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeGetRectangleAreaByName));
+			logger("getRectangleAreaByName finally strAreaObjectName = " + strAreaObjectName.toLowerCase() + " objRectangleArea = " + objRectangleArea + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeGetRectangleAreaByName));
 		}
 	}// the end of getRectangleAreaByName
 
@@ -2449,7 +2441,7 @@ public class Dragonfly {
 			try {
 				ImageIO.write(objScreenShot, strImageType.toUpperCase(), new File(strPathFileName));
 			} catch (IOException e) {
-				System.out.println("threadSaveImage IOException = ");
+				logger("threadSaveImage IOException = ");
 			}
 		}
 	}// the end of threadSaveImage
@@ -2464,7 +2456,7 @@ public class Dragonfly {
 	public static final String currentTimeMillisToDateTimestamp(Long lngStartTimeMillis) {
 		SimpleDateFormat objSimpleDateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss:SSS");
 		Date objFormattedDate = new Date(lngStartTimeMillis);
-		System.out.println(objSimpleDateFormat.format(objFormattedDate));
+		logger(objSimpleDateFormat.format(objFormattedDate));
 		return objSimpleDateFormat.format(objFormattedDate);
 	}// the end of currentTimeMillisToDateTimestamp
 
@@ -2597,7 +2589,7 @@ public class Dragonfly {
 			builder.append("<th>intLoop</th>");
 			builder.append("</tr>");
 			for (int intTestStepRow = 0; intTestStepRow < objTestSteps.size(); intTestStepRow++) {
-				// System.out.println(intTestStepRow);
+				// logger(intTestStepRow);
 				JSONObject objStep = (JSONObject) objTestSteps.get(intTestStepRow);
 				builder.append("</tr>");
 				builder.append("<td> " + (intTestStepRow + 1) + "</td>");
@@ -2625,12 +2617,12 @@ public class Dragonfly {
 			builder.append("</h1></body>");
 			builder.append("</html>");
 			String html = builder.toString();
-			// System.out.println(html);
-			System.out.println(file);
+			// logger(html);
+			logger(file);
 			bw.write(html);
 		} catch (Exception e) {
-			System.out.println(builder.toString());
-			System.out.println(e.toString());
+			logger(builder.toString());
+			logger(e.toString());
 		}
 	}// the end of writeJsonToHtml
 
@@ -2709,7 +2701,7 @@ public class Dragonfly {
 					strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString().replaceAll("\\\\\\\\", "\\");
 					objStringBuilder.append("<IMG alt=\"ReporterScreenShot_1\" src=\"" + strScreenshotFilePath + "\" width=1100 height=700> ");
 				}
-				// System.out.println("writeReportToHtml strScreenshotFilePath = " + objStep.get("strScreenshotFilePath").toString());
+				// logger("writeReportToHtml strScreenshotFilePath = " + objStep.get("strScreenshotFilePath").toString());
 				objStringBuilder.append("</div>");
 				objStringBuilder.append("<br>");
 				objStringBuilder.append("<br>");
@@ -2718,21 +2710,21 @@ public class Dragonfly {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("writeReportToHtml - " + e.toString());
-			System.out.println(objStringBuilder.toString());
+			logger("writeReportToHtml - " + e.toString());
+			logger(objStringBuilder.toString());
 		} finally {
 			objStringBuilder.append("</body>");
 			objStringBuilder.append("</html>");
-			// System.out.println(objStringBuilder.toString());
+			// logger(objStringBuilder.toString());
 			try {
 				String strHTML = objStringBuilder.toString();
-				System.out.println(strHTML);
+				logger(strHTML);
 				objBufferedWriter.write(strHTML);
 				objBufferedWriter.close();
 			} catch (Exception e2) {
-				System.out.println("writeReportToHtml - IOException" + e2.getMessage());
+				logger("writeReportToHtml - IOException" + e2.getMessage());
 			}
-			System.out.println("writeReportToHtml finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeWriteReportToHtml));
+			logger("writeReportToHtml finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeWriteReportToHtml));
 		}
 	}// the end of writeReportToHtml
 
@@ -3073,7 +3065,7 @@ public class Dragonfly {
 			out.close();
 
 		} catch (IOException e) {
-			System.out.println("main final " + e.toString());
+			logger("main final " + e.toString());
 		}
 	}// the end of writeJsonKeysToHtml
 		// TODO Learn how to iterate over jason keys
@@ -3081,7 +3073,7 @@ public class Dragonfly {
 	public static void writeJsonKeysToHtml(JSONObject objTestStep, String file) throws IOException {
 		for (Iterator iterator = objTestStep.keySet().iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
-			System.out.println(key + " = " + objTestStep.get(key));
+			logger(key + " = " + objTestStep.get(key));
 		}
 	}// the end of writeJsonKeysToHtml
 
@@ -3092,22 +3084,22 @@ public class Dragonfly {
 		if (strTagName.toLowerCase().startsWith("input_")) {
 			strTagName = "input";
 		}
-		System.out.println("webElementCollectionTable lngStartTimeSwitchTo = " + objWebDriver.getTitle());
+		logger("webElementCollectionTable lngStartTimeSwitchTo = " + objWebDriver.getTitle());
 		objWebDriver.switchTo().defaultContent();
 		for (String winHandle : objWebDriver.getWindowHandles()) {
 			intCount = 0;
-			// System.out.println("elementFind strCurrentWindowHandle = " +
+			// logger("elementFind strCurrentWindowHandle = " +
 			// strCurrentWindowHandle);
-			System.out.println("webElementCollectionTable winHandle = " + winHandle);
+			logger("webElementCollectionTable winHandle = " + winHandle);
 			long lngStartTimeSwitchTo = System.currentTimeMillis();
 			// if (strCurrentWindowHandle.equals(winHandle)) {
 			// } else {
 			objWebDriver.switchTo().window(winHandle);
-			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			System.out.println("webElementCollectionTable lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
+			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			logger("webElementCollectionTable lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
 			// }
-			System.out.println("webElementCollectionTable lngStartTimeSwitchTo = " + objWebDriver.getTitle());
-			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			logger("webElementCollectionTable lngStartTimeSwitchTo = " + objWebDriver.getTitle());
+			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 			List<WebElement> objWebElementCollection = objWebDriver.findElements(By.tagName(strTagName));
 			Iterator<WebElement> objWebElementEach = ((Collection<WebElement>) objWebElementCollection).iterator();
 			while (objWebElementEach.hasNext()) {
@@ -3115,54 +3107,54 @@ public class Dragonfly {
 				// try {
 				// elementVisible(objStepNew, row);
 				intCount = intCount + 1;
-				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementCollectionTable " + intCount);
-				// System.out.println("text:=  " + objWebElementEach.);
-				System.out.println("getTagName:= '" + row.getTagName() + "'");
-				// System.out.println("tag_type:= '" + row.getTagName() + "_" + row.getAttribute("type") + "'");
-				// System.out.println("TagName:= '" + row.getAttribute("TagName") + "'");
-				// System.out.println("type:= '" + row.getAttribute("type") + "'");
-				// System.out.println("Type:= '" + row.getAttribute("Type") + "'");
-				// System.out.println("TYPE:= '" + row.getAttribute("TYPE") + "'");
-				// System.out.println("id:= '" + row.getAttribute("id") + "'");
-				// System.out.println("name:= '" + row.getAttribute("name") + "'");
-				// System.out.println("text:= '" + row.getAttribute("text") + "'");
-				System.out.println("getText:= '" + row.getText() + "'");
-				// System.out.println("innerText:= '" + row.getAttribute("innerText") + "'");
-				// System.out.println("outerText:= '" + row.getAttribute("outerText") + "'");
-				// System.out.println("innerHTML:= '" + row.getAttribute("innerHTML") + "'");
-				System.out.println("outerHTML:= '" + row.getAttribute("outerHTML") + "'");
-				// System.out.println("uniqueID:= '" + row.getAttribute("uniqueID") + "'");
-				// System.out.println("class:= '" + row.getAttribute("class") + "'");
-				// System.out.println("href:= '" + row.getAttribute("href") + "'");
-				// System.out.println("NameProp:= '" + row.getAttribute("NameProp") + "'");
-				// System.out.println("isDisplayed:= '" + row.isDisplayed() + "'");
-				// System.out.println("isEnabled:= '" + row.isEnabled() + "'");
-				// System.out.println("getLocation().x:= '" + row.getLocation().x + "'");
-				// System.out.println("getLocation().y:= '" + row.getLocation().y + "'");
-				// System.out.println("getSize().height:= '" + row.getSize().height + "'");
-				// System.out.println("getSize().width:= '" + row.getSize().width + "'");
-				// System.out.println("src:= '" + row.getAttribute("src") + "'");
+				logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementCollectionTable " + intCount);
+				// logger("text:=  " + objWebElementEach.);
+				logger("getTagName:= '" + row.getTagName() + "'");
+				// logger("tag_type:= '" + row.getTagName() + "_" + row.getAttribute("type") + "'");
+				// logger("TagName:= '" + row.getAttribute("TagName") + "'");
+				// logger("type:= '" + row.getAttribute("type") + "'");
+				// logger("Type:= '" + row.getAttribute("Type") + "'");
+				// logger("TYPE:= '" + row.getAttribute("TYPE") + "'");
+				// logger("id:= '" + row.getAttribute("id") + "'");
+				// logger("name:= '" + row.getAttribute("name") + "'");
+				// logger("text:= '" + row.getAttribute("text") + "'");
+				logger("getText:= '" + row.getText() + "'");
+				// logger("innerText:= '" + row.getAttribute("innerText") + "'");
+				// logger("outerText:= '" + row.getAttribute("outerText") + "'");
+				// logger("innerHTML:= '" + row.getAttribute("innerHTML") + "'");
+				logger("outerHTML:= '" + row.getAttribute("outerHTML") + "'");
+				// logger("uniqueID:= '" + row.getAttribute("uniqueID") + "'");
+				// logger("class:= '" + row.getAttribute("class") + "'");
+				// logger("href:= '" + row.getAttribute("href") + "'");
+				// logger("NameProp:= '" + row.getAttribute("NameProp") + "'");
+				// logger("isDisplayed:= '" + row.isDisplayed() + "'");
+				// logger("isEnabled:= '" + row.isEnabled() + "'");
+				// logger("getLocation().x:= '" + row.getLocation().x + "'");
+				// logger("getLocation().y:= '" + row.getLocation().y + "'");
+				// logger("getSize().height:= '" + row.getSize().height + "'");
+				// logger("getSize().width:= '" + row.getSize().width + "'");
+				// logger("src:= '" + row.getAttribute("src") + "'");
 				// if (objCollectionJS.size() > 0) {
 				//
 				// JavascriptExecutor objJavascriptExecutor = null;
 				// objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
 				// long lngStartTimeJS = System.currentTimeMillis();
-				// System.out.println("JS value = " +
+				// logger("JS value = " +
 				// objJavascriptExecutor.executeScript("return arguments[0].value;",
 				// objCollectionJS.get(0)) + " MillisecondsWaited = " +
 				// (System.currentTimeMillis() - lngStartTimeJS));
 				// lngStartTimeJS = System.currentTimeMillis();
-				// System.out.println("JS innerText = " +
+				// logger("JS innerText = " +
 				// objJavascriptExecutor.executeScript("return arguments[0].innerText;",
 				// objCollectionJS.get(0)) + " MillisecondsWaited = " +
 				// (System.currentTimeMillis() - lngStartTimeJS));
 				// lngStartTimeJS = System.currentTimeMillis();
-				// System.out.println("JS innerHTML = " +
+				// logger("JS innerHTML = " +
 				// objJavascriptExecutor.executeScript("return arguments[0].innerHTML;",
 				// objCollectionJS.get(0)) + " MillisecondsWaited = " +
 				// (System.currentTimeMillis() - lngStartTimeJS));
 				// lngStartTimeJS = System.currentTimeMillis();
-				// System.out.println("JS outerHTML = " +
+				// logger("JS outerHTML = " +
 				// objJavascriptExecutor.executeScript("return arguments[0].outerHTML;",
 				// objCollectionJS.get(0)) + " MillisecondsWaited = " +
 				// (System.currentTimeMillis() - lngStartTimeJS));
@@ -3186,62 +3178,62 @@ public class Dragonfly {
 		while (objWebElementEach.hasNext()) {
 			WebElement row = objWebElementEach.next();
 			intCount = intCount + 1;
-			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementCollectionAttributes " + intCount);
-			// System.out.println("text:=  " + objWebElementEach.);
-			System.out.println("text:=  " + row.getTagName());
-			System.out.println("tag_type:=  " + row.getTagName() + "_" + row.getAttribute("type"));
-			System.out.println("TagName:=  " + row.getAttribute("TagName"));
-			System.out.println("type:=  " + row.getAttribute("type"));
-			System.out.println("id:=  " + row.getAttribute("id"));
-			System.out.println("name:=  " + row.getAttribute("name"));
-			System.out.println("text:=  " + row.getAttribute("text"));
-			System.out.println("innerText:=  " + row.getAttribute("innerText"));
-			System.out.println("outerText:=  " + row.getAttribute("outerText"));
-			System.out.println("innerHTML:=  " + row.getAttribute("innerHTML"));
-			System.out.println("outerHTML:=  " + row.getAttribute("outerHTML"));
-			System.out.println("uniqueID:=  " + row.getAttribute("uniqueID"));
-			System.out.println("class:=  " + row.getAttribute("class"));
-			System.out.println("type:=  " + row.getAttribute("type"));
-			System.out.println("TYPE:=  " + row.getAttribute("TYPE"));
-			System.out.println("href:=  " + row.getAttribute("href"));
-			System.out.println("NameProp:=  " + row.getAttribute("NameProp"));
-			System.out.println("isDisplayed:=  " + row.isDisplayed());
-			System.out.println("name:=  " + row.isEnabled());
-			System.out.println("getLocation().x:=  " + row.getLocation().x);
-			System.out.println("getLocation().y:=  " + row.getLocation().y);
-			System.out.println("getSize().height:=  " + row.getSize().height);
-			System.out.println("getLocation().y:=  " + row.getSize().width);
-			System.out.println("src:=  " + row.getAttribute("src"));
+			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementCollectionAttributes " + intCount);
+			// logger("text:=  " + objWebElementEach.);
+			logger("text:=  " + row.getTagName());
+			logger("tag_type:=  " + row.getTagName() + "_" + row.getAttribute("type"));
+			logger("TagName:=  " + row.getAttribute("TagName"));
+			logger("type:=  " + row.getAttribute("type"));
+			logger("id:=  " + row.getAttribute("id"));
+			logger("name:=  " + row.getAttribute("name"));
+			logger("text:=  " + row.getAttribute("text"));
+			logger("innerText:=  " + row.getAttribute("innerText"));
+			logger("outerText:=  " + row.getAttribute("outerText"));
+			logger("innerHTML:=  " + row.getAttribute("innerHTML"));
+			logger("outerHTML:=  " + row.getAttribute("outerHTML"));
+			logger("uniqueID:=  " + row.getAttribute("uniqueID"));
+			logger("class:=  " + row.getAttribute("class"));
+			logger("type:=  " + row.getAttribute("type"));
+			logger("TYPE:=  " + row.getAttribute("TYPE"));
+			logger("href:=  " + row.getAttribute("href"));
+			logger("NameProp:=  " + row.getAttribute("NameProp"));
+			logger("isDisplayed:=  " + row.isDisplayed());
+			logger("name:=  " + row.isEnabled());
+			logger("getLocation().x:=  " + row.getLocation().x);
+			logger("getLocation().y:=  " + row.getLocation().y);
+			logger("getSize().height:=  " + row.getSize().height);
+			logger("getLocation().y:=  " + row.getSize().width);
+			logger("src:=  " + row.getAttribute("src"));
 		}
 	} // the end of webElementCollectionAttributes
 
 	public static void webElementAttributes(WebElement objWebElement) {
-		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementAttributes ");
-		// System.out.println("text:=  " + objWebElementEach.);
-		System.out.println("text:=  " + objWebElement.getTagName());
-		System.out.println("tag_type:=  " + objWebElement.getTagName() + "_" + objWebElement.getAttribute("type"));
-		System.out.println("TagName:=  " + objWebElement.getAttribute("TagName"));
-		System.out.println("type:=  " + objWebElement.getAttribute("type"));
-		System.out.println("id:=  " + objWebElement.getAttribute("id"));
-		System.out.println("name:=  " + objWebElement.getAttribute("name"));
-		System.out.println("text:=  " + objWebElement.getAttribute("text"));
-		System.out.println("innerText:=  " + objWebElement.getAttribute("innerText"));
-		System.out.println("outerText:=  " + objWebElement.getAttribute("outerText"));
-		System.out.println("innerHTML:=  " + objWebElement.getAttribute("innerHTML"));
-		System.out.println("outerHTML:=  " + objWebElement.getAttribute("outerHTML"));
-		System.out.println("uniqueID:=  " + objWebElement.getAttribute("uniqueID"));
-		System.out.println("class:=  " + objWebElement.getAttribute("class"));
-		System.out.println("type:=  " + objWebElement.getAttribute("type"));
-		System.out.println("TYPE:=  " + objWebElement.getAttribute("TYPE"));
-		System.out.println("href:=  " + objWebElement.getAttribute("href"));
-		System.out.println("NameProp:=  " + objWebElement.getAttribute("NameProp"));
-		System.out.println("isDisplayed:=  " + objWebElement.isDisplayed());
-		System.out.println("name:=  " + objWebElement.isEnabled());
-		System.out.println("getLocation().x:=  " + objWebElement.getLocation().x);
-		System.out.println("getLocation().y:=  " + objWebElement.getLocation().y);
-		System.out.println("getSize().height:=  " + objWebElement.getSize().height);
-		System.out.println("getLocation().y:=  " + objWebElement.getSize().width);
-		System.out.println("src:=  " + objWebElement.getAttribute("src"));
+		logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementAttributes ");
+		// logger("text:=  " + objWebElementEach.);
+		logger("text:=  " + objWebElement.getTagName());
+		logger("tag_type:=  " + objWebElement.getTagName() + "_" + objWebElement.getAttribute("type"));
+		logger("TagName:=  " + objWebElement.getAttribute("TagName"));
+		logger("type:=  " + objWebElement.getAttribute("type"));
+		logger("id:=  " + objWebElement.getAttribute("id"));
+		logger("name:=  " + objWebElement.getAttribute("name"));
+		logger("text:=  " + objWebElement.getAttribute("text"));
+		logger("innerText:=  " + objWebElement.getAttribute("innerText"));
+		logger("outerText:=  " + objWebElement.getAttribute("outerText"));
+		logger("innerHTML:=  " + objWebElement.getAttribute("innerHTML"));
+		logger("outerHTML:=  " + objWebElement.getAttribute("outerHTML"));
+		logger("uniqueID:=  " + objWebElement.getAttribute("uniqueID"));
+		logger("class:=  " + objWebElement.getAttribute("class"));
+		logger("type:=  " + objWebElement.getAttribute("type"));
+		logger("TYPE:=  " + objWebElement.getAttribute("TYPE"));
+		logger("href:=  " + objWebElement.getAttribute("href"));
+		logger("NameProp:=  " + objWebElement.getAttribute("NameProp"));
+		logger("isDisplayed:=  " + objWebElement.isDisplayed());
+		logger("name:=  " + objWebElement.isEnabled());
+		logger("getLocation().x:=  " + objWebElement.getLocation().x);
+		logger("getLocation().y:=  " + objWebElement.getLocation().y);
+		logger("getSize().height:=  " + objWebElement.getSize().height);
+		logger("getLocation().y:=  " + objWebElement.getSize().width);
+		logger("src:=  " + objWebElement.getAttribute("src"));
 	} // the end of webElementAttributes
 
 	// public class JavascriptActions extends Actions {
