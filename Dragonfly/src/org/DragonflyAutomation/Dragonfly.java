@@ -339,6 +339,10 @@ public class Dragonfly {
 				objStep.put("strStartTimestamp", "");
 				objStep.put("strStepDuration", "");
 				objStep.put("strEndTimestamp", "");
+				
+				objStep.put("strStepExpected", "");
+				objStep.put("strStepActual", "");
+				
 
 				// TODO consider moving the step println to a method and call
 				logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
@@ -1116,6 +1120,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
+					objStep.put("strStepActual", createStepActual(objStep,"SET"));
 					logger("elementSetSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
@@ -1202,6 +1207,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
+					objStep.put("strStepActual", createStepActual(objStep,"verify"));
 					logger("elementVerifyValueSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
@@ -1585,10 +1591,13 @@ public class Dragonfly {
 			coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
 			objStep.put("blnStatus", true);
 
+			//System.out.println(createStepActual(objStep,"LAUNCH"));
+			
 			lngTimeEnd = System.currentTimeMillis();
 			objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 			objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 			objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
+			objStep.put("strStepActual", createStepActual(objStep,"LAUNCH"));
 			logger("browserLaunch finally Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 			// return objWebDriver;
 		}
@@ -2694,7 +2703,7 @@ public class Dragonfly {
 				objStringBuilder.append("<TR>");
 
 				objStringBuilder.append("<TD align=center valign=middle>Actual</TD>");
-				objStringBuilder.append("<TD align=left valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
+				objStringBuilder.append("<TD align=left valign=middle>" + objStep.get("strStepActual").toString() + "</TD>");
 				objStringBuilder.append("</TR>");
 				objStringBuilder.append("</TABLE> ");
 				if (objStep.get("strScreenshotFilePath").toString().trim().length() != 0) {
@@ -2761,136 +2770,175 @@ public class Dragonfly {
 		}
 	}
 
-	public static String createStepActual(JSONObject objStep) {
-		String DetailsHTML = "";
-		String strDetailsNoHTML = "";
+	public static String createStepActual(JSONObject objStep, String strStepType) {
+		String strActualHtml = "";
+		String strActualText = "";
 		String strStepDetails = objStep.get("strAttributeValues").toString();
-		String strOutputParameterValue = "";
+		String strOutputValue = objStep.get("strOutputValue").toString();
 		String strInputParameterValueHTML = "";
-		String strInputParameterValue = "";
+		String strInputValue = objStep.get("strInputValue").toString();
 		String strActualReturn = "";
 		String strActualReturnHTML = "";
 		String strStepParameterName = "";
 		String intWaited = "";
 		String strParameterName = "";
+		String strTagName = objStep.get("strTagName").toString();// strStepParameterName & " " & strObjectToString
+		String strOutputValueHtml = objStep.get("strOutputValue").toString();
 
 		// strObjectToString = objObjectDetailsHTML.GetTOProperty("TestObjGenType")
-		String strToString = "";// strStepParameterName & " " & strObjectToString
-		// strInputParameterValue = strParameterValue
-		String strOutputParameterValueHTML = "";
-		// strInputParameterValueHTML = FormatHTML(strInputParameterValue)
+		// strInputParameterValueHTML = FormatHTML(strInputValue)
 		// strActualReturnHTML = FormatHTML(strActualReturn)
 
-		switch (strStepDetails.toUpperCase()) {
-		case "launch":
-
+		switch (strStepType.toUpperCase()) {
+		case "LAUNCH":
+			strActualHtml = "Launch {" + strTagName + "} browser to url {" + strInputValue + "} then expect navigation within {" + intWaited + "} milliseconds";
+			strActualText = "Launch {" + strTagName + "} browser to url {" + strInputValue + "} then expect navigation within {" + intWaited + "} milliseconds";
+			break;
+		case "CLOSE":
+			strActualHtml = "Close {" + strTagName + "} browser within {" + intWaited + "} milliseconds";
+			strActualText = "Close {" + strTagName + "} browser within {" + intWaited + "} milliseconds";
+			break;
 		case "DEFAULT":
-			DetailsHTML = "The <b>" + strToString + " </b> default value is {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>}.";
-			strDetailsNoHTML = "The expected " + strToString + " default value is " + strOutputParameterValue + ".";
+			strActualHtml = "The <b>" + strTagName + " </b> default value is {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>}.";
+			strActualText = "The expected " + strTagName + " default value is " + strOutputValue + ".";
+			break;
 		case "CLICKED":
-			DetailsHTML = "The expected <b>" + strToString + "</b>  value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was clicked.";
-			strDetailsNoHTML = "The expected " + strToString + "  value {" + strInputParameterValue + "} was clicked.";
+			strActualHtml = "The expected <b>" + strTagName + "</b>  value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was clicked.";
+			strActualText = "The expected " + strTagName + "  value {" + strInputValue + "} was clicked.";
+			break;
 		case "EXPECTED":
-			DetailsHTML = "The expected <b>" + strToString + "</b>  value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was not verified.<BR>The actual value was {<b><FONT COLOR='FF0000'>" + strActualReturnHTML + "</FONT></b>}.";
-			strDetailsNoHTML = "The expected " + strToString + " value {" + strInputParameterValue + "} was not verified.  The actual value was {" + strActualReturn + "}.";
+			strActualHtml = "The expected <b>" + strTagName + "</b>  value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was not verified.<BR>The actual value was {<b><FONT COLOR='FF0000'>" + strActualReturnHTML + "</FONT></b>}.";
+			strActualText = "The expected " + strTagName + " value {" + strInputValue + "} was not verified.  The actual value was {" + strActualReturn + "}.";
+			break;
 		case "EXPECTEDTOOLTIP":
-			DetailsHTML = "The expected <b>" + strToString + "</b>  tooltip value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was not verified.<BR>The actual value was {<b><FONT COLOR='FF0000'>" + strActualReturnHTML + "</FONT></b>}.";
-			strDetailsNoHTML = "The expected " + strToString + " tooltip value {" + strInputParameterValue + "} was not verified.  The actual value was {" + strActualReturn + "}.";
+			strActualHtml = "The expected <b>" + strTagName + "</b>  tooltip value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was not verified.<BR>The actual value was {<b><FONT COLOR='FF0000'>" + strActualReturnHTML + "</FONT></b>}.";
+			strActualText = "The expected " + strTagName + " tooltip value {" + strInputValue + "} was not verified.  The actual value was {" + strActualReturn + "}.";
+			break;
 		case "FIND":
-			DetailsHTML = "The expected <b>" + strToString + "</b>  value {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was found.";
-			strDetailsNoHTML = "The expected " + strToString + "  value {" + strOutputParameterValue + "} was found.";
+			strActualHtml = "The expected <b>" + strTagName + "</b>  value {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was found.";
+			strActualText = "The expected " + strTagName + "  value {" + strOutputValue + "} was found.";
+			break;
 		case "NOTFOUND":
-			DetailsHTML = "The expected <b>" + strToString + "</b>  value {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was not found.";
-			strDetailsNoHTML = "The expected " + strToString + " value {" + strOutputParameterValue + "} was not found.";
+			strActualHtml = "The expected <b>" + strTagName + "</b>  value {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was not found.";
+			strActualText = "The expected " + strTagName + " value {" + strOutputValue + "} was not found.";
+			break;
 		case "VERIFY":
-			DetailsHTML = "The expected <b>" + strToString + "</b>  value {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was verified.";
-			strDetailsNoHTML = "The expected " + strToString + " value {" + strOutputParameterValue + "} was verified.";
+			strActualHtml = "The expected <b>" + strTagName + "</b>  value {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was verified.";
+			strActualText = "The expected " + strTagName + " value {" + strOutputValue + "} was verified.";
+			break;
 		case "VERIFYTOOLTIP":
-			DetailsHTML = "The expected <b>" + strToString + "</b> tooltip value {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was verified.";
-			strDetailsNoHTML = "The expected " + strToString + " tooltip value {" + strOutputParameterValue + "} was verified.";
+			strActualHtml = "The expected <b>" + strTagName + "</b> tooltip value {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was verified.";
+			strActualText = "The expected " + strTagName + " tooltip value {" + strOutputValue + "} was verified.";
+			break;
 		case "GET":
-			DetailsHTML = "The <b>" + strToString + " </b> actual value is {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>}.";
-			strDetailsNoHTML = "The " + strToString + " actual value is {" + strOutputParameterValue + "}";
+			strActualHtml = "The <b>" + strTagName + " </b> actual value is {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>}.";
+			strActualText = "The " + strTagName + " actual value is {" + strOutputValue + "}";
+			break;
 		case "GETTOOLTIP":
-			DetailsHTML = "The <b>" + strToString + " </b> tooltip actual value is {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>}.";
-			strDetailsNoHTML = "The " + strToString + " tooltip actual value is {" + strOutputParameterValue + "}";
+			strActualHtml = "The <b>" + strTagName + " </b> tooltip actual value is {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>}.";
+			strActualText = "The " + strTagName + " tooltip actual value is {" + strOutputValue + "}";
+			break;
 		case "SET":
-			DetailsHTML = "The expected <b>" + strToString + " </b>  value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was set.";
-			strDetailsNoHTML = "The expected " + strToString + " value {" + strInputParameterValue + "} was set.";
+			strActualHtml = "The expected <b>" + strTagName + " </b>  value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was set.";
+			strActualText = "The expected " + strTagName + " value {" + strInputValue + "} was set.";
+			break;
 		case "PERSISTED":
-			DetailsHTML = "The expected <b>" + strToString + " </b>  value {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} persisted.";
-			strDetailsNoHTML = "The expected " + strToString + " value {" + strOutputParameterValue + "} persisted.";
+			strActualHtml = "The expected <b>" + strTagName + " </b>  value {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} persisted.";
+			strActualText = "The expected " + strTagName + " value {" + strOutputValue + "} persisted.";
+			break;
 		case "PASSWORD":
-			DetailsHTML = "The <b>" + strToString + " </b> password value {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} was set.";
-			strDetailsNoHTML = "The " + strToString + " password value {" + strOutputParameterValue + "} was set.";
+			strActualHtml = "The <b>" + strTagName + " </b> password value {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} was set.";
+			strActualText = "The " + strTagName + " password value {" + strOutputValue + "} was set.";
+			break;
 		case "NOTPERSISTED":
-			DetailsHTML = "The expected <b>" + strToString + " </b> value  {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} did not persist.<BR>The actual value {<b><FONT COLOR='FF0000'>" + strActualReturnHTML + "</FONT></b>} was displayed.";
-			strDetailsNoHTML = "The expected " + strToString + " value {" + strInputParameterValue + "} did not persist.  The actual value {" + strActualReturn + "} was displayed.";
+			strActualHtml = "The expected <b>" + strTagName + " </b> value  {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} did not persist.<BR>The actual value {<b><FONT COLOR='FF0000'>" + strActualReturnHTML + "</FONT></b>} was displayed.";
+			strActualText = "The expected " + strTagName + " value {" + strInputValue + "} did not persist.  The actual value {" + strActualReturn + "} was displayed.";
+			break;
 		case "EXIST":
-			DetailsHTML = "The expected <b>" + strToString + "</b> exists.";
-			strDetailsNoHTML = "The expected " + strToString + " exists.";
+			strActualHtml = "The expected <b>" + strTagName + "</b> exists.";
+			strActualText = "The expected " + strTagName + " exists.";
+			break;
 		case "NOTEXIST":
-			DetailsHTML = "The expected <b>" + strToString + "</b> does not exist after " + intWaited + " milliseconds.";
-			strDetailsNoHTML = "The expected " + strToString + " does not exist after " + intWaited + " milliseconds.";
+			strActualHtml = "The expected <b>" + strTagName + "</b> does not exist after " + intWaited + " milliseconds.";
+			strActualText = "The expected " + strTagName + " does not exist after " + intWaited + " milliseconds.";
+			break;
 		case "NOTEXISTTOOLTIP":
-			DetailsHTML = "The expected <b>" + strToString + "</b> tooltip does not exist after " + intWaited + " milliseconds.";
-			strDetailsNoHTML = "The expected " + strToString + " tooltip does not exist after " + intWaited + " milliseconds.";
+			strActualHtml = "The expected <b>" + strTagName + "</b> tooltip does not exist after " + intWaited + " milliseconds.";
+			strActualText = "The expected " + strTagName + " tooltip does not exist after " + intWaited + " milliseconds.";
+			break;
 		case "INVISIBLE":
-			DetailsHTML = "The expected <b>" + strToString + "</b> <b><FONT COLOR='008000'></FONT></b> is invisible.";
-			strDetailsNoHTML = "The expected " + strToString + " is invisible.";
+			strActualHtml = "The expected <b>" + strTagName + "</b> <b><FONT COLOR='008000'></FONT></b> is invisible.";
+			strActualText = "The expected " + strTagName + " is invisible.";
+			break;
 		case "ENABLED":
-			DetailsHTML = "The expected <b>" + strToString + "</b> <b><FONT COLOR='008000'></FONT></b> is enabled.";
-			strDetailsNoHTML = "The expected " + strToString + " is enabled.";
+			strActualHtml = "The expected <b>" + strTagName + "</b> <b><FONT COLOR='008000'></FONT></b> is enabled.";
+			strActualText = "The expected " + strTagName + " is enabled.";
+			break;
 		case "DISABLED":
-			DetailsHTML = "The expected <b>" + strToString + "</b> <b><FONT COLOR='008000'></FONT></b> is disabled.";
-			strDetailsNoHTML = "The expected " + strToString + " is disabled.";
+			strActualHtml = "The expected <b>" + strTagName + "</b> <b><FONT COLOR='008000'></FONT></b> is disabled.";
+			strActualText = "The expected " + strTagName + " is disabled.";
+			break;
 		case "VISIBLE":
-			DetailsHTML = "The expected <b>" + strToString + "</b> <b><FONT COLOR='008000'></FONT></b> is visible.";
-			strDetailsNoHTML = "The expected " + strToString + " is visible.";
+			strActualHtml = "The expected <b>" + strTagName + "</b> <b><FONT COLOR='008000'></FONT></b> is visible.";
+			strActualText = "The expected " + strTagName + " is visible.";
+			break;
 		case "HIDDEN":
-			DetailsHTML = "The expected <b>" + strToString + "</b> <b><FONT COLOR='008000'></FONT></b> is hidden.";
-			strDetailsNoHTML = "The expected " + strToString + " is hidden.";
+			strActualHtml = "The expected <b>" + strTagName + "</b> <b><FONT COLOR='008000'></FONT></b> is hidden.";
+			strActualText = "The expected " + strTagName + " is hidden.";
+			break;
 		case "SYNCNOTEXISTS":
-			DetailsHTML = "The expected <b>" + strToString + "</b></b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} does not exist after " + intWaited + " milliseconds.";
-			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} does not exist after " + intWaited + " milliseconds.";
+			strActualHtml = "The expected <b>" + strTagName + "</b></b> {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} does not exist after " + intWaited + " milliseconds.";
+			strActualText = "The expected " + strTagName + " {" + strOutputValue + "} does not exist after " + intWaited + " milliseconds.";
+			break;
 		case "SYNCEXISTS":
-			DetailsHTML = "The expected <b>" + strToString + "</b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} exists after " + intWaited + " milliseconds.";
-			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} exists after " + intWaited + " milliseconds.";
+			strActualHtml = "The expected <b>" + strTagName + "</b> {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} exists after " + intWaited + " milliseconds.";
+			strActualText = "The expected " + strTagName + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
+			break;
 		case "SYNCCLOSED":
-			DetailsHTML = "The expected <b>" + strToString + "</b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} closed after " + intWaited + " milliseconds.";
-			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} closed after " + intWaited + " milliseconds.";
+			strActualHtml = "The expected <b>" + strTagName + "</b> {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} closed after " + intWaited + " milliseconds.";
+			strActualText = "The expected " + strTagName + " {" + strOutputValue + "} closed after " + intWaited + " milliseconds.";
+			break;
 		case "SYNCNOTCLOSED":
-			DetailsHTML = "The expected <b>" + strToString + "</b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} did not close after " + intWaited + " milliseconds.";
-			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} did not close after " + intWaited + " milliseconds.";
+			strActualHtml = "The expected <b>" + strTagName + "</b> {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} did not close after " + intWaited + " milliseconds.";
+			strActualText = "The expected " + strTagName + " {" + strOutputValue + "} did not close after " + intWaited + " milliseconds.";
+			break;
 		case "SYNCHIDDEN":
-			DetailsHTML = "The expected <b>" + strToString + "</b></b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} does not exist after " + intWaited + " milliseconds.";
-			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} does not exist after " + intWaited + " milliseconds.";
+			strActualHtml = "The expected <b>" + strTagName + "</b></b> {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} does not exist after " + intWaited + " milliseconds.";
+			strActualText = "The expected " + strTagName + " {" + strOutputValue + "} does not exist after " + intWaited + " milliseconds.";
+			break;
 		case "SYNCVISIBLE":
-			DetailsHTML = "The expected <b>" + strToString + "</b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} exists after " + intWaited + " milliseconds.";
-			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} exists after " + intWaited + " milliseconds.";
+			strActualHtml = "The expected <b>" + strTagName + "</b> {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} exists after " + intWaited + " milliseconds.";
+			strActualText = "The expected " + strTagName + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
+			break;
 		case "SYNCOPTIONAL":
-			DetailsHTML = "The expected <b>" + strToString + "</b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} sync is optional after " + intWaited + " milliseconds.";
-			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} exists after " + intWaited + " milliseconds.";
+			strActualHtml = "The expected <b>" + strTagName + "</b> {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} sync is optional after " + intWaited + " milliseconds.";
+			strActualText = "The expected " + strTagName + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
+			break;
 		case "SYNCDISABLED":
-			DetailsHTML = "The expected <b>" + strToString + "</b></b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} does not exist after " + intWaited + " milliseconds.";
-			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} does not exist after " + intWaited + " milliseconds.";
+			strActualHtml = "The expected <b>" + strTagName + "</b></b> {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} does not exist after " + intWaited + " milliseconds.";
+			strActualText = "The expected " + strTagName + " {" + strOutputValue + "} does not exist after " + intWaited + " milliseconds.";
+			break;
 		case "SYNCENABLED":
-			DetailsHTML = "The expected <b>" + strToString + "</b> {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} exists after " + intWaited + " milliseconds.";
-			strDetailsNoHTML = "The expected " + strToString + " {" + strOutputParameterValue + "} exists after " + intWaited + " milliseconds.";
+			strActualHtml = "The expected <b>" + strTagName + "</b> {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} exists after " + intWaited + " milliseconds.";
+			strActualText = "The expected " + strTagName + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
+			break;
 		case "NAVIGATE":
-			DetailsHTML = "The expected <b>" + strToString + " </b>  value {<b><FONT COLOR='008000'>" + strOutputParameterValueHTML + "</FONT></b>} was set.<BR>No validation performed due to navigation.";
-			strDetailsNoHTML = "The expected " + strToString + " value {" + strOutputParameterValue + "} was set. No validation performed due to navigation.";
+			strActualHtml = "The expected <b>" + strTagName + " </b>  value {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} was set.<BR>No validation performed due to navigation.";
+			strActualText = "The expected " + strTagName + " value {" + strOutputValue + "} was set. No validation performed due to navigation.";
+			break;
 		case "KEYSTROKE":
-			DetailsHTML = "The expected <b>" + strToString + "</b>  value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was pressed.";
-			strDetailsNoHTML = "The expected " + strToString + "  value {" + strInputParameterValue + "} was pressed.";
+			strActualHtml = "The expected <b>" + strTagName + "</b>  value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was pressed.";
+			strActualText = "The expected " + strTagName + "  value {" + strInputValue + "} was pressed.";
+			break;
 		case "NOTINLIST":
-			DetailsHTML = "The list item {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} does not exist in the <b>" + strStepParameterName + "</b> list field.<BR>Please confirm the input value against the actual list values {<b><FONT COLOR='FF0000'>" + strActualReturnHTML;
-			// "</FONT></b>} is available for this field."
-			strDetailsNoHTML = "The list item {" + strInputParameterValue + "} does not exist in the " + strParameterName + " list field.  Please confirm the input value against the actual list values {" + strActualReturn + "} is available for this field.";
-
-			DetailsHTML = "<DIV align='left/>" + DetailsHTML + "</DIV>";
+			strActualHtml = "The list item {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} does not exist in the <b>" + strStepParameterName + "</b> list field.<BR>Please confirm the input value against the actual list values {<b><FONT COLOR='FF0000'>" + strActualReturnHTML + "</FONT></b>} is available for this field.";
+			strActualText = "The list item {" + strInputValue + "} does not exist in the " + strParameterName + " list field.  Please confirm the input value against the actual list values {" + strActualReturn + "} is available for this field.";
+			break;
+		case "break":
+			break;
 		}
-		return null;
+		strActualHtml = "<DIV align='left/>" + strActualHtml + "</DIV>";
+		return strActualText;
 	}
 
 	// Function DetailsHTML(objObjectDetailsHTML, strStepAction, strStepParameterName, strActualReturn, intWaited)
