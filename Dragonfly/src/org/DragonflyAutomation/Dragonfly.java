@@ -282,11 +282,11 @@ public class Dragonfly {
 		try {
 			// strTestPath = "Data/public/local_ATW_window.json";
 			// strTestPath = "Data/public/local_ATW_AlertPopups.json";
-			strTestPath = "Data/public/local_ATW.json";
+			//strTestPath = "Data/public/local_ATW.json";
 			// strTestPath = "Data/public/local_ATW_frames.json";
 			// strTestPath = "Data/public/public_SeaWorld.json";
 			// strTestPath = "Data/public/local_jqueryFade.json";
-			// strTestPath = "Data/public/local_size_Visibility.json";
+			 strTestPath = "Data/public/local_size_Visibility.json";
 			// strTestPath = "Data/public/local_AngularJS_Calculator.json";
 			// strTestPath = "Data/public/public_mercury_tours.json";
 			// strTestPath = "Data/public/public_ranorex.json";
@@ -339,10 +339,9 @@ public class Dragonfly {
 				objStep.put("strStartTimestamp", "");
 				objStep.put("strStepDuration", "");
 				objStep.put("strEndTimestamp", "");
-				
+
 				objStep.put("strStepExpected", "");
 				objStep.put("strStepActual", "");
-				
 
 				// TODO consider moving the step println to a method and call
 				logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
@@ -529,6 +528,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
+					objStep.put("strStepActual", createStepActual(objStep, "get"));
 					logger("elementGetSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
@@ -608,6 +608,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
+					objStep.put("strStepActual", createStepActual(objStep, "mouseover"));
 					logger("elementOnMouseOverSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
@@ -1120,7 +1121,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
-					objStep.put("strStepActual", createStepActual(objStep,"SET"));
+					objStep.put("strStepActual", createStepActual(objStep, "SET"));
 					logger("elementSetSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
@@ -1207,7 +1208,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
-					objStep.put("strStepActual", createStepActual(objStep,"verify"));
+					objStep.put("strStepActual", createStepActual(objStep, "verify"));
 					logger("elementVerifyValueSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
@@ -1308,6 +1309,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
+					objStep.put("strStepActual", createStepActual(objStep, "syncvisible"));
 					logger("elementVisibleSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
@@ -1373,6 +1375,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
+					objStep.put("strStepActual", createStepActual(objStep, "synchidden"));
 					logger("elementHiddenSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
@@ -1440,6 +1443,8 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
+					objStep.put("strStepActual", createStepActual(objStep, "syncenabled"));
+
 					logger("elementEnabledSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
@@ -1504,6 +1509,7 @@ public class Dragonfly {
 					objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
+					objStep.put("strStepActual", createStepActual(objStep, "syncdisabled"));
 					logger("elementDisabledSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
@@ -1591,13 +1597,13 @@ public class Dragonfly {
 			coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
 			objStep.put("blnStatus", true);
 
-			//System.out.println(createStepActual(objStep,"LAUNCH"));
-			
+			// System.out.println(createStepActual(objStep,"LAUNCH"));
+
 			lngTimeEnd = System.currentTimeMillis();
 			objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 			objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
 			objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
-			objStep.put("strStepActual", createStepActual(objStep,"LAUNCH"));
+			objStep.put("strStepActual", createStepActual(objStep, "LAUNCH"));
 			logger("browserLaunch finally Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 			// return objWebDriver;
 		}
@@ -2206,7 +2212,6 @@ public class Dragonfly {
 	// '******************************************************************************
 	// End Function '==> WebObjectEnabled
 
-	@SuppressWarnings("finally")
 	public static String elementGet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementTagNameNotSupportedException {
 		long lngStartTimeElementGet = System.currentTimeMillis();
 		String strElementGet = "";
