@@ -263,7 +263,8 @@ public class Dragonfly {
 		String strResultsPath = "";
 		String strImagesPath = "";
 		logger("Working Directory = " + System.getProperty("user.dir"));
-		switch (OSType()) {
+		String strReturnOSType = OSType();
+		switch (strReturnOSType) {
 		case "Windows":
 			strResultsPath = System.getProperty("user.dir") + "\\Results\\" + dateTimestamp() + "\\";
 			strImagesPath = "images\\";
@@ -273,7 +274,7 @@ public class Dragonfly {
 			strImagesPath = "images/";
 			break;
 		default:
-			// //TODO switch (OSType()) need to raise an error and log
+			logger("main switch OSType = " + strReturnOSType + "  not supported");
 			break;
 		}
 		new File(strResultsPath).mkdirs();
@@ -282,11 +283,11 @@ public class Dragonfly {
 		try {
 			// strTestPath = "Data/public/local_ATW_window.json";
 			// strTestPath = "Data/public/local_ATW_AlertPopups.json";
-			//strTestPath = "Data/public/local_ATW.json";
+			// strTestPath = "Data/public/local_ATW.json";
 			// strTestPath = "Data/public/local_ATW_frames.json";
 			// strTestPath = "Data/public/public_SeaWorld.json";
 			// strTestPath = "Data/public/local_jqueryFade.json";
-			 strTestPath = "Data/public/local_size_Visibility.json";
+			strTestPath = "Data/public/local_size_Visibility.json";
 			// strTestPath = "Data/public/local_AngularJS_Calculator.json";
 			// strTestPath = "Data/public/public_mercury_tours.json";
 			// strTestPath = "Data/public/public_ranorex.json";
@@ -327,9 +328,9 @@ public class Dragonfly {
 				if (objStep.get("blnExitOnFail").toString().trim().length() == 0) {
 					objStep.put("blnExitOnFail", "true");
 				}
-				if (objStep.get("intLoop").toString().trim().length() == 0) {
-					objStep.put("intLoop", "0");
-				}
+				// if (objStep.get("intLoop").toString().trim().length() == 0) {
+				// objStep.put("intLoop", "0");
+				// }
 				objStep.put("strCurrentWindowHandle", strCurrentWindowHandle);
 				objStep.put("strType", "");
 				objStep.put("strScreenshotFilePath", strResultsPath + strImagesPath);
@@ -343,30 +344,10 @@ public class Dragonfly {
 				objStep.put("strStepExpected", "");
 				objStep.put("strStepActual", "");
 
-				// TODO consider moving the step println to a method and call
-				logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
-				logger("main strAction = " + objStep.get("strAction").toString());
-				logger("main strTagName = " + objStep.get("strTagName").toString());
-				logger("main strAttributeNames = " + objStep.get("strAttributeNames").toString());
-				logger("main strAttributeValues = " + objStep.get("strAttributeValues").toString());
-				logger("main strInputValue = " + objStep.get("strInputValue").toString());
-				logger("main strLogicalName = " + objStep.get("strLogicalName").toString());
-				logger("main intMillisecondsToWait = " + objStep.get("intMillisecondsToWait").toString());
-				logger("main blnOptional = " + objStep.get("blnOptional").toString());
-				logger("main strAssert = " + objStep.get("strAssert").toString());
-				logger("main blnPleaseWait = " + objStep.get("blnPleaseWait").toString());
-				logger("main blnHighlight = " + objStep.get("blnHighlight").toString());
-				logger("main blnScreenshot = " + objStep.get("blnScreenshot").toString());
-				logger("main strFunction = " + objStep.get("strFunction").toString());
-				logger("main strAssistiveProperties = " + objStep.get("strAssistiveProperties").toString());
-				logger("main blnExitOnFail = " + objStep.get("blnExitOnFail").toString());
-				logger("main strOutputLinkName = " + objStep.get("strOutputLinkName").toString());
-				logger("main strOutputValue = " + objStep.get("strOutputValue").toString());
-				logger("main intLoop = " + objStep.get("intLoop").toString());
-				logger("main strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
+				logStepDetails(objStep, intStep);
 				if (!objStep.get("strFunction").toString().trim().equals("")) {
 					String strMethodName = objStep.get("strFunction").toString();
-					String arg1 = strInputValue;
+					String arguments = strInputValue;
 					try {
 						Class objClass = Class.forName("org.DragonflyAutomation.Dragonfly");
 						Class objParameterTypes[] = new Class[1];
@@ -374,12 +355,12 @@ public class Dragonfly {
 						Method objMethod = objClass.getMethod(strMethodName, objParameterTypes);
 						Dragonfly objDragonfly = new Dragonfly();
 						Object arrArgumentList[] = new Object[1];
-						arrArgumentList[0] = new String(arg1);
+						arrArgumentList[0] = new String(arguments);
 						Object objReturn = objMethod.invoke(objDragonfly, arrArgumentList);
 						String strReturnValue = (String) objReturn;
 						strInputValue = strReturnValue;
 						objStep.put("strInputValue", strInputValue);
-						logger(strReturnValue.toString());
+						logger("main call function retrun value = " + strReturnValue.toString());
 					} catch (Throwable e) {
 						logger("main call function - " + e.toString());
 					}
@@ -462,6 +443,29 @@ public class Dragonfly {
 			// }
 		}// the end of try
 	}// the end of Main
+
+	public static void logStepDetails(JSONObject objStep, int intStep) {
+		logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
+		logger("main strAction = " + objStep.get("strAction").toString());
+		logger("main strTagName = " + objStep.get("strTagName").toString());
+		logger("main strAttributeNames = " + objStep.get("strAttributeNames").toString());
+		logger("main strAttributeValues = " + objStep.get("strAttributeValues").toString());
+		logger("main strInputValue = " + objStep.get("strInputValue").toString());
+		logger("main strLogicalName = " + objStep.get("strLogicalName").toString());
+		logger("main intMillisecondsToWait = " + objStep.get("intMillisecondsToWait").toString());
+		logger("main blnOptional = " + objStep.get("blnOptional").toString());
+		logger("main strAssert = " + objStep.get("strAssert").toString());
+		logger("main blnPleaseWait = " + objStep.get("blnPleaseWait").toString());
+		logger("main blnHighlight = " + objStep.get("blnHighlight").toString());
+		logger("main blnScreenshot = " + objStep.get("blnScreenshot").toString());
+		logger("main strFunction = " + objStep.get("strFunction").toString());
+		logger("main strAssistiveProperties = " + objStep.get("strAssistiveProperties").toString());
+		logger("main blnExitOnFail = " + objStep.get("blnExitOnFail").toString());
+		logger("main strOutputLinkName = " + objStep.get("strOutputLinkName").toString());
+		logger("main strOutputValue = " + objStep.get("strOutputValue").toString());
+		logger("main intLoop = " + objStep.get("intLoop").toString());
+		logger("main strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
+	}
 
 	@SuppressWarnings("unchecked")
 	public static void elementGetSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
@@ -3130,6 +3134,20 @@ public class Dragonfly {
 		}
 	}// the end of writeJsonKeysToHtml
 
+		
+	public static void writeJsonStepsAfterRunToHtml(JSONObject objTestStep, String file) throws IOException {
+	String strKeys=	"intBrowserOuterHeight|strOutputLinkName|intBrowserInnerWidth|strType|intBrowserOuterX|intBrowserOuterY|strFunction|strAttributeValues|blnHighlight|intElementX|strScreenshotFilePath|intElementY|strAssert|intLoop|strAssistiveProperties|intElementHeight|intElementScreenY|strAttributeNames|strLogicalName|intElementScreenX|strStepActual|strOutputValue|strAction|strScreenshotArea|strStartTimestamp|strTagType|intMillisecondsToWait|intElementWidth|intBrowserOuterWidth|blnOptional|strCurrentWindowHandle|strStepExpected|blnScreenshot|blnExitOnFail|intFrame|intBrowserInnerHeight|strEndTimestamp|blnPleaseWait|strStepDuration|strInputValue|strTagName|strStatus";
+	
+	String[] arrKeys;
+	arrKeys = strKeys.split("\\|");
+		
+	//for (intOptionsEach = 0; intOptionsEach < arrOptions.length; intOptionsEach++) {
+	for (Iterator iterator = objTestStep.keySet().iterator(); iterator.hasNext();) {
+			String key = (String) iterator.next();
+			logger(key + " = " + objTestStep.get(key));
+		}
+	}// the end of writeJsonKeysToHtml
+	
 	// TODO webElementCollectionTable send output to html file
 	public static void webElementCollectionTable(String strTagName, WebDriver objWebDriver) {
 		int intCount = 0;
