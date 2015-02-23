@@ -82,7 +82,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"intLoop": "<loopStart>3"
 		},
 
 		{
@@ -166,35 +166,14 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"intLoop": "<loopEnd>"
 		},
 
 		{
-			"strAction": "break",
-			"strTagName": "input",
-			"strAttributeNames": "id",
-			"strAttributeValues": "window_open",
-			"strInputValue": "",
-			"strLogicalName": "",
-			"intMillisecondsToWait": "",
-			"blnOptional": "",
-			"strAssert": "off",
-			"blnPleaseWait": "",
-			"blnHighlight": "",
-			"blnScreenshot": "",
-			"strFunction": "",
-			"strAssistiveProperties": "",
-			"blnExitOnFail": "",
-			"strOutputLinkName": "",
-			"strOutputValue": "",
-			"intLoop": ""
-		},
-
-		{
-			"strAction": "sync_visible",
-			"strTagName": "h1",
-			"strAttributeNames": "id",
-			"strAttributeValues": "page2_title",
+			"strAction": "sync_hidden",
+			"strTagName": "a",
+			"strAttributeNames": "text",
+			"strAttributeValues": "Option B",
 			"strInputValue": "",
 			"strLogicalName": "",
 			"intMillisecondsToWait": "",
