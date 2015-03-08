@@ -3,7 +3,7 @@
 	[
 		{
 			"strAction": "launch",
-			"strTagName": "chrome",
+			"strTagName": "firefox",
 			"strAttributeNames": "",
 			"strAttributeValues": "",
 			"strInputValue": "http://www.ranorex.com/web-testing-examples/vip/",

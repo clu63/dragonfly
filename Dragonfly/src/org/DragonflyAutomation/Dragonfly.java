@@ -334,8 +334,10 @@ public class Dragonfly {
 
 				if (objStep.get("intLoop").toString().trim().length() > 0) {
 					if (objStep.get("intLoop").toString().startsWith("<loopStart>") == true) {
+
 						if (intLoopEach == 0) {
 							intLoopCount = Integer.parseInt(objStep.get("intLoop").toString().replace("<loopStart>", ""));
+							objStep.put("intLoop", "");
 							intLoopEach = 1;
 							intLoopStep = intStep;
 						} else {
@@ -345,12 +347,15 @@ public class Dragonfly {
 					}
 					if (objStep.get("intLoop").toString().startsWith("<loopExit>") == true) {
 					}
+					logger("main intLoopEach = " + intLoopEach);
+					logger("main intStep = " + intStep);
+					logger("main intLoopStep = " + intLoopStep);
 					if (objStep.get("intLoop").toString().startsWith("<loopEnd>") == true) {
 						if (intLoopEach == intLoopCount) {
 							intLoopCount = 0;
 							intLoopEach = 0;
 						} else {
-							intStep = intLoopStep;
+							intStep = intLoopStep - 1;
 						}
 					}
 				}
@@ -1132,7 +1137,7 @@ public class Dragonfly {
 							} else {
 								objStep.put("strStatus", "fail");
 								coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
-								blnExit = false;
+								blnExit = true;
 							}
 						}
 					}
@@ -1359,8 +1364,9 @@ public class Dragonfly {
 				}
 				blnStatus = true;
 			} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException | ElementNotFoundException e) {
-				blnFound = true;
+				blnFound = false;
 				blnHidden = true;
+				blnStatus = true;
 				logger("elementHiddenSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (MultipleElementsFoundException | ElementNotHiddenException e) {
 				blnFound = false;
@@ -2370,9 +2376,9 @@ public class Dragonfly {
 				getRectangleAreaByName(objStep, 0, objStep.get("strScreenshotArea").toString(), objHighlightArea, objWebDriver, objWebElement);
 				BufferedImage screenShot = robot.createScreenCapture(objHighlightArea);
 				strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString() + "Screenshot_" + dateTimestamp() + ".jpg";
-				objStep.put("strScreenshotFilePath", strScreenshotFilePath);
 				Thread objThread = new Thread(new threadSaveImage(screenShot, "jpg", strScreenshotFilePath));
 				objThread.start();
+				objStep.put("strScreenshotFilePath", strScreenshotFilePath);
 			} catch (AWTException e) {
 				// TODO handle coordinateHighlightScreenshot AWTException
 				logger("coordinateHighlightScreenshot " + e.toString());
