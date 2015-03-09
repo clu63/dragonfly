@@ -332,33 +332,6 @@ public class Dragonfly {
 					objStep.put("blnExitOnFail", "true");
 				}
 
-				if (objStep.get("intLoop").toString().trim().length() > 0) {
-					if (objStep.get("intLoop").toString().startsWith("<loopStart>") == true) {
-
-						if (intLoopEach == 0) {
-							intLoopCount = Integer.parseInt(objStep.get("intLoop").toString().replace("<loopStart>", ""));
-							objStep.put("intLoop", "");
-							intLoopEach = 1;
-							intLoopStep = intStep;
-						} else {
-							intLoopEach = intLoopEach + 1;
-						}
-
-					}
-					if (objStep.get("intLoop").toString().startsWith("<loopExit>") == true) {
-					}
-					logger("main intLoopEach = " + intLoopEach);
-					logger("main intStep = " + intStep);
-					logger("main intLoopStep = " + intLoopStep);
-					if (objStep.get("intLoop").toString().startsWith("<loopEnd>") == true) {
-						if (intLoopEach == intLoopCount) {
-							intLoopCount = 0;
-							intLoopEach = 0;
-						} else {
-							intStep = intLoopStep - 1;
-						}
-					}
-				}
 				objStep.put("strCurrentWindowHandle", strCurrentWindowHandle);
 				objStep.put("strType", "");
 				objStep.put("strScreenshotFilePath", strResultsPath + strImagesPath);
@@ -373,6 +346,25 @@ public class Dragonfly {
 				objStep.put("strStepActual", "");
 
 				logStepDetails(objStep, intStep);
+
+				if (objStep.get("intLoop").toString().trim().length() > 0) {
+					if (objStep.get("intLoop").toString().startsWith("<loopStart>") == true) {
+						if (intLoopEach == 0) {
+							intLoopCount = Integer.parseInt(objStep.get("intLoop").toString().replace("<loopStart>", ""));
+							objStep.put("intLoop", "");
+							intLoopEach = 1;
+							intLoopStep = intStep;
+							// } else {
+							// intLoopEach = intLoopEach + 1;
+						}
+					}
+				}
+
+				logger("main intLoopCount = " + intLoopCount);
+				logger("main intLoopEach = " + intLoopEach);
+				logger("main intStep = " + intStep);
+				logger("main intLoopStep = " + intLoopStep);
+
 				if (!objStep.get("strFunction").toString().trim().equals("")) {
 					String strMethodName = objStep.get("strFunction").toString();
 					String arguments = strInputValue;
@@ -451,6 +443,21 @@ public class Dragonfly {
 						break;
 					}
 				}
+
+				if (objStep.get("intLoop").toString().startsWith("<loopExit>") == true) {
+				}
+
+				if (objStep.get("intLoop").toString().startsWith("<loopEnd>") == true) {
+					if (intLoopEach == intLoopCount) {
+						intLoopCount = 0;
+						intLoopEach = 0;
+
+					} else {
+						intLoopEach = intLoopEach + 1;
+						intStep = intLoopStep;
+					}
+				}
+
 			}// for intStep
 				// TODO confirm the exceptions to catch in main some may need to be removed
 		} catch (IOException e) {
