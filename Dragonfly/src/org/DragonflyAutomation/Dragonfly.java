@@ -20,6 +20,7 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -249,6 +250,18 @@ public class Dragonfly {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
+		Robot robot = null;
+		try {
+			robot = new Robot();
+		} catch (AWTException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		robot.keyPress(KeyEvent.VK_WINDOWS);
+		robot.keyPress(KeyEvent.VK_D);
+		robot.keyRelease(KeyEvent.VK_D);
+		robot.keyRelease(KeyEvent.VK_WINDOWS);
+
 		WebDriver objWebDriver = null;
 		WebElement objWebElement;
 		String strTestPath = "";
@@ -284,9 +297,9 @@ public class Dragonfly {
 		new File(strResultsPath + strImagesPath).mkdirs();
 		// logger("ClipboardGet = " + ClipboardGet());
 		try {
-			// strTestPath = "Data/public/local_ATW_window.json";
+			strTestPath = "Data/public/local_ATW_window.json";
 			// strTestPath = "Data/public/local_ATW_AlertPopups.json";
-			strTestPath = "Data/public/local_ATW.json";
+			// strTestPath = "Data/public/local_ATW.json";
 			// strTestPath = "Data/public/local_ATW_frames.json";
 			// strTestPath = "Data/public/public_SeaWorld.json";
 			// strTestPath = "Data/public/local_jqueryFade.json";
@@ -309,6 +322,7 @@ public class Dragonfly {
 			for (intStep = 0; intStep < objTestSteps.size(); intStep++) {
 				objWebElement = null;
 				objStep = (JSONObject) objTestSteps.get(intStep);
+
 				String strInputValue = objStep.get("strInputValue").toString();
 				if (strInputValue.toLowerCase().startsWith("<link>") == true) {
 					strInputValue = objLinks.get(strInputValue.replace("<link>", "")).toString();
@@ -422,6 +436,14 @@ public class Dragonfly {
 					case "mouse_over":
 						elementOnMouseOverSync(objStep, objWebDriver, objWebElement);
 						break;
+					case "sleep":
+						try {
+							TimeUnit.MILLISECONDS.sleep(Integer.parseInt(objStep.get("strInputValue").toString()));
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
 					case "break":
 						break;
 					default:
@@ -454,7 +476,7 @@ public class Dragonfly {
 
 					} else {
 						intLoopEach = intLoopEach + 1;
-						intStep = intLoopStep;
+						intStep = intLoopStep - 1;
 					}
 				}
 
@@ -1375,7 +1397,15 @@ public class Dragonfly {
 				blnHidden = true;
 				blnStatus = true;
 				logger("elementHiddenSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (MultipleElementsFoundException | ElementNotHiddenException e) {
+			} catch (MultipleElementsFoundException e) {
+				blnFound = false;
+				blnHidden = false;
+				logger("elementHiddenSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+			} catch (ElementNotHiddenException e) {
+				// blnFound = false;
+				blnHidden = false;
+				logger("elementHiddenSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+			} catch (Exception e) {
 				blnFound = false;
 				blnHidden = false;
 				logger("elementHiddenSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
@@ -1571,6 +1601,7 @@ public class Dragonfly {
 				myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL).build().perform();
 				break;
 			case "ie":
+				killWindowsProcess("taskkill /F /IM iexplore.exe");
 				desiredCapabilities = DesiredCapabilities.internetExplorer();
 				desiredCapabilities.setJavascriptEnabled(true);
 				System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
@@ -1736,9 +1767,9 @@ public class Dragonfly {
 		// objWebDriver.manage().timeouts().implicitlyWait(10, TimeUnit.NANOSECONDS);
 		Boolean blnSwitch = false;
 		Boolean blnFound = false;
+		String strXpath = "";
 		try {
 			int intFramesCount = 0;
-			String strXpath = "";
 			String strTagName;
 			String strIndex = "";
 			WebElement objWebElement;
@@ -1996,7 +2027,7 @@ public class Dragonfly {
 		} catch (NoSuchFrameException e) {
 			throw new ElementNotFoundException("elementFind " + e.toString());
 		} finally {
-			logger("elementFind finally blnFound = " + blnFound + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementFind));
+			logger("elementFind finally strXpath = " + strXpath + " blnFound = " + blnFound + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementFind));
 		}
 	}// the end of elementFind
 
@@ -2110,7 +2141,7 @@ public class Dragonfly {
 			if (objWebElement.isDisplayed() == false) {
 				return true;
 			} else {
-				logger("elementHidden objWebElement.isDisplayed() = return false MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
+				logger("elementHidden objWebElement.isDisplayed() = return true MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
 				throw new ElementNotHiddenException("Element is displayed.");
 			}// the end of if (objWebElement.isDisplayed())
 		} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException e) {
@@ -2343,24 +2374,24 @@ public class Dragonfly {
 				Rectangle objHighlightArea = new Rectangle(0, 0, 0, 0);
 				if (Boolean.parseBoolean(objStepHighlightArea.get("blnHighlight").toString()) == true) {
 					int intThickness = 5;
-					Color objColor2 = null;
+					Color objHighlightColor = null;
 					logger("coordinateHighlightScreenshot before color switch");
 					switch (objStepHighlightArea.get("strStatus").toString().toLowerCase()) {
 					case "pass":
 						if (objStepHighlightArea.get("strAction").toString().toLowerCase().equals("set") && objStepHighlightArea.get("strAssert").toString().toLowerCase().equals("off")) {
-							objColor2 = Color.BLUE;
+							objHighlightColor = Color.BLUE;
 						} else {
-							objColor2 = Color.GREEN;
+							objHighlightColor = Color.GREEN;
 						}
 						break;
 					case "fail":
-						objColor2 = Color.RED;
+						objHighlightColor = Color.RED;
 						break;
 					case "warning":
-						objColor2 = Color.YELLOW;
+						objHighlightColor = Color.YELLOW;
 						break;
 					case "info":
-						objColor2 = Color.MAGENTA;
+						objHighlightColor = Color.MAGENTA;
 						break;
 					}
 					logger("coordinateHighlightScreenshot intThickness = " + intThickness);
@@ -2369,7 +2400,7 @@ public class Dragonfly {
 					setBounds(objHighlightArea.x, objHighlightArea.y, objHighlightArea.width, objHighlightArea.height);
 					setUndecorated(true);
 					setBackground(new Color(0, 0, 0, 0));
-					getRootPane().setBorder(BorderFactory.createLineBorder(objColor2, intThickness, false));
+					getRootPane().setBorder(BorderFactory.createLineBorder(objHighlightColor, intThickness, false));
 					setVisible(true);
 				}// the end of if (blnHighlight == true)
 			}
