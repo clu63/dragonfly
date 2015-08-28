@@ -1,0 +1,21 @@
+ Function EmbedVideo(strFullPath)
+ strText = strText & "<OBJECT id=" & Chr(34) & "VIDEO" & Chr(34) &
+ " width=" & Chr(34) & ConstScreenWidth * 0.85 & Chr(34) & " height=" &
+ Chr(34) & ConstScreenHeight * 0.85 & Chr(34) & " CLASSID=" & Chr(34) &
+ "CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" & Chr(34) & " type=" &
+ Chr(34) & "application/x-oleobject" & Chr(34) & ">"
+ strText = strText & "<PARAM NAME=" & Chr(34) & "URL" & Chr(34) &
+ " VALUE=" & Chr(34) & strFullPath & Chr(34) & ">"
+ strText = strText & "<PARAM NAME=" & Chr(34) &
+ "SendPlayStateChangeEvents" & Chr(34) & " VALUE=" & Chr(34) & "False" &
+ Chr(34) & ">"
+ strText = strText & "<PARAM NAME=" & Chr(34) & "AutoStart" & Chr(34) &
+ " VALUE=" & Chr(34) & "True" & Chr(34) & ">"
+ strText = strText & "<PARAM NAME=" & Chr(34) & "uiMode" & Chr(34) &
+ " value=" & Chr(34) & "none" & Chr(34) & ">"
+ strText = strText & "<PARAM NAME=" & Chr(34) & "PlayCount" & Chr(34) &
+ " value=" & Chr(34) & "9999" & Chr(34) & ">"
+ strText = strText & "<PARAM NAME=" & Chr(34) & "VideoBorderColor" &
+ Chr(34) & " value=" & Chr(34) & "False" & Chr(34) & "></OBJECT>"
+ EmbedVideo = strText
+ End Function

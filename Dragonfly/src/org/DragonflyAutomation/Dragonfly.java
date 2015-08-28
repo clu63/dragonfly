@@ -40,11 +40,9 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -75,44 +73,39 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
-
 import com.opera.core.systems.OperaDriver;
-
 import java.io.IOException;
-
 import sun.misc.BASE64Encoder;
 import sun.misc.BASE64Decoder;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.awt.image.BufferedImage;
-
 import javax.imageio.ImageIO;
 
 public class Dragonfly {
+	// System.exit(0);
+	static int intTestInstanceEach = 0;
+	static JSONArray objLinkArray = null;
+	static JSONArray objTestInstances = null;
+	static JSONArray objTestSteps = null;
+	static JSONArray objTestStepsCombinedOriginal = null;
+	static JSONObject objElement = null;
+	static JSONObject objElements = null;
+	static JSONObject objJsonStepsFile = null;
+	static JSONObject objJsonTestDataFile = null;
+	static JSONObject objLinks = null;
+	static JSONObject objTestInstance = null;
+	static JSONParser objJsonParser = new JSONParser();
 	static String strLog = "";
 	static String strOperatingSystem = "";
-	static JSONParser objJsonParser = new JSONParser();
-	static JSONObject objElements = null;
-	static JSONObject objElement = null;
-	static JSONArray objTestSteps = null;
-	static JSONObject objJsonStepsFile = null;
-	static JSONArray objTestStepsCombinedOriginal = null;
-	static JSONObject objJsonTestDataFile = null;
-
-	static JSONArray objTestInstances = null;
-	static JSONObject objTestInstance = null;
-	static int intTestInstanceEach = 0;
-
-	static JSONArray objLinkArray = null;
-	static JSONObject objLinks = null;
-
-	static String strElementRepositoryPath = "Data/internal/element_repository/";
-	static String strTestDataPath = "Data/internal/test_data/";
-	static String strTestInstancesPath = "Data/internal/test_instances/";
-	static String strTestMatrixPath = "Data/internal/test_matrix/";
-	static String strTestModulesPath = "Data/internal/test_modules/";
+	static String strPathElementRepository = "Data/internal/element_repository/";
+	static String strPathSystemUserDir = System.getProperty("user.dir");
+	static String strPathTestData = "Data/internal/test_data/";
+	static String strPathTestInstances = "Data/internal/test_instances/";
+	static String strPathTestMatrix = "Data/internal/test_matrix/";
+	static String strPathTestModules = "Data/internal/test_modules/";
+	static String strTestStepsCombinedOriginal = "";
 
 	public static void logger(String strTextToAdd) {
 		// System.out.println(strTextToAdd);
@@ -244,13 +237,13 @@ public class Dragonfly {
 	public String data_RandomRangeFiveNumbers(String strDataInput) {
 		return Integer.toString(RandomNumberRange(1, 99999));
 	}// the end of data_RandomFourNumbers
-	
+
 	public String data_EnvironmentURL(String strApplication_Environment) {
 		String strURL = "";
-		String testPath = "Data/internal/test_data/Environment.json";
+		String strPathFullTestData = strPathTestData + "/Environment.json";
 		JSONParser objJsonParser = new JSONParser();
 		try {
-			JSONObject objJsonFile = (JSONObject) objJsonParser.parse(new FileReader(testPath));
+			JSONObject objJsonFile = (JSONObject) objJsonParser.parse(new FileReader(strPathFullTestData));
 			strURL = objJsonFile.get(strApplication_Environment).toString();
 			logger("data_EnvironmentURL strURL = " + strURL);
 		} catch (Exception e) {
@@ -279,7 +272,7 @@ public class Dragonfly {
 		}
 	}// the end of OSType
 
-	public static void minimizeAllWindows() {
+	public static void windowsMinimizeAll() {
 		Robot objRobot = null;
 		switch (strOperatingSystem) {
 		case "Windows":
@@ -289,22 +282,22 @@ public class Dragonfly {
 				objRobot.keyPress(KeyEvent.VK_D);
 				objRobot.keyRelease(KeyEvent.VK_D);
 				objRobot.keyRelease(KeyEvent.VK_WINDOWS);
-				logger("minimizeAllWindows = Windows operating system minimize all windows.");
+				logger("windowsMinimizeAll = Windows operating system minimize all windows.");
 			} catch (Exception e) {
-				logger("minimizeAllWindows Exception = " + e.toString());
+				logger("windowsMinimizeAll Exception = " + e.toString());
 			}
 			break;
 		case "default":
-			logger("minimizeAllWindows = the operating system not supported at this time " + strOperatingSystem);
+			logger("windowsMinimizeAll = the operating system not supported at this time " + strOperatingSystem);
 		}
 	}
 
-	public static void killWindowsProcess(String strProcessToKill) {
+	public static void windowsProcessKill(String strProcessToKill) {
 		try {
 			Runtime.getRuntime().exec(strProcessToKill);
-			logger("killWindowsProcess process killed = " + strProcessToKill);
+			logger("windowsProcessKill process killed = " + strProcessToKill);
 		} catch (Exception e) {
-			logger("killWindowsProcess Exception = " + e.toString());
+			logger("windowsProcessKill Exception = " + e.toString());
 		}
 	}
 
@@ -317,104 +310,29 @@ public class Dragonfly {
 		}
 	}
 
-	// public static JSONValue deepClone(JSONValue jsonValue){
-	// JSONString string = jsonValue.isString();
-	// if (string != null){return new JSONString(string.stringValue());}
-	//
-	// JSONBoolean aBoolean = jsonValue.isBoolean();
-	// if (aBoolean != null){return JSONBoolean.getInstance(aBoolean.booleanValue());}
-	//
-	// JSONNull aNull = jsonValue.isNull();
-	// if (aNull != null){return JSONNull.getInstance();}
-	//
-	// JSONNumber number = jsonValue.isNumber();
-	// if (number!=null){return new JSONNumber(number.doubleValue());}
-	//
-	// JSONObject jsonObject = jsonValue.isObject();
-	// if (jsonObject!=null){
-	// JSONObject clonedObject = new JSONObject();
-	// for (String key : jsonObject.keySet()){
-	// clonedObject.put(key, deepClone(jsonObject.get(key)));
-	// }
-	// return clonedObject;
-	// }
-	//
-	// JSONArray array = jsonValue.isArray();
-	// if (array != null){
-	// JSONArray clonedArray = new JSONArray();
-	// for (int i=0 ; i < array.size() ; ++i){
-	// clonedArray.set(i, deepClone(array.get(i)));
-	// }
-	// return clonedArray;
-	// }
-	//
-	// throw new IllegalStateException();
-	// }
-
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
-		// System.exit(0);
-		// String strTestPath = "";
-		String strTestMatixPath = "";
+		JSONObject objTestInstancesEach = null;
+		String strPathFullTestMatix = "";
+		// String strPathSystemUserDir = System.getProperty("user.dir");
 		String strTestMatixFileName = "";
-		strOperatingSystem = OSType();
-		String strSystemUserDirPath = System.getProperty("user.dir");
 		WebDriver objWebDriver = null;
 		WebElement objWebElement;
-		// JSONObject objElementRepositoryObject = null;
-		// JSONArray objElementRepositoryArray = null;
-		// String strTestName;
-		JSONObject objTestInstancesEach = null;
-		minimizeAllWindows();
-
-		// new File(strTestNameResultsPath).mkdirs();
-		strTestMatixPath = strTestMatrixPath + strTestMatixFileName;
-		testMatrixSetup(strTestMatixPath);
-		String strTestStepsCombinedOriginal = objTestStepsCombinedOriginal.toString();
-
-		// elementRepositoryCombine(strTestPath);
-		// testInstances(strTestInstancesPath + "ti_LiloUserByResort.json");
-		// intTestInstanceEach = 0;
-		// Object objParser = objJsonParser.parse(new FileReader(strTestInstancesPath + "ti_LiloUserByResort.json"));
-		// objTestInstance = (JSONObject) objParser;
-		// objTestInstances = (JSONArray) objTestInstance.get("test_instances");
-
+		windowsMinimizeAll();
+		strOperatingSystem = OSType();
+		strTestMatixFileName = "";
+		strPathFullTestMatix = strPathTestMatrix + strTestMatixFileName;
+		testMatrixSetup(strPathFullTestMatix);
 		for (intTestInstanceEach = 0; intTestInstanceEach < objTestInstances.size(); intTestInstanceEach++) {
 			objTestSteps = null;
-			// objTestSteps = objTestStepsCombinedOriginal;
-			// DummyBean objTestSteps = new DummyBean(objTestStepsCombinedOriginal);
-
-			// objTestSteps = (JSONArray) objTestStepsCombinedOriginal.clone();
-
-			// objTestSteps = new JSONArray();
-
-			//Object objParser2 = null;
 			try {
-//				objParser2 = objJsonParser.parse(strTestStepsCombinedOriginal);
-				objTestSteps = (JSONArray)objJsonParser.parse(strTestStepsCombinedOriginal);
-				
+				objTestSteps = (JSONArray) objJsonParser.parse(strTestStepsCombinedOriginal);
 			} catch (ParseException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			//objTestSteps = (JSONArray) objParser2;
-
-			// objStepsFile = (JSONObject) objParser2;
-			// objTestSteps = (JSONArray) objStepsFile.get("steps");
-			// objTestSteps = (JSONArray) objStepsFile.get("steps");
-
-			// System.arraycopy(objTestStepsCombinedOriginal, 0, objTestSteps, 0, objTestStepsCombinedOriginal.size());
-			// objTestSteps =(JSONArray) ArrayUtils.clone(objTestStepsCombinedOriginal);
-
 			logger("objTestInstances.size = " + objTestInstances.size());
-
 			objTestInstancesEach = (JSONObject) objTestInstances.get(intTestInstanceEach);
-
-			// System.exit(0);
-
-			// JSONParser parser = new JSONParser();
-			// JSONObject objJsonFile = null;
-			// JSONArray objTestSteps = null;
 			JSONObject objStep = null;
 			int intStep = 0;
 			int intMillisecondsToWaitDefault = 20000;
@@ -423,75 +341,58 @@ public class Dragonfly {
 			int intLoopEach = 0;
 			int intLoopStep = 0;
 			String strCurrentWindowHandle = "";
-			String strResultsPath = "";
-			String strImagesPath = "";
+			String strPathResults = "";
+			String strPathImages = "";
 			String strTestStatus = "pass";
 			String strResultsFolder = dateTimestamp();
-			logger("Working Directory = " + strSystemUserDirPath);
+			logger("Working Directory = " + strPathSystemUserDir);
 			switch (strOperatingSystem) {
 			case "Windows":
-				strResultsPath = strSystemUserDirPath + "\\Results\\" + strTestMatixFileName.replace(".json", "") + "\\" + strResultsFolder + "\\";
-				strImagesPath = "images\\";
+				strPathResults = strPathSystemUserDir + "\\Results\\" + strTestMatixFileName.replace(".json", "") + "\\" + strResultsFolder + "\\";
+				strPathImages = "images\\";
 				break;
 			case "Mac":
-				strResultsPath = strSystemUserDirPath + "/Results/" + strTestMatixFileName.replace(".json", "") + "/" + strResultsFolder + "/";
-				strImagesPath = "images/";
+				strPathResults = strPathSystemUserDir + "/Results/" + strTestMatixFileName.replace(".json", "") + "/" + strResultsFolder + "/";
+				strPathImages = "images/";
 				break;
 			default:
 				logger("main switch strOperatingSystem = " + strOperatingSystem + "  not supported");
 				System.exit(0);
 			}
-			new File(strResultsPath).mkdirs();
-			new File(strResultsPath + strImagesPath).mkdirs();
-			// logger("ClipboardGet = " + ClipboardGet());
+			new File(strPathResults).mkdirs();
+			new File(strPathResults + strPathImages).mkdirs();
 			try {
-
-				// Object objParser = parser.parse(new FileReader(strTestPath));
-				// objJsonFile = (JSONObject) objParser;
-				// objTestSteps = (JSONArray) objJsonFile.get("steps");
-
-				// JSONArray objLinkArray = (JSONArray) objJsonFile.get("link");
-				// JSONObject objLinks = (JSONObject) objLinkArray.get(0);
-				writeJsonToHtml(objTestSteps, strResultsPath + "StepsOriginal.html");
-				writeJsonToHtml(objTestStepsCombinedOriginal, strResultsPath + "StepsOriginal_" + intTestInstanceEach + ".html");
-
+				writeJsonToHtml(objTestSteps, strPathResults + "StepsOriginal.html");
+				// writeJsonToHtml(objTestStepsCombinedOriginal, strPathResults + "StepsOriginal_" + intTestInstanceEach + ".html");
 				for (intStep = 0; intStep < objTestSteps.size(); intStep++) {
 					objWebElement = null;
 					objStep = (JSONObject) objTestSteps.get(intStep);
-
 					String strInputValue = objStep.get("strInputValue").toString();
 					String strLogicalName = objStep.get("strLogicalName").toString();
-
 					logger("strLogicalName = " + strLogicalName);
 					if (strLogicalName.toLowerCase().startsWith("<er>") == true) {
 						strLogicalName = strLogicalName.replace("<er>", "");
 						logger("strLogicalName = " + strLogicalName);
-
 						System.out.println(objElement);
 						JSONObject objElementNode = (JSONObject) objElement.get(strLogicalName);
-
 						System.out.println(objElementNode);
-
 						logger("objElement.get(strTagName).toString() = " + objElementNode.get("strTagName").toString());
 						logger("objElement.get(strAttributeNames).toString() = " + objElementNode.get("strAttributeNames").toString());
 						logger("objElement.get(strAttributeValues).toString() = " + objElementNode.get("strAttributeValues").toString());
-
 						objStep.put("strTagName", objElementNode.get("strTagName").toString());
 						objStep.put("strAttributeNames", objElementNode.get("strAttributeNames").toString());
 						objStep.put("strAttributeValues", objElementNode.get("strAttributeValues").toString());
-
 					}
+					System.out.println(objStep.get("strAttributeValues").toString());
 					if (strInputValue.toLowerCase().startsWith("<link>") == true) {
 						strInputValue = objLinks.get(strInputValue.replace("<link>", "")).toString();
 						objStep.put("strInputValue", strInputValue);
 					}
-
 					if (strInputValue.toLowerCase().startsWith("<ti>") == true) {
 						strInputValue = objTestInstancesEach.get(strInputValue.replace("<ti>", "")).toString();
 						logger("strInputValue = " + strInputValue);
 						objStep.put("strInputValue", strInputValue);
 					}
-
 					if (objStep.get("intMillisecondsToWait").toString().trim().length() == 0) {
 						objStep.put("intMillisecondsToWait", intMillisecondsToWaitDefault);
 					}
@@ -503,28 +404,22 @@ public class Dragonfly {
 					}
 					objStep.put("blnPleaseWait", "true");
 					objStep.put("blnHighlight", "true");
-
 					objStep.put("blnScreenshot", "true");
 					objStep.put("strScreenshotArea", "screen");
 					if (objStep.get("blnExitOnFail").toString().trim().length() == 0) {
 						objStep.put("blnExitOnFail", "true");
 					}
-
 					objStep.put("strCurrentWindowHandle", strCurrentWindowHandle);
 					objStep.put("strType", "");
-					objStep.put("strScreenshotFilePath", strResultsPath + strImagesPath);
+					objStep.put("strScreenshotFilePath", strPathResults + strPathImages);
 					objStep.put("strStatus", "info");
 					objStep.put("intFrame", intFrame);
-
 					objStep.put("strStartTimestamp", "");
 					objStep.put("strStepDuration", "");
 					objStep.put("strEndTimestamp", "");
-
 					objStep.put("strStepExpected", "");
 					objStep.put("strStepActual", "");
-
 					logStepDetails(objStep, intStep);
-
 					if (objStep.get("intLoop").toString().trim().length() > 0) {
 						if (objStep.get("intLoop").toString().startsWith("<loopStart>") == true) {
 							if (intLoopEach == 0) {
@@ -537,12 +432,10 @@ public class Dragonfly {
 							}
 						}
 					}
-
 					logger("main intLoopCount = " + intLoopCount);
 					logger("main intLoopEach = " + intLoopEach);
 					logger("main intStep = " + intStep);
 					logger("main intLoopStep = " + intLoopStep);
-
 					if (!objStep.get("strFunction").toString().trim().equals("")) {
 						String strMethodName = objStep.get("strFunction").toString();
 						String arguments = strInputValue;
@@ -606,8 +499,8 @@ public class Dragonfly {
 						case "break":
 							break;
 						default:
-							// TODO action not supported add exit test and reporting
-							break;
+							logger("main switch strAction = " + objStep.get("strAction").toString().toLowerCase() + "  not supported");
+							System.exit(0);
 						}// the end of switch (strAction.toLowerCase())
 						if (objStep.get("strAction").toString().toLowerCase().equals("break")) {
 							break;
@@ -625,79 +518,69 @@ public class Dragonfly {
 							break;
 						}
 					}
-
 					if (objStep.get("intLoop").toString().startsWith("<loopExit>") == true) {
 					}
-
 					if (objStep.get("intLoop").toString().startsWith("<loopEnd>") == true) {
 						if (intLoopEach == intLoopCount) {
 							intLoopCount = 0;
 							intLoopEach = 0;
-
 						} else {
 							intLoopEach = intLoopEach + 1;
 							intStep = intLoopStep - 1;
 						}
 					}
-
 				}// for intStep
-
-				// TODO confirm the exceptions to catch in main some may need to be removed
-
+					// TODO confirm the exceptions to catch in main some may need to be removed
 			} catch (BrowserDriverNotSupportedException e) {
 				logger("main - " + e.toString());
 			} finally {
 				// TODO review how end of run is determined for reporting and cleanup
-				writeJsonToHtml(objTestSteps, strResultsPath + "StepsWithDefaults.html");
-				writeReportToHtml(objTestSteps, strResultsPath + "Report.html");
-				writeJsonToFile(objJsonStepsFile, strResultsPath + "StepsAfterRun.json");
-				writeJsonStepsAfterRunToHtml(objTestSteps, strResultsPath + "StepsAfterRun.html");
-				writeLogger(strResultsPath + "DragonflyLog.txt");
-				File objDirectoryOld = new File(strResultsPath);
-				String strResultsPathNew = strResultsPath.replace(strResultsFolder, strResultsFolder + "_" + strTestStatus);
-				logger("main strResultsPathNew = " + strResultsPathNew);
-				File objDirectoryNew = new File(strResultsPathNew);
+				writeJsonToHtml(objTestSteps, strPathResults + "StepsWithDefaults.html");
+				writeReportToHtml(objTestSteps, strPathResults + "Report.html");
+				writeJsonToFile(objJsonStepsFile, strPathResults + "StepsAfterRun.json");
+				writeJsonStepsAfterRunToHtml(objTestSteps, strPathResults + "StepsAfterRun.html");
+				writeLogger(strPathResults + "DragonflyLog.txt");
+				File objDirectoryOld = new File(strPathResults);
+				String strPathResultsNew = strPathResults.replace(strResultsFolder, strResultsFolder + "_" + strTestStatus);
+				logger("main strPathResultsNew = " + strPathResultsNew);
+				File objDirectoryNew = new File(strPathResultsNew);
 				objDirectoryOld.renameTo(objDirectoryNew);
 				if (objWebDriver.toString().contains("InternetExplorerDriver")) {
-					killWindowsProcess("taskkill /F /IM IEDriverServer.exe");
+					windowsProcessKill("taskkill /F /IM IEDriverServer.exe");
 				}
 			}// the end of try
 			strLog = "";
 			// System.exit(0);
 		}
-
 	}// the end of Main
 
-	// TODO complete testMatrixSetup method to create json objects for test
 	@SuppressWarnings("unchecked")
-	public static void testMatrixSetup(String strTestMatixPath) {
+	public static void testMatrixSetup(String strPathTestMatix) {
+		// TODO complete testMatrixSetup method to create json objects for test
 		int intElementRepositoryEach = 0;
-		int intTestModulesEach = 0;
 		int intTestDataEach = 0;
-		String strElementRepositoryFileName = "";
-		String strTestInstancesPathFull = "";
-		String strTestInstanceFileName = "";
-		String strTestModulesFileName = "";
-		String strTestModulesPathFull = "";
-		String strTestDataFileName = "";
-		String strTestDataPathFull = "";
-		String strTestStepsCombinedOriginal = "";
+		int intTestModulesEach = 0;
 		JSONArray objJsonArrayElementRepository = null;
+		JSONArray objJsonArrayTestData = null;
 		JSONArray objJsonArrayTestInstance = null;
 		JSONArray objJsonArrayTestModules = null;
-		JSONObject objJsonTestMatrixFile = null;
 		JSONObject objJsonElementsEach = null;
-		JSONObject objJsonStepsEach = null;
-		JSONArray objJsonArrayTestData = null;
-		JSONObject objJsonTestDataEach = null;
+		JSONObject objJsonTestMatrixFile = null;
+		String strFileNameElementRepository = "";
+		String strFileNameTestData = "";
+		String strFileNameTestInstance = "";
+		String strFileNameTestModules = "";
+		String strPathFullTestData = "";
+		String strPathFullTestInstances = "";
+		String strPathFullTestModules = "";
 		try {
-			objJsonTestMatrixFile = (JSONObject) objJsonParser.parse(new FileReader(strTestMatixPath));
+			objJsonTestMatrixFile = (JSONObject) objJsonParser.parse(new FileReader(strPathTestMatix));
 			// test_instances
 			objJsonArrayTestInstance = (JSONArray) objJsonTestMatrixFile.get("test_instances");
 			if (objJsonArrayTestInstance.size() == 1) {
-				strTestInstanceFileName = objJsonArrayTestInstance.get(0).toString();
-				strTestInstancesPathFull = strTestInstancesPath + strTestInstanceFileName;
-				objTestInstance = (JSONObject) objJsonParser.parse(new FileReader(strTestInstancesPathFull));
+				strFileNameTestInstance = objJsonArrayTestInstance.get(0).toString();
+				strPathFullTestInstances = strPathTestInstances + strFileNameTestInstance;
+				objTestInstance = (JSONObject) objJsonParser.parse(new FileReader(strPathFullTestInstances));
 				objTestInstances = (JSONArray) objTestInstance.get("test_instances");
 			} else if (objJsonArrayTestInstance.size() > 1) {
 				// TODO add error handling, report only 1 test instance per test
@@ -705,16 +588,15 @@ public class Dragonfly {
 			// element_repository
 			objJsonArrayElementRepository = (JSONArray) objJsonTestMatrixFile.get("element_repository");
 			for (intElementRepositoryEach = 0; intElementRepositoryEach < objJsonArrayElementRepository.size(); intElementRepositoryEach++) {
-				strElementRepositoryFileName = objJsonArrayElementRepository.get(intElementRepositoryEach).toString();
-				System.out.println("strElementRepositoryFileName = " + strElementRepositoryFileName);
-				objElements = (JSONObject) objJsonParser.parse(new FileReader(strElementRepositoryPath + strElementRepositoryFileName));
+				strFileNameElementRepository = objJsonArrayElementRepository.get(intElementRepositoryEach).toString();
+				System.out.println("strFileNameElementRepository = " + strFileNameElementRepository);
+				objElements = (JSONObject) objJsonParser.parse(new FileReader(strPathElementRepository + strFileNameElementRepository));
 				objJsonElementsEach = (JSONObject) objElements.get("elements");
 				if (intElementRepositoryEach == 0) {
 					objElement = (JSONObject) objElements.get("elements");
 				} else {
 					objElement.putAll(objJsonElementsEach);
 				}
-
 				System.out.println("objElement = " + objElement);
 				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 			}
@@ -722,61 +604,42 @@ public class Dragonfly {
 			objJsonArrayTestModules = (JSONArray) objJsonTestMatrixFile.get("test_modules");
 			if (objJsonArrayTestModules.size() == 0) {
 				// TODO add error handling, report no test modules and fail
+				logger("testMatrixSetup objJsonArrayTestModules.size() == 0.  At lease 1 test module must be includes in a dragonfly test");
 			} else {
 				for (intTestModulesEach = 0; intTestModulesEach < objJsonArrayTestModules.size(); intTestModulesEach++) {
-					strTestModulesFileName = objJsonArrayTestModules.get(intTestModulesEach).toString();
-					strTestModulesPathFull = strTestModulesPath + strTestModulesFileName;
-
-					System.out.println("strTestModulesPathFull = " + strTestModulesPathFull);
-
-					objJsonStepsFile = (JSONObject) objJsonParser.parse(new FileReader(strTestModulesPathFull));
-					// objJsonStepsEach = objJsonStepsFile;
+					strFileNameTestModules = objJsonArrayTestModules.get(intTestModulesEach).toString();
+					strPathFullTestModules = strPathTestModules + strFileNameTestModules;
+					System.out.println("strPathFullTestModules = " + strPathFullTestModules);
+					objJsonStepsFile = (JSONObject) objJsonParser.parse(new FileReader(strPathFullTestModules));
 					JSONArray objJsonStepsARRAY = (JSONArray) objJsonStepsFile.get("steps");
 					String strStepsToString = objJsonStepsARRAY.toString();
-
 					System.out.println("objJsonStepsEach = " + objJsonStepsARRAY.toString());
 					System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-
 					if (intTestModulesEach > 0) {
-						// if (intTestModulesEach == 0) {
-						// objElement = (JSONObject) objElements.get("elements");
-						// objTestStepsCombinedOriginal = (JSONObject) objJsonStepsFile.get("steps");
-						// } else {
-						// objJsonStepsFile.putAll(objJsonStepsEach);
-						// objJsonStepsEach.putAll((JSONObject) objJsonParser.parse(new FileReader(strTestModulesPathFull)));
-
-						strTestStepsCombinedOriginal = strTestStepsCombinedOriginal.replace("]", ",") + strStepsToString.replace("[", "");
-
+						// strTestStepsCombinedOriginal = strTestStepsCombinedOriginal.replace("]", ",") + strStepsToString.replace("[", "");
+						strTestStepsCombinedOriginal = strTestStepsCombinedOriginal.substring(0, strTestStepsCombinedOriginal.length() - 1) + "," + strStepsToString.substring(1);
 					} else {
 						strTestStepsCombinedOriginal = strStepsToString;
 					}
 				}
-
-				// Object objParser2 = null;
-
-				objTestStepsCombinedOriginal = (JSONArray) objJsonParser.parse(strTestStepsCombinedOriginal);
-
+				// objTestStepsCombinedOriginal = (JSONArray) objJsonParser.parse(strTestStepsCombinedOriginal);
 				System.out.println("strTestStepsCombinedOriginal = " + strTestStepsCombinedOriginal);
-				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-				System.out.println("objTestStepsCombinedOriginal = " + objTestStepsCombinedOriginal);
-				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-
-				// objTestStepsCombinedOriginal = (JSONArray) objJsonStepsEach.get("steps");
+				// System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+				// System.out.println("objTestStepsCombinedOriginal = " + objTestStepsCombinedOriginal);
+				// System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 				objLinkArray = (JSONArray) objJsonStepsFile.get("link");
 				objLinks = (JSONObject) objLinkArray.get(0);
 			}
-			//System.exit(0);
-
+			// System.exit(0);
 			// test_data
 			objJsonArrayTestData = (JSONArray) objJsonTestMatrixFile.get("test_data");
 			if (objJsonArrayTestData.size() > 0) {
 				for (intTestDataEach = 0; intTestDataEach < objJsonArrayTestData.size(); intTestDataEach++) {
-					strTestDataFileName = objJsonArrayTestData.get(intTestDataEach).toString();
-					strTestDataPathFull = strTestDataPath + strTestDataFileName;
-					objJsonTestDataFile = (JSONObject) objJsonParser.parse(new FileReader(strTestDataPathFull));
+					strFileNameTestData = objJsonArrayTestData.get(intTestDataEach).toString();
+					strPathFullTestData = strPathTestData + strFileNameTestData;
+					objJsonTestDataFile = (JSONObject) objJsonParser.parse(new FileReader(strPathFullTestData));
 					if (intTestDataEach > 0) {
-						objJsonTestDataFile.putAll((JSONObject) objJsonParser.parse(new FileReader(strTestDataPathFull)));
-
+						objJsonTestDataFile.putAll((JSONObject) objJsonParser.parse(new FileReader(strPathFullTestData)));
 					}
 				}
 			}
@@ -785,56 +648,6 @@ public class Dragonfly {
 			e.printStackTrace();
 		}
 	}
-
-	// @SuppressWarnings("unchecked")
-	// public static void elementRepositoryCombine(String strTestMatixPath) {
-	// int intElementRepositoryEach = 0;
-	// JSONArray objElementRepositoryArray = null;
-	// try {
-	// Object objTestMatrixFile = objJsonParser.parse(new FileReader(strTestMatixPath));
-	// JSONObject objTestMatrixFileJson = (JSONObject) objTestMatrixFile;
-	// System.out.println("objTestMatrixFileJson = " + objTestMatrixFileJson);
-	// objElementRepositoryArray = (JSONArray) objTestMatrixFileJson.get("element_repository");
-	// System.out.println("objElementRepositoryArray = " + objElementRepositoryArray);
-	//
-	// System.out.println("objElementRepositoryArray.size() = " + objElementRepositoryArray.size());
-	// for (intElementRepositoryEach = 0; intElementRepositoryEach < objElementRepositoryArray.size(); intElementRepositoryEach++) {
-	// String strFile = objElementRepositoryArray.get(intElementRepositoryEach).toString();
-	// System.out.println("objElementRepositoryArray.get(intElementRepositoryEach).toString() = " + objElementRepositoryArray.get(intElementRepositoryEach).toString());
-	// try {
-	// Object objElementRepositoryFile = objJsonParser.parse(new FileReader(strElementRepositoryPath + strFile));
-	// objElements = (JSONObject) objElementRepositoryFile;
-	// JSONObject objElementsEach = (JSONObject) objElements.get("elements");
-	// System.out.println("objElementsEach = " + objElementsEach);
-	// if (intElementRepositoryEach == 0) {
-	// objElement = (JSONObject) objElements.get("elements");
-	// } else {
-	// objElement.putAll(objElementsEach);
-	// }
-	// System.out.println("objElementsEach = " + objElementsEach);
-	// } catch (IOException | ParseException e1) {
-	// // TODO Auto-generated catch block
-	// e1.printStackTrace();
-	// }
-	// }
-	// System.out.println("objElement = " + objElement);
-	// } catch (Exception e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
-
-	// public static void testInstances(String strTestInstancesPath) {
-	// Object objParser = null;
-	// try {
-	// objParser = objJsonParser.parse(new FileReader(strTestInstancesPath));
-	// } catch (IOException | ParseException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// objTestInstance = (JSONObject) objParser;
-	// objTestInstances = (JSONArray) objTestInstance.get("test_instances");
-	// }
 
 	public static void logStepDetails(JSONObject objStep, int intStep) {
 		String[] arrKeys;
@@ -1061,7 +874,6 @@ public class Dragonfly {
 				objWebElement.sendKeys(objStep.get("strInputValue").toString());
 				objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
 				break;
-
 			// //objWebElement.click();
 			// objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
 			// objJavascriptExecutor.executeScript("arguments[0].value = '';", objWebElement);
@@ -1161,7 +973,6 @@ public class Dragonfly {
 			case "alert":
 				blnSet = true;
 				Alert alert = objWebDriver.switchTo().alert();
-
 				logger(alert.getText()); // Print Alert popup
 				logger(objStep.get("strAttributeValues").toString().toLowerCase());
 				switch (objStep.get("strAttributeValues").toString().toLowerCase()) {
@@ -1234,7 +1045,6 @@ public class Dragonfly {
 					lngJqueryActive = (long) ((JavascriptExecutor) objWebDriver).executeScript("return (jQuery.active);");
 					logger("SetSyncComplete lngJqueryActive = " + lngJqueryActive);
 					// logger("elementSet both = " + ((JavascriptExecutor) objWebDriver).executeScript("return (window.jQuery != null) && (jQuery.active === 0);"));
-
 				}
 			} catch (Exception e) {
 				logger("SetSyncComplete JqueryActive Exception = " + e.toString());
@@ -1283,10 +1093,8 @@ public class Dragonfly {
 				// blnResult = false;
 				throw new AngularJsNotCompleteException("");
 			}
-
 		} catch (NoSuchWindowException e) {
 			logger("SetSyncComplete - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-
 		} finally {
 			logger("SetSyncComplete finally Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngTimeStart));
 		}
@@ -1336,7 +1144,6 @@ public class Dragonfly {
 						logger("elementSetSync outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 					}
 					logger("elementSetSync strOuterHTML over");
-
 					blnFound = true;
 				}
 				if (blnVisible == false) {
@@ -1844,7 +1651,6 @@ public class Dragonfly {
 					objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 					objStep.put("strEndTimestamp", currentTimeMillisToDateTimestamp(lngTimeEnd));
 					objStep.put("strStepActual", createStepActual(objStep, "syncenabled"));
-
 					logger("elementEnabledSync finally strStatus " + objStep.get("strStatus").toString() + " Milliseconds Waited = " + objStep.get("strStepDuration").toString());
 					return;
 				}
@@ -1917,10 +1723,10 @@ public class Dragonfly {
 		}// the end of While
 	}// the end of elementDisabledSync
 
-	// TODO combine duplicate code
-	// TODO add desiredCapabilities.setJavascriptEnabled(true); to all browsers
 	@SuppressWarnings("unchecked")
 	public static WebDriver browserLaunch(JSONObject objStep) throws BrowserDriverNotSupportedException {
+		// TODO combine duplicate code
+		// TODO add desiredCapabilities.setJavascriptEnabled(true); to all browsers
 		Long lngTimeStart = System.currentTimeMillis();
 		Long lngTimeEnd = null;
 		WebDriver objWebDriver = null;
@@ -1937,7 +1743,7 @@ public class Dragonfly {
 				myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL).build().perform();
 				break;
 			case "ie":
-				killWindowsProcess("taskkill /F /IM iexplore.exe");
+				windowsProcessKill("taskkill /F /IM iexplore.exe");
 				sleepMilliseconds(1000);
 				desiredCapabilities = DesiredCapabilities.internetExplorer();
 				desiredCapabilities.setJavascriptEnabled(true);
@@ -1998,9 +1804,7 @@ public class Dragonfly {
 			elementCoordinates(objStep, objWebDriver, null);
 			coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
 			objStep.put("blnStatus", true);
-
-			// System.out.println(createStepActual(objStep,"LAUNCH"));
-
+			System.out.println(createStepActual(objStep, "LAUNCH"));
 			lngTimeEnd = System.currentTimeMillis();
 			objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 			objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
@@ -2043,9 +1847,7 @@ public class Dragonfly {
 
 	public static WebElement isAlertPresent2(WebDriver objWebDriver) throws ElementNotFoundException {
 		try {
-
 			Alert alert = objWebDriver.switchTo().alert();
-
 			logger("isAlertPresent2 - alert switch to which did not fail:  " + alert.toString());
 			// return (WebElement) alert;
 			return null;
@@ -2106,6 +1908,7 @@ public class Dragonfly {
 		Boolean blnFound = false;
 		String strXpath = "";
 		String strIndexKeyword = "";
+		int intAttributeEach = 0;
 		try {
 			int intFramesCount = 0;
 			String strTagName;
@@ -2130,18 +1933,19 @@ public class Dragonfly {
 				objStep.put("strTagType", "title");
 				return null;
 			}
-			for (int intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
+			for (intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
 				strXpathAttributesTemp = "";
 				switch (arrAttributeNames[intAttributeEach].toLowerCase()) {
+				case "xpath":
+					strXpathAttributesTemp = arrAttributeValues[intAttributeEach];
+					break;
 				case "index":
 					if (arrAttributeValues[intAttributeEach].equals("<last>")) {
 						strIndex = "";
 						strIndexKeyword = "<last>";
-
 					} else if (arrAttributeValues[intAttributeEach].equals("<random>")) {
 						strIndex = "";
 						strIndexKeyword = "<random>";
-
 					} else {
 						strIndex = "[" + arrAttributeValues[intAttributeEach] + "]";
 					}
@@ -2154,36 +1958,65 @@ public class Dragonfly {
 					}
 					break;
 				default:
+					// By.xpath("//td[contains(text(),'youruser')]") //here user text is case sensitive
+					// By.xpath("//td[contains(lower-case(text()),'youruser')]") //to handle case sensitivity. Here user is not case sensitive
+					// (//input[contains(translate(@name,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'USER') and @type='text'])
 					if (arrAttributeNames[intAttributeEach].toLowerCase().equals("type")) {
 						objStep.put("strType", arrAttributeValues[intAttributeEach]);
 					}
 					if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("re:")) {
-						strXpathAttributesTemp = "contains(@" + arrAttributeNames[intAttributeEach] + ", '" + arrAttributeValues[intAttributeEach].substring(3) + "')";
+						// strXpathAttributesTemp = "contains(@" + arrAttributeNames[intAttributeEach] + ", '" + arrAttributeValues[intAttributeEach].substring(3) + "')";
+						// strXpathAttributesTemp = "contains(lower-case(@" + arrAttributeNames[intAttributeEach] + "), '" + arrAttributeValues[intAttributeEach].substring(3).toLowerCase() + "')";
+						strXpathAttributesTemp = "contains(translate(@" + arrAttributeNames[intAttributeEach] + ",'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), '" + arrAttributeValues[intAttributeEach].substring(3).toLowerCase() + "')";
 					} else {
 						strXpathAttributesTemp = "@" + arrAttributeNames[intAttributeEach] + "='" + arrAttributeValues[intAttributeEach] + "'";
 					}
 					break;
 				}
-				if (strXpathAttributesTemp.trim().length() != 0) {
-					if (strXpathAttributes.trim().length() == 0) {
-						strXpathAttributes = strXpathAttributesTemp;
-					} else {
-						strXpathAttributes = strXpathAttributes + " and " + strXpathAttributesTemp;
+				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~1~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+				System.out.println("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
+				System.out.println("strXpathAttributesTemp = " + strXpathAttributesTemp);
+				// System.out.println("strXpath = " + strXpath);
+				if (arrAttributeNames[0].toLowerCase().equals("xpath")) {
+				} else {
+					if (strXpathAttributesTemp.trim().length() != 0) {
+						if (strXpathAttributes.trim().length() == 0) {
+							strXpathAttributes = strXpathAttributesTemp;
+						} else {
+							strXpathAttributes = strXpathAttributes + " and " + strXpathAttributesTemp;
+						}
 					}
 				}
 			}// for (int intAttributeEach
-			if (strXpathAttributes.trim().length() == 0) {
-				strXpathAttributes = "";
+			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~2~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			System.out.println("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
+			System.out.println("strXpathAttributesTemp = " + strXpathAttributesTemp);
+			System.out.println("strXpathAttributes = " + strXpathAttributes);
+			// System.out.println("strXpath = " + strXpath);
+			if (arrAttributeNames[0].toLowerCase().equals("xpath")) {
+				strXpath = strXpathAttributesTemp;
+				// System.out.println("(arrAttributeNames[0].toLowerCase() == xpath");
+				// System.out.println("strXpath = " + strXpath);
 			} else {
-				strXpathAttributes = "[" + strXpathAttributes + "]";
+				if (strXpathAttributes.trim().length() == 0) {
+					strXpathAttributes = "";
+				} else {
+					strXpathAttributes = "[" + strXpathAttributes + "]";
+				}
+				strXpath = "(//" + strTagName + strXpathAttributes + ")" + strIndex;
+				// System.out.println("(arrAttributeNames[0].toLowerCase() != xpath");
+				// System.out.println("strXpath = " + strXpath);
 			}
-			strXpath = "(//" + strTagName + strXpathAttributes + ")" + strIndex;
+			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~3~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			System.out.println("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
+			System.out.println("strXpathAttributesTemp = " + strXpathAttributesTemp);
+			System.out.println("strXpath = " + strXpath);
+			System.out.println("strXpathAttributes = " + strXpathAttributes);
+			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 			// logger("elementFind strXpath = " + strXpath);
 			// logger("elementFind before loop strCurrentWindowHandle = " + strCurrentWindowHandle);
-
 			Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
 			// logger("elementFind arrHandles.length = " + arrHandles.length);
-
 			for (int i = arrHandles.length - 1; i >= 0; i--) {
 				logger("elementFind arrHandles[i] = " + arrHandles[i].toString());
 			}
@@ -2195,10 +2028,8 @@ public class Dragonfly {
 			// if (arrHandles.length == 1) {
 			// logger("elementFind arrHandles[0] = " +arrHandles[0].toString());
 			// }
-
 			for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0; intHandlesEach--) {
 				strWindowHandle = arrHandles[intHandlesEach].toString();
-
 				long lngStartTimeSwitchTo = System.currentTimeMillis();
 				// objWebDriver.switchTo().window(strWindowHandle);
 				// logger("elementFind intHandlesEach = " + intHandlesEach);
@@ -2220,7 +2051,6 @@ public class Dragonfly {
 					objStep.put("intFrame", -1);
 					objWebDriver.manage().window().maximize();
 				}
-
 				// }
 				// if (strCurrentWindowHandle.equals(strWindowHandle) ||
 				// Integer.parseInt(objStep.get("intFrame").toString()) < 0) {
@@ -2234,7 +2064,6 @@ public class Dragonfly {
 				// objStep.put("intFrame", -1);
 				// // blnSwitchWindow = true;
 				// }
-
 				long intBrowserInnerWidth = 0;
 				long intBrowserInnerHeight = 0;
 				try {
@@ -2253,7 +2082,6 @@ public class Dragonfly {
 				}
 				objStep.put("intBrowserInnerWidth", intBrowserInnerWidth);
 				objStep.put("intBrowserInnerHeight", intBrowserInnerHeight);
-
 				long lngStartTimegetElementsByTagName = System.currentTimeMillis();
 				List<WebElement> objCollectionJS = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
 				// logger("elementFind objCollectionJS = " + objCollectionJS.size() + " strTagName = " + strTagName + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName));
@@ -2262,15 +2090,11 @@ public class Dragonfly {
 					objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
 					// logger("elementFind objWebElementCollection.size = " + objWebElementCollection.size() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeByXpath));
 				}
-
 				if (objWebElementCollection.size() == 0) {
-
 					long lngStartTimeFrameCollection = System.currentTimeMillis();
 					// objFrameCollection = objWebDriver.findElements(By.tagName("frame"));
 					objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
-
 					// logger("elementFind Frames = " + objFrameCollection.size() + " MillisecondsWaitedFrame " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
-
 					objFrameCollection.addAll((List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('iframe');"));
 					// objFrameCollection.addAll(objWebDriver.findElements(By.tagName("iframe")));
 					intFramesCount = objFrameCollection.size();
@@ -2287,26 +2111,21 @@ public class Dragonfly {
 						objStep.put("intFrame", intFramesEach);
 						logger("elementFind frames objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeSwitchToFrame));
 						// }
-
 						long lngStartTimegetElementsByTagName2 = System.currentTimeMillis();
 						List<WebElement> objCollectionJS2 = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
 						logger("elementFind objCollectionJS2 = " + objCollectionJS2.size() + " strTagName = " + strTagName + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName2));
-
 						// long lngStartTimegetElementsByXpath = System.currentTimeMillis();
 						// List<WebElement> objCollectionJS = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElements(By.xpath('" + strXpath + "');");
 						// logger("elementFind objCollectionJS = " + objCollectionJS.size() + " " + (System.currentTimeMillis() - lngStartTimegetElementsByXpath));
 						// jse.executeScript("document.getElement(By.xpath(\"//div[@class='btnContr']/input[@onclick='return cancel();']\")");
-
 						// long lngStartTimeTagName = System.currentTimeMillis();
 						// objTagNameCollection = objWebDriver.findElements(By.tagName(strTagName));
 						// logger("elementFind objWebElementCollection.size = " + objTagNameCollection.size() + " MillisecondsWaitedTagName = " + (System.currentTimeMillis() - lngStartTimeTagName));
-
 						// if (objCollectionJS.size() > 0) {
 						// long lngStartTimeByTagNameByXpath = System.currentTimeMillis();
 						// List<WebElement> objWebElementCollectionByTagNameByXpath = objCollectionJS.get(0).findElements(By.xpath(strXpath));
 						// logger("elementFind objWebElementCollectionByTagNameByXpath.size = " + objWebElementCollectionByTagNameByXpath.size() + " MillisecondsWaitedTagName = " + (System.currentTimeMillis() - lngStartTimeByTagNameByXpath));
 						// }
-
 						// if (objCollectionJS.size() > 0) {
 						//
 						// JavascriptExecutor objJavascriptExecutor = null;
@@ -2321,13 +2140,11 @@ public class Dragonfly {
 						// logger("JS outerHTML = " + objJavascriptExecutor.executeScript("return arguments[0].outerHTML;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
 						//
 						// }
-
 						if (objCollectionJS2.size() > 0) {
 							long lngStartTimeByXpath = System.currentTimeMillis();
 							objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
 							// logger("elementFind objWebElementCollection.size = " + objWebElementCollection.size() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeByXpath));
 						}
-
 						if (objWebElementCollection.size() > 0) {
 							blnFound = true;
 							break;
@@ -2336,7 +2153,6 @@ public class Dragonfly {
 				} else if (objWebElementCollection.size() == 1) {
 					break;
 				} else {
-
 				}// the end of if (objWebElementCollection.size() == 0) {
 			}// the end of for win Handles
 			switch (objWebElementCollection.size()) {
@@ -2349,15 +2165,12 @@ public class Dragonfly {
 				objWebElement = objWebElementCollection.get(0);
 				// long lngStartTimeGetXpath = System.currentTimeMillis();
 				// logger("xpath = " + getElementXPath(objWebDriver, objWebElement) + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeGetXpath));
-
 				// TODO add title and url to each element found in the objStep json
 				// JavascriptExecutor js = (JavascriptExecutor) objWebDriver;
 				// String strTitle = (String) js.executeScript("return document.title");
 				// logger("main JavascriptExecutor strTitle  = " + strTitle + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
-
 				// logger("strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
 				// logger("objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
-
 				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
 				if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
 					if (objStep.get("strType").toString().toLowerCase().length() == 0) {
@@ -2382,11 +2195,8 @@ public class Dragonfly {
 						objStep.put("strTagType", objStep.get("strTagName").toString());
 					}
 					return objWebElement;
-
 				} else if (strIndexKeyword.equals("<random>")) {
-
 					int intRandomElement = RandomNumberRange(0, objWebElementCollection.size() - 1);
-
 					objWebElement = objWebElementCollection.get(intRandomElement);
 					blnFound = true;
 					objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
@@ -2404,7 +2214,6 @@ public class Dragonfly {
 					throw new MultipleElementsFoundException(objWebElementCollection.size() + " elements found. Element properties did not return an element, try refining attributes");
 				}
 			}// the end of switch (objWebElementCollection.size())
-
 		} catch (WebDriverException e) {
 			throw new ElementNotFoundException("elementFind " + e.toString());
 		} finally {
@@ -2462,6 +2271,7 @@ public class Dragonfly {
 	}// the end of elementCoordinates
 
 	public static boolean elementVisible(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementNotVisibleException {
+		// TODO elementVisible add check for class and css, commented code needs to be tested
 		long lngStartTimeElementVisible = System.currentTimeMillis();
 		Boolean blnVisible = false;
 		try {
@@ -2471,7 +2281,6 @@ public class Dragonfly {
 				return true;
 			}
 			if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-
 				if (isAlertPresent(objWebDriver) == true) {
 					blnVisible = true;
 					return true;
@@ -2483,7 +2292,6 @@ public class Dragonfly {
 				elementCoordinates(objStep, objWebDriver, objWebElement);
 				blnVisible = true;
 				return true;
-
 				// if (objStep.containsKey("intElementWidth")) {
 				// int intElementWidth = Integer.parseInt(objStep.get("intElementWidth").toString());
 				// int intElementHeight = Integer.parseInt(objStep.get("intElementHeight").toString());
@@ -2512,7 +2320,6 @@ public class Dragonfly {
 		try {
 			// TODO Alert complete
 			if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-
 				if (isAlertPresent(objWebDriver) == false) {
 					return true;
 				} else {
@@ -2538,7 +2345,6 @@ public class Dragonfly {
 		try {
 			// TODO Alert complete
 			if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-
 				if (isAlertPresent(objWebDriver) == true) {
 					return true;
 				} else {
@@ -2567,96 +2373,6 @@ public class Dragonfly {
 			logger("elementDisabled finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementDisabled));
 		}
 	}// the end of elementDisabled
-
-	// TODO elementVisible add check for class and css, commented code needs to
-	// be tested
-	// Function WebObjectEnabled()
-	// On Error Resume Next
-	// '******************************************************************************
-	// 'Variables Declaration
-	// '******************************************************************************
-	// Dim strClassName
-	// Dim arrClassNameDisabled
-	// Dim arrClassNameEnabled
-	// Dim intClassNameEach
-	// Dim intClassNameDisabledEach
-	// Dim intClassNameEnabledEach
-	// Dim objWebObject
-	// '******************************************************************************
-	// 'Variable Assignment
-	// '******************************************************************************
-	// If blnObjectShouldRefresh = True Then
-	// objObject.RefreshObject
-	// End If
-	// Set objWebObject = objObject.Object
-	// ' list of classnames to disable the object seperated by '|'
-	// strClassNameDisabled = "disabled-true"
-	// 'list of classnames to enable the object seperated by '|'
-	// strClassNameEnabled = "disabled-false"
-	// strClassName = objWebObject.ClassName
-	// arrClassName = Split(strClassName, " ")
-	// arrClassNameDisabled = Split(strClassNameDisabled, "|")
-	// arrClassNameEnabled = Split(strClassNameEnabled, "|")
-	// '******************************************************************************
-	// 'Process
-	// '******************************************************************************
-	// For intClassNameEach = 0 To UBound(arrClassName)
-	// For intClassNameDisabledEach = 0 To UBound(arrClassNameDisabled)
-	// 'check for a empty value in the case a pipe is left hanging
-	// If Trim(arrClassName(intClassNameEach)) <> "" Then
-	// If LCase(arrClassName(intClassNameEach)) =
-	// LCase(arrClassNameDisabled(intClassNameDisabledEach)) Then
-	// WebObjectEnabled = False
-	// Err.Clear
-	// On Error GoTo 0
-	// Exit Function
-	// End If
-	// End If
-	// Next
-	// For intClassNameEnabledEach = 0 To UBound(arrClassNameEnabled)
-	// If Trim(arrClassName(intClassNameEach)) <> "" Then
-	// If LCase(arrClassName(intClassNameEach)) =
-	// LCase(arrClassNameEnabled(intClassNameEnabledEach)) Then
-	// WebObjectEnabled = True
-	// Err.Clear
-	// On Error GoTo 0
-	// Exit Function
-	// End If
-	// End If
-	// Next
-	// Next
-	//
-	// ' If LCase(objWebObject.tagName) = "a" Then
-	// ' If InStr(LCase(objWebObject.onclick), "return false") > 0 Then
-	// ' WebObjectEnabled = False
-	// ' Err.Clear
-	// ' On Error GoTo 0
-	// ' Exit Function
-	// ' End If
-	// '
-	// ' If InStr(LCase(objWebObject.onclick), "return true") > 0 Then
-	// ' WebObjectEnabled = True
-	// ' Err.Clear
-	// ' On Error GoTo 0
-	// ' Exit Function
-	// ' End If
-	// ' End If
-	//
-	// If objWebObject.IsDisabled = True Then
-	// WebObjectEnabled = False
-	// Err.Clear
-	// On Error GoTo 0
-	// Exit Function
-	// Else
-	// WebObjectEnabled = True
-	// End If
-	// Set objWebObject = Nothing
-	// Err.Clear
-	// On Error GoTo 0
-	// '******************************************************************************
-	// 'EndFile
-	// '******************************************************************************
-	// End Function '==> WebObjectEnabled
 
 	public static String elementGet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) throws ElementTagNameNotSupportedException {
 		long lngStartTimeElementGet = System.currentTimeMillis();
@@ -2748,7 +2464,6 @@ public class Dragonfly {
 	@SuppressWarnings({ "serial", "unchecked" })
 	public static void coordinateHighlightScreenshot(final JSONObject objStepHighlightArea, final WebDriver objWebDriver, final WebElement objWebElement, JSONObject objStep) {
 		logger("coordinateHighlightScreenshot start");
-
 		long lngStartTimeCoordinateHighlightScreenshot = System.currentTimeMillis();
 		JFrame objJFrame = new JFrame() {
 			{
@@ -2939,77 +2654,6 @@ public class Dragonfly {
 		executor.executeScript("window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
 	}// the end of scrollToBottom
 
-	// Function DevelopmentModeSlideShow()
-	// On Error Resume Next
-	// ' strPath = ConstServerAttachmentPath
-	// ' strFile = "RUN_" & ConstRunID
-	// ' Set objRunList =
-	// QCUtil.QCConnection.RunFactory.NewList("SELECT * FROM RUN WHERE RN_RUN_ID = "
-	// & Chr(39) & ConstRunID & Chr(39))
-	// strText = "<ASX Version = " & Chr(34) & "3.0" & Chr(34) & ">" & vbCrLf
-	//
-	// If UBound(arrSlideShow) >= 0 Then
-	// ' If objRunList.Count >= 1 Then
-	// '' Set objAttachmentList = objRunList.Item(1).Attachments.NewList("")
-	// ' If objAttachmentList.Count >= 1 Then
-	// For intAttachmentListEach = 0 To UBound(arrSlideShow)
-	// strText = strText & "<ENTRY>" & vbCrLf
-	// strText = strText & "<Duration value = " & Chr(34) & "00:00:3.000" &
-	// Chr(34) & " />" & vbCrLf
-	// strText = strText & "  <REF HREF = " & Chr(34) &
-	// arrSlideShow(intAttachmentListEach) & Chr(34) & " />" & vbCrLf
-	// strText = strText & "</ENTRY>" & vbCrLf
-	// Next
-	// End If
-	// ' End If
-	//
-	// strText = strText & "</ASX>"
-	// strFullPath = gstrDragonflyPathFolderLocal & "Playlist.asx"
-	// FileCreate strFullPath, strText
-	// strFullAttachPath = strFullPath
-	//
-	// If Environment("TestExecutionSource") <> "QTP" Then
-	// ' strFile = "RUN_" & ConstRunID
-	// ' If Environment("TestExecutionSource") <> "QTP" Then
-	// strFullAttachPath = AttachmentSaveToRun(strFullPath,
-	// "Playlist of screen shots for this run")
-	// CurrentTestInstanceFieldSet "Playlist", strFullAttachPath
-	// CurrentRunFieldSet "Playlist", strFullAttachPath
-	// ' End If
-	// End If
-	//
-	// ReporterModify micDone, "Slide Show Run " & ConstRunID, Joseph &
-	// " <a href=" & Chr(34) & strFullAttachPath & Chr(34) & " />" &
-	// strFullAttachPath & "</a><br /><br />" & EmbedVideo(strFullAttachPath)
-	//
-	// ' Set objRunList = Nothing
-	// ' Set objAttachmentListItem = Nothing
-	// Err.Clear
-	// On Error GoTo 0
-	// End Function
-	//
-	// Function EmbedVideo(strFullPath)
-	// strText = strText & "<OBJECT id=" & Chr(34) & "VIDEO" & Chr(34) &
-	// " width=" & Chr(34) & ConstScreenWidth * 0.85 & Chr(34) & " height=" &
-	// Chr(34) & ConstScreenHeight * 0.85 & Chr(34) & " CLASSID=" & Chr(34) &
-	// "CLSID:6BF52A52-394A-11d3-B153-00C04F79FAA6" & Chr(34) & " type=" &
-	// Chr(34) & "application/x-oleobject" & Chr(34) & ">"
-	// strText = strText & "<PARAM NAME=" & Chr(34) & "URL" & Chr(34) &
-	// " VALUE=" & Chr(34) & strFullPath & Chr(34) & ">"
-	// strText = strText & "<PARAM NAME=" & Chr(34) &
-	// "SendPlayStateChangeEvents" & Chr(34) & " VALUE=" & Chr(34) & "False" &
-	// Chr(34) & ">"
-	// strText = strText & "<PARAM NAME=" & Chr(34) & "AutoStart" & Chr(34) &
-	// " VALUE=" & Chr(34) & "True" & Chr(34) & ">"
-	// strText = strText & "<PARAM NAME=" & Chr(34) & "uiMode" & Chr(34) &
-	// " value=" & Chr(34) & "none" & Chr(34) & ">"
-	// strText = strText & "<PARAM NAME=" & Chr(34) & "PlayCount" & Chr(34) &
-	// " value=" & Chr(34) & "9999" & Chr(34) & ">"
-	// strText = strText & "<PARAM NAME=" & Chr(34) & "VideoBorderColor" &
-	// Chr(34) & " value=" & Chr(34) & "False" & Chr(34) & "></OBJECT>"
-	// EmbedVideo = strText
-	// End Function
-
 	public static void writeLogger(String file) {
 		try {
 			BufferedWriter objBufferedWriter = new BufferedWriter(new FileWriter(file));
@@ -3156,7 +2800,6 @@ public class Dragonfly {
 				objStringBuilder.append("<TABLE border=1 width=100% height=10%>");
 				objStringBuilder.append("<TR>");
 				// style="background-color: green"
-
 				switch (objStep.get("strStatus").toString().toLowerCase()) {
 				case "pass":
 					strStatus = "Pass";
@@ -3183,26 +2826,21 @@ public class Dragonfly {
 					strColor = "magenta";
 					break;
 				}
-
 				String strStartTimestamp = objStep.get("strStartTimestamp").toString();
 				String strStepDuration = objStep.get("strStepDuration").toString();
 				String strEndTimestamp = objStep.get("strEndTimestamp").toString();
-
 				objStringBuilder.append("<TD rowspan=\"2\" width=60px align=center valign=middle>Step " + intTestStepRow + "</TD>");
 				// objStringBuilder.append("<TD rowspan=\"2\" width=35px align=center valign=middle>" + strStatusIcon + "</TD>");
 				// objStringBuilder.append("<TD style=\"background-color:" + strColor + ";color:black\" rowspan=\"2\" width=75px align=center valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
 				// objStringBuilder.append("<TD style=\"color:" + strColor + ";\" rowspan=\"2\" width=75px align=center valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
 				objStringBuilder.append("<TD rowspan=\"2\" width=35px align=center valign=middle>" + strStatusIcon + "<br>" + strStatus + "</TD>");
-
 				// objStringBuilder.append("<TD rowspan=\"2\" width=60px align=center valign=middle>" + objStep.get("strStatus").toString() + "</TD>");
 				objStringBuilder.append("<TD width= 75px align=center valign=middle>Expected</TD>");
 				// objStringBuilder.append("<TD align=left valign=middle>" + objStep.get("strAction").toString() + "</TD>");
 				objStringBuilder.append("<TD align=left valign=middle>" + createStepExpected(objStep) + "</TD>");
 				objStringBuilder.append("<TD rowspan=\"2\" width=150px align=left valign=middle>Start:" + strStartTimestamp + "<br>End: " + strEndTimestamp + "<br>Duration: " + strStepDuration + " ms</TD>");
-
 				objStringBuilder.append("</TR>");
 				objStringBuilder.append("<TR>");
-
 				objStringBuilder.append("<TD align=center valign=middle>Actual</TD>");
 				objStringBuilder.append("<TD align=left valign=middle>" + objStep.get("strStepActual").toString() + "</TD>");
 				objStringBuilder.append("</TR>");
@@ -3211,7 +2849,6 @@ public class Dragonfly {
 				// strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString().replaceAll("\\\\\\\\", "\\");
 				// objStringBuilder.append("<IMG alt=\"ReporterScreenShot_1\" src=\"" + strScreenshotFilePath + "\" width=1100 height=700> ");
 				// }
-
 				if (objStep.get("strScreenshotFilePath").toString().trim().length() != 0) {
 					strScreenshotFilePath = objStep.get("strScreenshotFilePath").toString().replaceAll("\\\\\\\\", "\\");
 					BufferedImage img = null;
@@ -3226,7 +2863,6 @@ public class Dragonfly {
 						logger("writeReportToHtml Exception = " + e.toString());
 					}
 				}
-
 				// logger("writeReportToHtml strScreenshotFilePath = " + objStep.get("strScreenshotFilePath").toString());
 				objStringBuilder.append("</div>");
 				objStringBuilder.append("<br>");
@@ -3301,11 +2937,9 @@ public class Dragonfly {
 		String strParameterName = "";
 		String strTagName = objStep.get("strTagName").toString();// strStepParameterName & " " & strObjectToString
 		String strOutputValueHtml = objStep.get("strOutputValue").toString();
-
 		// strObjectToString = objObjectDetailsHTML.GetTOProperty("TestObjGenType")
 		// strInputParameterValueHTML = FormatHTML(strInputValue)
 		// strActualReturnHTML = FormatHTML(strActualReturn)
-
 		switch (strStepType.toUpperCase()) {
 		case "LAUNCH":
 			strActualHtml = "Launch {" + strTagName + "} browser to url {" + strInputValue + "} then expect navigation within {" + intWaited + "} milliseconds";
@@ -3458,169 +3092,8 @@ public class Dragonfly {
 		return strActualText;
 	}
 
-	// Function DetailsHTML(objObjectDetailsHTML, strStepAction, strStepParameterName, strActualReturn, intWaited)
-	// On Error Resume Next
-	// strObjectToString = objObjectDetailsHTML.GetTOProperty("TestObjGenType")
-	// strToString = strStepParameterName & " " & strObjectToString
-	// strInputParameterValue = strParameterValue
-	// strOutputParameterValueHTML = FormatHTML(strOutputParameterValue)
-	// strInputParameterValueHTML = FormatHTML(strInputParameterValue)
-	// strActualReturnHTML = FormatHTML(strActualReturn)
-	// Select Case UCase(strStepAction)
-	// Case "DEFAULT"
-	// DetailsHTML = "The <b>" & strToString & " </b> default value is {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>}."
-	// strDetailsNoHTML = "The expected " & strToString & " default value is " & strOutputParameterValue& "."
-	// Case "CLICKED"
-	// DetailsHTML = "The expected <b>" & strToString & "</b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} was clicked."
-	// strDetailsNoHTML = "The expected " & strToString & "  value {" & strInputParameterValue & "} was clickecase / Case "EXPECTED"
-	// DetailsHTML = "The expected <b>" & strToString & "</b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} was not verified.<BR>The actual value was {<b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & ">" & strActualReturnHTML & "</FONT></b>}."
-	// strDetailsNoHTML = "The expected " & strToString & " value {" & strInputParameterValue & "} was not verified.  The actual value was {" & strActualReturn & "}."
-	// Case "EXPECTEDTOOLTIP"
-	// DetailsHTML = "The expected <b>" & strToString & "</b>  tooltip value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} was not verified.<BR>The actual value was {<b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & ">" & strActualReturnHTML & "</FONT></b>}."
-	// strDetailsNoHTML = "The expected " & strToString & " tooltip value {" & strInputParameterValue & "} was not verified.  The actual value was {" & strActualReturn & "}."
-	// Case "FIND"
-	// DetailsHTML = "The expected <b>" & strToString & "</b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b><b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & "></FONT></b>} was found."
-	// strDetailsNoHTML = "The expected " & strToString & "  value {" & strOutputParameterValue & "} was found."
-	// Case "NOTFOUND"
-	// DetailsHTML = "The expected <b>" & strToString & "</b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b><b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & "></FONT></b>} was not found."
-	// strDetailsNoHTML = "The expected " & strToString & " value {" & strOutputParameterValue & "} was not found."
-	// Case "VERIFY"
-	// DetailsHTML = "The expected <b>" & strToString & "</b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b><b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & "></FONT></b>} was verified."
-	// strDetailsNoHTML = "The expected " & strToString & " value {" & strOutputParameterValue & "} was verified."
-	// Case "VERIFYTOOLTIP"
-	// DetailsHTML = "The expected <b>" & strToString & "</b> tooltip value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b><b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & "></FONT></b>} was verified."
-	// strDetailsNoHTML = "The expected " & strToString & " tooltip value {" & strOutputParameterValue & "} was verified."
-	// Case "GET"
-	// DetailsHTML = "The <b>" & strToString & " </b> actual value is {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>}."
-	// strDetailsNoHTML = "The " & strToString & " actual value is {" & strOutputParameterValue & "}"
-	// Case "GETTOOLTIP"
-	// DetailsHTML = "The <b>" & strToString & " </b> tooltip actual value is {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>}."
-	// strDetailsNoHTML = "The " & strToString & " tooltip actual value is {" & strOutputParameterValue & "}"
-	// Case "SET"
-	// DetailsHTML = "The expected <b>" & strToString & " </b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} was set."
-	// strDetailsNoHTML = "The expected " & strToString & " value {" & strInputParameterValue & "} was set."
-	// Case "PERSISTED"
-	// DetailsHTML = "The expected <b>" & strToString & " </b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} persisted."
-	// strDetailsNoHTML = "The expected " & strToString & " value {" & strOutputParameterValue & "} persisted."
-	// Case "PASSWORD"
-	// DetailsHTML = "The <b>" & strToString & " </b> password value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} was set."
-	// strDetailsNoHTML = "The " & strToString & " password value {" & strOutputParameterValue & "} was set."
-	// Case "NOTPERSISTED"
-	// DetailsHTML = "The expected <b>" & strToString & " </b> value  {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} did not persist.<BR>The actual value {<b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & ">" & strActualReturnHTML & "</FONT></b>} was displayed."
-	// strDetailsNoHTML = "The expected " & strToString & " value {" & strInputParameterValue & "} did not persist.  The actual value {" & strActualReturn & "} was displayed."
-	// Case "EXIST"
-	// DetailsHTML = "The expected <b>" & strToString & "</b> exists."
-	// strDetailsNoHTML = "The expected " & strToString & " exists."
-	// Case "NOTEXIST"
-	// DetailsHTML = "The expected <b>" & strToString & "</b> does not exist after " & intWaited & " milliseconds."
-	// strDetailsNoHTML = "The expected " & strToString & " does not exist after " & intWaited & " milliseconds."
-	// Case "NOTEXISTTOOLTIP"
-	// DetailsHTML = "The expected <b>" & strToString & "</b> tooltip does not exist after " & intWaited & " milliseconds."
-	// strDetailsNoHTML = "The expected " & strToString & " tooltip does not exist after " & intWaited & " milliseconds."
-	// Case "INVISIBLE"
-	// DetailsHTML = "The expected <b>" & strToString & "</b> <b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & "></FONT></b> is invisible."
-	// strDetailsNoHTML = "The expected " & strToString & " is invisible."
-	// Case "ENABLED"
-	// DetailsHTML = "The expected <b>" & strToString & "</b> <b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & "></FONT></b> is enabled."
-	// strDetailsNoHTML = "The expected " & strToString & " is enabled."
-	// Case "DISABLED"
-	// DetailsHTML = "The expected <b>" & strToString & "</b> <b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & "></FONT></b> is disabled."
-	// strDetailsNoHTML = "The expected " & strToString & " is disabled."
-	// Case "VISIBLE"
-	// DetailsHTML = "The expected <b>" & strToString & "</b> <b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & "></FONT></b> is visible."
-	// strDetailsNoHTML = "The expected " & strToString & " is visible."
-	// Case "HIDDEN"
-	// DetailsHTML = "The expected <b>" & strToString & "</b> <b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & "></FONT></b> is hidden."
-	// strDetailsNoHTML = "The expected " & strToString & " is hidden."
-	// Case "SYNCNOTEXISTS"
-	// DetailsHTML = "The expected <b>" & strToString & "</b></b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} does not exist after " & intWaited & " milliseconds."
-	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} does not exist after " & intWaited & " milliseconds."
-	// Case "SYNCEXISTS"
-	// DetailsHTML = "The expected <b>" & strToString & "</b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} exists after " & intWaited & " milliseconds."
-	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} exists after " & intWaited & " milliseconds."
-	// Case "SYNCCLOSED"
-	// DetailsHTML = "The expected <b>" & strToString & "</b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} closed after " & intWaited & " milliseconds."
-	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} closed after " & intWaited & " milliseconds."
-	// Case "SYNCNOTCLOSED"
-	// DetailsHTML = "The expected <b>" & strToString & "</b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} did not close after " & intWaited & " milliseconds."
-	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} did not close after " & intWaited & " milliseconds."
-	// Case "SYNCHIDDEN"
-	// DetailsHTML = "The expected <b>" & strToString & "</b></b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} does not exist after " & intWaited & " milliseconds."
-	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} does not exist after " & intWaited & " milliseconds."
-	// Case "SYNCVISIBLE"
-	// DetailsHTML = "The expected <b>" & strToString & "</b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} exists after " & intWaited & " milliseconds."
-	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} exists after " & intWaited & " milliseconds."
-	// Case "SYNCOPTIONAL"
-	// DetailsHTML = "The expected <b>" & strToString & "</b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} sync is optional after " & intWaited & " milliseconds."
-	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} exists after " & intWaited & " milliseconds."
-	// Case "SYNCDISABLED"
-	// DetailsHTML = "The expected <b>" & strToString & "</b></b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} does not exist after " & intWaited & " milliseconds."
-	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} does not exist after " & intWaited & " milliseconds."
-	// Case "SYNCENABLED"
-	// DetailsHTML = "The expected <b>" & strToString & "</b> {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} exists after " & intWaited & " milliseconds."
-	// strDetailsNoHTML = "The expected " & strToString & " {" & strOutputParameterValue & "} exists after " & intWaited & " milliseconds."
-	// Case "NAVIGATE"
-	// DetailsHTML = "The expected <b>" & strToString & " </b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strOutputParameterValueHTML & "</FONT></b>} was set.<BR>No validation performed due to navigation."
-	// strDetailsNoHTML = "The expected " & strToString & " value {" & strOutputParameterValue & "} was set. No validation performed due to navigation."
-	// Case "KEYSTROKE"
-	// DetailsHTML = "The expected <b>" & strToString & "</b>  value {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} was pressed."
-	// strDetailsNoHTML = "The expected " & strToString & "  value {" & strInputParameterValue & "} was pressed."
-	// Case "NOTINLIST"
-	// DetailsHTML = "The list item {<b><FONT COLOR=" & Chr(34) & "008000" & Chr(34) & ">" & strInputParameterValueHTML & "</FONT></b>} does not exist in the <b>" & strStepParameterName & "</b> list field.<BR>Please confirm the input value against the actual list values {<b><FONT COLOR=" & Chr(34) & "FF0000" & Chr(34) & ">" & strActualReturnHTML & "</FONT></b>} is available for this field."
-	// strDetailsNoHTML = "The list item {" & strInputParameterValue & "} does not exist in the " & strParameterName & " list field.  Please confirm the input value against the actual list values {" & strActualReturn & "} is available for this field."
-	// End Select
-	// DetailsHTML = "<DIV align=" & Chr(34) & "left" & Chr(34) & ">" & DetailsHTML & "</DIV>"
-	// On Error GoTo 0
-	// End Function
-
-	// Function CreateStepDataTableRow()
-	// CreateStepDataTableRow = "Step " & intDataTableStep & " row " & intDataTableRow & " "
-	// End Function
-	//
-	//
-	// Function CreateStepNameGetToolTip()
-	// strStepName = CreateStepDataTableRow & "get " & ObjectName & " " & strObjectMicClass & " tooltip value" & " within " & intWait & " seconds"
-	// CreateStepNameGetToolTip = strStepName
-	// End Function
-	//
-	// Function CreateStepNameVerifyToolTip()
-	// strStepName = CreateStepDataTableRow & "verify " & ObjectName & " " & strObjectMicClass & " tooltip value is equal to {" & strParameterValue & "}" & " within " & intWait & " seconds"
-	// CreateStepNameVerifyToolTip = strStepName
-	// End Function
-	//
-	// Function CreateStepNameExistsToolTip()
-	// strStepName = CreateStepDataTableRow & "verify " & ObjectName & " " & strObjectMicClass & " tooltip value exists within " & intWait & " seconds"
-	// CreateStepNameExistsToolTip = strStepName
-	// End Function
-	//
-	//
-	// Function CreateStepNameSetClicked()
-	// strStepName = CreateStepDataTableRow & "set " & ObjectName & " " & strObjectMicClass & " to value {Clicked}" & " within " & intWait & " seconds"
-	// CreateStepNameSetClicked = strStepName
-	// End Function
-	//
-	// Function CreateStepNameSetPassword()
-	// strStepName = CreateStepDataTableRow & "set " & ObjectName & " " & strObjectMicClass & " to password value {" & strParameterValue & "}" & " within " & intWait & " seconds"
-	// CreateStepNameSetPassword = strStepName
-	// End Function
-	//
-	// Function CreateStepNameVerifyObjectState()
-	// strStepName = CreateStepDataTableRow & "verify " & ObjectName & " " & strObjectMicClass & " object state is  {" & strParameterValue & "}" & " within " & intWait & " seconds"
-	// CreateStepNameVerifyObjectState = strStepName
-	// End Function
-	//
-	// Function CreateStepNameSync()
-	// strStepName = CreateStepDataTableRow & "sync " & ObjectName & " " & strObjectMicClass & " within " & intWait & " seconds"
-	// CreateStepNameSync = strStepName
-	// End Function
-	//
-	// Function CreateStepNameSyncOptional()
-	// strStepName = CreateStepDataTableRow & "sync optional " & ObjectName & " " & strObjectMicClass & " within " & intWait & " seconds"
-	// CreateStepNameSyncOptional = strStepName
-	// End Function
-	//
-
 	public static void writeJsonToFile(JSONObject objJsonFile, String file) {
+		// TODO Learn how to iterate over jason keys
 		try {
 			// file = new File(strResultsPath + "UpdatedJson.json");
 			// writeJsonKeysToHtml(JSONObject objTestStep, file);
@@ -3628,12 +3101,10 @@ public class Dragonfly {
 			out = new BufferedWriter(new FileWriter(file));
 			out.write(objJsonFile.toString());
 			out.close();
-
 		} catch (IOException e) {
 			logger("main final " + e.toString());
 		}
 	}// the end of writeJsonKeysToHtml
-		// TODO Learn how to iterate over jason keys
 
 	public static void writeJsonKeysToHtml(JSONObject objTestStep, String file) throws IOException {
 		for (Iterator iterator = objTestStep.keySet().iterator(); iterator.hasNext();) {
@@ -3642,8 +3113,8 @@ public class Dragonfly {
 		}
 	}// the end of writeJsonKeysToHtml
 
-	// TODO webElementCollectionTable send output to html file
 	public static void webElementCollectionTable(String strTagName, WebDriver objWebDriver) {
+		// TODO webElementCollectionTable send output to html file
 		int intCount = 0;
 		JSONObject objStepNew = null;
 		if (strTagName.toLowerCase().startsWith("input_")) {
@@ -3800,209 +3271,6 @@ public class Dragonfly {
 		logger("src:=  " + objWebElement.getAttribute("src"));
 	} // the end of webElementAttributes
 
-	// public class JavascriptActions extends Actions {
-	//
-	// final protected WebDriver webDriver;
-	//
-	// final protected JavascriptExecutor javascriptExecutor;
-	//
-	// @Inject
-	// public JavascriptActions(WebDriver webDriver) {
-	// super(webDriver);
-	// this.webDriver = webDriver;
-	// javascriptExecutor = (JavascriptExecutor) webDriver;
-	// }
-	//
-	// public JavascriptActions click(JQuery target) {
-	// mouseClick(target, MouseButton.LEFT);
-	// return this;
-	// }
-	//
-	// public JavascriptActions ctrlCopy(JQuery target) {
-	// int keyCode = Keycode.C.intValue();
-	// ctrlKeyDown(target, keyCode);
-	// ctrlKeyUp(target, keyCode);
-	// return this;
-	// }
-	//
-	// public JavascriptActions ctrlCut(JQuery target) {
-	// int keyCode = Keycode.X.intValue();
-	// ctrlKeyDown(target, keyCode);
-	// ctrlKeyUp(target, keyCode);
-	// return this;
-	// }
-	//
-	// public JavascriptActions ctrlPaste(JQuery target) {
-	// int keyCode = Keycode.V.intValue();
-	// ctrlKeyDown(target, keyCode);
-	// ctrlKeyUp(target, keyCode);
-	// return this;
-	// }
-	//
-	// public JavascriptActions ctrlD(JQuery target) {
-	// int keyCode = Keycode.D.intValue();
-	// ctrlKeyDown(target, keyCode);
-	// ctrlKeyUp(target, keyCode);
-	// return this;
-	// }
-	//
-	// public JavascriptActions ctrlDelete(JQuery target) {
-	// int keyCode = Keycode.DELETE.intValue();
-	// ctrlKeyDown(target, keyCode);
-	// ctrlKeyUp(target, keyCode);
-	// return this;
-	// }
-	//
-	// public JavascriptActions ctrlFontBold(JQuery target) {
-	// int keyCode = Keycode.B.intValue();
-	// ctrlKeyDown(target, keyCode);
-	// ctrlKeyUp(target, keyCode);
-	// return this;
-	// }
-	//
-	// public JavascriptActions ctrlFontItalic(JQuery target) {
-	// int keyCode = Keycode.I.intValue();
-	// ctrlKeyDown(target, keyCode);
-	// ctrlKeyUp(target, keyCode);
-	// return this;
-	// }
-	//
-	// public JavascriptActions ctrlFontUnderline(JQuery target) {
-	// int keyCode = Keycode.U.intValue();
-	// ctrlKeyDown(target, keyCode);
-	// ctrlKeyUp(target, keyCode);
-	// return this;
-	// }
-	//
-	// public JavascriptActions enter(JQuery target) {
-	// int keyCode = Keycode.ENTER.intValue();
-	// keyDown(target, keyCode);
-	// keyUp(target, keyCode);
-	// return this;
-	// }
-	//
-	// public JavascriptActions esc(JQuery target) {
-	// int keyCode = Keycode.ESC.intValue();
-	// keyDown(target, keyCode);
-	// keyUp(target, keyCode);
-	// return this;
-	// }
-	//
-	// public JavascriptActions delete(JQuery target) {
-	// int keyCode = Keycode.DELETE.intValue();
-	// keyDown(target, keyCode);
-	// keyUp(target, keyCode);
-	// return this;
-	// }
-	//
-	// public JavascriptActions ctrlKeyDown(JQuery target, int combinationKeyCode) {
-	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.KEYDOWN, combinationKeyCode, MouseButton.IGNORE, new CompundKey[] { CompundKey.CTRL }, 0, 0)));
-	// return this;
-	// }
-	//
-	// public JavascriptActions ctrlKeyUp(JQuery target, int combinationKeyCode) {
-	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.KEYUP, combinationKeyCode, MouseButton.IGNORE, new CompundKey[] { CompundKey.CTRL }, 0, 0)));
-	// return this;
-	// }
-	//
-	// public JavascriptActions shiftKeyUp(JQuery target, int combinationKeyCode) {
-	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.KEYUP, combinationKeyCode, MouseButton.IGNORE, new CompundKey[] { CompundKey.SHIFT }, 0, 0)));
-	// return this;
-	// }
-	//
-	// public JavascriptActions shiftKeyDown(JQuery target, int combinationKeyCode) {
-	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.KEYDOWN, combinationKeyCode, MouseButton.IGNORE, new CompundKey[] { CompundKey.SHIFT }, 0, 0)));
-	// return this;
-	// }
-	//
-	// public JavascriptActions mouseDown(JQuery target, MouseButton type, CompundKey... compundKeys) {
-	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.MOUSEDOWN, -1, type, compundKeys, 0, 0)));
-	// return this;
-	// }
-	//
-	// public JavascriptActions mouseUp(JQuery target, MouseButton type, CompundKey... compundKeys) {
-	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.MOUSEUP, -1, type, compundKeys, 0, 0)));
-	// return this;
-	// }
-	//
-	// public JavascriptActions mouseClick(JQuery target, MouseButton type, CompundKey... compundKeys) {
-	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.CLICK, -1, type, compundKeys, 0, 0)));
-	// return this;
-	// }
-	//
-	// public JavascriptActions contextClick(JQuery target) {
-	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.CONTEXTMENU, -1, MouseButton.RIGHT, null, 0, 0)));
-	// return this;
-	// }
-	//
-	// public JavascriptActions mouseOver(JQuery target, MouseButton type) {
-	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.MOUSEOVER, -1, type, null, 0, 0)));
-	// return this;
-	// }
-	//
-	// public JavascriptActions mouseMove(JQuery target, MouseButton type) {
-	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.MOUSEMOVE, -1, type, null, 0, 0)));
-	// return this;
-	// }
-	//
-	// public JavascriptActions mouseMove(JQuery target, MouseButton type, int xOffset, int yOffset) {
-	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.MOUSEMOVE, -1, type, null, xOffset, yOffset)));
-	// return this;
-	// }
-	//
-	// public JavascriptActions mouseMove(int xOffset, int yOffset, JQuery target, MouseButton type) {
-	// return this;
-	// }
-	//
-	// public JavascriptActions keyDown(JQuery target, int keyCode) {
-	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.KEYDOWN, keyCode, MouseButton.IGNORE, null, 0, 0)));
-	// return this;
-	// }
-	//
-	// public JavascriptActions keyUp(JQuery target, int keyCode) {
-	// action.addAction(new ScriptAction(triggerEventScript(target, EventType.KEYUP, keyCode, MouseButton.IGNORE, null, 0, 0)));
-	// return this;
-	// }
-	//
-	// private String triggerEventScript(JQuery target, EventType eventType, int combinationKeyCode, MouseButton type, CompundKey[] compundKeys, int xOffset, int yOffset) {
-	// final String eventName = eventType.toString();
-	// Set<CompundKey> keys = compundKeys == null ? Collections.EMPTY_SET : ImmutableSet.copyOf(compundKeys);
-	//
-	// String script = "var evt = jq.Event('%eventName');" + " evt.keyCode = %evtKeyCode; evt.metaKey = %evtMetaKey; evt.ctrlKey = %evtCtrlKey; evt.shiftKey = %evtShiftKey;" + " evt.which = %evtWhich;" + "jq(%domTarget).trigger(evt);";
-	//
-	// script = script.replace("%domTarget", target.elementScript());
-	// script = script.replace("%eventName", eventName);
-	// if (combinationKeyCode < 0)
-	// script = script.replace("evt.keyCode = %evtKeyCode;", "");
-	// else
-	// script = script.replace("%evtKeyCode", "" + combinationKeyCode);
-	// int which = type.getWhich();
-	// if (which < 0) {
-	// script = script.replace("evt.which = %evtWhich;", "");
-	// } else {
-	// String offsetScript = "var ofs = " + target.zk().revisedOffsetScript();
-	// script = script.replace("%evtWhich;", "" + which + "; " + offsetScript + " evt.pageX=ofs[0]+" + xOffset + ";evt.pageY=ofs[1]+" + yOffset + ";evt.clientX=ofs[0]+ " + xOffset + ";evt.clientY=ofs[1]+ " + yOffset + ";");
-	// }
-	// boolean ctrlKey = keys.contains(CompundKey.CTRL), shiftKey = keys.contains(CompundKey.SHIFT);
-	// script = script.replace("%evtCtrlKey", Boolean.valueOf(ctrlKey).toString());
-	// script = script.replace("%evtShiftKey", Boolean.valueOf(shiftKey).toString());
-	// script = script.replace("%evtMetaKey", Boolean.valueOf(ctrlKey || shiftKey).toString());
-	// return script;
-	// }
-	//
-	// private class ScriptAction implements Action {
-	// String script;
-	//
-	// public ScriptAction(String script) {
-	// this.script = script;
-	// }
-	//
-	// public void perform() {
-	// javascriptExecutor.executeScript(script);
-	// }
-	// }
-	// }
-
 	public static BufferedImage decodeToImage(String imageString) {
 		BufferedImage image = null;
 		byte[] imageByte;
@@ -4024,10 +3292,8 @@ public class Dragonfly {
 		try {
 			ImageIO.write(image, type, bos);
 			byte[] imageBytes = bos.toByteArray();
-
 			BASE64Encoder encoder = new BASE64Encoder();
 			imageString = encoder.encode(imageBytes);
-
 			bos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -4039,5 +3305,4 @@ public class Dragonfly {
 		Random objRandom = new Random();
 		return objRandom.nextInt((intNumberMaximum - intNumberMinimum) + 1) + intNumberMinimum;
 	}
-
 } // the end of Dragonfly

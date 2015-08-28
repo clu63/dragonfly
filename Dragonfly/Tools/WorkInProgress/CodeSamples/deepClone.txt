@@ -1,0 +1,27 @@
+ public static JSONValue deepClone(JSONValue jsonValue){
+ JSONString string = jsonValue.isString();
+ if (string != null){return new JSONString(string.stringValue());}
+ JSONBoolean aBoolean = jsonValue.isBoolean();
+ if (aBoolean != null){return JSONBoolean.getInstance(aBoolean.booleanValue());}
+ JSONNull aNull = jsonValue.isNull();
+ if (aNull != null){return JSONNull.getInstance();}
+ JSONNumber number = jsonValue.isNumber();
+ if (number!=null){return new JSONNumber(number.doubleValue());}
+ JSONObject jsonObject = jsonValue.isObject();
+ if (jsonObject!=null){
+ JSONObject clonedObject = new JSONObject();
+ for (String key : jsonObject.keySet()){
+ clonedObject.put(key, deepClone(jsonObject.get(key)));
+ }
+ return clonedObject;
+ }
+ JSONArray array = jsonValue.isArray();
+ if (array != null){
+ JSONArray clonedArray = new JSONArray();
+ for (int i=0 ; i < array.size() ; ++i){
+ clonedArray.set(i, deepClone(array.get(i)));
+ }
+ return clonedArray;
+ }
+ throw new IllegalStateException();
+ }

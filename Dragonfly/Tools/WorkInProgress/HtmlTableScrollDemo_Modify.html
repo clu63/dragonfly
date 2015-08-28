@@ -3,14 +3,8 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Scrolling Table Fluid Width and Height - jsFiddle demo</title>
-
 <script type='text/javascript' src='/js/lib/dummy.js'></script>
-
-
-
-
 <link rel="stylesheet" type="text/css" href="/css/result-light.css">
-
 <style type='text/css'>
 /*the following html and body rule sets are required only if using a % width or height*/
 html {
@@ -193,21 +187,17 @@ body {
 	border-left: 1px solid black;
 } /*borders between body cells*/
 </style>
-
-
-
 <script type='text/javascript'>
 	//<![CDATA[ 
 	window.onload = function() {
 		/* THIS JAVASCRIPT JUST ADDS ROWS FOR TESTING PURPOSES */
 		(function() {
-			for (var n = 128, r = document.querySelector("tbody>tr"), p = r.parentNode; n--; p.appendChild(r.cloneNode(true)))
+			for (var n = 128, r = document.querySelector("tbody>tr"), p = r.parentNode; n--; p
+					.appendChild(r.cloneNode(true)))
 				;
 		})();
 	}//]]>
 </script>
-
-
 </head>
 <body>
 <body>
@@ -220,24 +210,46 @@ body {
 						<tr>
 							<th><div label="strAction" /></th>
 							<th><div label="strTagName" /></th>
-							<th><div label="strAttributeNames " /></th>
-							<th>
-								<!--more versatile way of doing column label; requires 2 identical copies of label-->
-								<div>
-									<div>Column 4</div>
-									<div>Column 4</div>
-								</div>
-							</th>
+							<th><div label="strAttributeNames" /></th>
+							<th><div label="strAttributeValues" /></th>
+							<th><div label="strInputValue" /></th>
+							<th><div label="strLogicalName" /></th>
+							<th><div label="intMillisecondsToWait" /></th>
+							<th><div label="blnOptional" /></th>
+							<th><div label="strAssert" /></th>
+							<th><div label="blnPleaseWait" /></th>
+							<th><div label="blnHighlight" /></th>
+							<th><div label="blnScreenshot" /></th>
+							<th><div label="strFunction" /></th>
+							<th><div label="strAssistiveProperties" /></th>
+							<th><div label="blnExitOnFail" /></th>
+							<th><div label="strOutputLinkName" /></th>
+							<th><div label="strOutputValue" /></th>
+							<th><div label="intLoop" /></th>
 							<th class="scrollbarhead" />
 							<!--ALWAYS ADD THIS EXTRA CELL AT END OF HEADER ROW-->
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td>Lorem ipsum</td>
-							<td>Dolor</td>
-							<td>Sit</td>
-							<td>Amet consectetur</td>
+							<td>strAction</td>
+							<td>strTagName</td>
+							<td>strAttributeNames</td>
+							<td>strAttributeValues</td>
+							<td>strInputValue</td>
+							<td>strLogicalName</td>
+							<td>intMillisecondsToWait</td>
+							<td>blnOptional</td>
+							<td>strAssert</td>
+							<td>blnPleaseWait</td>
+							<td>blnHighlight</td>
+							<td>blnScreenshot</td>
+							<td>strFunction</td>
+							<td>strAssistiveProperties</td>
+							<td>blnExitOnFail</td>
+							<td>strOutputLinkName</td>
+							<td>strOutputValue</td>
+							<td>intLoop</td>
 						</tr>
 					</tbody>
 				</table>
@@ -247,10 +259,5 @@ body {
 	</div>
 </body>
 <!--[if lte IE 9]><style>.scrollingtable > div > div > table {margin-right: 17px;}</style><![endif]-->
-
-
 </body>
-
-
 </html>
-

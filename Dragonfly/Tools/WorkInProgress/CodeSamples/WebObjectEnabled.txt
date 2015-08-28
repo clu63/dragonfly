@@ -1,0 +1,85 @@
+Function WebObjectEnabled()
+ On Error Resume Next
+ '******************************************************************************
+ 'Variables Declaration
+ '******************************************************************************
+ Dim strClassName
+ Dim arrClassNameDisabled
+ Dim arrClassNameEnabled
+ Dim intClassNameEach
+ Dim intClassNameDisabledEach
+ Dim intClassNameEnabledEach
+ Dim objWebObject
+ '******************************************************************************
+ 'Variable Assignment
+ '******************************************************************************
+ If blnObjectShouldRefresh = True Then
+ objObject.RefreshObject
+ End If
+ Set objWebObject = objObject.Object
+ ' list of classnames to disable the object seperated by '|'
+ strClassNameDisabled = "disabled-true"
+ 'list of classnames to enable the object seperated by '|'
+ strClassNameEnabled = "disabled-false"
+ strClassName = objWebObject.ClassName
+ arrClassName = Split(strClassName, " ")
+ arrClassNameDisabled = Split(strClassNameDisabled, "|")
+ arrClassNameEnabled = Split(strClassNameEnabled, "|")
+ '******************************************************************************
+ 'Process
+ '******************************************************************************
+ For intClassNameEach = 0 To UBound(arrClassName)
+ For intClassNameDisabledEach = 0 To UBound(arrClassNameDisabled)
+ 'check for a empty value in the case a pipe is left hanging
+ If Trim(arrClassName(intClassNameEach)) <> "" Then
+ If LCase(arrClassName(intClassNameEach)) =
+ LCase(arrClassNameDisabled(intClassNameDisabledEach)) Then
+ WebObjectEnabled = False
+ Err.Clear
+ On Error GoTo 0
+ Exit Function
+ End If
+ End If
+ Next
+ For intClassNameEnabledEach = 0 To UBound(arrClassNameEnabled)
+ If Trim(arrClassName(intClassNameEach)) <> "" Then
+ If LCase(arrClassName(intClassNameEach)) =
+ LCase(arrClassNameEnabled(intClassNameEnabledEach)) Then
+ WebObjectEnabled = True
+ Err.Clear
+ On Error GoTo 0
+ Exit Function
+ End If
+ End If
+ Next
+ Next
+ ' If LCase(objWebObject.tagName) = "a" Then
+ ' If InStr(LCase(objWebObject.onclick), "return false") > 0 Then
+ ' WebObjectEnabled = False
+ ' Err.Clear
+ ' On Error GoTo 0
+ ' Exit Function
+ ' End If
+ ' If InStr(LCase(objWebObject.onclick), "return true") > 0 Then
+ ' WebObjectEnabled = True
+ ' Err.Clear
+ ' On Error GoTo 0
+ ' Exit Function
+ ' End If
+ ' End If
+ If objWebObject.IsDisabled = True Then
+ WebObjectEnabled = False
+ Err.Clear
+ On Error GoTo 0
+ Exit Function
+ Else
+ WebObjectEnabled = True
+ End If
+ Set objWebObject = Nothing
+ Err.Clear
+ On Error GoTo 0
+ '******************************************************************************
+ 'EndFile
+ '******************************************************************************
+ End Function '==> WebObjectEnabled
+

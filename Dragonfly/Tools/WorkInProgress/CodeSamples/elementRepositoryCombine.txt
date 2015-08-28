@@ -1,0 +1,36 @@
+	@SuppressWarnings("unchecked")
+	public static void elementRepositoryCombine(String strTestMatixPath) {
+		int intElementRepositoryEach = 0;
+		JSONArray objElementRepositoryArray = null;
+		try {
+			Object objTestMatrixFile = objJsonParser.parse(new FileReader(strTestMatixPath));
+			JSONObject objTestMatrixFileJson = (JSONObject) objTestMatrixFile;
+			System.out.println("objTestMatrixFileJson = " + objTestMatrixFileJson);
+			objElementRepositoryArray = (JSONArray) objTestMatrixFileJson.get("element_repository");
+			System.out.println("objElementRepositoryArray = " + objElementRepositoryArray);
+			System.out.println("objElementRepositoryArray.size() = " + objElementRepositoryArray.size());
+			for (intElementRepositoryEach = 0; intElementRepositoryEach < objElementRepositoryArray.size(); intElementRepositoryEach++) {
+				String strFile = objElementRepositoryArray.get(intElementRepositoryEach).toString();
+				System.out.println("objElementRepositoryArray.get(intElementRepositoryEach).toString() = " + objElementRepositoryArray.get(intElementRepositoryEach).toString());
+				try {
+					Object objElementRepositoryFile = objJsonParser.parse(new FileReader(strElementRepositoryPath + strFile));
+					objElements = (JSONObject) objElementRepositoryFile;
+					JSONObject objElementsEach = (JSONObject) objElements.get("elements");
+					System.out.println("objElementsEach = " + objElementsEach);
+					if (intElementRepositoryEach == 0) {
+						objElement = (JSONObject) objElements.get("elements");
+					} else {
+						objElement.putAll(objElementsEach);
+					}
+					System.out.println("objElementsEach = " + objElementsEach);
+				} catch (IOException | ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			System.out.println("objElement = " + objElement);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
