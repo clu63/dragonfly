@@ -305,65 +305,69 @@ public class Dragonfly {
 		try {
 			TimeUnit.MILLISECONDS.sleep(intMillisecondsToWait);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger("sleepMilliseconds Exception = " + e.toString());
 		}
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
 		JSONObject objTestInstancesEach = null;
+		JSONObject objStep = null;
 		String strPathFullTestMatix = "";
-		// String strPathSystemUserDir = System.getProperty("user.dir");
 		String strTestMatixFileName = "";
 		WebDriver objWebDriver = null;
 		WebElement objWebElement;
-		windowsMinimizeAll();
+		int intStep = 0;
+		int intMillisecondsToWaitDefault = 20000;
+		int intFrame = -1;
+		int intLoopCount = 0;
+		int intLoopEach = 0;
+		int intLoopStep = 0;
+		String strCurrentWindowHandle = "";
+		String strPathResults = "";
+		String strPathImages = "";
+		String strTestStatus = "";
+		String strResultsFolder = "";
 		strOperatingSystem = OSType();
-		strTestMatixFileName = "";
+		windowsMinimizeAll();
 		strPathFullTestMatix = strPathTestMatrix + strTestMatixFileName;
+		System.out.println("strPathFullTestMatix = " + strPathFullTestMatix);
 		testMatrixSetup(strPathFullTestMatix);
 		for (intTestInstanceEach = 0; intTestInstanceEach < objTestInstances.size(); intTestInstanceEach++) {
-			objTestSteps = null;
 			try {
+				objTestSteps = null;
 				objTestSteps = (JSONArray) objJsonParser.parse(strTestStepsCombinedOriginal);
-			} catch (ParseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			logger("objTestInstances.size = " + objTestInstances.size());
-			objTestInstancesEach = (JSONObject) objTestInstances.get(intTestInstanceEach);
-			JSONObject objStep = null;
-			int intStep = 0;
-			int intMillisecondsToWaitDefault = 20000;
-			int intFrame = -1;
-			int intLoopCount = 0;
-			int intLoopEach = 0;
-			int intLoopStep = 0;
-			String strCurrentWindowHandle = "";
-			String strPathResults = "";
-			String strPathImages = "";
-			String strTestStatus = "pass";
-			String strResultsFolder = dateTimestamp();
-			logger("Working Directory = " + strPathSystemUserDir);
-			switch (strOperatingSystem) {
-			case "Windows":
-				strPathResults = strPathSystemUserDir + "\\Results\\" + strTestMatixFileName.replace(".json", "") + "\\" + strResultsFolder + "\\";
-				strPathImages = "images\\";
-				break;
-			case "Mac":
-				strPathResults = strPathSystemUserDir + "/Results/" + strTestMatixFileName.replace(".json", "") + "/" + strResultsFolder + "/";
-				strPathImages = "images/";
-				break;
-			default:
-				logger("main switch strOperatingSystem = " + strOperatingSystem + "  not supported");
-				System.exit(0);
-			}
-			new File(strPathResults).mkdirs();
-			new File(strPathResults + strPathImages).mkdirs();
-			try {
+				logger("objTestInstances.size = " + objTestInstances.size());
+				objTestInstancesEach = (JSONObject) objTestInstances.get(intTestInstanceEach);
+				objStep = null;
+				intStep = 0;
+				intMillisecondsToWaitDefault = 20000;
+				intFrame = -1;
+				intLoopCount = 0;
+				intLoopEach = 0;
+				intLoopStep = 0;
+				strCurrentWindowHandle = "";
+				strPathResults = "";
+				strPathImages = "";
+				strTestStatus = "pass";
+				strResultsFolder = dateTimestamp();
+				logger("Working Directory = " + strPathSystemUserDir);
+				switch (strOperatingSystem) {
+				case "Windows":
+					strPathResults = strPathSystemUserDir + "\\Results\\" + strTestMatixFileName.replace(".json", "") + "\\" + strResultsFolder + "\\";
+					strPathImages = "images\\";
+					break;
+				case "Mac":
+					strPathResults = strPathSystemUserDir + "/Results/" + strTestMatixFileName.replace(".json", "") + "/" + strResultsFolder + "/";
+					strPathImages = "images/";
+					break;
+				default:
+					logger("main switch strOperatingSystem = " + strOperatingSystem + "  not supported");
+					return;
+				}
+				new File(strPathResults).mkdirs();
+				new File(strPathResults + strPathImages).mkdirs();
 				writeJsonToHtml(objTestSteps, strPathResults + "StepsOriginal.html");
-				// writeJsonToHtml(objTestStepsCombinedOriginal, strPathResults + "StepsOriginal_" + intTestInstanceEach + ".html");
 				for (intStep = 0; intStep < objTestSteps.size(); intStep++) {
 					objWebElement = null;
 					objStep = (JSONObject) objTestSteps.get(intStep);
@@ -427,8 +431,6 @@ public class Dragonfly {
 								objStep.put("intLoop", "");
 								intLoopEach = 1;
 								intLoopStep = intStep;
-								// } else {
-								// intLoopEach = intLoopEach + 1;
 							}
 						}
 					}
@@ -439,23 +441,19 @@ public class Dragonfly {
 					if (!objStep.get("strFunction").toString().trim().equals("")) {
 						String strMethodName = objStep.get("strFunction").toString();
 						String arguments = strInputValue;
-						try {
-							Class objClass = Class.forName("org.DragonflyAutomation.Dragonfly");
-							Class objParameterTypes[] = new Class[1];
-							objParameterTypes[0] = String.class;
-							Method objMethod = objClass.getMethod(strMethodName, objParameterTypes);
-							Dragonfly objDragonfly = new Dragonfly();
-							Object arrArgumentList[] = new Object[1];
-							arrArgumentList[0] = new String(arguments);
-							Object objReturn = objMethod.invoke(objDragonfly, arrArgumentList);
-							String strReturnValue = (String) objReturn;
-							strInputValue = strReturnValue;
-							objStep.put("strInputValue", strInputValue);
-							logger("main call function return value = " + strReturnValue.toString());
-						} catch (Throwable e) {
-							logger("main call function - " + e.toString());
-						}
-					}// the end of
+						Class objClass = Class.forName("org.DragonflyAutomation.Dragonfly");
+						Class objParameterTypes[] = new Class[1];
+						objParameterTypes[0] = String.class;
+						Method objMethod = objClass.getMethod(strMethodName, objParameterTypes);
+						Dragonfly objDragonfly = new Dragonfly();
+						Object arrArgumentList[] = new Object[1];
+						arrArgumentList[0] = new String(arguments);
+						Object objReturn = objMethod.invoke(objDragonfly, arrArgumentList);
+						String strReturnValue = (String) objReturn;
+						strInputValue = strReturnValue;
+						objStep.put("strInputValue", strInputValue);
+						logger("main call function return value = " + strReturnValue.toString());
+					}// the end of (!objStep.get("strFunction").toString().trim().equals(""))
 					if (!strInputValue.equals("<skip>")) {
 						switch (objStep.get("strAction").toString().toLowerCase()) {
 						case "launch":
@@ -497,21 +495,19 @@ public class Dragonfly {
 							sleepMilliseconds(Integer.parseInt(objStep.get("strInputValue").toString()));
 							break;
 						case "break":
-							break;
+							logger("main switch strAction = break was entered to at this step to stop execution");
+							return;
 						default:
 							logger("main switch strAction = " + objStep.get("strAction").toString().toLowerCase() + "  not supported");
-							System.exit(0);
+							return;
 						}// the end of switch (strAction.toLowerCase())
-						if (objStep.get("strAction").toString().toLowerCase().equals("break")) {
-							break;
-						}// the end of if (strAction.toLowerCase().equals("break"))
 						strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
 						intFrame = Integer.parseInt(objStep.get("intFrame").toString());
 					}// the end of if (strInputValue != "<skip>")
 					if (objStep.get("strOutputLinkName").toString().trim().length() != 0) {
 						objLinks.put(objStep.get("strOutputLinkName").toString(), objStep.get("strOutputValue").toString());
 					}
-					if (objStep.get("strStatus").toString() == "fail") {
+					if (objStep.get("strStatus").toString().equals("fail")) {
 						strTestStatus = "fail";
 						if (Boolean.parseBoolean(objStep.get("blnExitOnFail").toString()) == true) {
 							webElementCollectionTable(objStep.get("strTagName").toString(), objWebDriver);
@@ -530,16 +526,21 @@ public class Dragonfly {
 						}
 					}
 				}// for intStep
-					// TODO confirm the exceptions to catch in main some may need to be removed
 			} catch (BrowserDriverNotSupportedException e) {
+				// TODO confirm the exceptions to catch in main some may need to be removed
+				logger("main - " + e.toString());
+			} catch (Exception e) {
 				logger("main - " + e.toString());
 			} finally {
 				// TODO review how end of run is determined for reporting and cleanup
 				writeJsonToHtml(objTestSteps, strPathResults + "StepsWithDefaults.html");
+				writeFile(strPathResults + "StepsWithDefaults.json", objTestSteps.toString());
 				writeReportToHtml(objTestSteps, strPathResults + "Report.html");
-				writeJsonToFile(objJsonStepsFile, strPathResults + "StepsAfterRun.json");
+				// writeJsonToFile(objJsonStepsFile, strPathResults + "StepsAfterRun.json");
+				writeFile(strPathResults + "StepsAfterRun.json", objJsonStepsFile.toString());
 				writeJsonStepsAfterRunToHtml(objTestSteps, strPathResults + "StepsAfterRun.html");
-				writeLogger(strPathResults + "DragonflyLog.txt");
+				// writeLogger(strPathResults + "DragonflyLog.txt");
+				writeFile(strPathResults + "DragonflyLog.log", Dragonfly.strLog);
 				File objDirectoryOld = new File(strPathResults);
 				String strPathResultsNew = strPathResults.replace(strResultsFolder, strResultsFolder + "_" + strTestStatus);
 				logger("main strPathResultsNew = " + strPathResultsNew);
@@ -550,7 +551,6 @@ public class Dragonfly {
 				}
 			}// the end of try
 			strLog = "";
-			// System.exit(0);
 		}
 	}// the end of Main
 
@@ -574,6 +574,7 @@ public class Dragonfly {
 		String strPathFullTestInstances = "";
 		String strPathFullTestModules = "";
 		try {
+			System.out.println("strPathTestMatix = " + strPathTestMatix);
 			objJsonTestMatrixFile = (JSONObject) objJsonParser.parse(new FileReader(strPathTestMatix));
 			// test_instances
 			objJsonArrayTestInstance = (JSONArray) objJsonTestMatrixFile.get("test_instances");
@@ -1732,6 +1733,7 @@ public class Dragonfly {
 		WebDriver objWebDriver = null;
 		DesiredCapabilities desiredCapabilities = null;
 		try {
+			objStep.put("blnStatus", true);
 			objStep.put("strStatus", "pass");
 			objStep.put("intFrame", -1);
 			switch (objStep.get("strTagName").toString()) {
@@ -1794,6 +1796,8 @@ public class Dragonfly {
 				// return objWebDriver;
 				break;
 			default:
+				objStep.put("blnStatus", false);
+				objStep.put("strStatus", "fail");
 				throw new BrowserDriverNotSupportedException("Browser '" + objStep.get("strTagName").toString() + "' not supported");
 			}
 		} catch (Exception e) {
@@ -1803,7 +1807,6 @@ public class Dragonfly {
 			objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
 			elementCoordinates(objStep, objWebDriver, null);
 			coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
-			objStep.put("blnStatus", true);
 			System.out.println(createStepActual(objStep, "LAUNCH"));
 			lngTimeEnd = System.currentTimeMillis();
 			objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
@@ -2654,19 +2657,9 @@ public class Dragonfly {
 		executor.executeScript("window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
 	}// the end of scrollToBottom
 
-	public static void writeLogger(String file) {
-		try {
-			BufferedWriter objBufferedWriter = new BufferedWriter(new FileWriter(file));
-			objBufferedWriter.write(Dragonfly.strLog);
-			objBufferedWriter.close();
-		} catch (Exception e) {
-			System.out.println(e.toString());
-		}
-	}// the end of writeLogger
-
 	public static void writeJsonToHtml(JSONArray objTestSteps, String file) {
 		StringBuilder builder = new StringBuilder();
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter(file));) {
+		try {
 			builder.append("<!DOCTYPE html>");
 			builder.append("<html lang=\"en\">");
 			builder.append("<head><title>Dragonfly steps</title></head>");
@@ -2694,7 +2687,6 @@ public class Dragonfly {
 			builder.append("<th>intLoop</th>");
 			builder.append("</tr>");
 			for (int intTestStepRow = 0; intTestStepRow < objTestSteps.size(); intTestStepRow++) {
-				// logger(intTestStepRow);
 				JSONObject objStep = (JSONObject) objTestSteps.get(intTestStepRow);
 				builder.append("</tr>");
 				builder.append("<td> " + (intTestStepRow + 1) + "</td>");
@@ -2722,8 +2714,7 @@ public class Dragonfly {
 			builder.append("</h1></body>");
 			builder.append("</html>");
 			String html = builder.toString();
-			logger(file);
-			bw.write(html);
+			writeFile(file, html);
 		} catch (Exception e) {
 			logger(builder.toString());
 			logger(e.toString());
@@ -2741,7 +2732,7 @@ public class Dragonfly {
 		String[] arrKeys;
 		arrKeys = strKeys.split("\\|");
 		StringBuilder builder = new StringBuilder();
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter(strFile));) {
+		try {
 			builder.append("<!DOCTYPE html>");
 			builder.append("<html lang=\"en\">");
 			builder.append("<head><title>Dragonfly Steps After Run</title></head>");
@@ -2772,8 +2763,7 @@ public class Dragonfly {
 			builder.append("</h1></body>");
 			builder.append("</html>");
 			String html = builder.toString();
-			logger(strFile);
-			bw.write(html);
+			writeFile(strFile, html);
 		} catch (Exception e) {
 			logger(builder.toString());
 			logger(e.toString());
@@ -2781,15 +2771,14 @@ public class Dragonfly {
 	}// the end of writeJsonStepsAfterRunToHtml
 
 	public static void writeReportToHtml(JSONArray objTestSteps, String strFile) {
+		logger("writeReportToHtml - strFile = " + strFile);
 		long lngStartTimeWriteReportToHtml = System.currentTimeMillis();
 		String strScreenshotFilePath = "";
 		StringBuilder objStringBuilder = new StringBuilder();
-		BufferedWriter objBufferedWriter = null;
 		String strColor = "";
 		String strStatusIcon = "";
 		String strStatus = "";
 		try {
-			objBufferedWriter = new BufferedWriter(new FileWriter(strFile));
 			objStringBuilder.append("<!DOCTYPE html>");
 			objStringBuilder.append("<html lang=\"en\">");
 			objStringBuilder.append("<head><title>Run Results</title></head>");
@@ -2873,22 +2862,27 @@ public class Dragonfly {
 			}
 		} catch (Exception e) {
 			logger("writeReportToHtml - " + e.toString());
-			// logger(objStringBuilder.toString());
 		} finally {
 			objStringBuilder.append("</body>");
 			objStringBuilder.append("</html>");
-			// logger(objStringBuilder.toString());
-			try {
-				String strHTML = objStringBuilder.toString();
-				logger(strHTML);
-				objBufferedWriter.write(strHTML);
-				objBufferedWriter.close();
-			} catch (Exception e2) {
-				logger("writeReportToHtml - IOException" + e2.getMessage());
-			}
+			String strHTML = objStringBuilder.toString();
+			writeFile(strFile, strHTML);
 			logger("writeReportToHtml finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeWriteReportToHtml));
 		}
 	}// the end of writeReportToHtml
+
+	public static void writeFile(String strPathFullFile, String strTextToWrite) {
+		logger("writeFile strPathFullFile = " + strPathFullFile);
+		// logger("writeFile strTextToWrite = " + strTextToWrite);
+		BufferedWriter objBufferedWriter = null;
+		try {
+			objBufferedWriter = new BufferedWriter(new FileWriter(strPathFullFile));
+			objBufferedWriter.write(strTextToWrite);
+			objBufferedWriter.close();
+		} catch (Exception e) {
+			logger("writeReportToHtml - IOException" + e.getMessage());
+		}
+	}
 
 	public static String createStepExpected(JSONObject objStep) {
 		String strAction = objStep.get("strAction").toString();
@@ -3091,20 +3085,6 @@ public class Dragonfly {
 		strActualHtml = "<DIV align='left/>" + strActualHtml + "</DIV>";
 		return strActualText;
 	}
-
-	public static void writeJsonToFile(JSONObject objJsonFile, String file) {
-		// TODO Learn how to iterate over jason keys
-		try {
-			// file = new File(strResultsPath + "UpdatedJson.json");
-			// writeJsonKeysToHtml(JSONObject objTestStep, file);
-			BufferedWriter out;
-			out = new BufferedWriter(new FileWriter(file));
-			out.write(objJsonFile.toString());
-			out.close();
-		} catch (IOException e) {
-			logger("main final " + e.toString());
-		}
-	}// the end of writeJsonKeysToHtml
 
 	public static void writeJsonKeysToHtml(JSONObject objTestStep, String file) throws IOException {
 		for (Iterator iterator = objTestStep.keySet().iterator(); iterator.hasNext();) {
