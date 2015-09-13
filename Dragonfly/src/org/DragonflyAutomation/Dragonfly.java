@@ -108,7 +108,7 @@ public class Dragonfly {
 	static String strTestStepsCombinedOriginal = "";
 
 	public static void logger(String strTextToAdd) {
-		// System.out.println(strTextToAdd);
+		System.out.println(strTextToAdd);
 		if (strLog.length() == 0) {
 			strLog = strTextToAdd;
 		} else {
@@ -221,6 +221,13 @@ public class Dragonfly {
 		}
 	}// the end of AngularJsNotCompleteException
 
+	@SuppressWarnings("serial")
+	public static class JSONKeyNotPresentException extends Exception {
+		public JSONKeyNotPresentException(String message) {
+			super(message);
+		}
+	}// the end of JSONKeyNotPresentException
+
 	public String data_DateDaysOut(String strDaysOut) {
 		Integer intDaysOut = Integer.parseInt(strDaysOut);
 		SimpleDateFormat FormattedDATE = new SimpleDateFormat("MM/dd/yyyy");
@@ -328,10 +335,11 @@ public class Dragonfly {
 		String strPathImages = "";
 		String strTestStatus = "";
 		String strResultsFolder = "";
+		String strLoopExitValue = "";
 		strOperatingSystem = OSType();
 		windowsMinimizeAll();
 		strPathFullTestMatix = strPathTestMatrix + strTestMatixFileName;
-		System.out.println("strPathFullTestMatix = " + strPathFullTestMatix);
+		logger("strPathFullTestMatix = " + strPathFullTestMatix);
 		testMatrixSetup(strPathFullTestMatix);
 		for (intTestInstanceEach = 0; intTestInstanceEach < objTestInstances.size(); intTestInstanceEach++) {
 			try {
@@ -368,33 +376,49 @@ public class Dragonfly {
 				new File(strPathResults).mkdirs();
 				new File(strPathResults + strPathImages).mkdirs();
 				writeJsonToHtml(objTestSteps, strPathResults + "StepsOriginal.html");
+				logger("objTestSteps.size() = " + objTestSteps.size());
 				for (intStep = 0; intStep < objTestSteps.size(); intStep++) {
+					logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
 					objWebElement = null;
 					objStep = (JSONObject) objTestSteps.get(intStep);
 					String strInputValue = objStep.get("strInputValue").toString();
 					String strLogicalName = objStep.get("strLogicalName").toString();
-					logger("strLogicalName = " + strLogicalName);
+					// logger("strLogicalName = " + strLogicalName);
+					// logger("strLogicalName = " + strLogicalName);
+					// logger("strLogicalName = After");
+					// System.exit(0);
 					if (strLogicalName.toLowerCase().startsWith("<er>") == true) {
 						strLogicalName = strLogicalName.replace("<er>", "");
-						logger("strLogicalName = " + strLogicalName);
-						System.out.println(objElement);
+						// logger("strLogicalName = " + strLogicalName);
+						// logger(objElement.toString());
+						ValidateJSONObjectKey(objElement, strLogicalName);
 						JSONObject objElementNode = (JSONObject) objElement.get(strLogicalName);
-						System.out.println(objElementNode);
-						logger("objElement.get(strTagName).toString() = " + objElementNode.get("strTagName").toString());
-						logger("objElement.get(strAttributeNames).toString() = " + objElementNode.get("strAttributeNames").toString());
-						logger("objElement.get(strAttributeValues).toString() = " + objElementNode.get("strAttributeValues").toString());
-						objStep.put("strTagName", objElementNode.get("strTagName").toString());
-						objStep.put("strAttributeNames", objElementNode.get("strAttributeNames").toString());
-						objStep.put("strAttributeValues", objElementNode.get("strAttributeValues").toString());
+						// logger(objElementNode.toString());
+						// logger("objElement.get(strTagName).toString() = " + objElementNode.get("strTagName").toString());
+						// logger("objElement.get(strAttributeNames).toString() = " + objElementNode.get("strAttributeNames").toString());
+						// logger("objElement.get(strAttributeValues).toString() = " + objElementNode.get("strAttributeValues").toString());
+						objStep.put("strTagName", getJSONObjectValue(objElementNode, "strTagName", ""));
+						objStep.put("strAttributeNames", getJSONObjectValue(objElementNode, "strAttributeNames", ""));
+						objStep.put("strAttributeValues", getJSONObjectValue(objElementNode, "strAttributeValues", ""));
+						// objStep.put("strTagName", objElementNode.get("strTagName").toString());
+						// objStep.put("strAttributeNames", objElementNode.get("strAttributeNames").toString());
+						// objStep.put("strAttributeValues", objElementNode.get("strAttributeValues").toString());
 					}
-					System.out.println(objStep.get("strAttributeValues").toString());
+					// logger(objStep.get("strAttributeValues").toString());
 					if (strInputValue.toLowerCase().startsWith("<link>") == true) {
-						strInputValue = objLinks.get(strInputValue.replace("<link>", "")).toString();
+						strInputValue = getJSONObjectValue(objLinks, strInputValue, "<link>");
+						// strInputValue = objLinks.get(strInputValue.replace("<link>", "")).toString();
 						objStep.put("strInputValue", strInputValue);
 					}
 					if (strInputValue.toLowerCase().startsWith("<ti>") == true) {
-						strInputValue = objTestInstancesEach.get(strInputValue.replace("<ti>", "")).toString();
-						logger("strInputValue = " + strInputValue);
+						// strInputValue = objTestInstancesEach.get(strInputValue.replace("<ti>", "")).toString();
+						strInputValue = getJSONObjectValue(objTestInstancesEach, strInputValue, "<ti>");
+						// System.exit(0);
+						// logger("strInputValue = " + strInputValue);
+						objStep.put("strInputValue", strInputValue);
+					}
+					if (strInputValue.toLowerCase().startsWith("<td>") == true) {
+						strInputValue = getJSONObjectValue(objJsonTestDataFile, strInputValue, "<td>");
 						objStep.put("strInputValue", strInputValue);
 					}
 					if (objStep.get("intMillisecondsToWait").toString().trim().length() == 0) {
@@ -425,9 +449,9 @@ public class Dragonfly {
 					objStep.put("strStepActual", "");
 					logStepDetails(objStep, intStep);
 					if (objStep.get("intLoop").toString().trim().length() > 0) {
-						if (objStep.get("intLoop").toString().startsWith("<loopStart>") == true) {
+						if (objStep.get("intLoop").toString().toLowerCase().startsWith("<loopstart>") == true) {
 							if (intLoopEach == 0) {
-								intLoopCount = Integer.parseInt(objStep.get("intLoop").toString().replace("<loopStart>", ""));
+								intLoopCount = Integer.parseInt(objStep.get("intLoop").toString().substring(11));
 								objStep.put("intLoop", "");
 								intLoopEach = 1;
 								intLoopStep = intStep;
@@ -514,9 +538,17 @@ public class Dragonfly {
 							break;
 						}
 					}
-					if (objStep.get("intLoop").toString().startsWith("<loopExit>") == true) {
+					if (objStep.get("intLoop").toString().toLowerCase().startsWith("<loopexit>") == true) {
+						strLoopExitValue = objStep.get("intLoop").toString().substring(10);
+						if (objStep.get("strOutputValue").toString().equals(strLoopExitValue)) {
+							// intLoopCount = Integer.parseInt(objStep.get("intLoop").toString().substring(11));
+							//objStep.put("intLoop", "");
+							intLoopCount = 0;
+							intLoopEach = 0;
+						}
+						//return;
 					}
-					if (objStep.get("intLoop").toString().startsWith("<loopEnd>") == true) {
+					if (objStep.get("intLoop").toString().toLowerCase().startsWith("<loopend>") == true) {
 						if (intLoopEach == intLoopCount) {
 							intLoopCount = 0;
 							intLoopEach = 0;
@@ -532,14 +564,11 @@ public class Dragonfly {
 			} catch (Exception e) {
 				logger("main - " + e.toString());
 			} finally {
-				// TODO review how end of run is determined for reporting and cleanup
 				writeJsonToHtml(objTestSteps, strPathResults + "StepsWithDefaults.html");
 				writeFile(strPathResults + "StepsWithDefaults.json", objTestSteps.toString());
 				writeReportToHtml(objTestSteps, strPathResults + "Report.html");
-				// writeJsonToFile(objJsonStepsFile, strPathResults + "StepsAfterRun.json");
 				writeFile(strPathResults + "StepsAfterRun.json", objJsonStepsFile.toString());
 				writeJsonStepsAfterRunToHtml(objTestSteps, strPathResults + "StepsAfterRun.html");
-				// writeLogger(strPathResults + "DragonflyLog.txt");
 				writeFile(strPathResults + "DragonflyLog.log", Dragonfly.strLog);
 				File objDirectoryOld = new File(strPathResults);
 				String strPathResultsNew = strPathResults.replace(strResultsFolder, strResultsFolder + "_" + strTestStatus);
@@ -553,6 +582,25 @@ public class Dragonfly {
 			strLog = "";
 		}
 	}// the end of Main
+
+	public static void ValidateJSONObjectKey(JSONObject objJSONObject, String strKeyName) throws JSONKeyNotPresentException {
+		if (!objJSONObject.containsKey(strKeyName)) {
+			throw new JSONKeyNotPresentException("JSON Key " + strKeyName + " not present");
+		}
+	}
+
+	public static String getJSONObjectValue(JSONObject objJSONObject, String strInputValue, String strKeywordName) throws JSONKeyNotPresentException {
+		String strJSONObjectKey = strInputValue.replace(strKeywordName, "");
+		String strJSONObjectValue = "";
+		if (objJSONObject.containsKey(strJSONObjectKey)) {
+			strJSONObjectValue = objJSONObject.get(strJSONObjectKey).toString();
+			logger("getJSONObjectValue strJSONObjectValue = " + strJSONObjectValue);
+			return strJSONObjectValue;
+		} else {
+			logger("JSON Key " + strJSONObjectKey + " for keyword link name " + strKeywordName + " not present");
+			throw new JSONKeyNotPresentException("JSON Key " + strJSONObjectKey + " for keyword link name " + strKeywordName + " not present");
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	public static void testMatrixSetup(String strPathTestMatix) {
@@ -574,7 +622,7 @@ public class Dragonfly {
 		String strPathFullTestInstances = "";
 		String strPathFullTestModules = "";
 		try {
-			System.out.println("strPathTestMatix = " + strPathTestMatix);
+			logger("strPathTestMatix = " + strPathTestMatix);
 			objJsonTestMatrixFile = (JSONObject) objJsonParser.parse(new FileReader(strPathTestMatix));
 			// test_instances
 			objJsonArrayTestInstance = (JSONArray) objJsonTestMatrixFile.get("test_instances");
@@ -590,7 +638,7 @@ public class Dragonfly {
 			objJsonArrayElementRepository = (JSONArray) objJsonTestMatrixFile.get("element_repository");
 			for (intElementRepositoryEach = 0; intElementRepositoryEach < objJsonArrayElementRepository.size(); intElementRepositoryEach++) {
 				strFileNameElementRepository = objJsonArrayElementRepository.get(intElementRepositoryEach).toString();
-				System.out.println("strFileNameElementRepository = " + strFileNameElementRepository);
+				logger("strFileNameElementRepository = " + strFileNameElementRepository);
 				objElements = (JSONObject) objJsonParser.parse(new FileReader(strPathElementRepository + strFileNameElementRepository));
 				objJsonElementsEach = (JSONObject) objElements.get("elements");
 				if (intElementRepositoryEach == 0) {
@@ -598,8 +646,8 @@ public class Dragonfly {
 				} else {
 					objElement.putAll(objJsonElementsEach);
 				}
-				System.out.println("objElement = " + objElement);
-				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+				logger("objElement = " + objElement);
+				logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 			}
 			// test_modules
 			objJsonArrayTestModules = (JSONArray) objJsonTestMatrixFile.get("test_modules");
@@ -610,12 +658,12 @@ public class Dragonfly {
 				for (intTestModulesEach = 0; intTestModulesEach < objJsonArrayTestModules.size(); intTestModulesEach++) {
 					strFileNameTestModules = objJsonArrayTestModules.get(intTestModulesEach).toString();
 					strPathFullTestModules = strPathTestModules + strFileNameTestModules;
-					System.out.println("strPathFullTestModules = " + strPathFullTestModules);
+					logger("strPathFullTestModules = " + strPathFullTestModules);
 					objJsonStepsFile = (JSONObject) objJsonParser.parse(new FileReader(strPathFullTestModules));
 					JSONArray objJsonStepsARRAY = (JSONArray) objJsonStepsFile.get("steps");
 					String strStepsToString = objJsonStepsARRAY.toString();
-					System.out.println("objJsonStepsEach = " + objJsonStepsARRAY.toString());
-					System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+					logger("objJsonStepsEach = " + objJsonStepsARRAY.toString());
+					logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 					if (intTestModulesEach > 0) {
 						// strTestStepsCombinedOriginal = strTestStepsCombinedOriginal.replace("]", ",") + strStepsToString.replace("[", "");
 						strTestStepsCombinedOriginal = strTestStepsCombinedOriginal.substring(0, strTestStepsCombinedOriginal.length() - 1) + "," + strStepsToString.substring(1);
@@ -624,10 +672,10 @@ public class Dragonfly {
 					}
 				}
 				// objTestStepsCombinedOriginal = (JSONArray) objJsonParser.parse(strTestStepsCombinedOriginal);
-				System.out.println("strTestStepsCombinedOriginal = " + strTestStepsCombinedOriginal);
-				// System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-				// System.out.println("objTestStepsCombinedOriginal = " + objTestStepsCombinedOriginal);
-				// System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+				logger("strTestStepsCombinedOriginal = " + strTestStepsCombinedOriginal);
+				// logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+				// logger("objTestStepsCombinedOriginal = " + objTestStepsCombinedOriginal);
+				// logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 				objLinkArray = (JSONArray) objJsonStepsFile.get("link");
 				objLinks = (JSONObject) objLinkArray.get(0);
 			}
@@ -657,7 +705,7 @@ public class Dragonfly {
 		strKeys = "strAction|strTagName|strAttributeNames|strAttributeValues|strInputValue|strLogicalName|intMillisecondsToWait";
 		strKeys = strKeys + "|blnOptional|strAssert|blnPleaseWait|blnHighlight|blnScreenshot|strFunction|strAssistiveProperties|blnExitOnFail";
 		strKeys = strKeys + "|strOutputLinkName|strOutputValue|intLoop|strCurrentWindowHandle";
-		logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
+		// logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
 		arrKeys = strKeys.split("\\|");
 		for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
 			strKey = (String) arrKeys[intKeysEach].toString();
@@ -949,7 +997,7 @@ public class Dragonfly {
 				String[] arrOptions;
 				arrOptions = strOptions.split("\\|");
 				for (intOptionsEach = 0; intOptionsEach < arrOptions.length; intOptionsEach++) {
-					System.out.println("arrOptions[intOptionsEach].toString() = " + arrOptions[intOptionsEach].toString());
+					logger("arrOptions[intOptionsEach].toString() = " + arrOptions[intOptionsEach].toString());
 					if (arrOptions[intOptionsEach].toString().equals(objStep.get("strInputValue").toString())) {
 						blnSet = true;
 						Select objSelect = new Select(objWebElement);
@@ -1807,7 +1855,7 @@ public class Dragonfly {
 			objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
 			elementCoordinates(objStep, objWebDriver, null);
 			coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
-			System.out.println(createStepActual(objStep, "LAUNCH"));
+			logger(createStepActual(objStep, "LAUNCH"));
 			lngTimeEnd = System.currentTimeMillis();
 			objStep.put("strStepDuration", (lngTimeEnd - lngTimeStart));
 			objStep.put("strStartTimestamp", currentTimeMillisToDateTimestamp(lngTimeStart));
@@ -1976,10 +2024,10 @@ public class Dragonfly {
 					}
 					break;
 				}
-				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~1~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-				System.out.println("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
-				System.out.println("strXpathAttributesTemp = " + strXpathAttributesTemp);
-				// System.out.println("strXpath = " + strXpath);
+				logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~1~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+				logger("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
+				logger("strXpathAttributesTemp = " + strXpathAttributesTemp);
+				// logger("strXpath = " + strXpath);
 				if (arrAttributeNames[0].toLowerCase().equals("xpath")) {
 				} else {
 					if (strXpathAttributesTemp.trim().length() != 0) {
@@ -1991,15 +2039,15 @@ public class Dragonfly {
 					}
 				}
 			}// for (int intAttributeEach
-			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~2~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			System.out.println("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
-			System.out.println("strXpathAttributesTemp = " + strXpathAttributesTemp);
-			System.out.println("strXpathAttributes = " + strXpathAttributes);
-			// System.out.println("strXpath = " + strXpath);
+			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~2~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			logger("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
+			logger("strXpathAttributesTemp = " + strXpathAttributesTemp);
+			logger("strXpathAttributes = " + strXpathAttributes);
+			// logger("strXpath = " + strXpath);
 			if (arrAttributeNames[0].toLowerCase().equals("xpath")) {
 				strXpath = strXpathAttributesTemp;
-				// System.out.println("(arrAttributeNames[0].toLowerCase() == xpath");
-				// System.out.println("strXpath = " + strXpath);
+				// logger("(arrAttributeNames[0].toLowerCase() == xpath");
+				// logger("strXpath = " + strXpath);
 			} else {
 				if (strXpathAttributes.trim().length() == 0) {
 					strXpathAttributes = "";
@@ -2007,15 +2055,15 @@ public class Dragonfly {
 					strXpathAttributes = "[" + strXpathAttributes + "]";
 				}
 				strXpath = "(//" + strTagName + strXpathAttributes + ")" + strIndex;
-				// System.out.println("(arrAttributeNames[0].toLowerCase() != xpath");
-				// System.out.println("strXpath = " + strXpath);
+				// logger("(arrAttributeNames[0].toLowerCase() != xpath");
+				// logger("strXpath = " + strXpath);
 			}
-			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~3~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			System.out.println("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
-			System.out.println("strXpathAttributesTemp = " + strXpathAttributesTemp);
-			System.out.println("strXpath = " + strXpath);
-			System.out.println("strXpathAttributes = " + strXpathAttributes);
-			System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~3~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			logger("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
+			logger("strXpathAttributesTemp = " + strXpathAttributesTemp);
+			logger("strXpath = " + strXpath);
+			logger("strXpathAttributes = " + strXpathAttributes);
+			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 			// logger("elementFind strXpath = " + strXpath);
 			// logger("elementFind before loop strCurrentWindowHandle = " + strCurrentWindowHandle);
 			Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
