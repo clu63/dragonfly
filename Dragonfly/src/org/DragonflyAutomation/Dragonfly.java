@@ -43,6 +43,7 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -86,6 +87,7 @@ import javax.imageio.ImageIO;
 public class Dragonfly {
 	// System.exit(0);
 	static int intTestInstanceEach = 0;
+	static int intTestInstanceSize = 0;
 	static JSONArray objLinkArray = null;
 	static JSONArray objTestInstances = null;
 	static JSONArray objTestSteps = null;
@@ -106,6 +108,8 @@ public class Dragonfly {
 	static String strPathTestMatrix = "Data/internal/test_matrix/";
 	static String strPathTestModules = "Data/internal/test_modules/";
 	static String strTestStepsCombinedOriginal = "";
+	static String strPathResultsFolder = "";
+	static String strPathResultsIterationsFolder = "";
 
 	public static void logger(String strTextToAdd) {
 		System.out.println(strTextToAdd);
@@ -228,6 +232,16 @@ public class Dragonfly {
 		}
 	}// the end of JSONKeyNotPresentException
 
+	// @SuppressWarnings("serial")
+	public static class TestInstanceMoreThanOneException extends Exception {
+		private static final long serialVersionUID = 433826266968573344L;
+
+		// private static final long serialVersionUID = 1L;
+		public TestInstanceMoreThanOneException(String message) {
+			super(message);
+		}
+	}// the end of JSONKeyNotPresentException
+
 	public String data_DateDaysOut(String strDaysOut) {
 		Integer intDaysOut = Integer.parseInt(strDaysOut);
 		SimpleDateFormat FormattedDATE = new SimpleDateFormat("MM/dd/yyyy");
@@ -318,6 +332,17 @@ public class Dragonfly {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(String[] args) {
+		// try {
+		// logger("clearMyTracksByProcessCookies start = ");
+		// commandLineExecution();
+		// // clearMyTracksByProcessCookies();
+		// // clearMyTracksByProcessCache();
+		// } catch (Exception e1) {
+		// logger("clearMyTracksByProcessCookies Exception = " + e1.toString());
+		// // TODO Auto-generated catch block
+		// e1.printStackTrace();
+		// }
+		// System.exit(0);
 		JSONObject objTestInstancesEach = null;
 		JSONObject objStep = null;
 		String strPathFullTestMatix = "";
@@ -334,18 +359,17 @@ public class Dragonfly {
 		String strPathResults = "";
 		String strPathImages = "";
 		String strTestStatus = "";
-		String strResultsFolder = "";
 		String strLoopExitValue = "";
 		strOperatingSystem = OSType();
 		windowsMinimizeAll();
 		strPathFullTestMatix = strPathTestMatrix + strTestMatixFileName;
 		logger("strPathFullTestMatix = " + strPathFullTestMatix);
 		testMatrixSetup(strPathFullTestMatix);
-		for (intTestInstanceEach = 0; intTestInstanceEach < objTestInstances.size(); intTestInstanceEach++) {
+		for (intTestInstanceEach = 0; intTestInstanceEach < intTestInstanceSize; intTestInstanceEach++) {
 			try {
 				objTestSteps = null;
 				objTestSteps = (JSONArray) objJsonParser.parse(strTestStepsCombinedOriginal);
-				logger("objTestInstances.size = " + objTestInstances.size());
+				logger("intTestInstanceSize = " + intTestInstanceSize);
 				objTestInstancesEach = (JSONObject) objTestInstances.get(intTestInstanceEach);
 				objStep = null;
 				intStep = 0;
@@ -358,15 +382,15 @@ public class Dragonfly {
 				strPathResults = "";
 				strPathImages = "";
 				strTestStatus = "pass";
-				strResultsFolder = dateTimestamp();
+				strPathResultsFolder = strPathResultsIterationsFolder + dateTimestamp();
 				logger("Working Directory = " + strPathSystemUserDir);
 				switch (strOperatingSystem) {
 				case "Windows":
-					strPathResults = strPathSystemUserDir + "\\Results\\" + strTestMatixFileName.replace(".json", "") + "\\" + strResultsFolder + "\\";
+					strPathResults = strPathSystemUserDir + "\\Results\\" + strTestMatixFileName.replace(".json", "") + "\\" + strPathResultsFolder + "\\";
 					strPathImages = "images\\";
 					break;
 				case "Mac":
-					strPathResults = strPathSystemUserDir + "/Results/" + strTestMatixFileName.replace(".json", "") + "/" + strResultsFolder + "/";
+					strPathResults = strPathSystemUserDir + "/Results/" + strTestMatixFileName.replace(".json", "") + "/" + strPathResultsFolder + "/";
 					strPathImages = "images/";
 					break;
 				default:
@@ -383,38 +407,20 @@ public class Dragonfly {
 					objStep = (JSONObject) objTestSteps.get(intStep);
 					String strInputValue = objStep.get("strInputValue").toString();
 					String strLogicalName = objStep.get("strLogicalName").toString();
-					// logger("strLogicalName = " + strLogicalName);
-					// logger("strLogicalName = " + strLogicalName);
-					// logger("strLogicalName = After");
-					// System.exit(0);
 					if (strLogicalName.toLowerCase().startsWith("<er>") == true) {
 						strLogicalName = strLogicalName.replace("<er>", "");
-						// logger("strLogicalName = " + strLogicalName);
-						// logger(objElement.toString());
 						ValidateJSONObjectKey(objElement, strLogicalName);
 						JSONObject objElementNode = (JSONObject) objElement.get(strLogicalName);
-						// logger(objElementNode.toString());
-						// logger("objElement.get(strTagName).toString() = " + objElementNode.get("strTagName").toString());
-						// logger("objElement.get(strAttributeNames).toString() = " + objElementNode.get("strAttributeNames").toString());
-						// logger("objElement.get(strAttributeValues).toString() = " + objElementNode.get("strAttributeValues").toString());
 						objStep.put("strTagName", getJSONObjectValue(objElementNode, "strTagName", ""));
 						objStep.put("strAttributeNames", getJSONObjectValue(objElementNode, "strAttributeNames", ""));
 						objStep.put("strAttributeValues", getJSONObjectValue(objElementNode, "strAttributeValues", ""));
-						// objStep.put("strTagName", objElementNode.get("strTagName").toString());
-						// objStep.put("strAttributeNames", objElementNode.get("strAttributeNames").toString());
-						// objStep.put("strAttributeValues", objElementNode.get("strAttributeValues").toString());
 					}
-					// logger(objStep.get("strAttributeValues").toString());
 					if (strInputValue.toLowerCase().startsWith("<link>") == true) {
 						strInputValue = getJSONObjectValue(objLinks, strInputValue, "<link>");
-						// strInputValue = objLinks.get(strInputValue.replace("<link>", "")).toString();
 						objStep.put("strInputValue", strInputValue);
 					}
 					if (strInputValue.toLowerCase().startsWith("<ti>") == true) {
-						// strInputValue = objTestInstancesEach.get(strInputValue.replace("<ti>", "")).toString();
 						strInputValue = getJSONObjectValue(objTestInstancesEach, strInputValue, "<ti>");
-						// System.exit(0);
-						// logger("strInputValue = " + strInputValue);
 						objStep.put("strInputValue", strInputValue);
 					}
 					if (strInputValue.toLowerCase().startsWith("<td>") == true) {
@@ -477,8 +483,9 @@ public class Dragonfly {
 						strInputValue = strReturnValue;
 						objStep.put("strInputValue", strInputValue);
 						logger("main call function return value = " + strReturnValue.toString());
-					}// the end of (!objStep.get("strFunction").toString().trim().equals(""))
-					if (!strInputValue.equals("<skip>")) {
+					}// the end of
+						// (!objStep.get("strFunction").toString().trim().equals(""))
+					if (!strInputValue.toLowerCase().equals("<skip>")) {
 						switch (objStep.get("strAction").toString().toLowerCase()) {
 						case "launch":
 							// TODO create a browserLaunchSync to manage reporting and sync
@@ -540,13 +547,14 @@ public class Dragonfly {
 					}
 					if (objStep.get("intLoop").toString().toLowerCase().startsWith("<loopexit>") == true) {
 						strLoopExitValue = objStep.get("intLoop").toString().substring(10);
+						logger("main - strLoopExitValue = " + strLoopExitValue);
 						if (objStep.get("strOutputValue").toString().equals(strLoopExitValue)) {
 							// intLoopCount = Integer.parseInt(objStep.get("intLoop").toString().substring(11));
-							//objStep.put("intLoop", "");
+							// objStep.put("intLoop", "");
 							intLoopCount = 0;
 							intLoopEach = 0;
 						}
-						//return;
+						// return;
 					}
 					if (objStep.get("intLoop").toString().toLowerCase().startsWith("<loopend>") == true) {
 						if (intLoopEach == intLoopCount) {
@@ -564,14 +572,14 @@ public class Dragonfly {
 			} catch (Exception e) {
 				logger("main - " + e.toString());
 			} finally {
+				writeFile(strPathResults + "DragonflyLog.log", Dragonfly.strLog);
 				writeJsonToHtml(objTestSteps, strPathResults + "StepsWithDefaults.html");
 				writeFile(strPathResults + "StepsWithDefaults.json", objTestSteps.toString());
 				writeReportToHtml(objTestSteps, strPathResults + "Report.html");
 				writeFile(strPathResults + "StepsAfterRun.json", objJsonStepsFile.toString());
 				writeJsonStepsAfterRunToHtml(objTestSteps, strPathResults + "StepsAfterRun.html");
-				writeFile(strPathResults + "DragonflyLog.log", Dragonfly.strLog);
 				File objDirectoryOld = new File(strPathResults);
-				String strPathResultsNew = strPathResults.replace(strResultsFolder, strResultsFolder + "_" + strTestStatus);
+				String strPathResultsNew = strPathResults.replace(strPathResultsFolder, strPathResultsFolder + "_" + strTestStatus);
 				logger("main strPathResultsNew = " + strPathResultsNew);
 				File objDirectoryNew = new File(strPathResultsNew);
 				objDirectoryOld.renameTo(objDirectoryNew);
@@ -582,6 +590,25 @@ public class Dragonfly {
 			strLog = "";
 		}
 	}// the end of Main
+
+	public static int loopEndFind(JSONObject objJSONObject) {
+		JSONArray objTestSteps2 = null;
+		int intStep2 = 0;
+		JSONObject objStep2 = null;
+		try {
+			objTestSteps2 = (JSONArray) objJsonParser.parse(strTestStepsCombinedOriginal);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for (intStep2 = 0; intStep2 < objTestSteps2.size(); intStep2++) {
+			objStep2 = (JSONObject) objTestSteps.get(intStep2);
+			if (objStep2.get("intLoop").toString().toLowerCase().startsWith("<loopend>") == true) {
+				return intStep2;
+			}
+		}
+		return 0;
+	}
 
 	public static void ValidateJSONObjectKey(JSONObject objJSONObject, String strKeyName) throws JSONKeyNotPresentException {
 		if (!objJSONObject.containsKey(strKeyName)) {
@@ -608,6 +635,7 @@ public class Dragonfly {
 		int intElementRepositoryEach = 0;
 		int intTestDataEach = 0;
 		int intTestModulesEach = 0;
+		int intJsonArrayTestInstanceSize = 0;
 		JSONArray objJsonArrayElementRepository = null;
 		JSONArray objJsonArrayTestData = null;
 		JSONArray objJsonArrayTestInstance = null;
@@ -626,13 +654,24 @@ public class Dragonfly {
 			objJsonTestMatrixFile = (JSONObject) objJsonParser.parse(new FileReader(strPathTestMatix));
 			// test_instances
 			objJsonArrayTestInstance = (JSONArray) objJsonTestMatrixFile.get("test_instances");
-			if (objJsonArrayTestInstance.size() == 1) {
+			intJsonArrayTestInstanceSize = objJsonArrayTestInstance.size();
+			if (intJsonArrayTestInstanceSize == 1) {
 				strFileNameTestInstance = objJsonArrayTestInstance.get(0).toString();
 				strPathFullTestInstances = strPathTestInstances + strFileNameTestInstance;
 				objTestInstance = (JSONObject) objJsonParser.parse(new FileReader(strPathFullTestInstances));
 				objTestInstances = (JSONArray) objTestInstance.get("test_instances");
-			} else if (objJsonArrayTestInstance.size() > 1) {
-				// TODO add error handling, report only 1 test instance per test
+				intTestInstanceSize = objTestInstances.size();
+			} else if (intJsonArrayTestInstanceSize == 0) {
+				intTestInstanceSize = 1;
+				objTestInstance = (JSONObject) objJsonParser.parse("{\"test_instances\":[{}]}");
+				objTestInstances = (JSONArray) objTestInstance.get("test_instances");
+			} else if (intJsonArrayTestInstanceSize > 1) {
+				intTestInstanceSize = 0;
+				logger(intJsonArrayTestInstanceSize + " Test Instances " + objJsonArrayTestInstance.toString() + " exceeds requirements of one. Update test matrix to have only one test instance.");
+				throw new TestInstanceMoreThanOneException(intJsonArrayTestInstanceSize + " Test Instances " + objJsonArrayTestInstance.toString() + " exceeds requirements of one. Update test matrix to have only one test instance.");
+			}
+			if (intTestInstanceSize > 1) {
+				strPathResultsIterationsFolder = dateTimestamp() + "_Iterations_" + intTestInstanceSize + "\\";
 			}
 			// element_repository
 			objJsonArrayElementRepository = (JSONArray) objJsonTestMatrixFile.get("element_repository");
@@ -869,6 +908,7 @@ public class Dragonfly {
 	}// the end of elementOnMouseOverSync
 
 	public static void elementSet(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement, String strOuterHTML) throws ElementTagNameNotSupportedException, ElementNotSetException {
+		logger("===>elementSet start  " + System.currentTimeMillis());
 		long lngStartTimeElementSet = System.currentTimeMillis();
 		JavascriptExecutor objJavascriptExecutor = null;
 		Boolean blnSet = false;
@@ -927,7 +967,7 @@ public class Dragonfly {
 			// objJavascriptExecutor.executeScript("arguments[0].focus();", objWebElement);
 			// objJavascriptExecutor.executeScript("arguments[0].value = '';", objWebElement);
 			// objJavascriptExecutor.executeScript("arguments[0].value = '" + objStep.get("strInputValue").toString() + "';", objWebElement);
-			// // objJavascriptExecutor.executeScript("arguments[0].onkeydown();", objWebElement);
+			// objJavascriptExecutor.executeScript("arguments[0].onkeydown();", objWebElement);
 			// // objJavascriptExecutor.executeScript("arguments[0].onkeyup();", objWebElement);
 			// objJavascriptExecutor.executeScript("arguments[0].blur();", objWebElement);
 			// logger("onchange before");
@@ -1170,6 +1210,7 @@ public class Dragonfly {
 
 	@SuppressWarnings("unchecked")
 	public static void elementSetSync(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement) {
+		logger("===>elementSetSync start  " + System.currentTimeMillis());
 		Long lngTimeStart = System.currentTimeMillis();
 		Long lngTimeEnd = null;
 		Boolean blnFound = false;
@@ -1208,8 +1249,7 @@ public class Dragonfly {
 					objStep.put("strStatus", "pass");
 					// TODO complete Alert Set, move or consider how to handle assert
 					if (blnSet == false) {
-						// if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-						// coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
+						// if (objStep.get("strTagName").toString().toLowerCase().equals("alert")) {coordinateHighlightScreenshot(objStep, objWebDriver, null, objStep);
 						// } else {
 						coordinateHighlightScreenshot(objStep, objWebDriver, objWebElement, objStep);
 						// }
@@ -1793,12 +1833,14 @@ public class Dragonfly {
 				myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL).build().perform();
 				break;
 			case "ie":
+				// killInternetExplorer();
 				windowsProcessKill("taskkill /F /IM iexplore.exe");
 				sleepMilliseconds(1000);
 				desiredCapabilities = DesiredCapabilities.internetExplorer();
 				desiredCapabilities.setJavascriptEnabled(true);
 				System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
 				objWebDriver = new InternetExplorerDriver(desiredCapabilities);
+				// objWebDriver.manage().deleteCookieNamed("JSESSIONID");
 				objWebDriver.get(objStep.get("strInputValue").toString());
 				// objWebDriver.navigate().to(objStep.get("strInputValue").toString());
 				objWebDriver.manage().window().maximize();
@@ -1827,8 +1869,7 @@ public class Dragonfly {
 				objWebDriver.manage().window().maximize();
 				break;
 			case "opera":
-				// TODO OperaDriver setup latest driver and test
-				// desiredCapabilities = DesiredCapabilities.internetExplorer();
+				// TODO OperaDriver setup latest driver and test desiredCapabilities = DesiredCapabilities.internetExplorer();
 				// desiredCapabilities.setJavascriptEnabled(true);
 				objWebDriver = new OperaDriver();
 				objWebDriver.get(objStep.get("strInputValue").toString());
@@ -1839,8 +1880,7 @@ public class Dragonfly {
 				// // WebDriver objWebDriver;
 				// Selenium selenium;
 				// objWebDriver = new OperaDriver();
-				// selenium = new WebDriverBackedSelenium(objWebDriver,
-				// "https://www.google.com/");
+				// selenium = new WebDriverBackedSelenium(objWebDriver, "https://www.google.com/");
 				// return objWebDriver;
 				break;
 			default:
@@ -1866,6 +1906,85 @@ public class Dragonfly {
 		}
 		return objWebDriver;
 	} // the end of browserLaunch
+
+	public static void killInternetExplorer() {
+		WebDriver objWebDriver = null;
+		DesiredCapabilities desiredCapabilities = null;
+		windowsProcessKill("taskkill /F /IM iexplore.exe");
+		sleepMilliseconds(1000);
+		desiredCapabilities = DesiredCapabilities.internetExplorer();
+		desiredCapabilities.setJavascriptEnabled(true);
+		System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
+		objWebDriver = new InternetExplorerDriver(desiredCapabilities);
+		objWebDriver.get("about:blank");
+		objWebDriver.manage().deleteCookieNamed("JSESSIONID");
+		// objWebDriver.navigate().to(objStep.get("strInputValue").toString());
+		// objWebDriver.manage().window().maximize();
+		// objWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+		// // objWebDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
+		objWebDriver.close();
+		objWebDriver.quit();
+		windowsProcessKill("taskkill /F /IM iexplore.exe");
+		sleepMilliseconds(1000);
+		windowsProcessKill("taskkill /F /IM IEDriverServer.exe");
+		// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
+		// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 2
+		// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 1
+		// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 16
+		// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 32
+		// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 255
+		// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 4351
+	}
+
+	// 1 = Browsing History
+	// 2 = Cookies
+	// 4 = Temporary Internet Files
+	// 8 = Offline favorites and download history
+	// 16 = Form Data
+	// 32 = Passwords
+	// 64 = Phishing Filter Data
+	// 128 = Web page Recovery Data
+	// 256 = Do not Show GUI when running the cache clear
+	// 512 = Do not use Multi-threading for deletion
+	// 1024 = Valid only when browser is in private browsing mode
+	// 2048 = Tracking Data
+	// 4096 = Data stored by add-ons
+	// 8192 = Preserves Cached data for Favorite websites
+
+	// Delete only download history
+	// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 16384
+
+	// Add values together to get aggregate functionality. For example '4' is
+	// deleting all temporary internet files and '260' is doing the same without
+	// the dialog being displayed while it purges.
+	// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 260
+
+	public static void commandLineExecution() throws Exception {
+		Process p = Runtime.getRuntime().exec("taskkill /F /IM iexplore.exe");
+		p.waitFor();
+		Process p5 = Runtime.getRuntime().exec("RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 10");
+		p5.waitFor();
+		String strCookiesLowFolderPath = System.getenv("APPDATA") + "\\Microsoft\\Windows\\Cookies\\Low\\";
+		strCookiesLowFolderPath = strCookiesLowFolderPath.replaceAll("\\\\", "/");
+		logger(strCookiesLowFolderPath);
+		FileUtils.deleteDirectory(new File(strCookiesLowFolderPath));
+		String strCacheLowFolderPath = System.getenv("APPDATA") + "Local/Microsoft/Windows/Temporary Internet Files/Low/";
+		strCacheLowFolderPath = strCacheLowFolderPath.replaceAll("\\\\", "/");
+		logger(strCacheLowFolderPath);
+		FileUtils.deleteDirectory(new File(strCacheLowFolderPath));
+	}
+
+	public static void clearMyTracksByProcessCookies() throws Exception {
+		String[] arrCommandLine = { "\"cmd.exe\"", "\"RunDll32.exe\"", "\"InetCpl.cpl,ClearMyTracksByProcess 2\"" };
+		Process objProcess = Runtime.getRuntime().exec(arrCommandLine);
+		objProcess.waitFor();
+	}
+
+	public static void clearMyTracksByProcessCache() throws Exception {
+		String[] arrCommandLine = { "\"RunDll32.exe\"", "\"InetCpl.cpl,ClearMyTracksByProcess 8\"" };
+		Process objProcess = Runtime.getRuntime().exec(arrCommandLine);
+		objProcess.waitFor();
+	}
 
 	public static String clipboardGet() {
 		String strClipboardData = "";
@@ -1951,326 +2070,1103 @@ public class Dragonfly {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "unused" })
+	//	@SuppressWarnings({ "unchecked", "unused" })
+	//	public static WebElement elementFind(JSONObject objStep, WebDriver objWebDriver) throws ElementNotFoundException, MultipleElementsFoundException {
+	//		long lngStartTimeElementFind = System.currentTimeMillis();
+	//		// objWebDriver.manage().timeouts().implicitlyWait(10,
+	//		// TimeUnit.NANOSECONDS);
+	//		Boolean blnSwitch = false;
+	//		Boolean blnFound = false;
+	//		String strXpath = "";
+	//		String strIndexKeyword = "";
+	//		int intAttributeEach = 0;
+	//		try {
+	//			int intFramesCount = 0;
+	//			String strTagName;
+	//			String strIndex = "";
+	//			WebElement objWebElement;
+	//			List<WebElement> objWebElementCollection = new ArrayList<WebElement>();
+	//			List<WebElement> objFrameCollection = new ArrayList<WebElement>();
+	//			List<WebElement> objTagNameCollection = new ArrayList<WebElement>();
+	//			String strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
+	//			strTagName = objStep.get("strTagName").toString().toLowerCase();
+	//			String arrAttributeNames[] = objStep.get("strAttributeNames").toString().split("\\|", -1);
+	//			String arrAttributeValues[] = objStep.get("strAttributeValues").toString().split("\\|", -1);
+	//			String strXpathAttributesTemp = "";
+	//			String strXpathAttributes = "";
+	//			String strWindowHandle = "";
+	//			if (strTagName.toLowerCase().equals("alert")) {
+	//				// TODO elementFind finish alert handling --- will need to
+	//				// consider issue where objWebDriver no longer exists maybe
+	//				// place this after setting window
+	//				objStep.put("strTagType", "alert");
+	//				return isAlertPresent2(objWebDriver);
+	//			}
+	//			if (strTagName.toLowerCase().equals("title")) {
+	//				objStep.put("strTagType", "title");
+	//				return null;
+	//			}
+	//			for (intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
+	//				strXpathAttributesTemp = "";
+	//				switch (arrAttributeNames[intAttributeEach].toLowerCase()) {
+	//				case "xpath":
+	//					strXpathAttributesTemp = arrAttributeValues[intAttributeEach];
+	//					break;
+	//				case "index":
+	//					if (arrAttributeValues[intAttributeEach].equals("<last>")) {
+	//						strIndex = "";
+	//						strIndexKeyword = "<last>";
+	//					} else if (arrAttributeValues[intAttributeEach].equals("<random>")) {
+	//						strIndex = "";
+	//						strIndexKeyword = "<random>";
+	//					} else {
+	//						strIndex = "[" + arrAttributeValues[intAttributeEach] + "]";
+	//					}
+	//					break;
+	//				case "text":
+	//					if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("re:")) {
+	//						strXpathAttributesTemp = "contains(text()" + ", '" + arrAttributeValues[intAttributeEach].substring(3) + "')";
+	//					} else {
+	//						strXpathAttributesTemp = "text()='" + arrAttributeValues[intAttributeEach] + "' ";
+	//					}
+	//					break;
+	//				default:
+	//					// By.xpath("//td[contains(text(),'youruser')]") //here user
+	//					// text is case sensitive
+	//					// By.xpath("//td[contains(lower-case(text()),'youruser')]")
+	//					// //to handle case sensitivity. Here user is not case
+	//					// sensitive
+	//					// (//input[contains(translate(@name,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+	//					// 'USER') and @type='text'])
+	//					if (arrAttributeNames[intAttributeEach].toLowerCase().equals("type")) {
+	//						objStep.put("strType", arrAttributeValues[intAttributeEach]);
+	//					}
+	//					if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("re:")) {
+	//						// strXpathAttributesTemp = "contains(@" +
+	//						// arrAttributeNames[intAttributeEach] + ", '" +
+	//						// arrAttributeValues[intAttributeEach].substring(3) +
+	//						// "')";
+	//						// strXpathAttributesTemp = "contains(lower-case(@" +
+	//						// arrAttributeNames[intAttributeEach] + "), '" +
+	//						// arrAttributeValues[intAttributeEach].substring(3).toLowerCase()
+	//						// + "')";
+	//						strXpathAttributesTemp = "contains(translate(@" + arrAttributeNames[intAttributeEach] + ",'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), '" + arrAttributeValues[intAttributeEach].substring(3).toLowerCase() + "')";
+	//					} else {
+	//						strXpathAttributesTemp = "@" + arrAttributeNames[intAttributeEach] + "='" + arrAttributeValues[intAttributeEach] + "'";
+	//					}
+	//					break;
+	//				}
+	//				logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~1~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	//				logger("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
+	//				logger("strXpathAttributesTemp = " + strXpathAttributesTemp);
+	//				// logger("strXpath = " + strXpath);
+	//				if (arrAttributeNames[0].toLowerCase().equals("xpath")) {
+	//				} else {
+	//					if (strXpathAttributesTemp.trim().length() != 0) {
+	//						if (strXpathAttributes.trim().length() == 0) {
+	//							strXpathAttributes = strXpathAttributesTemp;
+	//						} else {
+	//							strXpathAttributes = strXpathAttributes + " and " + strXpathAttributesTemp;
+	//						}
+	//					}
+	//				}
+	//			}// for (int intAttributeEach
+	//			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~2~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	//			logger("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
+	//			logger("strXpathAttributesTemp = " + strXpathAttributesTemp);
+	//			logger("strXpathAttributes = " + strXpathAttributes);
+	//			// logger("strXpath = " + strXpath);
+	//			if (arrAttributeNames[0].toLowerCase().equals("xpath")) {
+	//				strXpath = strXpathAttributesTemp;
+	//				// logger("(arrAttributeNames[0].toLowerCase() == xpath");
+	//				// logger("strXpath = " + strXpath);
+	//			} else {
+	//				if (strXpathAttributes.trim().length() == 0) {
+	//					strXpathAttributes = "";
+	//				} else {
+	//					strXpathAttributes = "[" + strXpathAttributes + "]";
+	//				}
+	//				strXpath = "(//" + strTagName + strXpathAttributes + ")" + strIndex;
+	//				// logger("(arrAttributeNames[0].toLowerCase() != xpath");
+	//				// logger("strXpath = " + strXpath);
+	//			}
+	//			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~3~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	//			logger("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
+	//			logger("strXpathAttributesTemp = " + strXpathAttributesTemp);
+	//			logger("strXpath = " + strXpath);
+	//			logger("strXpathAttributes = " + strXpathAttributes);
+	//			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	//			// logger("elementFind strXpath = " + strXpath);
+	//			// logger("elementFind before loop strCurrentWindowHandle = " +
+	//			// strCurrentWindowHandle);
+	//			Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
+	//			// logger("elementFind arrHandles.length = " + arrHandles.length);
+	//			// logger("elementFind objWebDriver.getTitle = " +
+	//			// objWebDriver.getTitle());
+	//			for (int i = arrHandles.length - 1; i >= 0; i--) {
+	//				logger("elementFind arrHandles[i] = " + arrHandles[i].toString());
+	//
+	//			}
+	//			// if (arrHandles.length == 2) {
+	//			// logger("elementFind arrHandles[0] = " +arrHandles[0].toString());
+	//			// logger("elementFind arrHandles[1] = " +arrHandles[1].toString());
+	//			// }
+	//			//
+	//			// if (arrHandles.length == 1) {
+	//			// logger("elementFind arrHandles[0] = " +arrHandles[0].toString());
+	//			// }
+	//			for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0; intHandlesEach--) {
+	//
+	//				strWindowHandle = arrHandles[intHandlesEach].toString();
+	//				long lngStartTimeSwitchTo = System.currentTimeMillis();
+	//				// objWebDriver.switchTo().window(strWindowHandle);
+	//				// logger("elementFind intHandlesEach = " + intHandlesEach);
+	//				// logger("elementFind lngStartTimeSwitchTo = " +
+	//				// (System.currentTimeMillis() - lngStartTimeSwitchTo));
+	//				// logger("elementFind objStep.get(\"inFrame\") = " +
+	//				// Integer.parseInt(objStep.get("intFrame").toString()));
+	//				// logger("elementFind strCurrentWindowHandle = " +
+	//				// strCurrentWindowHandle);
+	//				// logger("elementFind strWindowHandle = " + strWindowHandle);
+	//				if (!strCurrentWindowHandle.equals(strWindowHandle)) {
+	//					blnSwitch = true;
+	//				} else {
+	//					if (Integer.parseInt(objStep.get("intFrame").toString()) >= 0) {
+	//						blnSwitch = true;
+	//					}
+	//				}
+	//				if (blnSwitch == true) {
+	//					logger("elementFind objWebDriver.switchTo().window(strWindowHandle) = " + strWindowHandle);
+	//					objWebDriver.switchTo().window(strWindowHandle);
+	//					// logger("elementFind Switched = " +
+	//					// (System.currentTimeMillis() - lngStartTimeSwitchTo));
+	//					logger("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
+	//					objStep.put("intFrame", -1);
+	//					objWebDriver.manage().window().maximize();
+	//				}
+	//				// }
+	//				// if (strCurrentWindowHandle.equals(strWindowHandle) ||
+	//				// Integer.parseInt(objStep.get("intFrame").toString()) < 0) {
+	//				// logger("elementFind No Switch = " +
+	//				// (System.currentTimeMillis() - lngStartTimeSwitchTo));
+	//				//
+	//				// } else {
+	//				// objWebDriver.switchTo().window(strWindowHandle);
+	//				// logger("elementFind Switched = " +
+	//				// (System.currentTimeMillis() - lngStartTimeSwitchTo));
+	//				// objStep.put("intFrame", -1);
+	//				// // blnSwitchWindow = true;
+	//				// }
+	//				long intBrowserInnerWidth = 0;
+	//				long intBrowserInnerHeight = 0;
+	//				try {
+	//					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
+	//					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
+	//					// logger("intBrowserInnerWidth = " + intBrowserInnerWidth);
+	//					// logger("intBrowserInnerHeight = " +
+	//					// intBrowserInnerHeight);
+	//				} catch (WebDriverException e) {
+	//					throw new ElementNotFoundException("WebDriverException returned");
+	//				} catch (Exception e) {
+	//					// logger("BodyoffsetHeight = " + e.toString());
+	//					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetWidth;");
+	//					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetHeight;");
+	//					// logger("BodyoffsetWidth = " + intBrowserInnerWidth);
+	//					// logger("BodyoffsetHeight = " + intBrowserInnerHeight);
+	//				}
+	//				objStep.put("intBrowserInnerWidth", intBrowserInnerWidth);
+	//				objStep.put("intBrowserInnerHeight", intBrowserInnerHeight);
+	//				long lngStartTimegetElementsByTagName = System.currentTimeMillis();
+	//				List<WebElement> objCollectionJS = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
+	//				// logger("elementFind objCollectionJS = " +
+	//				// objCollectionJS.size() + " strTagName = " + strTagName +
+	//				// " MillisecondsWaited = " + (System.currentTimeMillis() -
+	//				// lngStartTimegetElementsByTagName));
+	//				if (objCollectionJS.size() > 0) {
+	//					long lngStartTimeByXpath = System.currentTimeMillis();
+	//					objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
+	//					// logger("elementFind objWebElementCollection.size = " +
+	//					// objWebElementCollection.size() +
+	//					// " MillisecondsWaitedXpath = " +
+	//					// (System.currentTimeMillis() - lngStartTimeByXpath));
+	//				}
+	//				if (objWebElementCollection.size() == 0) {
+	//					long lngStartTimeFrameCollection = System.currentTimeMillis();
+	//					// objFrameCollection =
+	//					// objWebDriver.findElements(By.tagName("frame"));
+	//					objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
+	//					// logger("elementFind Frames = " +
+	//					// objFrameCollection.size() + " MillisecondsWaitedFrame " +
+	//					// (System.currentTimeMillis() -
+	//					// lngStartTimeFrameCollection));
+	//					objFrameCollection.addAll((List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('iframe');"));
+	//					// objFrameCollection.addAll(objWebDriver.findElements(By.tagName("iframe")));
+	//					intFramesCount = objFrameCollection.size();
+	//					// logger("elementFind objFrameCollection = " +
+	//					// intFramesCount + " MillisecondsWaitedIframe " +
+	//					// (System.currentTimeMillis() -
+	//					// lngStartTimeFrameCollection));
+	//					// if (intFramesCount >= 1) {intFramesCount = intFramesCount
+	//					// + 1;
+	//					logger("elementFind intFramesCount = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+	//					// }
+	//					for (int intFramesEach = 0; intFramesEach < intFramesCount; intFramesEach++) {
+	//						logger("elementFind intFramesEach = " + intFramesEach);
+	//						// if (intFramesEach >= 0) {
+	//						long lngStartTimeSwitchToFrame = System.currentTimeMillis();
+	//						objWebDriver.switchTo().defaultContent();
+	//						objWebDriver.switchTo().frame(objFrameCollection.get(intFramesEach));
+	//						objStep.put("intFrame", intFramesEach);
+	//						logger("elementFind frames objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeSwitchToFrame));
+	//						// }
+	//						long lngStartTimegetElementsByTagName2 = System.currentTimeMillis();
+	//						List<WebElement> objCollectionJS2 = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
+	//						logger("elementFind objCollectionJS2 = " + objCollectionJS2.size() + " strTagName = " + strTagName + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName2));
+	//						// long lngStartTimegetElementsByXpath =
+	//						// System.currentTimeMillis();
+	//						// List<WebElement> objCollectionJS = (List<WebElement>)
+	//						// ((JavascriptExecutor)
+	//						// objWebDriver).executeScript("return document.getElements(By.xpath('"
+	//						// + strXpath + "');");
+	//						// logger("elementFind objCollectionJS = " +
+	//						// objCollectionJS.size() + " " +
+	//						// (System.currentTimeMillis() -
+	//						// lngStartTimegetElementsByXpath));
+	//						// jse.executeScript("document.getElement(By.xpath(\"//div[@class='btnContr']/input[@onclick='return cancel();']\")");
+	//						// long lngStartTimeTagName =
+	//						// System.currentTimeMillis();
+	//						// objTagNameCollection =
+	//						// objWebDriver.findElements(By.tagName(strTagName));
+	//						// logger("elementFind objWebElementCollection.size = "
+	//						// + objTagNameCollection.size() +
+	//						// " MillisecondsWaitedTagName = " +
+	//						// (System.currentTimeMillis() - lngStartTimeTagName));
+	//						// if (objCollectionJS.size() > 0) {
+	//						// long lngStartTimeByTagNameByXpath =
+	//						// System.currentTimeMillis();
+	//						// List<WebElement>
+	//						// objWebElementCollectionByTagNameByXpath =
+	//						// objCollectionJS.get(0).findElements(By.xpath(strXpath));
+	//						// logger("elementFind objWebElementCollectionByTagNameByXpath.size = "
+	//						// + objWebElementCollectionByTagNameByXpath.size() +
+	//						// " MillisecondsWaitedTagName = " +
+	//						// (System.currentTimeMillis() -
+	//						// lngStartTimeByTagNameByXpath));
+	//						// }
+	//						// if (objCollectionJS.size() > 0) {
+	//						//
+	//						// JavascriptExecutor objJavascriptExecutor = null;
+	//						// objJavascriptExecutor = (JavascriptExecutor)
+	//						// objWebDriver;
+	//						// long lngStartTimeJS = System.currentTimeMillis();
+	//						// logger("JS value = " +
+	//						// objJavascriptExecutor.executeScript("return arguments[0].value;",
+	//						// objCollectionJS.get(0)) + " MillisecondsWaited = " +
+	//						// (System.currentTimeMillis() - lngStartTimeJS));
+	//						// lngStartTimeJS = System.currentTimeMillis();
+	//						// logger("JS innerText = " +
+	//						// objJavascriptExecutor.executeScript("return arguments[0].innerText;",
+	//						// objCollectionJS.get(0)) + " MillisecondsWaited = " +
+	//						// (System.currentTimeMillis() - lngStartTimeJS));
+	//						// lngStartTimeJS = System.currentTimeMillis();
+	//						// logger("JS innerHTML = " +
+	//						// objJavascriptExecutor.executeScript("return arguments[0].innerHTML;",
+	//						// objCollectionJS.get(0)) + " MillisecondsWaited = " +
+	//						// (System.currentTimeMillis() - lngStartTimeJS));
+	//						// lngStartTimeJS = System.currentTimeMillis();
+	//						// logger("JS outerHTML = " +
+	//						// objJavascriptExecutor.executeScript("return arguments[0].outerHTML;",
+	//						// objCollectionJS.get(0)) + " MillisecondsWaited = " +
+	//						// (System.currentTimeMillis() - lngStartTimeJS));
+	//						//
+	//						// }
+	//						if (objCollectionJS2.size() > 0) {
+	//							long lngStartTimeByXpath = System.currentTimeMillis();
+	//							objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
+	//							// logger("elementFind objWebElementCollection.size = "
+	//							// + objWebElementCollection.size() +
+	//							// " MillisecondsWaitedXpath = " +
+	//							// (System.currentTimeMillis() -
+	//							// lngStartTimeByXpath));
+	//						}
+	//						if (objWebElementCollection.size() > 0) {
+	//							blnFound = true;
+	//							break;
+	//						}
+	//					}
+	//				} else if (objWebElementCollection.size() == 1) {
+	//					break;
+	//				} else {
+	//				}// the end of if (objWebElementCollection.size() == 0) {
+	//			}// the end of for win Handles
+	//			switch (objWebElementCollection.size()) {
+	//			case 0:
+	//				// logger("elementFind - Element properties did not return an element, try refining attributes.");
+	//				throw new ElementNotFoundException("Element properties did not return an element, try refining attributes");
+	//			case 1:
+	//				blnFound = true;
+	//				// logger(objWebElementCollection.get(0));
+	//				objWebElement = objWebElementCollection.get(0);
+	//				// long lngStartTimeGetXpath = System.currentTimeMillis();
+	//				// logger("xpath = " + getElementXPath(objWebDriver,
+	//				// objWebElement) + " MillisecondsWaitedXpath = " +
+	//				// (System.currentTimeMillis() - lngStartTimeGetXpath));
+	//				// TODO add title and url to each element found in the objStep
+	//				// json
+	//				// JavascriptExecutor js = (JavascriptExecutor) objWebDriver;
+	//				// String strTitle = (String)
+	//				// js.executeScript("return document.title");
+	//				// logger("main JavascriptExecutor strTitle  = " + strTitle +
+	//				// " intMillisecondsWaited = " + (System.currentTimeMillis() -
+	//				// lngStartTimedocumenttitle));
+	//				// logger("strCurrentWindowHandle = " +
+	//				// objStep.get("strCurrentWindowHandle").toString());
+	//				// logger("objWebDriver.getWindowHandle = " +
+	//				// objWebDriver.getWindowHandle());
+	//				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
+	//				if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
+	//					if (objStep.get("strType").toString().toLowerCase().length() == 0) {
+	//						objStep.put("strType", objWebElement.getAttribute("type"));
+	//					}
+	//					objStep.put("strTagType", "input_" + objStep.get("strType").toString());
+	//				} else {
+	//					objStep.put("strTagType", objStep.get("strTagName").toString());
+	//				}
+	//				return objWebElement;
+	//			default:
+	//				if (strIndexKeyword.equals("<last>")) {
+	//					objWebElement = objWebElementCollection.get(objWebElementCollection.size() - 1);
+	//					blnFound = true;
+	//					objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
+	//					if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
+	//						if (objStep.get("strType").toString().toLowerCase().length() == 0) {
+	//							objStep.put("strType", objWebElement.getAttribute("type"));
+	//						}
+	//						objStep.put("strTagType", "input_" + objStep.get("strType").toString());
+	//					} else {
+	//						objStep.put("strTagType", objStep.get("strTagName").toString());
+	//					}
+	//					return objWebElement;
+	//				} else if (strIndexKeyword.equals("<random>")) {
+	//					int intRandomElement = RandomNumberRange(0, objWebElementCollection.size() - 1);
+	//					objWebElement = objWebElementCollection.get(intRandomElement);
+	//					blnFound = true;
+	//					objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
+	//					if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
+	//						if (objStep.get("strType").toString().toLowerCase().length() == 0) {
+	//							objStep.put("strType", objWebElement.getAttribute("type"));
+	//						}
+	//						objStep.put("strTagType", "input_" + objStep.get("strType").toString());
+	//					} else {
+	//						objStep.put("strTagType", objStep.get("strTagName").toString());
+	//					}
+	//					return objWebElement;
+	//				} else {
+	//					logger("elementFind - Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
+	//					throw new MultipleElementsFoundException(objWebElementCollection.size() + " elements found. Element properties did not return an element, try refining attributes");
+	//				}
+	//			}// the end of switch (objWebElementCollection.size())
+	//		} catch (WebDriverException e) {
+	//			throw new ElementNotFoundException("elementFind " + e.toString());
+	//		} finally {
+	//			logger("elementFind finally strXpath = " + strXpath + " blnFound = " + blnFound + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementFind));
+	//			logger("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
+	//			logger("elementFind objWebDriver.getCurrentUrl = " + objWebDriver.getCurrentUrl());
+	//			logger("elementFind objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
+	//		}
+	//	}// the end of elementFind
+
+	//	@SuppressWarnings({ "unchecked" })
+	//	public static WebElement elementFindWithCallToSearchFrame(JSONObject objStep, WebDriver objWebDriver) throws ElementNotFoundException, MultipleElementsFoundException {
+	//		long lngStartTimeElementFind = System.currentTimeMillis();
+	//		// objWebDriver.manage().timeouts().implicitlyWait(10,
+	//		// TimeUnit.NANOSECONDS);
+	//		Boolean blnSwitch = false;
+	//		Boolean blnFound = false;
+	//		String strXpath = "";
+	//		String strIndexKeyword = "";
+	//		int intAttributeEach = 0;
+	//		try {
+	//			int intFramesCount = 0;
+	//			String strTagName;
+	//			String strIndex = "";
+	//			WebElement objWebElement = null;
+	//			List<WebElement> objWebElementCollection = new ArrayList<WebElement>();
+	//			List<WebElement> objFrameCollection = new ArrayList<WebElement>();
+	//			List<WebElement> objTagNameCollection = new ArrayList<WebElement>();
+	//			String strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
+	//			strTagName = objStep.get("strTagName").toString().toLowerCase();
+	//			String arrAttributeNames[] = objStep.get("strAttributeNames").toString().split("\\|", -1);
+	//			String arrAttributeValues[] = objStep.get("strAttributeValues").toString().split("\\|", -1);
+	//			String strXpathAttributesTemp = "";
+	//			String strXpathAttributes = "";
+	//			String strWindowHandle = "";
+	//			if (strTagName.toLowerCase().equals("alert")) {
+	//				// TODO elementFind finish alert handling --- will need to
+	//				// consider issue where objWebDriver no longer exists maybe
+	//				// place this after setting window
+	//				objStep.put("strTagType", "alert");
+	//				return isAlertPresent2(objWebDriver);
+	//			}
+	//			if (strTagName.toLowerCase().equals("title")) {
+	//				objStep.put("strTagType", "title");
+	//				return null;
+	//			}
+	//			for (intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
+	//				strXpathAttributesTemp = "";
+	//				switch (arrAttributeNames[intAttributeEach].toLowerCase()) {
+	//				case "xpath":
+	//					strXpathAttributesTemp = arrAttributeValues[intAttributeEach];
+	//					break;
+	//				case "index":
+	//					if (arrAttributeValues[intAttributeEach].equals("<last>")) {
+	//						strIndex = "";
+	//						strIndexKeyword = "<last>";
+	//					} else if (arrAttributeValues[intAttributeEach].equals("<random>")) {
+	//						strIndex = "";
+	//						strIndexKeyword = "<random>";
+	//					} else {
+	//						strIndex = "[" + arrAttributeValues[intAttributeEach] + "]";
+	//					}
+	//					break;
+	//				case "text":
+	//					if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("re:")) {
+	//						strXpathAttributesTemp = "contains(text()" + ", '" + arrAttributeValues[intAttributeEach].substring(3) + "')";
+	//					} else {
+	//						strXpathAttributesTemp = "text()='" + arrAttributeValues[intAttributeEach] + "' ";
+	//					}
+	//					break;
+	//				default:
+	//					// By.xpath("//td[contains(text(),'youruser')]") //here user
+	//					// text is case sensitive
+	//					// By.xpath("//td[contains(lower-case(text()),'youruser')]")
+	//					// //to handle case sensitivity. Here user is not case
+	//					// sensitive
+	//					// (//input[contains(translate(@name,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+	//					// 'USER') and @type='text'])
+	//					if (arrAttributeNames[intAttributeEach].toLowerCase().equals("type")) {
+	//						objStep.put("strType", arrAttributeValues[intAttributeEach]);
+	//					}
+	//					if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("re:")) {
+	//						// strXpathAttributesTemp = "contains(@" +
+	//						// arrAttributeNames[intAttributeEach] + ", '" +
+	//						// arrAttributeValues[intAttributeEach].substring(3) +
+	//						// "')";
+	//						// strXpathAttributesTemp = "contains(lower-case(@" +
+	//						// arrAttributeNames[intAttributeEach] + "), '" +
+	//						// arrAttributeValues[intAttributeEach].substring(3).toLowerCase()
+	//						// + "')";
+	//						strXpathAttributesTemp = "contains(translate(@" + arrAttributeNames[intAttributeEach] + ",'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), '" + arrAttributeValues[intAttributeEach].substring(3).toLowerCase() + "')";
+	//					} else {
+	//						strXpathAttributesTemp = "@" + arrAttributeNames[intAttributeEach] + "='" + arrAttributeValues[intAttributeEach] + "'";
+	//					}
+	//					break;
+	//				}
+	//				logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~1~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	//				logger("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
+	//				logger("strXpathAttributesTemp = " + strXpathAttributesTemp);
+	//				// logger("strXpath = " + strXpath);
+	//				if (arrAttributeNames[0].toLowerCase().equals("xpath")) {
+	//				} else {
+	//					if (strXpathAttributesTemp.trim().length() != 0) {
+	//						if (strXpathAttributes.trim().length() == 0) {
+	//							strXpathAttributes = strXpathAttributesTemp;
+	//						} else {
+	//							strXpathAttributes = strXpathAttributes + " and " + strXpathAttributesTemp;
+	//						}
+	//					}
+	//				}
+	//			}// for (int intAttributeEach
+	//			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~2~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	//			logger("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
+	//			logger("strXpathAttributesTemp = " + strXpathAttributesTemp);
+	//			logger("strXpathAttributes = " + strXpathAttributes);
+	//			// logger("strXpath = " + strXpath);
+	//			if (arrAttributeNames[0].toLowerCase().equals("xpath")) {
+	//				strXpath = strXpathAttributesTemp;
+	//				// logger("(arrAttributeNames[0].toLowerCase() == xpath");
+	//				// logger("strXpath = " + strXpath);
+	//			} else {
+	//				if (strXpathAttributes.trim().length() == 0) {
+	//					strXpathAttributes = "";
+	//				} else {
+	//					strXpathAttributes = "[" + strXpathAttributes + "]";
+	//				}
+	//				strXpath = "(//" + strTagName + strXpathAttributes + ")" + strIndex;
+	//				// logger("(arrAttributeNames[0].toLowerCase() != xpath");
+	//				// logger("strXpath = " + strXpath);
+	//			}
+	//			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~3~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	//			logger("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
+	//			logger("strXpathAttributesTemp = " + strXpathAttributesTemp);
+	//			logger("strXpath = " + strXpath);
+	//			logger("strXpathAttributes = " + strXpathAttributes);
+	//			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	//			// logger("elementFind strXpath = " + strXpath);
+	//			// logger("elementFind before loop strCurrentWindowHandle = " +
+	//			// strCurrentWindowHandle);
+	//			Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
+	//			// logger("elementFind arrHandles.length = " + arrHandles.length);
+	//			// logger("elementFind objWebDriver.getTitle = " +
+	//			// objWebDriver.getTitle());
+	//			for (int i = arrHandles.length - 1; i >= 0; i--) {
+	//				logger("elementFind arrHandles[i] = " + arrHandles[i].toString());
+	//
+	//			}
+	//			// if (arrHandles.length == 2) {
+	//			// logger("elementFind arrHandles[0] = " +arrHandles[0].toString());
+	//			// logger("elementFind arrHandles[1] = " +arrHandles[1].toString());
+	//			// }
+	//			//
+	//			// if (arrHandles.length == 1) {
+	//			// logger("elementFind arrHandles[0] = " +arrHandles[0].toString());
+	//			// }
+	//			for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0; intHandlesEach--) {
+	//
+	//				strWindowHandle = arrHandles[intHandlesEach].toString();
+	//				long lngStartTimeSwitchTo = System.currentTimeMillis();
+	//				// objWebDriver.switchTo().window(strWindowHandle);
+	//				// logger("elementFind intHandlesEach = " + intHandlesEach);
+	//				// logger("elementFind lngStartTimeSwitchTo = " +
+	//				// (System.currentTimeMillis() - lngStartTimeSwitchTo));
+	//				// logger("elementFind objStep.get(\"inFrame\") = " +
+	//				// Integer.parseInt(objStep.get("intFrame").toString()));
+	//				// logger("elementFind strCurrentWindowHandle = " +
+	//				// strCurrentWindowHandle);
+	//				// logger("elementFind strWindowHandle = " + strWindowHandle);
+	//				if (!strCurrentWindowHandle.equals(strWindowHandle)) {
+	//					blnSwitch = true;
+	//				} else {
+	//					if (Integer.parseInt(objStep.get("intFrame").toString()) >= 0) {
+	//						blnSwitch = true;
+	//					}
+	//				}
+	//				if (blnSwitch == true) {
+	//					logger("elementFind objWebDriver.switchTo().window(strWindowHandle) = " + strWindowHandle);
+	//					objWebDriver.switchTo().window(strWindowHandle);
+	//					// logger("elementFind Switched = " +
+	//					// (System.currentTimeMillis() - lngStartTimeSwitchTo));
+	//					logger("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
+	//					objStep.put("intFrame", -1);
+	//					objWebDriver.manage().window().maximize();
+	//				}
+	//
+	//				List<Integer> routeOriginal = new ArrayList<Integer>();
+	//				//routeOriginal.add(5);
+	//
+	//				logger("elementFind routeOriginal = " + routeOriginal);
+	//				logger("elementFind routeOriginal.size() = " + routeOriginal.size());
+	//
+	//				//List<Integer> routeOriginal = (1,2,3);
+	//				//Arrays.asList("A", "B", "C")
+	//				//routeOriginal.add(1);
+	//				//((Object) routeOriginal).asList(1,2,3);  
+	//				logger("elementFind routeOriginal.add(0) = " + routeOriginal);
+	//				objWebElement = searchFrames(objStep, objWebDriver, objWebElement, routeOriginal);
+	//
+	//				// }
+	//				// if (strCurrentWindowHandle.equals(strWindowHandle) ||
+	//				// Integer.parseInt(objStep.get("intFrame").toString()) < 0) {
+	//				// logger("elementFind No Switch = " +
+	//				// (System.currentTimeMillis() - lngStartTimeSwitchTo));
+	//				//
+	//				// } else {
+	//				// objWebDriver.switchTo().window(strWindowHandle);
+	//				// logger("elementFind Switched = " +
+	//				// (System.currentTimeMillis() - lngStartTimeSwitchTo));
+	//				// objStep.put("intFrame", -1);
+	//				// // blnSwitchWindow = true;
+	//				// }
+	//				long intBrowserInnerWidth = 0;
+	//				long intBrowserInnerHeight = 0;
+	//				try {
+	//					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
+	//					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
+	//					// logger("intBrowserInnerWidth = " + intBrowserInnerWidth);
+	//					// logger("intBrowserInnerHeight = " +
+	//					// intBrowserInnerHeight);
+	//				} catch (WebDriverException e) {
+	//					throw new ElementNotFoundException("WebDriverException returned");
+	//				} catch (Exception e) {
+	//					// logger("BodyoffsetHeight = " + e.toString());
+	//					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetWidth;");
+	//					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetHeight;");
+	//					// logger("BodyoffsetWidth = " + intBrowserInnerWidth);
+	//					// logger("BodyoffsetHeight = " + intBrowserInnerHeight);
+	//				}
+	//				objStep.put("intBrowserInnerWidth", intBrowserInnerWidth);
+	//				objStep.put("intBrowserInnerHeight", intBrowserInnerHeight);
+	//				long lngStartTimegetElementsByTagName = System.currentTimeMillis();
+	//				List<WebElement> objCollectionJS = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
+	//				// logger("elementFind objCollectionJS = " +
+	//				// objCollectionJS.size() + " strTagName = " + strTagName +
+	//				// " MillisecondsWaited = " + (System.currentTimeMillis() -
+	//				// lngStartTimegetElementsByTagName));
+	//				if (objCollectionJS.size() > 0) {
+	//					long lngStartTimeByXpath = System.currentTimeMillis();
+	//					objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
+	//					// logger("elementFind objWebElementCollection.size = " +
+	//					// objWebElementCollection.size() +
+	//					// " MillisecondsWaitedXpath = " +
+	//					// (System.currentTimeMillis() - lngStartTimeByXpath));
+	//				}
+	//				if (objWebElementCollection.size() == 0) {
+	//					long lngStartTimeFrameCollection = System.currentTimeMillis();
+	//					// objFrameCollection =
+	//					// objWebDriver.findElements(By.tagName("frame"));
+	//					objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
+	//					// logger("elementFind Frames = " +
+	//					// objFrameCollection.size() + " MillisecondsWaitedFrame " +
+	//					// (System.currentTimeMillis() -
+	//					// lngStartTimeFrameCollection));
+	//					objFrameCollection.addAll((List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('iframe');"));
+	//					// objFrameCollection.addAll(objWebDriver.findElements(By.tagName("iframe")));
+	//					intFramesCount = objFrameCollection.size();
+	//					// logger("elementFind objFrameCollection = " +
+	//					// intFramesCount + " MillisecondsWaitedIframe " +
+	//					// (System.currentTimeMillis() -
+	//					// lngStartTimeFrameCollection));
+	//					// if (intFramesCount >= 1) {intFramesCount = intFramesCount
+	//					// + 1;
+	//					logger("elementFind intFramesCount = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
+	//					// }
+	//					for (int intFramesEach = 0; intFramesEach < intFramesCount; intFramesEach++) {
+	//						logger("elementFind intFramesEach = " + intFramesEach);
+	//						// if (intFramesEach >= 0) {
+	//						long lngStartTimeSwitchToFrame = System.currentTimeMillis();
+	//						objWebDriver.switchTo().defaultContent();
+	//						objWebDriver.switchTo().frame(objFrameCollection.get(intFramesEach));
+	//						objStep.put("intFrame", intFramesEach);
+	//						logger("elementFind frames objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeSwitchToFrame));
+	//						// }
+	//						long lngStartTimegetElementsByTagName2 = System.currentTimeMillis();
+	//						List<WebElement> objCollectionJS2 = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
+	//						logger("elementFind objCollectionJS2 = " + objCollectionJS2.size() + " strTagName = " + strTagName + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName2));
+	//						// long lngStartTimegetElementsByXpath =
+	//						// System.currentTimeMillis();
+	//						// List<WebElement> objCollectionJS = (List<WebElement>)
+	//						// ((JavascriptExecutor)
+	//						// objWebDriver).executeScript("return document.getElements(By.xpath('"
+	//						// + strXpath + "');");
+	//						// logger("elementFind objCollectionJS = " +
+	//						// objCollectionJS.size() + " " +
+	//						// (System.currentTimeMillis() -
+	//						// lngStartTimegetElementsByXpath));
+	//						// jse.executeScript("document.getElement(By.xpath(\"//div[@class='btnContr']/input[@onclick='return cancel();']\")");
+	//						// long lngStartTimeTagName =
+	//						// System.currentTimeMillis();
+	//						// objTagNameCollection =
+	//						// objWebDriver.findElements(By.tagName(strTagName));
+	//						// logger("elementFind objWebElementCollection.size = "
+	//						// + objTagNameCollection.size() +
+	//						// " MillisecondsWaitedTagName = " +
+	//						// (System.currentTimeMillis() - lngStartTimeTagName));
+	//						// if (objCollectionJS.size() > 0) {
+	//						// long lngStartTimeByTagNameByXpath =
+	//						// System.currentTimeMillis();
+	//						// List<WebElement>
+	//						// objWebElementCollectionByTagNameByXpath =
+	//						// objCollectionJS.get(0).findElements(By.xpath(strXpath));
+	//						// logger("elementFind objWebElementCollectionByTagNameByXpath.size = "
+	//						// + objWebElementCollectionByTagNameByXpath.size() +
+	//						// " MillisecondsWaitedTagName = " +
+	//						// (System.currentTimeMillis() -
+	//						// lngStartTimeByTagNameByXpath));
+	//						// }
+	//						// if (objCollectionJS.size() > 0) {
+	//						//
+	//						// JavascriptExecutor objJavascriptExecutor = null;
+	//						// objJavascriptExecutor = (JavascriptExecutor)
+	//						// objWebDriver;
+	//						// long lngStartTimeJS = System.currentTimeMillis();
+	//						// logger("JS value = " +
+	//						// objJavascriptExecutor.executeScript("return arguments[0].value;",
+	//						// objCollectionJS.get(0)) + " MillisecondsWaited = " +
+	//						// (System.currentTimeMillis() - lngStartTimeJS));
+	//						// lngStartTimeJS = System.currentTimeMillis();
+	//						// logger("JS innerText = " +
+	//						// objJavascriptExecutor.executeScript("return arguments[0].innerText;",
+	//						// objCollectionJS.get(0)) + " MillisecondsWaited = " +
+	//						// (System.currentTimeMillis() - lngStartTimeJS));
+	//						// lngStartTimeJS = System.currentTimeMillis();
+	//						// logger("JS innerHTML = " +
+	//						// objJavascriptExecutor.executeScript("return arguments[0].innerHTML;",
+	//						// objCollectionJS.get(0)) + " MillisecondsWaited = " +
+	//						// (System.currentTimeMillis() - lngStartTimeJS));
+	//						// lngStartTimeJS = System.currentTimeMillis();
+	//						// logger("JS outerHTML = " +
+	//						// objJavascriptExecutor.executeScript("return arguments[0].outerHTML;",
+	//						// objCollectionJS.get(0)) + " MillisecondsWaited = " +
+	//						// (System.currentTimeMillis() - lngStartTimeJS));
+	//						//
+	//						// }
+	//						if (objCollectionJS2.size() > 0) {
+	//							long lngStartTimeByXpath = System.currentTimeMillis();
+	//							objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
+	//							// logger("elementFind objWebElementCollection.size = "
+	//							// + objWebElementCollection.size() +
+	//							// " MillisecondsWaitedXpath = " +
+	//							// (System.currentTimeMillis() -
+	//							// lngStartTimeByXpath));
+	//						}
+	//						if (objWebElementCollection.size() > 0) {
+	//							blnFound = true;
+	//							break;
+	//						}
+	//					}
+	//				} else if (objWebElementCollection.size() == 1) {
+	//					break;
+	//				} else {
+	//				}// the end of if (objWebElementCollection.size() == 0) {
+	//			}// the end of for win Handles
+	//			switch (objWebElementCollection.size()) {
+	//			case 0:
+	//				// logger("elementFind - Element properties did not return an element, try refining attributes.");
+	//				throw new ElementNotFoundException("Element properties did not return an element, try refining attributes");
+	//			case 1:
+	//				blnFound = true;
+	//				// logger(objWebElementCollection.get(0));
+	//				objWebElement = objWebElementCollection.get(0);
+	//				// long lngStartTimeGetXpath = System.currentTimeMillis();
+	//				// logger("xpath = " + getElementXPath(objWebDriver,
+	//				// objWebElement) + " MillisecondsWaitedXpath = " +
+	//				// (System.currentTimeMillis() - lngStartTimeGetXpath));
+	//				// TODO add title and url to each element found in the objStep
+	//				// json
+	//				// JavascriptExecutor js = (JavascriptExecutor) objWebDriver;
+	//				// String strTitle = (String)
+	//				// js.executeScript("return document.title");
+	//				// logger("main JavascriptExecutor strTitle  = " + strTitle +
+	//				// " intMillisecondsWaited = " + (System.currentTimeMillis() -
+	//				// lngStartTimedocumenttitle));
+	//				// logger("strCurrentWindowHandle = " +
+	//				// objStep.get("strCurrentWindowHandle").toString());
+	//				// logger("objWebDriver.getWindowHandle = " +
+	//				// objWebDriver.getWindowHandle());
+	//				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
+	//				if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
+	//					if (objStep.get("strType").toString().toLowerCase().length() == 0) {
+	//						objStep.put("strType", objWebElement.getAttribute("type"));
+	//					}
+	//					objStep.put("strTagType", "input_" + objStep.get("strType").toString());
+	//				} else {
+	//					objStep.put("strTagType", objStep.get("strTagName").toString());
+	//				}
+	//				return objWebElement;
+	//			default:
+	//				if (strIndexKeyword.equals("<last>")) {
+	//					objWebElement = objWebElementCollection.get(objWebElementCollection.size() - 1);
+	//					blnFound = true;
+	//					objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
+	//					if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
+	//						if (objStep.get("strType").toString().toLowerCase().length() == 0) {
+	//							objStep.put("strType", objWebElement.getAttribute("type"));
+	//						}
+	//						objStep.put("strTagType", "input_" + objStep.get("strType").toString());
+	//					} else {
+	//						objStep.put("strTagType", objStep.get("strTagName").toString());
+	//					}
+	//					return objWebElement;
+	//				} else if (strIndexKeyword.equals("<random>")) {
+	//					int intRandomElement = RandomNumberRange(0, objWebElementCollection.size() - 1);
+	//					objWebElement = objWebElementCollection.get(intRandomElement);
+	//					blnFound = true;
+	//					objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
+	//					if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
+	//						if (objStep.get("strType").toString().toLowerCase().length() == 0) {
+	//							objStep.put("strType", objWebElement.getAttribute("type"));
+	//						}
+	//						objStep.put("strTagType", "input_" + objStep.get("strType").toString());
+	//					} else {
+	//						objStep.put("strTagType", objStep.get("strTagName").toString());
+	//					}
+	//					return objWebElement;
+	//				} else {
+	//					logger("elementFind - Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
+	//					throw new MultipleElementsFoundException(objWebElementCollection.size() + " elements found. Element properties did not return an element, try refining attributes");
+	//				}
+	//			}// the end of switch (objWebElementCollection.size())
+	//		} catch (WebDriverException e) {
+	//			throw new ElementNotFoundException("elementFind " + e.toString());
+	//		} catch (Exception e) {
+	//			logger("elementFind Exception = " + e.toString());
+	//			return null;
+	//		} finally {
+	//			logger("elementFind finally strXpath = " + strXpath + " blnFound = " + blnFound + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementFind));
+	//			logger("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
+	//			logger("elementFind objWebDriver.getCurrentUrl = " + objWebDriver.getCurrentUrl());
+	//			logger("elementFind objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
+	//		}
+	//
+	//	}// the end of elementFind
+
+	@SuppressWarnings({ "unchecked" })
 	public static WebElement elementFind(JSONObject objStep, WebDriver objWebDriver) throws ElementNotFoundException, MultipleElementsFoundException {
-		long lngStartTimeElementFind = System.currentTimeMillis();
-		// objWebDriver.manage().timeouts().implicitlyWait(10, TimeUnit.NANOSECONDS);
-		Boolean blnSwitch = false;
-		Boolean blnFound = false;
-		String strXpath = "";
-		String strIndexKeyword = "";
-		int intAttributeEach = 0;
-		try {
-			int intFramesCount = 0;
-			String strTagName;
-			String strIndex = "";
-			WebElement objWebElement;
-			List<WebElement> objWebElementCollection = new ArrayList<WebElement>();
-			List<WebElement> objFrameCollection = new ArrayList<WebElement>();
-			List<WebElement> objTagNameCollection = new ArrayList<WebElement>();
-			String strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
-			strTagName = objStep.get("strTagName").toString().toLowerCase();
-			String arrAttributeNames[] = objStep.get("strAttributeNames").toString().split("\\|", -1);
-			String arrAttributeValues[] = objStep.get("strAttributeValues").toString().split("\\|", -1);
-			String strXpathAttributesTemp = "";
-			String strXpathAttributes = "";
-			String strWindowHandle = "";
-			if (strTagName.toLowerCase().equals("alert")) {
-				// TODO elementFind finish alert handling --- will need to consider issue where objWebDriver no longer exists maybe place this after setting window
-				objStep.put("strTagType", "alert");
-				return isAlertPresent2(objWebDriver);
-			}
-			if (strTagName.toLowerCase().equals("title")) {
-				objStep.put("strTagType", "title");
-				return null;
-			}
-			for (intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
-				strXpathAttributesTemp = "";
-				switch (arrAttributeNames[intAttributeEach].toLowerCase()) {
-				case "xpath":
-					strXpathAttributesTemp = arrAttributeValues[intAttributeEach];
-					break;
-				case "index":
-					if (arrAttributeValues[intAttributeEach].equals("<last>")) {
-						strIndex = "";
-						strIndexKeyword = "<last>";
-					} else if (arrAttributeValues[intAttributeEach].equals("<random>")) {
-						strIndex = "";
-						strIndexKeyword = "<random>";
-					} else {
-						strIndex = "[" + arrAttributeValues[intAttributeEach] + "]";
-					}
-					break;
-				case "text":
-					if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("re:")) {
-						strXpathAttributesTemp = "contains(text()" + ", '" + arrAttributeValues[intAttributeEach].substring(3) + "')";
-					} else {
-						strXpathAttributesTemp = "text()='" + arrAttributeValues[intAttributeEach] + "' ";
-					}
-					break;
-				default:
-					// By.xpath("//td[contains(text(),'youruser')]") //here user text is case sensitive
-					// By.xpath("//td[contains(lower-case(text()),'youruser')]") //to handle case sensitivity. Here user is not case sensitive
-					// (//input[contains(translate(@name,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 'USER') and @type='text'])
-					if (arrAttributeNames[intAttributeEach].toLowerCase().equals("type")) {
-						objStep.put("strType", arrAttributeValues[intAttributeEach]);
-					}
-					if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("re:")) {
-						// strXpathAttributesTemp = "contains(@" + arrAttributeNames[intAttributeEach] + ", '" + arrAttributeValues[intAttributeEach].substring(3) + "')";
-						// strXpathAttributesTemp = "contains(lower-case(@" + arrAttributeNames[intAttributeEach] + "), '" + arrAttributeValues[intAttributeEach].substring(3).toLowerCase() + "')";
-						strXpathAttributesTemp = "contains(translate(@" + arrAttributeNames[intAttributeEach] + ",'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), '" + arrAttributeValues[intAttributeEach].substring(3).toLowerCase() + "')";
-					} else {
-						strXpathAttributesTemp = "@" + arrAttributeNames[intAttributeEach] + "='" + arrAttributeValues[intAttributeEach] + "'";
-					}
-					break;
-				}
-				logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~1~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-				logger("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
-				logger("strXpathAttributesTemp = " + strXpathAttributesTemp);
-				// logger("strXpath = " + strXpath);
-				if (arrAttributeNames[0].toLowerCase().equals("xpath")) {
-				} else {
-					if (strXpathAttributesTemp.trim().length() != 0) {
-						if (strXpathAttributes.trim().length() == 0) {
-							strXpathAttributes = strXpathAttributesTemp;
-						} else {
-							strXpathAttributes = strXpathAttributes + " and " + strXpathAttributesTemp;
-						}
-					}
-				}
-			}// for (int intAttributeEach
-			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~2~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			logger("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
-			logger("strXpathAttributesTemp = " + strXpathAttributesTemp);
-			logger("strXpathAttributes = " + strXpathAttributes);
-			// logger("strXpath = " + strXpath);
-			if (arrAttributeNames[0].toLowerCase().equals("xpath")) {
-				strXpath = strXpathAttributesTemp;
-				// logger("(arrAttributeNames[0].toLowerCase() == xpath");
-				// logger("strXpath = " + strXpath);
-			} else {
-				if (strXpathAttributes.trim().length() == 0) {
-					strXpathAttributes = "";
-				} else {
-					strXpathAttributes = "[" + strXpathAttributes + "]";
-				}
-				strXpath = "(//" + strTagName + strXpathAttributes + ")" + strIndex;
-				// logger("(arrAttributeNames[0].toLowerCase() != xpath");
-				// logger("strXpath = " + strXpath);
-			}
-			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~3~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			logger("arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
-			logger("strXpathAttributesTemp = " + strXpathAttributesTemp);
-			logger("strXpath = " + strXpath);
-			logger("strXpathAttributes = " + strXpathAttributes);
-			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~End~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			// logger("elementFind strXpath = " + strXpath);
-			// logger("elementFind before loop strCurrentWindowHandle = " + strCurrentWindowHandle);
-			Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
-			// logger("elementFind arrHandles.length = " + arrHandles.length);
-			for (int i = arrHandles.length - 1; i >= 0; i--) {
-				logger("elementFind arrHandles[i] = " + arrHandles[i].toString());
-			}
-			// if (arrHandles.length == 2) {
-			// logger("elementFind arrHandles[0] = " +arrHandles[0].toString());
-			// logger("elementFind arrHandles[1] = " +arrHandles[1].toString());
-			// }
-			//
-			// if (arrHandles.length == 1) {
-			// logger("elementFind arrHandles[0] = " +arrHandles[0].toString());
-			// }
-			for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0; intHandlesEach--) {
-				strWindowHandle = arrHandles[intHandlesEach].toString();
-				long lngStartTimeSwitchTo = System.currentTimeMillis();
-				// objWebDriver.switchTo().window(strWindowHandle);
-				// logger("elementFind intHandlesEach = " + intHandlesEach);
-				// logger("elementFind lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
-				// logger("elementFind objStep.get(\"inFrame\") = " + Integer.parseInt(objStep.get("intFrame").toString()));
-				// logger("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
-				// logger("elementFind strWindowHandle = " + strWindowHandle);
-				if (!strCurrentWindowHandle.equals(strWindowHandle)) {
-					blnSwitch = true;
-				} else {
-					if (Integer.parseInt(objStep.get("intFrame").toString()) >= 0) {
-						blnSwitch = true;
-					}
-				}
-				if (blnSwitch == true) {
-					objWebDriver.switchTo().window(strWindowHandle);
-					// logger("elementFind Switched = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
-					// logger("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
-					objStep.put("intFrame", -1);
-					objWebDriver.manage().window().maximize();
-				}
-				// }
-				// if (strCurrentWindowHandle.equals(strWindowHandle) ||
-				// Integer.parseInt(objStep.get("intFrame").toString()) < 0) {
-				// logger("elementFind No Switch = " +
-				// (System.currentTimeMillis() - lngStartTimeSwitchTo));
-				//
-				// } else {
-				// objWebDriver.switchTo().window(strWindowHandle);
-				// logger("elementFind Switched = " +
-				// (System.currentTimeMillis() - lngStartTimeSwitchTo));
-				// objStep.put("intFrame", -1);
-				// // blnSwitchWindow = true;
-				// }
-				long intBrowserInnerWidth = 0;
-				long intBrowserInnerHeight = 0;
-				try {
-					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
-					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
-					// logger("intBrowserInnerWidth = " + intBrowserInnerWidth);
-					// logger("intBrowserInnerHeight = " + intBrowserInnerHeight);
-				} catch (WebDriverException e) {
-					throw new ElementNotFoundException("WebDriverException returned");
-				} catch (Exception e) {
-					// logger("BodyoffsetHeight = " + e.toString());
-					intBrowserInnerWidth = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetWidth;");
-					intBrowserInnerHeight = (long) ((JavascriptExecutor) objWebDriver).executeScript("return document.body.offsetHeight;");
-					// logger("BodyoffsetWidth = " + intBrowserInnerWidth);
-					// logger("BodyoffsetHeight = " + intBrowserInnerHeight);
-				}
-				objStep.put("intBrowserInnerWidth", intBrowserInnerWidth);
-				objStep.put("intBrowserInnerHeight", intBrowserInnerHeight);
-				long lngStartTimegetElementsByTagName = System.currentTimeMillis();
-				List<WebElement> objCollectionJS = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
-				// logger("elementFind objCollectionJS = " + objCollectionJS.size() + " strTagName = " + strTagName + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName));
-				if (objCollectionJS.size() > 0) {
-					long lngStartTimeByXpath = System.currentTimeMillis();
-					objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
-					// logger("elementFind objWebElementCollection.size = " + objWebElementCollection.size() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeByXpath));
-				}
-				if (objWebElementCollection.size() == 0) {
-					long lngStartTimeFrameCollection = System.currentTimeMillis();
-					// objFrameCollection = objWebDriver.findElements(By.tagName("frame"));
-					objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
-					// logger("elementFind Frames = " + objFrameCollection.size() + " MillisecondsWaitedFrame " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
-					objFrameCollection.addAll((List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('iframe');"));
-					// objFrameCollection.addAll(objWebDriver.findElements(By.tagName("iframe")));
-					intFramesCount = objFrameCollection.size();
-					// logger("elementFind objFrameCollection = " + intFramesCount + " MillisecondsWaitedIframe " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
-					// if (intFramesCount >= 1) {intFramesCount = intFramesCount + 1;
-					// logger("elementFind objFrameCollection = " + intFramesCount + "  " + (System.currentTimeMillis() - lngStartTimeFrameCollection));
-					// }
-					for (int intFramesEach = 0; intFramesEach < intFramesCount; intFramesEach++) {
-						// logger("elementFind intFramesEach = " + intFramesEach);
-						// if (intFramesEach >= 0) {
-						long lngStartTimeSwitchToFrame = System.currentTimeMillis();
-						objWebDriver.switchTo().defaultContent();
-						objWebDriver.switchTo().frame(objFrameCollection.get(intFramesEach));
-						objStep.put("intFrame", intFramesEach);
-						logger("elementFind frames objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeSwitchToFrame));
-						// }
-						long lngStartTimegetElementsByTagName2 = System.currentTimeMillis();
-						List<WebElement> objCollectionJS2 = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
-						logger("elementFind objCollectionJS2 = " + objCollectionJS2.size() + " strTagName = " + strTagName + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName2));
-						// long lngStartTimegetElementsByXpath = System.currentTimeMillis();
-						// List<WebElement> objCollectionJS = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElements(By.xpath('" + strXpath + "');");
-						// logger("elementFind objCollectionJS = " + objCollectionJS.size() + " " + (System.currentTimeMillis() - lngStartTimegetElementsByXpath));
-						// jse.executeScript("document.getElement(By.xpath(\"//div[@class='btnContr']/input[@onclick='return cancel();']\")");
-						// long lngStartTimeTagName = System.currentTimeMillis();
-						// objTagNameCollection = objWebDriver.findElements(By.tagName(strTagName));
-						// logger("elementFind objWebElementCollection.size = " + objTagNameCollection.size() + " MillisecondsWaitedTagName = " + (System.currentTimeMillis() - lngStartTimeTagName));
-						// if (objCollectionJS.size() > 0) {
-						// long lngStartTimeByTagNameByXpath = System.currentTimeMillis();
-						// List<WebElement> objWebElementCollectionByTagNameByXpath = objCollectionJS.get(0).findElements(By.xpath(strXpath));
-						// logger("elementFind objWebElementCollectionByTagNameByXpath.size = " + objWebElementCollectionByTagNameByXpath.size() + " MillisecondsWaitedTagName = " + (System.currentTimeMillis() - lngStartTimeByTagNameByXpath));
-						// }
-						// if (objCollectionJS.size() > 0) {
-						//
-						// JavascriptExecutor objJavascriptExecutor = null;
-						// objJavascriptExecutor = (JavascriptExecutor) objWebDriver;
-						// long lngStartTimeJS = System.currentTimeMillis();
-						// logger("JS value = " + objJavascriptExecutor.executeScript("return arguments[0].value;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
-						// lngStartTimeJS = System.currentTimeMillis();
-						// logger("JS innerText = " + objJavascriptExecutor.executeScript("return arguments[0].innerText;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
-						// lngStartTimeJS = System.currentTimeMillis();
-						// logger("JS innerHTML = " + objJavascriptExecutor.executeScript("return arguments[0].innerHTML;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
-						// lngStartTimeJS = System.currentTimeMillis();
-						// logger("JS outerHTML = " + objJavascriptExecutor.executeScript("return arguments[0].outerHTML;", objCollectionJS.get(0)) + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeJS));
-						//
-						// }
-						if (objCollectionJS2.size() > 0) {
-							long lngStartTimeByXpath = System.currentTimeMillis();
-							objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
-							// logger("elementFind objWebElementCollection.size = " + objWebElementCollection.size() + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeByXpath));
-						}
-						if (objWebElementCollection.size() > 0) {
-							blnFound = true;
-							break;
-						}
-					}
-				} else if (objWebElementCollection.size() == 1) {
-					break;
-				} else {
-				}// the end of if (objWebElementCollection.size() == 0) {
-			}// the end of for win Handles
-			switch (objWebElementCollection.size()) {
-			case 0:
-				// logger("elementFind - Element properties did not return an element, try refining attributes.");
-				throw new ElementNotFoundException("Element properties did not return an element, try refining attributes");
-			case 1:
-				blnFound = true;
-				// logger(objWebElementCollection.get(0));
-				objWebElement = objWebElementCollection.get(0);
-				// long lngStartTimeGetXpath = System.currentTimeMillis();
-				// logger("xpath = " + getElementXPath(objWebDriver, objWebElement) + " MillisecondsWaitedXpath = " + (System.currentTimeMillis() - lngStartTimeGetXpath));
-				// TODO add title and url to each element found in the objStep json
-				// JavascriptExecutor js = (JavascriptExecutor) objWebDriver;
-				// String strTitle = (String) js.executeScript("return document.title");
-				// logger("main JavascriptExecutor strTitle  = " + strTitle + " intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimedocumenttitle));
-				// logger("strCurrentWindowHandle = " + objStep.get("strCurrentWindowHandle").toString());
-				// logger("objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
-				objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-				if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
-					if (objStep.get("strType").toString().toLowerCase().length() == 0) {
-						objStep.put("strType", objWebElement.getAttribute("type"));
-					}
-					objStep.put("strTagType", "input_" + objStep.get("strType").toString());
-				} else {
-					objStep.put("strTagType", objStep.get("strTagName").toString());
-				}
-				return objWebElement;
-			default:
-				if (strIndexKeyword.equals("<last>")) {
-					objWebElement = objWebElementCollection.get(objWebElementCollection.size() - 1);
-					blnFound = true;
-					objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-					if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
-						if (objStep.get("strType").toString().toLowerCase().length() == 0) {
-							objStep.put("strType", objWebElement.getAttribute("type"));
-						}
-						objStep.put("strTagType", "input_" + objStep.get("strType").toString());
-					} else {
-						objStep.put("strTagType", objStep.get("strTagName").toString());
-					}
-					return objWebElement;
-				} else if (strIndexKeyword.equals("<random>")) {
-					int intRandomElement = RandomNumberRange(0, objWebElementCollection.size() - 1);
-					objWebElement = objWebElementCollection.get(intRandomElement);
-					blnFound = true;
-					objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
-					if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
-						if (objStep.get("strType").toString().toLowerCase().length() == 0) {
-							objStep.put("strType", objWebElement.getAttribute("type"));
-						}
-						objStep.put("strTagType", "input_" + objStep.get("strType").toString());
-					} else {
-						objStep.put("strTagType", objStep.get("strTagName").toString());
-					}
-					return objWebElement;
-				} else {
-					logger("elementFind - Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
-					throw new MultipleElementsFoundException(objWebElementCollection.size() + " elements found. Element properties did not return an element, try refining attributes");
-				}
-			}// the end of switch (objWebElementCollection.size())
-		} catch (WebDriverException e) {
-			throw new ElementNotFoundException("elementFind " + e.toString());
-		} finally {
-			logger("elementFind finally strXpath = " + strXpath + " blnFound = " + blnFound + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementFind));
+		logger("===>elementFind start  " + System.currentTimeMillis());
+		WebElement objWebElement = null;
+
+		//String strCurrentWindowHandle = objStep.get("strCurrentWindowHandle").toString();
+		String strWindowHandle = "";
+		//Boolean blnSwitch = false;
+		Object[] arrHandles = objWebDriver.getWindowHandles().toArray();
+		// logger("elementFind arrHandles.length = " + arrHandles.length);
+		// logger("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
+		for (int intWindowHandlesEach = arrHandles.length - 1; intWindowHandlesEach >= 0; intWindowHandlesEach--) {
+			logger("elementFind arrHandles[" + intWindowHandlesEach + "] = " + arrHandles[intWindowHandlesEach].toString());
 		}
-	}// the end of elementFind
+
+		for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0; intHandlesEach--) {
+			try {
+				strWindowHandle = arrHandles[intHandlesEach].toString();
+				//long lngStartTimeSwitchTo = System.currentTimeMillis();
+				//			if (!strCurrentWindowHandle.equals(strWindowHandle)) {
+				//				blnSwitch = true;
+				//			} else {
+				//				if (Integer.parseInt(objStep.get("intFrame").toString()) >= 0) {
+				//					blnSwitch = true;
+				//				}
+				//			}
+				//	if (blnSwitch == true) {
+				logger("elementFind objWebDriver.switchTo().window(strWindowHandle) = " + strWindowHandle);
+				objWebDriver.switchTo().window(strWindowHandle);
+				// logger("elementFind Switched = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
+				logger("elementFind objWebDriver.getTitle = " + objWebDriver.getTitle());
+				objStep.put("intFrame", -1);
+				//objWebDriver.manage().window().maximize();
+				//}
+				List<Integer> routeOriginal = new ArrayList<Integer>();
+				logger("elementFind routeOriginal = " + routeOriginal);
+				logger("elementFind routeOriginal.size() = " + routeOriginal.size());
+				logger("elementFind routeOriginal.add(0) = " + routeOriginal);
+				objWebElement = searchFrames(objStep, objWebDriver, objWebElement, routeOriginal);
+				if (objWebElement != null) {
+					logger("elementFind objWebElement Not null ");
+					return objWebElement;
+				} else {
+					logger("elementFind objWebElement IS NULL");
+				}
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				logger("elementFind Exception = " + e.toString());
+			}
+		}
+		throw new ElementNotFoundException("Element properties did not return an element, try refining attributes");
+	} // elementFind
+
+	public static WebElement searchFrames(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement, List<Integer> arrFramePath) throws ElementNotFoundException, MultipleElementsFoundException {
+		logger("===>searchFrames start  " + System.currentTimeMillis());
+		//WebElement objWebElement2 = new WebElement;
+		//List<WebElement> objWebElementCollection = new ArrayList<WebElement>();
+		int intMaximumDepth = 100;
+		// doWhateverYouWannaDoHere();
+		logger("searchFrames route = " + arrFramePath + " arrFramePath.size = " + arrFramePath.size());
+		logger("searchFrames objWebDriver.getTitle = " + objWebDriver.getTitle());
+		logger("searchFrames objWebDriver.getCurrentUrl = " + objWebDriver.getCurrentUrl());
+		logger("searchFrames objWebDriver.getWindowHandle = " + objWebDriver.getWindowHandle());
+		//	logger("searchFrames objWebDriver.getPageSource = " + objWebDriver.getPageSource());
+		try {
+			//objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
+			//objWebElementCollection = objWebDriver.findElements(By.id("wdwArrivalDate"));
+			//logger("searchFrames objWebElementCollection.size = " + objWebElementCollection.size());
+			objWebElement = elementFindXpath(objStep, objWebDriver);
+			logger("searchFrames objWebElement found");
+			//if (objWebElement != null) {
+			//strOuterHTML = objWebElement.getAttribute("outerHTML");
+			logger("searchFrames objWebElement outerHTML = " + objWebElement.getAttribute("outerHTML"));
+			//logger("elementSetSync outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+			//	}
+			//objWebElement2 =  objWebElement;
+			return objWebElement;
+			//return objWebElement;
+		} catch (ElementNotFoundException | MultipleElementsFoundException e) {
+			// TODO Auto-generated catch block
+			logger("searchFrames Exception = " + e.toString());
+		}
+		if (arrFramePath.size() < intMaximumDepth) {
+			int intFramesCount = objWebDriver.findElements(By.tagName("frame")).size();
+			logger("searchFrames intFramesCount =  " + intFramesCount);
+			for (int intFramesEach = 0; intFramesEach < intFramesCount; intFramesEach++) {
+				try {
+					objWebDriver.switchTo().frame(intFramesEach);
+					List<Integer> arrFramePathNew = new ArrayList<Integer>(arrFramePath);
+					arrFramePathNew.add(intFramesEach);
+					searchFrames(objStep, objWebDriver, objWebElement, arrFramePathNew);
+					objWebDriver.switchTo().defaultContent();
+					for (int intFramesPathEach : arrFramePath)
+						objWebDriver.switchTo().frame(intFramesPathEach);
+				} catch (NoSuchFrameException error) {
+					logger("searchFrames NoSuchFrameException = " + error.toString());
+					break;
+				} catch (Exception error) {
+					logger("searchFrames NoSuchFrameException = " + error.toString());
+				}
+			}
+		}
+		logger("searchFrames the end of arrFramePath.size =  " + arrFramePath.size());
+		//if (!objWebElement.equals(null)) {
+		if (objWebElement != null) {
+			logger("searchFrames objWebElement Not null ");
+			logger("searchFrames objWebElement outerHTML = " + objWebElement.getAttribute("outerHTML"));
+			//return objWebElement;
+		} else {
+			logger("searchFrames objWebElement IS NULL");
+		}
+		//throw new ElementNotFoundException("searchFrames ElementNotFoundException");
+		return objWebElement;
+	} // searchFrames
+
+	@SuppressWarnings("unchecked")
+	public static WebElement elementFindXpath(JSONObject objStep, WebDriver objWebDriver) throws ElementNotFoundException, MultipleElementsFoundException {
+		logger("===>elementFindXpath start  " + System.currentTimeMillis());
+		int intAttributeEach = 0;
+		List<WebElement> objWebElementCollection = new ArrayList<WebElement>();
+		String arrAttributeNames[] = objStep.get("strAttributeNames").toString().split("\\|", -1);
+		String arrAttributeValues[] = objStep.get("strAttributeValues").toString().split("\\|", -1);
+		String strIndex = "";
+		String strIndexKeyword = "";
+		String strTagName = objStep.get("strTagName").toString().toLowerCase();
+		String strXpath = "";
+		String strXpathAttributes = "";
+		String strXpathAttributesTemp = "";
+		WebElement objWebElement = null;
+		for (intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
+			strXpathAttributesTemp = "";
+			switch (arrAttributeNames[intAttributeEach].toLowerCase()) {
+			case "xpath":
+				strXpathAttributesTemp = arrAttributeValues[intAttributeEach];
+				break;
+			case "index":
+				if (arrAttributeValues[intAttributeEach].equals("<last>")) {
+					strIndex = "";
+					strIndexKeyword = "<last>";
+				} else if (arrAttributeValues[intAttributeEach].equals("<random>")) {
+					strIndex = "";
+					strIndexKeyword = "<random>";
+				} else {
+					strIndex = "[" + arrAttributeValues[intAttributeEach] + "]";
+				}
+				break;
+			case "text":
+				if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("re:")) {
+					strXpathAttributesTemp = "contains(text()" + ", '" + arrAttributeValues[intAttributeEach].substring(3) + "')";
+				} else {
+					strXpathAttributesTemp = "text()='" + arrAttributeValues[intAttributeEach] + "' ";
+				}
+				break;
+			default:
+				if (arrAttributeNames[intAttributeEach].toLowerCase().equals("type")) {
+					objStep.put("strType", arrAttributeValues[intAttributeEach]);
+				}
+				if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("re:")) {
+					// strXpathAttributesTemp = "contains(@" + arrAttributeNames[intAttributeEach] + ", '" +arrAttributeValues[intAttributeEach].substring(3) + "')";
+					// strXpathAttributesTemp = "contains(lower-case(@" +arrAttributeNames[intAttributeEach] + "), '" +arrAttributeValues[intAttributeEach].substring(3).toLowerCase() + "')";
+					strXpathAttributesTemp = "contains(translate(@" + arrAttributeNames[intAttributeEach] + ",'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), '" + arrAttributeValues[intAttributeEach].substring(3).toLowerCase() + "')";
+				} else {
+					strXpathAttributesTemp = "@" + arrAttributeNames[intAttributeEach] + "='" + arrAttributeValues[intAttributeEach] + "'";
+				}
+				break;
+			}
+			if (arrAttributeNames[0].toLowerCase().equals("xpath")) {
+			} else {
+				if (strXpathAttributesTemp.trim().length() != 0) {
+					if (strXpathAttributes.trim().length() == 0) {
+						strXpathAttributes = strXpathAttributesTemp;
+					} else {
+						strXpathAttributes = strXpathAttributes + " and " + strXpathAttributesTemp;
+					}
+				}
+			}
+		}// for (int intAttributeEach
+		if (arrAttributeNames[0].toLowerCase().equals("xpath")) {
+			strXpath = strXpathAttributesTemp;
+		} else {
+			if (strXpathAttributes.trim().length() == 0) {
+				strXpathAttributes = "";
+			} else {
+				strXpathAttributes = "[" + strXpathAttributes + "]";
+			}
+			strXpath = "(//" + strTagName + strXpathAttributes + ")" + strIndex;
+		}
+		logger("elementFindXpath arrAttributeNames[0].toLowerCase() = " + arrAttributeNames[0].toLowerCase());
+		logger("elementFindXpath strXpathAttributesTemp = " + strXpathAttributesTemp);
+		logger("elementFindXpath strXpath = " + strXpath);
+		logger("elementFindXpath strXpathAttributes = " + strXpathAttributes);
+
+		long lngStartTimegetElementsByTagName2 = System.currentTimeMillis();
+		List<WebElement> objCollectionJS2 = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
+		logger("elementFindXpath objCollectionJS2 = " + objCollectionJS2.size() + " strTagName = " + strTagName + " MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName2));
+		if (objCollectionJS2.size() > 0) {
+			long lngStartTimeByXpath = System.currentTimeMillis();
+			objWebElementCollection = objWebDriver.findElements(By.xpath(strXpath));
+		}
+		//		if (objWebElementCollection.size() > 0) {
+		//		}
+		switch (objWebElementCollection.size()) {
+		case 0:
+			// logger("elementFindXpath - Element properties did not return an element, try refining attributes.");
+			throw new ElementNotFoundException("Element properties did not return an element, try refining attributes");
+		case 1:
+			objWebElement = objWebElementCollection.get(0);
+			break;
+		default:
+			if (strIndexKeyword.equals("<last>")) {
+				objWebElement = objWebElementCollection.get(objWebElementCollection.size() - 1);
+				break;
+			} else if (strIndexKeyword.equals("<random>")) {
+				int intRandomElement = RandomNumberRange(0, objWebElementCollection.size() - 1);
+				objWebElement = objWebElementCollection.get(intRandomElement);
+				break;
+			} else {
+				logger("elementFindXpath - Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
+				throw new MultipleElementsFoundException(objWebElementCollection.size() + " elements found. Element properties did not return an element, try refining attributes");
+			}
+		}
+		objStep.put("strCurrentWindowHandle", objWebDriver.getWindowHandle());
+		if (objStep.get("strTagName").toString().toLowerCase().equals("input")) {
+			if (objStep.get("strType").toString().toLowerCase().length() == 0) {
+				objStep.put("strType", objWebElement.getAttribute("type"));
+			}
+			objStep.put("strTagType", "input_" + objStep.get("strType").toString());
+		} else {
+			objStep.put("strTagType", objStep.get("strTagName").toString());
+		}
+		return objWebElement;
+	} // elementFindXpath
+
+	//	public static void searchFramesNew(JSONObject objStep, WebDriver objWebDriver, WebElement objWebElement, List<Integer> route) {
+	//		//	try {
+	//		int MAX_DEPTH = 10;
+	//		logger("searchFrames route = " + route + route.size());
+	//
+	//		// doWhateverYouWannaDoHere();
+	//		if (route.size() < MAX_DEPTH) {
+	//
+	//			//			objFrameCollection = (List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('frame');");
+	//			//			objFrameCollection.addAll((List<WebElement>) ((JavascriptExecutor) objWebDriver).executeScript("return document.getElementsByTagName('iframe');"));
+	//			//			intFramesCount = objFrameCollection.size();
+	//
+	//			int numOfFrames = objWebDriver.findElements(By.tagName("frame")).size();
+	//			for (int i = 0; i < numOfFrames; i++) {
+	//
+	//				objWebDriver.switchTo().frame(i);
+	//				List<Integer> newRoute = new ArrayList<Integer>(route);
+	//				newRoute.add(i);
+	//				searchFramesNew(objStep, objWebDriver, objWebElement, newRoute);
+	//				objWebDriver.switchTo().defaultContent();
+	//				for (int j : route) {
+	//					objWebDriver.switchTo().frame(j);
+	//				}
+	//			}
+	//		}
+	//
+	//		//} catch (NoSuchFrameException error) {
+	//		//	logger("searchFrames NoSuchFrameException = " + error.toString());
+	//		//		break;
+	//		//} catch (Exception error) {
+	//		//	logger("searchFrames route = " + error.toString());
+	//		//	} finally {
+	//	}
 
 	public static String getElementXPath(WebDriver objWebDriver, WebElement objWebElement) {
 		return (String) ((JavascriptExecutor) objWebDriver).executeScript("gPt=function(c){if(c.id!==''){return'id(\"'+c.id+'\")'}if(c===document.body){return c.tagName}var a=0;var e=c.parentNode.childNodes;for(var b=0;b<e.length;b++){var d=e[b];if(d===c){return gPt(c.parentNode)+'/'+c.tagName+'['+(a+1)+']'}if(d.nodeType===1&&d.tagName===c.tagName){a++}}};return gPt(arguments[0]).toLowerCase();", objWebElement);
@@ -2346,10 +3242,8 @@ public class Dragonfly {
 				// if (objStep.containsKey("intElementWidth")) {
 				// int intElementWidth = Integer.parseInt(objStep.get("intElementWidth").toString());
 				// int intElementHeight = Integer.parseInt(objStep.get("intElementHeight").toString());
-				//
 				// logger("elementVisible intElementWidth = " + intElementWidth);
 				// logger("elementVisible intElementHeight = " + intElementHeight);
-				//
 				// if (intElementWidth == 0 || intElementHeight == 0) {
 				// throw new ElementNotVisibleException("Element's heigh or width is 0");
 				// } else {
@@ -3152,8 +4046,7 @@ public class Dragonfly {
 		objWebDriver.switchTo().defaultContent();
 		for (String winHandle : objWebDriver.getWindowHandles()) {
 			intCount = 0;
-			// logger("elementFind strCurrentWindowHandle = " +
-			// strCurrentWindowHandle);
+			// logger("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
 			logger("webElementCollectionTable winHandle = " + winHandle);
 			long lngStartTimeSwitchTo = System.currentTimeMillis();
 			// if (strCurrentWindowHandle.equals(winHandle)) {
@@ -3162,7 +4055,8 @@ public class Dragonfly {
 			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 			logger("webElementCollectionTable lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
 			// }
-			logger("webElementCollectionTable lngStartTimeSwitchTo = " + objWebDriver.getTitle());
+			logger("webElementCollectionTable objWebDriver.getTitle = " + objWebDriver.getTitle());
+			//logger("webElementCollectionTable objWebDriver.getPageSource = " + objWebDriver.getPageSource());
 			logger("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 			List<WebElement> objWebElementCollection = objWebDriver.findElements(By.tagName(strTagName));
 			Iterator<WebElement> objWebElementEach = ((Collection<WebElement>) objWebElementCollection).iterator();
