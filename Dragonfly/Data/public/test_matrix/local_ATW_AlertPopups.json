@@ -1,0 +1,28 @@
+{
+	"test_details": 
+	{
+		"test_name": "ATW.AlertPopups",
+		"test_description": "",
+		"test_type": "Positive"
+	},
+
+	"test_instances": 
+	[
+	
+	],
+
+	"element_repository": 
+	[
+	
+	],
+
+	"test_modules": 
+	[
+		"tm_local_ATW_AlertPopups.json"
+	],
+
+	"test_data": 
+	[
+	
+	]
+}
