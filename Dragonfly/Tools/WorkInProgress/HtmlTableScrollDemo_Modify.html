@@ -2,10 +2,47 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<title>Scrolling Table Fluid Width and Height - jsFiddle demo</title>
+<title>Dragonfly Step Builder Scroll</title>
 <script type='text/javascript' src='/js/lib/dummy.js'></script>
 <link rel="stylesheet" type="text/css" href="/css/result-light.css">
 <style type='text/css'>
+:root {
+	var-main-color: #F5EDFF;
+	/*      var-main-color: rgba(255,40,100, 0.8); */
+}
+
+:root {
+	background: GhostWhite;
+}
+
+table {
+	counter-reset: rowNumber -2;
+}
+
+table tr {
+	counter-increment: rowNumber;
+}
+
+/* table tr td:first-child::before { */
+/* 	content: counter(rowNumber); */
+/* 	min-width: 1em; */
+/* 	margin-right: 1.5em; */
+/* 	text-align: center; */
+/* } */
+
+table tr td:first-child::before {
+	content: counter(rowNumber);
+	margin-right: 5em;
+	text-align: center;
+}
+
+/* h1#foo  { */
+/*     color: var(--main-color); */
+/* } */
+/* h1#norm { */
+/*     color:#06c;     */
+/* } */
+
 /*the following html and body rule sets are required only if using a % width or height*/
 html {
 	width: 100%;
@@ -21,6 +58,42 @@ body {
 	text-align: center;
 }
 
+select {
+	border: 0;
+	width: 100%;
+	background: transparent;
+	font-family: Verdana, Tahoma, sans-serif;
+	font-size: 16px;
+}
+
+td {
+	border: 0;
+	width: 100%;
+	font-family: Verdana, Tahoma, sans-serif;
+	font-size: 16px;
+}
+
+input[type=text] {
+	border: 0;
+	width: 100%;
+	background: transparent;
+	font-family: Verdana, Tahoma, sans-serif;
+	font-size: 16px;
+}
+
+input[type=button] {
+	background: transparent;
+	font-family: Verdana, Tahoma, sans-serif;
+	font-size: 16px;
+}
+
+input[type=file] {
+	background: transparent;
+	font-family: Verdana, Tahoma, sans-serif;
+	font-size: 16px;
+}
+
+
 .scrollingtable {
 	box-sizing: border-box;
 	display: inline-block;
@@ -30,7 +103,7 @@ body {
 	/*if you want a fixed width, set it here, else set to auto*/
 	min-width: /*0*/ 100%;
 	/*if you want a % width, set it here, else set to 0*/
-	height: /*188px*/ 100%;
+	height: /*300px*/ 100%;
 	/*set table height here; can be fixed value or %*/
 	min-height: /*0*/ 104px;
 	/*if using % height, make this large enough to fit scrollbar arrows + caption + thead*/
@@ -55,7 +128,9 @@ body {
 
 .scrollingtable>div:before {
 	top: 0;
-	background: cornflowerblue; /*header row background color*/
+	/* 	background: varHeaderRowColor ; /*header row background color*/
+	/* 	background: var(beautifulColor); */
+	background: #F5EDFF;
 }
 
 .scrollingtable>div:before, .scrollingtable>div>div:after {
@@ -63,22 +138,24 @@ body {
 	position: absolute;
 	z-index: -1;
 	width: 100%;
-	height: 50%;
+	height: 10%;
 	left: 0;
 }
 
 .scrollingtable>div>div {
-	min-height: /*0*/ 43px;
+	min-height: /*0 */ 43px;
 	/*if using % height, make this large enough to fit scrollbar arrows*/
-	max-height: 100%;
+	max-height: 95%;
 	overflow: /*scroll*/ auto;
 	/*set to auto if using fixed or % width; else scroll*/
 	overflow-x: hidden;
-	border: 1px solid black; /*border around table body*/
+	border: 2px solid black; /*border around table body*/
 }
 
 .scrollingtable>div>div:after {
-	background: white;
+	/* 	background: white; */
+	/* 	background: varBackgroundRowColor ; */
+	background: #EDFFF5;
 } /*match page background color*/
 .scrollingtable>div>div>table {
 	width: 100%;
@@ -93,7 +170,7 @@ body {
 	margin-top: -1px; /*inverse of border-width*/
 	width: 100%;
 	font-weight: bold;
-	text-align: center;
+	text-align: left;
 }
 
 .scrollingtable>div>div>table>*>tr>* {
@@ -108,7 +185,7 @@ body {
 
 .scrollingtable>div>div>table>thead>tr>*>div {
 	display: inline-block;
-	padding: 0 6px 0 6px; /*header cell padding*/
+	padding: 0 12px 0 12px; /*header cell padding*/
 }
 
 .scrollingtable>div>div>table>thead>tr>:first-child:before {
@@ -126,7 +203,7 @@ body {
 	position: absolute;
 	top: 0;
 	white-space: pre-wrap;
-	color: white; /*header row font color*/
+	color: black; /*header row font color*/
 }
 
 .scrollingtable>div>div>table>thead>tr>*>div[label]:before,
@@ -150,7 +227,9 @@ body {
 	position: absolute;
 	width: 100px;
 	top: -1px; /*inverse border-width*/
-	background: white; /*match page background color*/
+	/* 	background: white; /*match page background color*/
+	/* 	background: varBackgroundRowColor ; */
+	background: #EDFFF5;
 }
 
 .scrollingtable>div>div>table>tbody>tr:after {
@@ -167,7 +246,9 @@ body {
 }
 
 .scrollingtable>div>div>table>tbody>tr {
-	background: white;
+	/* 	background: white; */
+	/* 	background: varBackgroundRowColor     /* #EDEAD1;*/
+	background: #EDFFF5;
 }
 
 .scrollingtable>div>div>table>tbody>tr>* {
@@ -181,81 +262,417 @@ body {
 }
 
 .scrollingtable>div>div>table>tbody>tr:nth-child(even) {
-	background: gainsboro;
+	/* 	background: #EDEAD1 ; */
+	/* 	background: varEvenRowColor ;/*#E9CFEC;*/
+	background: #FFF5EE;
 } /*alternate row color*/
 .scrollingtable>div>div>table>tbody>tr>*+* {
-	border-left: 1px solid black;
-} /*borders between body cells*/
+	border-left: 1px solid black; /*borders between body cells*/
+}
 </style>
-<script type='text/javascript'>
-	//<![CDATA[ 
-	window.onload = function() {
-		/* THIS JAVASCRIPT JUST ADDS ROWS FOR TESTING PURPOSES */
-		(function() {
-			for (var n = 128, r = document.querySelector("tbody>tr"), p = r.parentNode; n--; p
-					.appendChild(r.cloneNode(true)))
-				;
-		})();
-	}//]]>
+
+
+<script language="javascript" type="text/javascript">
+	// function myFunction() {
+	//     var varHeaderRowColor = #F5EDFF;
+	//     var varBackgroundRowColor = #EDFFF5;
+	//     var varEvenRowColor = #FFF5EE;
+
+	// }
+	// window.onload = myFunction;
+	function loadJsonFile() {
+		try {
+			var objTable;
+			var intRow;
+			var intColumnCount;
+			var objRowEach;
+			var intColumnEach;
+			var objCellEach;
+			var strKeyName
+			var strKeyValue
+			var blnResponse
+			var strFileToLoad
+			strFileToLoad = document.getElementById('fileToLoad').value;
+			// 			alert(strFileToLoad)
+			if (strFileToLoad == "") {
+				alert("no file")
+			} else {
+				blnResponse = confirm("All rows will be replaced with selected file. Press OK to continue or Cancel to return");
+				if (blnResponse == true) {
+					refreshTable();
+					var file = "file:///" + strFileToLoad.split('\\').join('\/');
+					//var rawFile = new XMLHttpRequest();
+					var rawFile = new ActiveXObject("Microsoft.XMLHTTP");
+					rawFile.open("GET", file, false);
+					rawFile.onreadystatechange = function() {
+						if (rawFile.readyState === 4) {
+							if (rawFile.status === 200 || rawFile.status == 0) {
+								var allText = rawFile.responseText;
+								// 								alert(allText)
+								//var	objJsonFile = JSON.parse(allText);
+								var objJsonFile = eval("(" + allText + ")");
+								var intRow;
+								var intRowCount = objJsonFile.steps.length;
+								//alert(intRowCount)
+								for (intRow = 0; intRow < intRowCount; intRow++) {
+									if (intRow > 0) {
+										addRow();
+									}
+									objRowEach = document.getElementById('DragonflyStepTable').rows[intRow + 1];
+									intColumnCount = objRowEach.cells.length;
+
+									for (intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
+										objCellEach = objRowEach.cells[intColumnEach];
+										// 										strKeyName = document.getElementById('DragonflyStepTable').rows[0].cells[intColumnEach].textContent;
+										strKeyName = document.getElementById('DragonflyStepTableHeaderRow').cells[intColumnEach].getAttribute("id");
+
+										strKeyValue = objJsonFile.steps[intRow][strKeyName];
+										//alert(strKeyName + " = " + strKeyValue)
+
+										if (strKeyName == "strTagName") {
+
+											strKeyValue = strKeyValue.toLowerCase();
+										}
+										switch (objCellEach.childNodes[0].type) {
+										case "text":
+											objCellEach.childNodes[0].value = strKeyValue;
+											break;
+										case "select-one":
+											selectItemByValue(objCellEach.childNodes[0], strKeyValue);
+											break;
+										}// the end of switch
+									}// the end of for intColumnEach
+									//return;
+								}// the end of for intRow
+							}// the end of if rawFile.status
+						}// the end of if rawFile.readyState
+					}// the end of rawFile.onreadystatechange
+					rawFile.send(null);
+				}// the end of if blnResponse
+			}// the end of if strFileToLoad
+		} catch (e) {
+			alert(e);
+		}
+	}// the end of loadJsonFile
+
+	function selectItemByValue(objElement, strValue) {
+		for (var intOptionsEach = 0; intOptionsEach < objElement.options.length; intOptionsEach++) {
+			if (objElement.options[intOptionsEach].value == strValue)
+				objElement.selectedIndex = intOptionsEach;
+		}
+	}
+
+	function saveTableToJson() {
+		try {
+			var strFileToSave = document.getElementById('fileToLoad').value;
+			if (strFileToSave == "") {
+				alert("no file")
+			} else {
+				var blnResponse = confirm("All rows will replace selected file. Press OK to continue or Cancel to return");
+				if (blnResponse == true) {
+					var ForAppending = 8;
+					var ForWriting = 2;
+					var intColumnCount;
+					var intColumnEach;
+					var intRow;
+					var intRowCount = document.getElementById('DragonflyStepTable').rows.length;
+					var objCellEach;
+					var objFile;
+					var objFileSystemObject = new ActiveXObject("Scripting.FileSystemObject");
+					var objRowEach;
+					var objTable = document.getElementById('DragonflyStepTable');
+					var strKeyName = "";
+					var strTextToJson = "{\"steps\":[";
+					var TriStateFalse = 0;
+					for (intRow = 1; intRow < intRowCount; intRow++) {
+						strTextToJson = strTextToJson + "{";
+						objRowEach = objTable.rows[intRow];
+						intColumnCount = objRowEach.cells.length;
+						for (intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
+							objCellEach = objRowEach.cells[intColumnEach];
+							strKeyName = objTable.rows[0].cells[intColumnEach].innerHTML;
+							switch (objCellEach.childNodes[0].type) {
+							case "text":
+								strTextToJson = strTextToJson + "\"" + strKeyName + "\":\"" + objCellEach.childNodes[0].value + "\",";
+								break;
+							case "select-one":
+								strTextToJson = strTextToJson + "\"" + strKeyName + "\":\"" + objCellEach.childNodes[0].options[objCellEach.childNodes[0].selectedIndex].innerHTML + "\",";
+								break;
+							}
+						}
+						strTextToJson = strTextToJson.replace(/,+$/, "");
+						strTextToJson = strTextToJson + "},";
+					}
+					strTextToJson = strTextToJson.replace(/,+$/, "");
+					strTextToJson = strTextToJson + "],\"link\":[{}]}";
+					strFileToSave = strFileToSave.split('\\').join('\\\\')
+					objFile = objFileSystemObject.OpenTextFile(strFileToSave, ForWriting, true, TriStateFalse);
+					objFile.Write(strTextToJson);
+					objFile.Close();
+				}// the end of if blnResponse
+			}// the end of if strFileToSave
+		} catch (e) {
+			alert(e);
+		}
+	}
+
+	function addRow() {
+		var objTable = document.getElementById('DragonflyStepTable');
+		var intRowCount = objTable.rows.length;
+		var objRowNew = objTable.insertRow(intRowCount);
+		var intColumnCount = objTable.rows[0].cells.length;
+		for (var i = 0; i < intColumnCount; i++) {
+			var objCellNew = objRowNew.insertCell(i);
+			objCellNew.innerHTML = objTable.rows[intRowCount - 1].cells[i].innerHTML;
+			switch (objCellNew.childNodes[0].type) {
+			case "text":
+				objCellNew.childNodes[0].value = "";
+				break;
+			case "checkbox":
+				objCellNew.childNodes[0].checked = false;
+				break;
+			case "select-one":
+				objCellNew.childNodes[0].selectedIndex = 0;
+				break;
+			}
+		}
+	}
+
+	function insertRow() {
+		var objTable = document.getElementById('DragonflyStepTable');
+		var intRowCount = objTable.rows.length;
+		for (var intRow = 0; intRow < intRowCount; intRow++) {
+			var objRowEach = objTable.rows[intRow];
+			var objCheckboxEach = objRowEach.cells[0].childNodes[0];
+			if (null != objCheckboxEach && true == objCheckboxEach.checked) {
+				objCheckboxEach.checked = false;
+				var objRowNew = objTable.insertRow(intRow);
+				var intColumnCount = objRowEach.cells.length;
+				for (var intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
+					var objCellNew = objRowNew.insertCell(intColumnEach);
+					objCellNew.innerHTML = objRowEach.cells[intColumnEach].innerHTML;
+					switch (objCellNew.childNodes[0].type) {
+					case "text":
+						objCellNew.childNodes[0].value = "";
+						break;
+					case "checkbox":
+						objCellNew.childNodes[0].checked = false;
+						break;
+					case "select-one":
+						objCellNew.childNodes[0].selectedIndex = 0;
+						break;
+					}
+				}
+				break;
+			}
+		}
+	}
+
+	function deleteRow() {
+		try {
+			var objTable = document.getElementById('DragonflyStepTable');
+			var intRowCount = objTable.rows.length;
+			var blnResponse = false;
+			for (var intRowEach = 0; intRowEach < intRowCount; intRowEach++) {
+				var objRowEach = objTable.rows[intRowEach];
+				var objCheckboxEach = objRowEach.cells[0].childNodes[0];
+				if (null != objCheckboxEach && true == objCheckboxEach.checked) {
+					if (intRowCount <= 2) {
+						alert("Cannot delete all the rows.");
+						break;
+					}
+					if (blnResponse == false) {
+						blnResponse = confirm("All rows with checkboxes selected will be deleted. Press OK to continue or Cancel to return");
+						if (blnResponse == true) {
+						} else {
+							break;
+						}
+					}
+					objTable.deleteRow(intRowEach);
+					intRowCount--;
+					intRowEach--;
+				}
+			}
+		} catch (e) {
+			alert(e);
+		}
+	}
+
+	function refreshTableCall() {
+		var blnResponse = false;
+		blnResponse = confirm("All rows will deleted and refreshed to a new table. Press OK to continue or Cancel to return");
+		if (blnResponse == true) {
+			refreshTable();
+		}
+	}
+
+	function refreshTable() {
+		var objTable = document.getElementById('DragonflyStepTable');
+		var intRowCount = objTable.rows.length;
+		for (var intRowEach = 2; intRowEach < intRowCount; intRowEach++) {
+			objTable.deleteRow(intRowEach);
+			intRowCount--;
+			intRowEach--;
+		}
+		var intColumnCount = objTable.rows[0].cells.length;
+		for (var intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
+			var objCellEach = objTable.rows[1].cells(intColumnEach);
+			switch (objCellEach.childNodes[0].type) {
+			case "text":
+				objCellEach.childNodes[0].value = "";
+				break;
+			case "checkbox":
+				objCellEach.childNodes[0].checked = false;
+				break;
+			case "select-one":
+				objCellEach.childNodes[0].selectedIndex = 0;
+				break;
+			}
+		}
+	}
 </script>
+
+
+
 </head>
 <body>
 <body>
+
+
 	<div class="scrollingtable">
+		<input type="button" value="Add Row" onclick="addRow()"></input> <input type="button" value="Insert Row" onclick="insertRow()"></input> <input type="button" value="Delete Row" onclick="deleteRow()"></input> <input type="button" value="Refresh Table" onclick="refreshTableCall()"></input> <input type="file" style="width: 750px" id="fileToLoad"></input> <input type="button" value="Load JSON" onclick="loadJsonFile()"></input> <input type="button" value="Save JSON" onclick="saveTableToJson()"></input>
+
 		<div>
 			<div>
-				<table>
-					<caption>Top Caption</caption>
+
+				<table id="DragonflyStepTable" border="1">
+					<caption></caption>
 					<thead>
-						<tr>
-							<th><div label="strAction" /></th>
-							<th><div label="strTagName" /></th>
-							<th><div label="strAttributeNames" /></th>
-							<th><div label="strAttributeValues" /></th>
-							<th><div label="strInputValue" /></th>
-							<th><div label="strLogicalName" /></th>
-							<th><div label="intMillisecondsToWait" /></th>
-							<th><div label="blnOptional" /></th>
-							<th><div label="strAssert" /></th>
-							<th><div label="blnPleaseWait" /></th>
-							<th><div label="blnHighlight" /></th>
-							<th><div label="blnScreenshot" /></th>
-							<th><div label="strFunction" /></th>
-							<th><div label="strAssistiveProperties" /></th>
-							<th><div label="blnExitOnFail" /></th>
-							<th><div label="strOutputLinkName" /></th>
-							<th><div label="strOutputValue" /></th>
-							<th><div label="intLoop" /></th>
-							<th class="scrollbarhead" />
+
+						<tr id="DragonflyStepTableHeaderRow">
+							<th id="+"><div label="+" /></div></th>
+							<th id="strAction" width="200px"><div label="strAction" /></div></th>
+							<th id="strTagName"><div label="strTagName" /></div></th>
+							<th id="strAttributeNames"><div label="strAttributeNames" /></div></th>
+							<th id="strAttributeValues"><div label="strAttributeValues" /></div></th>
+							<th id="strInputValue"><div label="strInputValue" /></div></th>
+							<th id="strLogicalName"><div label="strLogicalName" /></div></th>
+							<th id="intMillisecondsToWait"><div label="intMillisecondsToWait" /></div></th>
+							<th id="blnOptional"><div label="blnOptional" /></div></th>
+							<th id="strAssert"><div label="strAssert" /></div></th>
+							<th id="blnPleaseWait"><div label="blnPleaseWait" /></div></th>
+							<th id="blnHighlight"><div label="blnHighlight" /></div></th>
+							<th id="blnScreenshot"><div label="blnScreenshot" /></div></th>
+							<th id="strFunction"><div label="strFunction" /></div></th>
+							<th id="strAssistiveProperties"><div label="strAssistiveProperties" /></div></th>
+							<th id="blnExitOnFail"><div label="blnExitOnFail" /></div></th>
+							<th id="strOutputLinkName"><div label="strOutputLinkName" /></div></th>
+							<th id="strOutputValue"><div label="strOutputValue" /></div></th>
+							<th id="intLoop"><div label="intLoop" /></div></th>
+							<!-- 							<th id="strAction" class="scrollbarhead" /> -->
 							<!--ALWAYS ADD THIS EXTRA CELL AT END OF HEADER ROW-->
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
-							<td>strAction</td>
-							<td>strTagName</td>
-							<td>strAttributeNames</td>
-							<td>strAttributeValues</td>
-							<td>strInputValue</td>
-							<td>strLogicalName</td>
-							<td>intMillisecondsToWait</td>
-							<td>blnOptional</td>
-							<td>strAssert</td>
-							<td>blnPleaseWait</td>
-							<td>blnHighlight</td>
-							<td>blnScreenshot</td>
-							<td>strFunction</td>
-							<td>strAssistiveProperties</td>
-							<td>blnExitOnFail</td>
-							<td>strOutputLinkName</td>
-							<td>strOutputValue</td>
-							<td>intLoop</td>
+							<td><input type="checkbox" name="chk"></input></td>
+							<td><select id="strAction">
+									<option value=""></option>
+									<option value="launch">launch</option>
+									<option value="close">close</option>
+									<option value="get">get</option>
+									<option value="set">set</option>
+									<option value="verify">verify</option>
+									<option value="sync_visible">sync_visible</option>
+									<option value="sync_hidden">sync_hidden</option>
+									<option value="sync_enabled">sync_enabled</option>
+									<option value="sync_disabled">sync_disabled</option>
+									<option value="mouse_over">mouse_over</option>
+									<option value="sleep">sleep</option>
+									<option value="break">break</option>
+							</select></td>
+							<td><select id="strTagName">
+									<option value=""></option>
+									<option value="chrome">chrome</option>
+									<option value="firefox">firefox</option>
+									<option value="ie">ie</option>
+									<option value="opera">opera</option>
+									<option value="safari">safari</option>
+									<option value="a">a</option>
+									<option value="alert">alert</option>
+									<option value="body">body</option>
+									<option value="button">button</option>
+									<option value="div">div</option>
+									<option value="h1">h1</option>
+									<option value="h2">h2</option>
+									<option value="h3">h3</option>
+									<option value="h4">h4</option>
+									<option value="h5">h5</option>
+									<option value="h6">h6</option>
+									<option value="img">img</option>
+									<option value="input">input</option>
+									<option value="li">li</option>
+									<option value="p">p</option>
+									<option value="select">select</option>
+									<option value="span">span</option>
+									<option value="table">table</option>
+									<option value="td">td</option>
+									<option value="textarea">textarea</option>
+									<option value="th">th</option>
+									<option value="title">title</option>
+									<option value="tr">tr</option>
+							</select></td>
+							<td><input type="text" id="strAttributeNames"></input></td>
+							<td><input type="text" id="strAttributeValues"></input></td>
+							<td><input type="text" id="strInputValue"></input></td>
+							<td><input type="text" id="strLogicalName"></input></td>
+							<td><input type="text" id="intMillisecondsToWait"></input></td>
+							<td><select id="blnOptional">
+									<option value=""></option>
+									<option value="true">true</option>
+									<option value="false">false</option>
+							</select></td>
+							<td><select id="strAssert">
+									<option value=""></option>
+									<option value="off">off</option>
+									<option value="value">value</option>
+									<option value="visible">visible</option>
+									<option value="hidden">hidden</option>
+									<option value="enabled">enabled</option>
+									<option value="disabled">disabled</option>
+							</select></td>
+							<td><select id="blnPleaseWait">
+									<option value=""></option>
+									<option value="true">true</option>
+									<option value="false">false</option>
+							</select></td>
+							<td><select id="blnHighlight">
+									<option value=""></option>
+									<option value="true">true</option>
+									<option value="false">false</option>
+							</select></td>
+							<td><select id="blnScreenshot">
+									<option value=""></option>
+									<option value="true">true</option>
+									<option value="false">false</option>
+							</select></td>
+							<td><input type="text" id="strFunction"></input></td>
+							<td><input type="text" id="strAssistiveProperties"></input></td>
+							<td><select id="blnExitOnFail">
+									<option value=""></option>
+									<option value="true">true</option>
+									<option value="false">false</option>
+							</select></td>
+							<td><input type="text" id="strOutputLinkName"></input></td>
+							<td><input type="text" id="strOutputValue"></input></td>
+							<td><input type="text" id="intLoop"></input></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 			Faux bottom caption
 		</div>
+
 	</div>
 </body>
 <!--[if lte IE 9]><style>.scrollingtable > div > div > table {margin-right: 17px;}</style><![endif]-->

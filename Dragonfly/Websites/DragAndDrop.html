@@ -1,0 +1,108 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>iGoogle like Drag & Drop Portal v2.0 by Michel Hiemstra</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="author" content="Michel Hiemstra (mhiemstra@php.net)" />
+		<meta name="keywords" content="drag&drop portal, igoogle drag and drop, igoogle, drag and drop div igoogle javascript, drag and drop block like igoogle, div drag drop" />
+		<meta name="description" content="iGoogle like Drag & Drop Portal v2.0 by Michel Hiemstra" />
+
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.1/prototype.js"></script>
+		<script type="text/javascript" src="assets/js/scriptaculous.js"></script>
+		<script type="text/javascript" src="assets/js/portal.js"></script>
+
+		<script type="text/javascript">
+			var settings 	= {'column-1' : ['block-1','block-2'],
+							   'column-2' : ['block-3'],
+							   'column-3' : ['block-4']};
+
+			var options 	= { portal 			: 'columns',
+								editorEnabled 	: true};
+			var data 		= {};
+
+			var portal;
+
+			Event.observe(window, 'load', function() {
+				portal = new Portal(settings, options, data);
+			});
+		</script>
+
+		<link rel="stylesheet" href="assets/css/style.css"  type="text/css" media="screen" />
+		<link rel="stylesheet" href="assets/css/portal.css"  type="text/css" media="screen" />
+	</head>
+	<body>
+<script type="text/javascript"><!--
+google_ad_client = "pub-0714236485040063";
+/* 728x90, opprettet 14.08.08 */
+google_ad_slot = "8581783445";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>		<div id="wrapper">
+
+			<h1>iGoogle-like Drag &amp; Drop Portal v2.0</h1>
+			<p>This great script is created by Michel Hiemstra. For more information, visit his <a href="http://www.michelhiemstra.nl/blog/igoogle-like-drag-drop-portal-v20/">website</a></p>
+
+			<div style="clear:both;"></div>
+			<hr />
+
+
+			<div id="columns">
+
+				<div id="column-1" class="column menu"></div>
+
+				<div id="column-2" class="column blocks"></div>
+
+				<div id="column-3" class="column sidebar"></div>
+
+				<div class="portal-column" id="portal-column-block-list" style="display: none;">
+					<div class="block" id="block-1">
+						<h1 class="draghandle">Block 1</h1>
+						<p>Block 1 data</p>
+					</div>
+
+					<div class="block" id="block-2">
+						<h1 class="draghandle">Block 2</h1>
+						<p>Block 2 data</p>
+					</div>
+
+					<div class="block" id="block-3">
+						<h1 class="draghandle">Block 3</h1>
+						<p>Block 3 data</p>
+					</div>
+
+					<div class="block" id="block-4">
+						<h1 class="draghandle">Block 4</h1>
+						<p>Block 4 data</p>
+					</div>
+				</div>
+
+			</div>
+
+
+
+			<div style="clear:both;"></div>
+
+			<div style="clear:both;"></div>
+
+			<hr style="margin-top: 40px;" />
+
+
+			<div style="clear:both;"></div>
+
+			<div id="browser-support">
+				Supported browsers: Just about all of them: IE6, IE7, IE8, FireFox, Safari, Chrome, Opera and more.
+			</div>
+
+			<div style="clear:both;"></div>
+
+			<div id="licence">
+				<a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/80x15.png" /></a>
+			</div>
+		</div>
+	</body>
+</html>

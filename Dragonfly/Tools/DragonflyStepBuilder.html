@@ -33,8 +33,7 @@ input[type=text] {
 				blnResponse = confirm("All rows will be replaced with selected file. Press OK to continue or Cancel to return");
 				if (blnResponse == true) {
 					refreshTable();
-					var file = "file:///"
-							+ strFileToLoad.split('\\').join('\/');
+					var file = "file:///" + strFileToLoad.split('\\').join('\/');
 					//var rawFile = new XMLHttpRequest();
 					var rawFile = new ActiveXObject("Microsoft.XMLHTTP");
 					rawFile.open("GET", file, false);
@@ -50,26 +49,21 @@ input[type=text] {
 									if (intRow > 0) {
 										addRow();
 									}
-									objRowEach = document
-											.getElementById('DragonflyStepTable').rows[intRow + 1];
+									objRowEach = document.getElementById('DragonflyStepTable').rows[intRow + 1];
 									intColumnCount = objRowEach.cells.length;
 									for (intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
 										objCellEach = objRowEach.cells[intColumnEach];
-										strKeyName = document
-												.getElementById('DragonflyStepTable').rows[0].cells[intColumnEach].innerHTML;
+										strKeyName = document.getElementById('DragonflyStepTable').rows[0].cells[intColumnEach].innerHTML;
 										strKeyValue = objJsonFile.steps[intRow][strKeyName];
 										if (strKeyName == "strTagName") {
-											strKeyValue = strKeyValue
-													.toLowerCase();
+											strKeyValue = strKeyValue.toLowerCase();
 										}
 										switch (objCellEach.childNodes[0].type) {
 										case "text":
 											objCellEach.childNodes[0].value = strKeyValue;
 											break;
 										case "select-one":
-											selectItemByValue(
-													objCellEach.childNodes[0],
-													strKeyValue);
+											selectItemByValue(objCellEach.childNodes[0], strKeyValue);
 											break;
 										}// the end of switch
 									}// the end of for intColumnEach
@@ -105,15 +99,12 @@ input[type=text] {
 					var intColumnCount;
 					var intColumnEach;
 					var intRow;
-					var intRowCount = document
-							.getElementById('DragonflyStepTable').rows.length;
+					var intRowCount = document.getElementById('DragonflyStepTable').rows.length;
 					var objCellEach;
 					var objFile;
-					var objFileSystemObject = new ActiveXObject(
-							"Scripting.FileSystemObject");
+					var objFileSystemObject = new ActiveXObject("Scripting.FileSystemObject");
 					var objRowEach;
-					var objTable = document
-							.getElementById('DragonflyStepTable');
+					var objTable = document.getElementById('DragonflyStepTable');
 					var strKeyName = "";
 					var strTextToJson = "{\"steps\":[";
 					var TriStateFalse = 0;
@@ -126,18 +117,10 @@ input[type=text] {
 							strKeyName = objTable.rows[0].cells[intColumnEach].innerHTML;
 							switch (objCellEach.childNodes[0].type) {
 							case "text":
-								strTextToJson = strTextToJson + "\""
-										+ strKeyName + "\":\""
-										+ objCellEach.childNodes[0].value
-										+ "\",";
+								strTextToJson = strTextToJson + "\"" + strKeyName + "\":\"" + objCellEach.childNodes[0].value + "\",";
 								break;
 							case "select-one":
-								strTextToJson = strTextToJson
-										+ "\""
-										+ strKeyName
-										+ "\":\""
-										+ objCellEach.childNodes[0].options[objCellEach.childNodes[0].selectedIndex].innerHTML
-										+ "\",";
+								strTextToJson = strTextToJson + "\"" + strKeyName + "\":\"" + objCellEach.childNodes[0].options[objCellEach.childNodes[0].selectedIndex].innerHTML + "\",";
 								break;
 							}
 						}
@@ -147,8 +130,7 @@ input[type=text] {
 					strTextToJson = strTextToJson.replace(/,+$/, "");
 					strTextToJson = strTextToJson + "],\"link\":[{}]}";
 					strFileToSave = strFileToSave.split('\\').join('\\\\')
-					objFile = objFileSystemObject.OpenTextFile(strFileToSave,
-							ForWriting, true, TriStateFalse);
+					objFile = objFileSystemObject.OpenTextFile(strFileToSave, ForWriting, true, TriStateFalse);
 					objFile.Write(strTextToJson);
 					objFile.Close();
 				}// the end of if blnResponse
