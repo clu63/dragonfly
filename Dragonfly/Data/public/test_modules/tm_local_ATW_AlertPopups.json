@@ -86,7 +86,7 @@
 		},
 
 		{
-			"strAction": "set",
+			"strAction": "drag",
 			"strTagName": "input",
 			"strAttributeNames": "value",
 			"strAttributeValues": "Show alert box",
@@ -107,7 +107,7 @@
 		},
 
 		{
-			"strAction": "sync_visible",
+			"strAction": "break",
 			"strTagName": "alert",
 			"strAttributeNames": "",
 			"strAttributeValues": "",
