@@ -7,279 +7,188 @@
 <link rel="stylesheet" type="text/css" href="/css/result-light.css">
 <style type='text/css'>
 :root {
-	var-main-color: #F5EDFF;
-	/*      var-main-color: rgba(255,40,100, 0.8); */
-}
-
-:root {
-	background: GhostWhite;
+     background: LightBlue; /*background color aqua*/
 }
 
 table {
-	counter-reset: rowNumber -2;
+     counter-reset: rowNumber -2;
 }
 
 table tr {
-	counter-increment: rowNumber;
+     counter-increment: rowNumber;
 }
 
-/* table tr td:first-child::before { */
-/* 	content: counter(rowNumber); */
-/* 	min-width: 1em; */
-/* 	margin-right: 1.5em; */
-/* 	text-align: center; */
-/* } */
-
-table tr td:first-child::before {
-	content: counter(rowNumber);
-	margin-right: 5em;
-	text-align: center;
+table tr td div:first-child::after {
+     content: counter(rowNumber); text-align: center;
 }
-
-/* h1#foo  { */
-/*     color: var(--main-color); */
-/* } */
-/* h1#norm { */
-/*     color:#06c;     */
-/* } */
 
 /*the following html and body rule sets are required only if using a % width or height*/
 html {
-	width: 100%;
-	height: 100%;
+     width: 100%; height: 100%;
 }
 
 body {
-	box-sizing: border-box;
-	width: 100%;
-	height: 100%;
-	margin: 0;
-	padding: 0 20px 0 20px;
-	text-align: center;
+     box-sizing: border-box; width: 100%; height: 100%; margin: 0; padding: 0 20px 0 20px; text-align: center;
 }
 
 select {
-	border: 0;
-	width: 100%;
-	background: transparent;
-	font-family: Verdana, Tahoma, sans-serif;
-	font-size: 16px;
+     border: 0; width: 100%; background: transparent; font-family: Verdana, Tahoma, sans-serif; font-size: 16px;
 }
 
-td {
-	border: 0;
-	width: 100%;
-	font-family: Verdana, Tahoma, sans-serif;
-	font-size: 16px;
+table tr th {
+     border: 0; width: 100%; height: 100%; font-family: Verdana, Tahoma, sans-serif; font-size: 16px;
+}
+
+table tr td div {
+     float: none; margin: 0 auto; width: 100%; transform: scale(1.25);
 }
 
 input[type=text] {
-	border: 0;
-	width: 100%;
-	background: transparent;
-	font-family: Verdana, Tahoma, sans-serif;
-	font-size: 16px;
+     border: 0; width: 100%; background: transparent; font-family: Verdana, Tahoma, sans-serif; font-size: 16px;
 }
 
 input[type=button] {
-	background: transparent;
-	font-family: Verdana, Tahoma, sans-serif;
-	font-size: 16px;
+     font-family: Verdana, Tahoma, sans-serif; font-size: 16px;
+}
+
+td input[type="checkbox"] {
+     float: none; margin: 0 auto; width: 100%; transform: scale(1.25);
 }
 
 input[type=file] {
-	background: transparent;
-	font-family: Verdana, Tahoma, sans-serif;
-	font-size: 16px;
+     font-family: Verdana, Tahoma, sans-serif; font-size: 16px;
 }
 
-
 .scrollingtable {
-	box-sizing: border-box;
-	display: inline-block;
-	vertical-align: middle;
-	overflow: hidden;
-	width: auto;
-	/*if you want a fixed width, set it here, else set to auto*/
-	min-width: /*0*/ 100%;
-	/*if you want a % width, set it here, else set to 0*/
-	height: /*300px*/ 100%;
-	/*set table height here; can be fixed value or %*/
-	min-height: /*0*/ 104px;
-	/*if using % height, make this large enough to fit scrollbar arrows + caption + thead*/
-	font-family: Verdana, Tahoma, sans-serif;
-	font-size: 16px;
-	line-height: 20px;
-	padding: 20px 0 20px 0;
-	/*need enough padding to make room for caption*/
-	text-align: left;
+     box-sizing: border-box; display: inline-block; vertical-align: middle; overflow: hidden; width: auto;
+     /*if you want a fixed width, set it here, else set to auto*/ min-width: /*0*/ 100%;
+     /*if you want a % width, set it here, else set to 0*/ height: /*300px*/ 100%;
+     /*set table height here; can be fixed value or %*/ min-height: /*0*/ 100%;
+     /*if using % height, make this large enough to fit scrollbar arrows + caption + thead*/ font-family: Verdana, Tahoma, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 20px 0;
+     /*need enough padding to make room for caption*/ text-align: left;
 }
 
 .scrollingtable * {
-	box-sizing: border-box;
+     box-sizing: border-box;
 }
 
 .scrollingtable>div {
-	position: relative;
-	border-top: 1px solid black;
-	height: 100%;
-	padding-top: 20px; /*this determines column header height*/
+     position: relative; border-top: 1px solid black; height: 100%; padding-top: 20px; /*this determines column header height*/
 }
 
 .scrollingtable>div:before {
-	top: 0;
-	/* 	background: varHeaderRowColor ; /*header row background color*/
-	/* 	background: var(beautifulColor); */
-	background: #F5EDFF;
+     top: 0; background: Green; /*  #A4F0B7 header row background color*/
 }
 
-.scrollingtable>div:before, .scrollingtable>div>div:after {
-	content: "";
-	position: absolute;
-	z-index: -1;
-	width: 100%;
-	height: 10%;
-	left: 0;
+.scrollingtable>div:before,.scrollingtable>div>div:after {
+     content: ""; position: absolute; z-index: -1; width: 100%; height: 5%; left: 0;
 }
 
 .scrollingtable>div>div {
-	min-height: /*0 */ 43px;
-	/*if using % height, make this large enough to fit scrollbar arrows*/
-	max-height: 95%;
-	overflow: /*scroll*/ auto;
-	/*set to auto if using fixed or % width; else scroll*/
-	overflow-x: hidden;
-	border: 2px solid black; /*border around table body*/
+     min-height: /*0 */ 20px;
+     /*if using % height, make this large enough to fit scrollbar arrows*/ max-height: 97%; overflow: /*scroll*/ auto;
+     /*set to auto if using fixed or % width; else scroll*/ overflow-x: hidden; border: 1px solid black; /*border around table body*/
 }
 
 .scrollingtable>div>div:after {
-	/* 	background: white; */
-	/* 	background: varBackgroundRowColor ; */
-	background: #EDFFF5;
-} /*match page background color*/
+     background: purple; /* LightBlue #BBDAFF match page background color aqua #67C7E2*/
+}
+
 .scrollingtable>div>div>table {
-	width: 100%;
-	border-spacing: 0;
-	margin-top: -20px; /*inverse of column header height*/
-	margin-right: 17px; /*uncomment if using % width*/
+     width: 100%; border-spacing: 0; margin-top: -23px; /*inverse of column header height*/ margin-right: 17px; /*uncomment if using % width*/
 }
 
 .scrollingtable>div>div>table>caption {
-	position: absolute;
-	top: -20px; /*inverse of caption height*/
-	margin-top: -1px; /*inverse of border-width*/
-	width: 100%;
-	font-weight: bold;
-	text-align: left;
+     position: absolute; top: -20px; /*inverse of caption height*/ margin-top: -1px; /*inverse of border-width*/ width: 100%; font-weight: bold; text-align: left;
 }
 
 .scrollingtable>div>div>table>*>tr>* {
-	padding: 0;
+     padding: 0;
 }
 
 .scrollingtable>div>div>table>thead {
-	vertical-align: bottom;
-	white-space: nowrap;
-	text-align: center;
+     vertical-align: center; white-space: nowrap; text-align: center;
+}
+
+.scrollingtable>div>div>table>thead>tr>th:nth-child(1)>div {
+     display: inline-block; padding: 0 12px 0 12px; /*header cell padding*/
+}
+
+.scrollingtable>div>div>table>thead>tr>th:nth-child(2)>div {
+     display: inline-block; padding: 0 12px 0 12px; /*header cell padding*/
+}
+
+.scrollingtable>div>div>table>thead>tr>th:nth-child(3)>div {
+     display: inline-block; padding: 0 36px 0 36px; /*header cell padding*/
 }
 
 .scrollingtable>div>div>table>thead>tr>*>div {
-	display: inline-block;
-	padding: 0 12px 0 12px; /*header cell padding*/
+     display: inline-block; padding: 0 36px 0 36px; /*header cell padding*/
+}
+
+.scrollingtable>div>div>table>thead>tr>th:nth-child(21)>div {
+     display: inline-block; padding: 0 0 0 0; /*header cell padding*/
 }
 
 .scrollingtable>div>div>table>thead>tr>:first-child:before {
-	content: "";
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 20px; /*match column header height*/
-	border-left: 1px solid black; /*leftmost header border*/
+     content: ""; position: absolute; top: 0; left: 0; height: 20px; /*match column header height*/ border-left: 1px solid black; /*leftmost header border*/
 }
 
-.scrollingtable>div>div>table>thead>tr>*>div[label]:before,
-	.scrollingtable>div>div>table>thead>tr>*>div>div:first-child,
-	.scrollingtable>div>div>table>thead>tr>*+:before {
-	position: absolute;
-	top: 0;
-	white-space: pre-wrap;
-	color: black; /*header row font color*/
+.scrollingtable>div>div>table>thead>tr>*>div[label]:before,.scrollingtable>div>div>table>thead>tr>*>div>div:first-child,.scrollingtable>div>div>table>thead>tr>*+:before {
+     position: absolute; top: 0; white-space: pre-wrap; color: white; font-size: 18px; font-weight: bold; /*header row font color*/
 }
 
-.scrollingtable>div>div>table>thead>tr>*>div[label]:before,
-	.scrollingtable>div>div>table>thead>tr>*>div[label]:after {
-	content: attr(label);
+.scrollingtable>div>div>table>thead>tr>*>div[label]:before,.scrollingtable>div>div>table>thead>tr>*>div[label]:after {
+     content: attr(label);
 }
 
 .scrollingtable>div>div>table>thead>tr>*+:before {
-	content: "";
-	display: block;
-	min-height: 20px; /*match column header height*/
-	padding-top: 1px;
-	border-left: 1px solid black; /*borders between header cells*/
+     content: ""; display: block; min-height: 20px; /*match column header height*/ padding-top: 1px; border-left: 1px solid black; /*borders between header cells*/
 }
 
 .scrollingtable .scrollbarhead {
-	float: right;
+     float: right;
 }
 
 .scrollingtable .scrollbarhead:before {
-	position: absolute;
-	width: 100px;
-	top: -1px; /*inverse border-width*/
-	/* 	background: white; /*match page background color*/
-	/* 	background: varBackgroundRowColor ; */
-	background: #EDFFF5;
+     position: absolute; width: 100px; top: -1px; /*inverse border-width*/
+     /* 	background: white; /*match page background color*/
+     /* 	background: varBackgroundRowColor ; */ background: orange; /* #EDFFF5 match page background color*/
 }
 
 .scrollingtable>div>div>table>tbody>tr:after {
-	content: "";
-	display: table-cell;
-	position: relative;
-	padding: 0;
-	border-top: 1px solid black;
-	top: -1px; /*inverse of border width*/
+     content: ""; display: table-cell; position: relative; padding: 0; border-top: 1px solid black; top: -1px; /*inverse of border width*/
 }
 
 .scrollingtable>div>div>table>tbody {
-	vertical-align: top;
+     vertical-align: top;
 }
 
 .scrollingtable>div>div>table>tbody>tr {
-	/* 	background: white; */
-	/* 	background: varBackgroundRowColor     /* #EDEAD1;*/
-	background: #EDFFF5;
+     background: LemonChiffon; /* #FFF9CE background row color odd Rows start 1*/
 }
 
 .scrollingtable>div>div>table>tbody>tr>* {
-	border-bottom: 1px solid black;
-	padding: 0 6px 0 6px;
-	height: 20px; /*match column header height*/
+     border-bottom: 1px solid black; padding: 0 6px 0 6px; height: 20px; /*match column header height*/
 }
 
 .scrollingtable>div>div>table>tbody:last-of-type>tr:last-child>* {
-	border-bottom: none;
+     border-bottom: none;
 }
 
 .scrollingtable>div>div>table>tbody>tr:nth-child(even) {
-	/* 	background: #EDEAD1 ; */
-	/* 	background: varEvenRowColor ;/*#E9CFEC;*/
-	background: #FFF5EE;
-} /*alternate row color*/
+     background: Plum; /*  #E9CFEC alternate even rows color*/
+}
+
 .scrollingtable>div>div>table>tbody>tr>*+* {
-	border-left: 1px solid black; /*borders between body cells*/
+     border-left: 1px solid black; /*borders between body cells*/
 }
 </style>
-
-
 <script language="javascript" type="text/javascript">
-	// function myFunction() {
-	//     var varHeaderRowColor = #F5EDFF;
-	//     var varBackgroundRowColor = #EDFFF5;
-	//     var varEvenRowColor = #FFF5EE;
+	// 	     var varHeaderRowColor = "#F5EDFF";
+	// 	     var varBackgroundRowColor = "#EDFFF5";
+	// 	     var varEvenRowColor = "#FFF5EE";
 
-	// }
-	// window.onload = myFunction;
 	function loadJsonFile() {
 		try {
 			var objTable;
@@ -293,7 +202,7 @@ input[type=file] {
 			var blnResponse
 			var strFileToLoad
 			strFileToLoad = document.getElementById('fileToLoad').value;
-			// 			alert(strFileToLoad)
+			//alert(strFileToLoad)
 			if (strFileToLoad == "") {
 				alert("no file")
 			} else {
@@ -313,34 +222,36 @@ input[type=file] {
 								var objJsonFile = eval("(" + allText + ")");
 								var intRow;
 								var intRowCount = objJsonFile.steps.length;
-								//alert(intRowCount)
+								//	alert(intRowCount)
 								for (intRow = 0; intRow < intRowCount; intRow++) {
 									if (intRow > 0) {
 										addRow();
 									}
 									objRowEach = document.getElementById('DragonflyStepTable').rows[intRow + 1];
 									intColumnCount = objRowEach.cells.length;
-
+									//alert(intColumnEach)
 									for (intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
+										//alert(intColumnEach)
 										objCellEach = objRowEach.cells[intColumnEach];
 										// 										strKeyName = document.getElementById('DragonflyStepTable').rows[0].cells[intColumnEach].textContent;
 										strKeyName = document.getElementById('DragonflyStepTableHeaderRow').cells[intColumnEach].getAttribute("id");
+										//	alert(strKeyName)
+										if (strKeyName != "strScrollbarhead") {
+											strKeyValue = objJsonFile.steps[intRow][strKeyName];
 
-										strKeyValue = objJsonFile.steps[intRow][strKeyName];
-										//alert(strKeyName + " = " + strKeyValue)
-
-										if (strKeyName == "strTagName") {
-
-											strKeyValue = strKeyValue.toLowerCase();
+											//alert(strKeyName + " = " + strKeyValue)
+											if (strKeyName == "strTagName") {
+												strKeyValue = strKeyValue.toLowerCase();
+											}
+											switch (objCellEach.childNodes[0].type) {
+											case "text":
+												objCellEach.childNodes[0].value = strKeyValue;
+												break;
+											case "select-one":
+												selectItemByValue(objCellEach.childNodes[0], strKeyValue);
+												break;
+											}// the end of switch
 										}
-										switch (objCellEach.childNodes[0].type) {
-										case "text":
-											objCellEach.childNodes[0].value = strKeyValue;
-											break;
-										case "select-one":
-											selectItemByValue(objCellEach.childNodes[0], strKeyValue);
-											break;
-										}// the end of switch
 									}// the end of for intColumnEach
 									//return;
 								}// the end of for intRow
@@ -390,7 +301,7 @@ input[type=file] {
 						intColumnCount = objRowEach.cells.length;
 						for (intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
 							objCellEach = objRowEach.cells[intColumnEach];
-							strKeyName = objTable.rows[0].cells[intColumnEach].innerHTML;
+							strKeyName = objTable.rows[0].cells[intColumnEach].getAttribute("id");
 							switch (objCellEach.childNodes[0].type) {
 							case "text":
 								strTextToJson = strTextToJson + "\"" + strKeyName + "\":\"" + objCellEach.childNodes[0].value + "\",";
@@ -423,7 +334,10 @@ input[type=file] {
 		var intColumnCount = objTable.rows[0].cells.length;
 		for (var i = 0; i < intColumnCount; i++) {
 			var objCellNew = objRowNew.insertCell(i);
+			objCellNew.setAttribute("align", "center");
 			objCellNew.innerHTML = objTable.rows[intRowCount - 1].cells[i].innerHTML;
+
+			//alert(objCellNew.innerHTML)
 			switch (objCellNew.childNodes[0].type) {
 			case "text":
 				objCellNew.childNodes[0].value = "";
@@ -450,6 +364,7 @@ input[type=file] {
 				var intColumnCount = objRowEach.cells.length;
 				for (var intColumnEach = 0; intColumnEach < intColumnCount; intColumnEach++) {
 					var objCellNew = objRowNew.insertCell(intColumnEach);
+					objCellNew.setAttribute("align", "center");
 					objCellNew.innerHTML = objRowEach.cells[intColumnEach].innerHTML;
 					switch (objCellNew.childNodes[0].type) {
 					case "text":
@@ -531,152 +446,148 @@ input[type=file] {
 		}
 	}
 </script>
-
-
-
 </head>
 <body>
+</body>
 <body>
-
-
-	<div class="scrollingtable">
-		<input type="button" value="Add Row" onclick="addRow()"></input> <input type="button" value="Insert Row" onclick="insertRow()"></input> <input type="button" value="Delete Row" onclick="deleteRow()"></input> <input type="button" value="Refresh Table" onclick="refreshTableCall()"></input> <input type="file" style="width: 750px" id="fileToLoad"></input> <input type="button" value="Load JSON" onclick="loadJsonFile()"></input> <input type="button" value="Save JSON" onclick="saveTableToJson()"></input>
-
-		<div>
-			<div>
-
-				<table id="DragonflyStepTable" border="1">
-					<caption></caption>
-					<thead>
-
-						<tr id="DragonflyStepTableHeaderRow">
-							<th id="+"><div label="+" /></div></th>
-							<th id="strAction" width="200px"><div label="strAction" /></div></th>
-							<th id="strTagName"><div label="strTagName" /></div></th>
-							<th id="strAttributeNames"><div label="strAttributeNames" /></div></th>
-							<th id="strAttributeValues"><div label="strAttributeValues" /></div></th>
-							<th id="strInputValue"><div label="strInputValue" /></div></th>
-							<th id="strLogicalName"><div label="strLogicalName" /></div></th>
-							<th id="intMillisecondsToWait"><div label="intMillisecondsToWait" /></div></th>
-							<th id="blnOptional"><div label="blnOptional" /></div></th>
-							<th id="strAssert"><div label="strAssert" /></div></th>
-							<th id="blnPleaseWait"><div label="blnPleaseWait" /></div></th>
-							<th id="blnHighlight"><div label="blnHighlight" /></div></th>
-							<th id="blnScreenshot"><div label="blnScreenshot" /></div></th>
-							<th id="strFunction"><div label="strFunction" /></div></th>
-							<th id="strAssistiveProperties"><div label="strAssistiveProperties" /></div></th>
-							<th id="blnExitOnFail"><div label="blnExitOnFail" /></div></th>
-							<th id="strOutputLinkName"><div label="strOutputLinkName" /></div></th>
-							<th id="strOutputValue"><div label="strOutputValue" /></div></th>
-							<th id="intLoop"><div label="intLoop" /></div></th>
-							<!-- 							<th id="strAction" class="scrollbarhead" /> -->
-							<!--ALWAYS ADD THIS EXTRA CELL AT END OF HEADER ROW-->
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td><input type="checkbox" name="chk"></input></td>
-							<td><select id="strAction">
-									<option value=""></option>
-									<option value="launch">launch</option>
-									<option value="close">close</option>
-									<option value="get">get</option>
-									<option value="set">set</option>
-									<option value="verify">verify</option>
-									<option value="sync_visible">sync_visible</option>
-									<option value="sync_hidden">sync_hidden</option>
-									<option value="sync_enabled">sync_enabled</option>
-									<option value="sync_disabled">sync_disabled</option>
-									<option value="mouse_over">mouse_over</option>
-									<option value="drag">drag</option>
-									<option value="drop">drop</option>
-									<option value="sleep">sleep</option>
-									<option value="break">break</option>
-							</select></td>
-							<td><select id="strTagName">
-									<option value=""></option>
-									<option value="chrome">chrome</option>
-									<option value="firefox">firefox</option>
-									<option value="ie">ie</option>
-									<option value="opera">opera</option>
-									<option value="safari">safari</option>
-									<option value="a">a</option>
-									<option value="alert">alert</option>
-									<option value="body">body</option>
-									<option value="button">button</option>
-									<option value="div">div</option>
-									<option value="h1">h1</option>
-									<option value="h2">h2</option>
-									<option value="h3">h3</option>
-									<option value="h4">h4</option>
-									<option value="h5">h5</option>
-									<option value="h6">h6</option>
-									<option value="img">img</option>
-									<option value="input">input</option>
-									<option value="li">li</option>
-									<option value="p">p</option>
-									<option value="select">select</option>
-									<option value="span">span</option>
-									<option value="table">table</option>
-									<option value="td">td</option>
-									<option value="textarea">textarea</option>
-									<option value="th">th</option>
-									<option value="title">title</option>
-									<option value="tr">tr</option>
-							</select></td>
-							<td><input type="text" id="strAttributeNames"></input></td>
-							<td><input type="text" id="strAttributeValues"></input></td>
-							<td><input type="text" id="strInputValue"></input></td>
-							<td><input type="text" id="strLogicalName"></input></td>
-							<td><input type="text" id="intMillisecondsToWait"></input></td>
-							<td><select id="blnOptional">
-									<option value=""></option>
-									<option value="true">true</option>
-									<option value="false">false</option>
-							</select></td>
-							<td><select id="strAssert">
-									<option value=""></option>
-									<option value="off">off</option>
-									<option value="value">value</option>
-									<option value="visible">visible</option>
-									<option value="hidden">hidden</option>
-									<option value="enabled">enabled</option>
-									<option value="disabled">disabled</option>
-							</select></td>
-							<td><select id="blnPleaseWait">
-									<option value=""></option>
-									<option value="true">true</option>
-									<option value="false">false</option>
-							</select></td>
-							<td><select id="blnHighlight">
-									<option value=""></option>
-									<option value="true">true</option>
-									<option value="false">false</option>
-							</select></td>
-							<td><select id="blnScreenshot">
-									<option value=""></option>
-									<option value="true">true</option>
-									<option value="false">false</option>
-							</select></td>
-							<td><input type="text" id="strFunction"></input></td>
-							<td><input type="text" id="strAssistiveProperties"></input></td>
-							<td><select id="blnExitOnFail">
-									<option value=""></option>
-									<option value="true">true</option>
-									<option value="false">false</option>
-							</select></td>
-							<td><input type="text" id="strOutputLinkName"></input></td>
-							<td><input type="text" id="strOutputValue"></input></td>
-							<td><input type="text" id="intLoop"></input></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			Faux bottom caption
-		</div>
-
-	</div>
+     <div class="scrollingtable">
+          <input type="button" value="Add Row" onclick="addRow()"></input> <input type="button" value="Insert Row" onclick="insertRow()"></input> <input type="button" value="Delete Row" onclick="deleteRow()"></input> <input type="button" value="Refresh Table" onclick="refreshTableCall()"></input> <input type="file" style="width: 750px" id="fileToLoad"></input> <input type="button" value="Load JSON" onclick="loadJsonFile()"></input> <input type="button" value="Save JSON" onclick="saveTableToJson()"></input>
+          <div>
+               <div>
+                    <table id="DragonflyStepTable" border="1">
+                         <caption></caption>
+                         <thead>
+                              <tr id="DragonflyStepTableHeaderRow">
+                                   <th id="+"><div label="+"></div></th>
+                                   <th id="step"><div label="step"></div></th>
+                                   <th id="strAction"><div label="strAction"></div></th>
+                                   <th id="strTagName"><div label="strTagName"></div></th>
+                                   <th id="strAttributeNames"><div label="strAttributeNames"></div></th>
+                                   <th id="strAttributeValues"><div label="strAttributeValues"></div></th>
+                                   <th id="strInputValue"><div label="strInputValue"></div></th>
+                                   <th id="strLogicalName"><div label="strLogicalName"></div></th>
+                                   <th id="intMillisecondsToWait"><div label="intMillisecondsToWait"></div></th>
+                                   <th id="blnOptional"><div label="blnOptional"></div></th>
+                                   <th id="strAssert"><div label="strAssert"></div></th>
+                                   <th id="blnPleaseWait"><div label="blnPleaseWait"></div></th>
+                                   <th id="blnHighlight"><div label="blnHighlight"></div></th>
+                                   <th id="blnScreenshot"><div label="blnScreenshot"></div></th>
+                                   <th id="strFunction"><div label="strFunction"></div></th>
+                                   <th id="strAssistiveProperties"><div label="strAssistiveProperties"></div></th>
+                                   <th id="blnExitOnFail"><div label="blnExitOnFail"></div></th>
+                                   <th id="strOutputLinkName"><div label="strOutputLinkName"></div></th>
+                                   <th id="strOutputValue"><div label="strOutputValue"></div></th>
+                                   <th id="intLoop"><div label="intLoop"></div></th>
+                                   <!-- <th id="strScrollbarhead" class="scrollbarhead"><div label=""></div></th>-->
+                                   <!-- 							<th id="strAction" class="scrollbarhead" /> -->
+                                   <!--ALWAYS ADD THIS EXTRA CELL AT END OF HEADER ROW-->
+                              </tr>
+                         </thead>
+                         <tbody>
+                              <tr>
+                                   <td align="center"><input type="checkbox" name="chk"></input></td>
+                                   <td align="center"><div id="step"></div></td>
+                                   <td><select id="strAction">
+                                             <option value=""></option>
+                                             <option value="launch">launch</option>
+                                             <option value="close">close</option>
+                                             <option value="get">get</option>
+                                             <option value="set">set</option>
+                                             <option value="verify">verify</option>
+                                             <option value="sync_visible">sync_visible</option>
+                                             <option value="sync_hidden">sync_hidden</option>
+                                             <option value="sync_enabled">sync_enabled</option>
+                                             <option value="sync_disabled">sync_disabled</option>
+                                             <option value="mouse_over">mouse_over</option>
+                                             <option value="drag">drag</option>
+                                             <option value="drop">drop</option>
+                                             <option value="sleep">sleep</option>
+                                             <option value="break">break</option>
+                                   </select></td>
+                                   <td><select id="strTagName">
+                                             <option value=""></option>
+                                             <option value="chrome">chrome</option>
+                                             <option value="firefox">firefox</option>
+                                             <option value="ie">ie</option>
+                                             <option value="opera">opera</option>
+                                             <option value="safari">safari</option>
+                                             <option value="a">a</option>
+                                             <option value="alert">alert</option>
+                                             <option value="body">body</option>
+                                             <option value="button">button</option>
+                                             <option value="div">div</option>
+                                             <option value="h1">h1</option>
+                                             <option value="h2">h2</option>
+                                             <option value="h3">h3</option>
+                                             <option value="h4">h4</option>
+                                             <option value="h5">h5</option>
+                                             <option value="h6">h6</option>
+                                             <option value="img">img</option>
+                                             <option value="input">input</option>
+                                             <option value="li">li</option>
+                                             <option value="p">p</option>
+                                             <option value="select">select</option>
+                                             <option value="span">span</option>
+                                             <option value="table">table</option>
+                                             <option value="td">td</option>
+                                             <option value="textarea">textarea</option>
+                                             <option value="th">th</option>
+                                             <option value="title">title</option>
+                                             <option value="tr">tr</option>
+                                   </select></td>
+                                   <td><input type="text" id="strAttributeNames"></input></td>
+                                   <td><input type="text" id="strAttributeValues"></input></td>
+                                   <td><input type="text" id="strInputValue"></input></td>
+                                   <td><input type="text" id="strLogicalName"></input></td>
+                                   <td><input type="text" id="intMillisecondsToWait"></input></td>
+                                   <td><select id="blnOptional">
+                                             <option value=""></option>
+                                             <option value="true">true</option>
+                                             <option value="false">false</option>
+                                   </select></td>
+                                   <td><select id="strAssert">
+                                             <option value=""></option>
+                                             <option value="off">off</option>
+                                             <option value="value">value</option>
+                                             <option value="visible">visible</option>
+                                             <option value="hidden">hidden</option>
+                                             <option value="enabled">enabled</option>
+                                             <option value="disabled">disabled</option>
+                                   </select></td>
+                                   <td><select id="blnPleaseWait">
+                                             <option value=""></option>
+                                             <option value="true">true</option>
+                                             <option value="false">false</option>
+                                   </select></td>
+                                   <td><select id="blnHighlight">
+                                             <option value=""></option>
+                                             <option value="true">true</option>
+                                             <option value="false">false</option>
+                                   </select></td>
+                                   <td><select id="blnScreenshot">
+                                             <option value=""></option>
+                                             <option value="true">true</option>
+                                             <option value="false">false</option>
+                                   </select></td>
+                                   <td><input type="text" id="strFunction"></input></td>
+                                   <td><input type="text" id="strAssistiveProperties"></input></td>
+                                   <td><select id="blnExitOnFail">
+                                             <option value=""></option>
+                                             <option value="true">true</option>
+                                             <option value="false">false</option>
+                                   </select></td>
+                                   <td><input type="text" id="strOutputLinkName"></input></td>
+                                   <td><input type="text" id="strOutputValue"></input></td>
+                                   <td><input type="text" id="intLoop"></input></td>
+                                   <!--  <td><input type="text" id="strScrollbarhead"></input></td> -->
+                              </tr>
+                         </tbody>
+                    </table>
+               </div>
+               <!--                Faux bottom caption -->
+          </div>
+     </div>
 </body>
 <!--[if lte IE 9]><style>.scrollingtable > div > div > table {margin-right: 17px;}</style><![endif]-->
-</body>
+<body></body>
 </html>

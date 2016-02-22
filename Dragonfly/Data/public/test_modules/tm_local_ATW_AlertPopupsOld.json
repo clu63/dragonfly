@@ -86,7 +86,7 @@
 		},
 
 		{
-			"strAction": "set",
+			"strAction": "verify",
 			"strTagName": "input",
 			"strAttributeNames": "value",
 			"strAttributeValues": "Show alert box",
@@ -107,7 +107,7 @@
 		},
 
 		{
-			"strAction": "sync_visible",
+			"strAction": "break",
 			"strTagName": "alert",
 			"strAttributeNames": "",
 			"strAttributeValues": "",
@@ -150,27 +150,6 @@
 
 		{
 			"strAction": "get",
-			"strTagName": "alert",
-			"strAttributeNames": "title",
-			"strAttributeValues": "title",
-			"strInputValue": "",
-			"strLogicalName": "",
-			"intMillisecondsToWait": "",
-			"blnOptional": "",
-			"strAssert": "",
-			"blnPleaseWait": "",
-			"blnHighlight": "",
-			"blnScreenshot": "",
-			"strFunction": "",
-			"strAssistiveProperties": "",
-			"blnExitOnFail": "",
-			"strOutputLinkName": "",
-			"strOutputValue": "",
-			"intLoop": ""
-		},
-
-		{
-			"strAction": "break",
 			"strTagName": "alert",
 			"strAttributeNames": "text",
 			"strAttributeValues": "text",
@@ -758,7 +737,7 @@
 		},
 
 		{
-			"strAction": "break",
+			"strAction": "set",
 			"strTagName": "alert",
 			"strAttributeNames": "button",
 			"strAttributeValues": "accept",

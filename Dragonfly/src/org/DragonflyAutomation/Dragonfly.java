@@ -435,7 +435,7 @@ public class Dragonfly {
 		//		JSONObject objTestInstancesEach = null;
 		//		JSONObject objStep = new JSONObject();
 		String strPathFullTestMatix = "";
-		String strTestMatixFileName = "local_ATW_AlertPopups.json"; // "Hskpng_DragDrop.json"; //"local_DragAndDrop.json"; //local_ATW_AlertPopups.json";//"PP_Login.json"; // "LiloOutOfOrder.json";		// "PP_Login.json";
+		String strTestMatixFileName = "local_ATW_AlertPopups.json"; 
 		int intStep = 0;
 		int intMillisecondsToWaitDefault = 20000;
 		int intFrame = -1;
@@ -716,7 +716,7 @@ public class Dragonfly {
 	}
 
 	public static String jSONObjectGetValue(JSONObject objJSONObject, String strInputValue, String strKeywordName) throws JSONKeyNotPresentException {
-		logger("  ==start==>jSONObjectGetValue " + dateTimestamp());
+		//logger("  ==start==>jSONObjectGetValue " + dateTimestamp());
 		String strJSONObjectKey = strInputValue.replace(strKeywordName, "");
 		String strJSONObjectValue = "";
 		if (objJSONObject.containsKey(strJSONObjectKey)) {
@@ -731,7 +731,7 @@ public class Dragonfly {
 
 	@SuppressWarnings("unchecked")
 	public static void jSONObjectStepPut(String strKeyName, String strKeyValue) {
-		logger("  ==start==>jSONObjectGetValue " + dateTimestamp());
+		//logger("  ==start==>jSONObjectStepPut " + dateTimestamp());
 		objStep.put(strKeyName, strKeyValue);
 	}
 
@@ -2591,15 +2591,23 @@ public class Dragonfly {
 			break;
 		case "edit":
 			strText = "";
-			strControlID = "[CLASS:Edit]";
+			strControlID = "[CLASS:Edit; INSTANCE:1]";
 			break;
 		}
 		logger("coordinatesAlert: objStep.get(strAttributeValues).toString().toLowerCase(): = " + objStep.get("strAttributeValues").toString().toLowerCase());
 		logger("coordinatesAlert: strText: = " + strText);
 		logger("coordinatesAlert: strControlID: = " + strControlID);
+		logger("coordinatesAlert: intWinPosHeight: = " + intWinPosHeight);
+		logger("coordinatesAlert: intWinPosWidth: = " + intWinPosWidth);
+		logger("coordinatesAlert: intWinPosX: = " + intWinPosX);
+		logger("coordinatesAlert: intWinPosY: = " + intWinPosY);
+		
+		
+		
 		switch (objStep.get("strAttributeValues").toString().toLowerCase()) {
 		case "accept":
 		case "dismiss":
+		case "edit":
 		case "text":
 			intControlPosHeight = objAutoIt.controlGetPosHeight("[ACTIVE]", strText, strControlID);
 			intControlPosWidth = objAutoIt.controlGetPosWidth("[ACTIVE]", strText, strControlID);
@@ -2626,15 +2634,16 @@ public class Dragonfly {
 			intClientSizeHeight = objAutoIt.winGetClientSizeHeight("[ACTIVE]");
 			intClientSizeWidth = objAutoIt.winGetClientSizeWidth("[ACTIVE]");
 			logger("coordinatesAlert: intControlPosHeight: = " + intControlPosHeight);
+			logger("coordinatesAlert: intControlPosHeight: = " + intControlPosHeight);
 			logger("coordinatesAlert: intControlPosWidth: = " + intControlPosWidth);
 			logger("coordinatesAlert: intControlPosX: = " + intControlPosX);
 			logger("coordinatesAlert: intControlPosY: = " + intControlPosY);
 			logger("coordinatesAlert: intClientSizeHeight: = " + intClientSizeHeight);
 			logger("coordinatesAlert: intClientSizeWidth: = " + intClientSizeWidth);
-			intWinPosX = intWinPosX + intControlPosX + ((intWinPosWidth - intClientSizeWidth) / 2);
-			intWinPosY = intWinPosY + intControlPosY + ((intWinPosHeight - intClientSizeHeight) - ((intWinPosWidth - intClientSizeWidth) / 2));
-			intWinPosWidth = intControlPosWidth;
-			intWinPosHeight = intControlPosHeight;
+			//intWinPosX = intWinPosX ;
+			//intWinPosY = intWinPosY + intControlPosY + ((intWinPosHeight - intClientSizeHeight) - ((intWinPosWidth - intClientSizeWidth) / 2));
+			//intWinPosWidth = intControlPosWidth;
+			intWinPosHeight = ((intWinPosHeight - intClientSizeHeight) - ((intWinPosWidth - intClientSizeWidth) / 2));
 			break;
 		}
 		jSONObjectStepPut("intElementScreenX", Integer.toString(intWinPosX));
@@ -2867,15 +2876,29 @@ public class Dragonfly {
 				strElementGet = objWebElement.getText();
 				return strElementGet;
 			case "alert":
-				strElementGet = objWebDriver.switchTo().alert().getText();
+				if (objStep.get("strAttributeValues").toString().toLowerCase().equals("title")) {
+					strElementGet = objAutoIt.winGetTitle("[ACTIVE]");
+					logger("winGetTitle: = " + objAutoIt.winGetTitle("[ACTIVE]"));
+				} else {
+					strElementGet = objWebDriver.switchTo().alert().getText();
+				}
 				return strElementGet;
 			default:
 				strElementGet = "elementGet tag not supported";
 				throw new ElementTagNameNotSupportedException("Element tag not supported");
 			}
+			//		} catch (Exception e) {
+			//			// TODO handle ElementGet Exception
+			//			logger("ElementGet: Exception = " + e.toString());
 		} finally {
 			logger("ElementGet: finally strElementGet = {" + strElementGet + "} MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementGet));
 		}
+		//		if (strElementGet.equals("elementGet tag not supported")) {
+		//			throw new ElementTagNameNotSupportedException(strElementGet);
+		//		} else {
+		//			return strElementGet;
+		//		}
+		//return strElementGet;
 	}
 
 	public class syncTime {
