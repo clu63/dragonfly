@@ -170,7 +170,7 @@
 		},
 
 		{
-			"strAction": "break",
+			"strAction": "get",
 			"strTagName": "alert",
 			"strAttributeNames": "text",
 			"strAttributeValues": "text",
@@ -191,7 +191,7 @@
 		},
 
 		{
-			"strAction": "get",
+			"strAction": "verify",
 			"strTagName": "alert",
 			"strAttributeNames": "text",
 			"strAttributeValues": "text",
@@ -575,7 +575,7 @@
 			"strAttributeValues": "text",
 			"strInputValue": "fail",
 			"strLogicalName": "",
-			"intMillisecondsToWait": "",
+			"intMillisecondsToWait": "0",
 			"blnOptional": "",
 			"strAssert": "",
 			"blnPleaseWait": "",
@@ -758,10 +758,31 @@
 		},
 
 		{
-			"strAction": "break",
+			"strAction": "set",
 			"strTagName": "alert",
 			"strAttributeNames": "button",
 			"strAttributeValues": "accept",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		},
+
+		{
+			"strAction": "refresh",
+			"strTagName": "ie",
+			"strAttributeNames": "",
+			"strAttributeValues": "",
 			"strInputValue": "",
 			"strLogicalName": "",
 			"intMillisecondsToWait": "",
