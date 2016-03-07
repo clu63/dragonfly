@@ -34,6 +34,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -53,6 +55,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import org.apache.commons.io.FileUtils;
+import org.ini4j.Reg;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -274,206 +277,17 @@ public class Dragonfly {
 		}
 	}
 
-	public static void logger(String strTextToAdd) {
-		System.out.println(strTextToAdd);
-		if (gstrLog.length() == 0) {
-			gstrLog = strTextToAdd;
-		} else {
-			gstrLog = gstrLog + System.getProperty("line.separator") + strTextToAdd;
-		}
-	}
-
-	public String data_DateDaysOut(String strDaysOut) {
-		logger("  ==start==>data_DateDaysOut " + dateTimestamp());
-		Integer intDaysOut = Integer.parseInt(strDaysOut);
-		SimpleDateFormat FormattedDATE = new SimpleDateFormat("MM/dd/yyyy");
-		Calendar objCalendar = Calendar.getInstance();
-		objCalendar.add(Calendar.DATE, intDaysOut);
-		String strNewDate = (String) (FormattedDATE.format(objCalendar.getTime()));
-		return strNewDate;
-	}
-
-	public String data_RandomFourNumbers(String strDaysOut) {
-		logger("  ==start==>data_RandomFourNumbers " + dateTimestamp());
-		return Integer.toString(randomNumberRange(1000, 9999));
-	}
-
-	public String data_RandomRangeFiveNumbers(String strDataInput) {
-		logger("  ==start==>data_RandomRangeFiveNumbers " + dateTimestamp());
-		return Integer.toString(randomNumberRange(1, 99999));
-	}
-
-	public String data_EnvironmentURL(String strApplication_Environment) {
-		logger("  ==start==>data_EnvironmentURL " + dateTimestamp());
-		String strURL = "";
-		String strPathFullTestData = gstrPathTestData + "/Environment.json";
-		try {
-			JSONObject objJsonObjectFile = (JSONObject) gobjJsonParser.parse(new FileReader(strPathFullTestData));
-			strURL = objJsonObjectFile.get(strApplication_Environment).toString();
-			logger("data_EnvironmentURL: strURL = " + strURL);
-		} catch (Exception e) {
-			logger("data_EnvironmentURL: Exception = " + e.toString());
-		}
-		return strURL;
-	}
-
-	public String data_localWebsiteFilePath(String strWebsite) {
-		logger("  ==start==>data_localWebsiteFilePath " + dateTimestamp());
-		String strLocalWebsiteFilePath = "file:///" + System.getProperty("user.dir").replaceAll("\\\\", "/") + "/Websites/" + strWebsite;
-		logger("data_localWebsiteFilePath: strLocalWebsiteFilePath = " + strLocalWebsiteFilePath);
-		return strLocalWebsiteFilePath;
-	}
-
-	public static String oSType() {
-		logger("  ==start==>oSType " + dateTimestamp());
-		String strOS = System.getProperty("os.name").toLowerCase();
-		if (strOS.contains("win")) {
-			return "Windows";
-		} else if (strOS.contains("nux") || strOS.contains("nix")) {
-			return "Linux";
-		} else if (strOS.contains("mac")) {
-			return "Mac";
-		} else if (strOS.contains("sunos")) {
-			return "Solaris";
-		} else {
-			return "Other";
-		}
-	}
-
-	public static String jvmBitVersion() {
-		logger("jvmBitVersion: System.getProperty(sun.arch.data.model) =" + System.getProperty("sun.arch.data.model"));
-		return System.getProperty("sun.arch.data.model");
-	}
-
-	public static void autoItSetObject() throws InterruptedException {
-		logger("  ==start==>autoItSetObject " + dateTimestamp());
-		String strJacobDllVersionToUse;
-		if (jvmBitVersion().contains("32")) {
-			strJacobDllVersionToUse = "jacob-1.18-x86.dll";
-		} else {
-			strJacobDllVersionToUse = "jacob-1.18-x64.dll";
-		}
-		logger("autoItSetObject: " + System.getProperty("java.library.path"));
-		logger("autoItSetObject: " + strJacobDllVersionToUse);
-		File objFile = new File("Libraries", strJacobDllVersionToUse);
-		logger("autoItSetObject: " + LibraryLoader.JACOB_DLL_PATH);
-		logger("autoItSetObject: " + objFile.getAbsolutePath());
-		System.setProperty(LibraryLoader.JACOB_DLL_PATH, objFile.getAbsolutePath());
-		gobjAutoIt = new AutoItX();
-	}
-
-	public static void windowsMinimizeAll() {
-		logger("  ==start==>windowsMinimizeAll " + dateTimestamp());
-		Robot objRobot = null;
-		switch (gstrOperatingSystem) {
-		case "Windows":
-			try {
-				objRobot = new Robot();
-				objRobot.keyPress(KeyEvent.VK_WINDOWS);
-				objRobot.keyPress(KeyEvent.VK_D);
-				objRobot.keyRelease(KeyEvent.VK_D);
-				objRobot.keyRelease(KeyEvent.VK_WINDOWS);
-				logger("windowsMinimizeAll: Windows operating system minimize all windows.");
-			} catch (Exception e) {
-				logger("windowsMinimizeAll: Exception = " + e.toString());
-			}
-			break;
-		case "default":
-			logger("windowsMinimizeAll: the operating system not supported at this time " + gstrOperatingSystem);
-		}
-	}
-
-	public static void windowsProcessKill(String strProcessToKill) {
-		logger("  ==start==>windowsProcessKill " + dateTimestamp());
-		try {
-			Runtime.getRuntime().exec(strProcessToKill);
-			logger("windowsProcessKill: process killed = " + strProcessToKill);
-		} catch (Exception e) {
-			logger("windowsProcessKill: Exception = " + e.toString());
-		}
-	}
-
-	public static void sleepMilliseconds(int intMillisecondsToWait) {
-		logger("  ==start==>sleepMilliseconds " + dateTimestamp());
-		try {
-			TimeUnit.MILLISECONDS.sleep(intMillisecondsToWait);
-		} catch (Exception e) {
-			logger("sleepMilliseconds: Exception = " + e.toString());
-		}
-	}
-
-	public static void InternetExplorerVersion() {
-		//	Const HKEY_LOCAL_MACHINE = &H80000002
-		//	strComputer = "."
-		//	Set objFSO = CreateObject("Scripting.FileSystemObject")
-		//	Set objStandardStreamOut = objFSO.GetStandardStream (1)
-		//	Set objReg = GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & strComputer & "\root\default:StdRegProv")
-		//	objStandardStreamOut.WriteLine "Checking Internet Explorer Update Version"
-		//	strKeyPath = "SOFTWARE\Microsoft\Internet Explorer"
-		//	strValueName = "svcKBNumber"
-		//	objReg.GetStringValue HKEY_LOCAL_MACHINE, strKeyPath, strValueName, strKBNumber
-		//	objStandardStreamOut.WriteLine "Current version installed is " & strKBNumber
-		//
-		//	Set objShell = Nothing
-		//	'On Error GoTo 0
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static void jsonOrder() {
-		Map obj = new LinkedHashMap();
-		obj.put("name", "foo");
-		obj.put("num", new Integer(100));
-		obj.put("balance", new Double(1000.21));
-		obj.put("is_vip", new Boolean(true));
-		obj.put("nickname", null);
-		String jsonText = JSONValue.toJSONString(obj);
-		System.out.print(jsonText);
-	}
-
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static void jsonOrder2() {
-		Map obj = new LinkedHashMap();
-		//		String strKeys = "intBrowserOuterHeight|strOutputLinkName|intBrowserInnerWidth|strType|intBrowserOuterX|intBrowserOuterY|strFunction";
-		//		strKeys = strKeys + "|strAttributeValues|blnHighlight|intElementX|strScreenshotFilePath|intElementY|strAssert|intLoop|strAssistiveProperties";
-		//		strKeys = strKeys + "|intElementHeight|intElementScreenY|strAttributeNames|strLogicalName|intElementScreenX|strStepActual|strOutputValue";
-		//		strKeys = strKeys + "|strAction|strScreenshotArea|strStartTimestamp|strTagType|intMillisecondsToWait|intElementWidth|intBrowserOuterWidth";
-		//		strKeys = strKeys + "|blnOptional|strCurrentWindowHandle|strStepExpected|blnScreenshot|blnExitOnFail|intFrame|intBrowserInnerHeight";
-		//		strKeys = strKeys + "|strEndTimestamp|blnPleaseWait|strStepDuration|strInputValue|strTagName|strStatus";
-		//		String strKeys = "strAction|strTagName|strAttributeNames|strAttributeValues|strInputValue|strLogicalName|intMillisecondsToWait|blnOptional|strAssert|";
-		//		strKeys = strKeys + "blnPleaseWait|blnHighlight|blnScreenshot|strFunction|strAssistiveProperties|blnExitOnFail|strOutputLinkName|strOutputValue|intLoop|";
-		//		strKeys = strKeys + "intBrowserInnerHeight|intBrowserInnerWidth|intBrowserOuterHeight|intBrowserOuterWidth|intBrowserOuterX|intBrowserOuterY|intElementHeight|";
-		//		strKeys = strKeys + "intElementScreenX|intElementScreenY|intElementWidth|intElementX|intElementY|intFrame|strTagType|strType|strCurrentWindowHandle|";
-		//		strKeys = strKeys + "strURL|strStepExpected|strStepActual|strStartTimestamp|strEndTimestamp|strStepDuration|strScreenshotArea|strScreenshotFilePath|strStatus|blnStatus";
-		String strKey = "";
-		String[] arrKeys;
-		//	arrKeys = strKeys.split("\\|");
-		arrKeys = StepsNamesCompleteArray();
-		for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
-			strKey = (String) arrKeys[intKeysEach].toString();
-			obj.put(strKey, "");
-		}
-		String jsonText = JSONValue.toJSONString(obj);
-		System.out.print(jsonText);
-		JSONObject objTestStep = null;
-		try {
-			objTestStep = (JSONObject) gobjJsonParser.parse(jsonText);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		for (Iterator<?> iterator = objTestStep.keySet().iterator(); iterator.hasNext();) {
-			String key = (String) iterator.next();
-			logger("jsonOrder2: " + key + " = " + objTestStep.get(key));
-		}
-		logger("jsonOrder2: ````````````````````````````");
-		for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
-			strKey = (String) arrKeys[intKeysEach].toString();
-			logger("jsonOrder2: " + strKey + " = " + objTestStep.get(strKey));
-		}
-	}
-
 	public static void main(String[] args) {
 		logger("  ==start==>main " + dateTimestamp());
+		try {
+			internetExplorerVersion();
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		//		String value = WindowsReqistry.readRegistry("HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\" + "Explorer\\Shell Folders", "Personal");
+		//		System.out.println(value);
+		System.exit(0);
 		//testPage();
 		// try {
 		// logger("clearMyTracksByProcessCookies start = ");
@@ -491,7 +305,7 @@ public class Dragonfly {
 		//		JSONObject gobjJsonObjectTestInstancesEach = null;
 		//		JSONObject gobjJsonObjectStep = new JSONObject();
 		String strPathFullTestMatix = "";
-		String strTestMatixFileName = "local_ATW_AlertPopups.json"; // "Hskpng_DragDrop.json"; //"local_DragAndDrop.json"; //local_ATW_AlertPopups.json";//"PP_Login.json"; // "LiloOutOfOrder.json";		// "PP_Login.json";
+		String strTestMatixFileName = "local_ATW_AlertPopups.json"; 
 		int intStep = 0;
 		int intMillisecondsToWaitDefault = 20000;
 		int intFrame = -1;
@@ -559,57 +373,57 @@ public class Dragonfly {
 					String strLogicalName = gobjJsonObjectStep.get("strLogicalName").toString();
 					if (strLogicalName.toLowerCase().startsWith("<er>") == true) {
 						strLogicalName = strLogicalName.replace("<er>", "");
-						jSONObjectValidateKey(gobjJsonObjectElement, strLogicalName);
+						jsonObjectValidateKey(gobjJsonObjectElement, strLogicalName);
 						JSONObject objJsonObjectElementNode = (JSONObject) gobjJsonObjectElement.get(strLogicalName);
-						jSONObjectStepPut("strTagName", jSONObjectGetValue(objJsonObjectElementNode, "strTagName", ""));
-						jSONObjectStepPut("strAttributeNames", jSONObjectGetValue(objJsonObjectElementNode, "strAttributeNames", ""));
-						jSONObjectStepPut("strAttributeValues", jSONObjectGetValue(objJsonObjectElementNode, "strAttributeValues", ""));
+						jsonObjectStepPut("strTagName", jsonObjectGetValue(objJsonObjectElementNode, "strTagName", ""));
+						jsonObjectStepPut("strAttributeNames", jsonObjectGetValue(objJsonObjectElementNode, "strAttributeNames", ""));
+						jsonObjectStepPut("strAttributeValues", jsonObjectGetValue(objJsonObjectElementNode, "strAttributeValues", ""));
 					}
 					if (strInputValue.toLowerCase().startsWith("<link>") == true) {
-						strInputValue = jSONObjectGetValue(gobjJsonObjectLinks, strInputValue, "<link>");
-						jSONObjectStepPut("strInputValue", strInputValue);
+						strInputValue = jsonObjectGetValue(gobjJsonObjectLinks, strInputValue, "<link>");
+						jsonObjectStepPut("strInputValue", strInputValue);
 					}
 					if (strInputValue.toLowerCase().startsWith("<ti>") == true) {
-						strInputValue = jSONObjectGetValue(gobjJsonObjectTestInstancesEach, strInputValue, "<ti>");
-						jSONObjectStepPut("strInputValue", strInputValue);
+						strInputValue = jsonObjectGetValue(gobjJsonObjectTestInstancesEach, strInputValue, "<ti>");
+						jsonObjectStepPut("strInputValue", strInputValue);
 					}
 					if (strInputValue.toLowerCase().startsWith("<td>") == true) {
-						strInputValue = jSONObjectGetValue(gobjJsonObjectTestDataFile, strInputValue, "<td>");
-						jSONObjectStepPut("strInputValue", strInputValue);
+						strInputValue = jsonObjectGetValue(gobjJsonObjectTestDataFile, strInputValue, "<td>");
+						jsonObjectStepPut("strInputValue", strInputValue);
 					}
 					if (gobjJsonObjectStep.get("intMillisecondsToWait").toString().trim().length() == 0) {
-						jSONObjectStepPut("intMillisecondsToWait", Integer.toString(intMillisecondsToWaitDefault));
+						jsonObjectStepPut("intMillisecondsToWait", Integer.toString(intMillisecondsToWaitDefault));
 					}
 					if (gobjJsonObjectStep.get("blnOptional").toString().trim().length() == 0) {
-						jSONObjectStepPut("blnOptional", "false");
+						jsonObjectStepPut("blnOptional", "false");
 					}
 					if (gobjJsonObjectStep.get("strAssert").toString().trim().length() == 0) {
-						jSONObjectStepPut("strAssert", "off");
+						jsonObjectStepPut("strAssert", "off");
 					}
-					jSONObjectStepPut("blnPleaseWait", "true");
-					jSONObjectStepPut("blnHighlight", "true");
-					jSONObjectStepPut("blnScreenshot", "true");
-					jSONObjectStepPut("strScreenshotArea", "screen");
-					jSONObjectStepPut("strHighlightArea", "");
+					jsonObjectStepPut("blnPleaseWait", "true");
+					jsonObjectStepPut("blnHighlight", "true");
+					jsonObjectStepPut("blnScreenshot", "true");
+					jsonObjectStepPut("strScreenshotArea", "screen");
+					jsonObjectStepPut("strHighlightArea", "");
 					if (gobjJsonObjectStep.get("blnExitOnFail").toString().trim().length() == 0) {
-						jSONObjectStepPut("blnExitOnFail", "true");
+						jsonObjectStepPut("blnExitOnFail", "true");
 					}
-					jSONObjectStepPut("strCurrentWindowHandle", strCurrentWindowHandle);
-					jSONObjectStepPut("strType", "");
-					jSONObjectStepPut("strScreenshotFilePath", strPathResults + strPathImages);
-					jSONObjectStepPut("strStatus", "info");
-					jSONObjectStepPut("intFrame", Integer.toString(intFrame));
-					jSONObjectStepPut("strStartTimestamp", "");
-					jSONObjectStepPut("strStepDuration", "");
-					jSONObjectStepPut("strEndTimestamp", "");
-					jSONObjectStepPut("strStepExpected", "");
-					jSONObjectStepPut("strStepActual", "");
+					jsonObjectStepPut("strCurrentWindowHandle", strCurrentWindowHandle);
+					jsonObjectStepPut("strType", "");
+					jsonObjectStepPut("strScreenshotFilePath", strPathResults + strPathImages);
+					jsonObjectStepPut("strStatus", "info");
+					jsonObjectStepPut("intFrame", Integer.toString(intFrame));
+					jsonObjectStepPut("strStartTimestamp", "");
+					jsonObjectStepPut("strStepDuration", "");
+					jsonObjectStepPut("strEndTimestamp", "");
+					jsonObjectStepPut("strStepExpected", "");
+					jsonObjectStepPut("strStepActual", "");
 					logStepDetails(intStep);
 					if (gobjJsonObjectStep.get("intLoop").toString().trim().length() > 0) {
 						if (gobjJsonObjectStep.get("intLoop").toString().toLowerCase().startsWith("<loopstart>") == true) {
 							if (intLoopEach == 0) {
 								intLoopCount = Integer.parseInt(gobjJsonObjectStep.get("intLoop").toString().substring(11));
-								jSONObjectStepPut("intLoop", "");
+								jsonObjectStepPut("intLoop", "");
 								intLoopEach = 1;
 								intLoopStep = intStep;
 							}
@@ -632,21 +446,16 @@ public class Dragonfly {
 						Object objReturn = objMethod.invoke(objDragonfly, arrArgumentList);
 						String strReturnValue = (String) objReturn;
 						strInputValue = strReturnValue.toString();
-						jSONObjectStepPut("strInputValue", strInputValue);
+						jsonObjectStepPut("strInputValue", strInputValue);
 						logger("main: call function return value = " + strInputValue);
 					}
 					if (!strInputValue.toLowerCase().equals("<skip>")) {
 						switch (gobjJsonObjectStep.get("strAction").toString().toLowerCase()) {
 						case "launch":
-							// TODO create a browserLaunchSync to manage reporting and sync
-							gobjWebDriver = browserLaunch();
+							browserLaunchSync();
 							break;
 						case "close":
-							// TODO create a browserCloseSync to manage reporting and sync close
-							gobjWebDriver.close();
-							gobjWebDriver.quit();
-							jSONObjectStepPut("strStatus", "pass");
-							coordinateHighlightScreenshot(gobjJsonObjectStep);
+							browserCloseSync();
 							break;
 						case "get":
 							elementGetSync();
@@ -679,14 +488,14 @@ public class Dragonfly {
 							elementDropSync();
 							break;
 						case "sleep":
-							sleepMilliseconds(Integer.parseInt(gobjJsonObjectStep.get("strInputValue").toString()));
+							sleepSync();
+							break;
+						case "refresh":
+							browserRefreshSync();
 							break;
 						case "break":
 							logger("main: switch strAction = break was entered to at this step to stop execution");
 							return;
-						case "refresh":
-							webDriverRefresh();
-							break;
 						default:
 							logger("main: switch strAction = " + gobjJsonObjectStep.get("strAction").toString().toLowerCase() + "  not supported");
 							return;
@@ -727,9 +536,6 @@ public class Dragonfly {
 					//						gobjJsonArrayTestStepsComplete.putAll((JSONObject) gobjJsonParser.parse(new FileReader(strPathFullTestData)));
 					//					}
 				}
-			} catch (BrowserDriverNotSupportedException e) {
-				// TODO confirm the exceptions to catch in main some may need to be removed
-				logger("main: " + e.toString());
 			} catch (Exception e) {
 				logger("main: " + e.toString());
 			} finally {
@@ -752,6 +558,335 @@ public class Dragonfly {
 		}
 	}
 
+	public static boolean alertFind() {
+		logger("  ==start==>alertFind " + dateTimestamp());
+		try {
+			logger("alertFind: gobjWebDriver.getTitle() = " + gobjWebDriver.getTitle());
+			gobjWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+			logger("alertFind: implicitlyWait  ");
+			String strAlertPresent = gobjWebDriver.switchTo().alert().getText();
+			logger("alertFind: alert switch to which did not fail:  " + strAlertPresent);
+			return true;
+		} catch (UnhandledAlertException e) {
+			//logger("alertFind getText " + gobjWebDriver.switchTo().alert().getText());
+			logger("alertFind: UnhandledAlertException = " + e.toString());
+			return true;
+		} catch (NoAlertPresentException e) {
+			logger("alertFind: NoAlertPresentException = " + e.toString());
+			return false;
+		} catch (Exception e) {
+			logger("alertFind: Exception = " + e.toString());
+			return false;
+		}
+	}
+
+	public static void autoItSetObject() throws InterruptedException {
+		logger("  ==start==>autoItSetObject " + dateTimestamp());
+		String strJacobDllVersionToUse;
+		if (jvmBitVersion().contains("32")) {
+			strJacobDllVersionToUse = "jacob-1.18-x86.dll";
+		} else {
+			strJacobDllVersionToUse = "jacob-1.18-x64.dll";
+		}
+		logger("autoItSetObject: " + System.getProperty("java.library.path"));
+		logger("autoItSetObject: " + strJacobDllVersionToUse);
+		File objFile = new File("Libraries", strJacobDllVersionToUse);
+		logger("autoItSetObject: " + LibraryLoader.JACOB_DLL_PATH);
+		logger("autoItSetObject: " + objFile.getAbsolutePath());
+		System.setProperty(LibraryLoader.JACOB_DLL_PATH, objFile.getAbsolutePath());
+		gobjAutoIt = new AutoItX();
+	}
+
+	public static void browserClose() {
+		// TODO create a browserCloseSync to manage reporting and sync close
+		gobjWebDriver.close();
+		gobjWebDriver.quit();
+		jsonObjectStepPut("strStatus", "pass");
+		coordinateHighlightScreenshot(gobjJsonObjectStep);
+	}
+
+	public static void browserCloseSync() {
+		browserClose();
+	}
+
+	public static WebDriver browserLaunch() throws BrowserDriverNotSupportedException {
+		// TODO combine duplicate code
+		// TODO add desiredCapabilities.setJavascriptEnabled(true); to all browsers
+		logger("  ==start==>browserLaunch " + dateTimestamp());
+		Long lngTimeStart = System.currentTimeMillis();
+		DesiredCapabilities desiredCapabilities = null;
+		try {
+			jsonObjectStepPut("blnStatus", "true");
+			jsonObjectStepPut("strStatus", "pass");
+			jsonObjectStepPut("intFrame", "-1");
+			switch (gobjJsonObjectStep.get("strTagName").toString()) {
+			case "firefox":
+				gobjWebDriver = new FirefoxDriver();
+				gobjWebDriver.get(gobjJsonObjectStep.get("strInputValue").toString());
+				gobjWebDriver.manage().window().maximize();
+				Actions myAction = new Actions(gobjWebDriver);
+				myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL).build().perform();
+				break;
+			case "ie":
+				// internetExplorerProcessKill();
+				windowsProcessKill("taskkill /F /IM iexplore.exe");
+				sleepMilliseconds(1000);
+				logger("browserLaunch: DesiredCapabilities");
+				desiredCapabilities = DesiredCapabilities.internetExplorer();
+				logger("browserLaunch: setJavascriptEnabled");
+				desiredCapabilities.setJavascriptEnabled(true);
+				//desiredCapabilities.setCapability("unexpectedAlertBehaviour", "ignore");
+				logger("browserLaunch: UNEXPECTED_ALERT_BEHAVIOR");
+				desiredCapabilities.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, "ignore");
+				logger("browserLaunch: IE_ENSURE_CLEAN_SESSION");
+				desiredCapabilities.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
+				logger("browserLaunch: REQUIRE_WINDOW_FOCUS");
+				desiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
+				logger("browserLaunch: webdriver.ie.driver" + System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
+				System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
+				logger("browserLaunch: new InternetExplorerDriver(desiredCapabilities)");
+				gobjWebDriver = new InternetExplorerDriver(desiredCapabilities);
+				//try {
+				//C:\Users\perrj115\Documents\GitHub\dragonfly\Dragonfly\Drivers\IEDriverServer.exe
+				//	File file = new File(System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
+				//	logger("browserLaunch file.getAbsolutePath() " + file.getAbsolutePath());
+				//System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
+				//	WebDriver driver = new InternetExplorerDriver();
+				//	gobjWebDriver = new InternetExplorerDriver();
+				//} catch (Exception e) {
+				//	logger("browserLaunch new InternetExplorerDriver " + e.toString());
+				//	}
+				// gobjWebDriver.manage().deleteCookieNamed("JSESSIONID");
+				logger("browserLaunch: gobjJsonObjectStep.get(strInputValue).toString() = " + gobjJsonObjectStep.get("strInputValue").toString());
+				gobjWebDriver.get(gobjJsonObjectStep.get("strInputValue").toString());
+				// gobjWebDriver.navigate().to(gobjJsonObjectStep.get("strInputValue").toString());
+				logger("browserLaunch: gobjWebDriver.manage().window().maximize()");
+				gobjWebDriver.manage().window().maximize();
+				//	Capabilities getCapabilities();
+				// gobjWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+				// // gobjWebDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
+				break;
+			case "chrome":
+				switch (gstrOperatingSystem) {
+				case "Windows":
+					System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "\\Drivers\\chromedriver.exe");
+					break;
+				case "Mac":
+					System.setProperty("webdriver.chrome.driver", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome");
+					break;
+				default:
+					// TODO need to raise an error and log
+					break;
+				}
+				gobjWebDriver = new ChromeDriver();
+				gobjWebDriver.get(gobjJsonObjectStep.get("strInputValue").toString());
+				gobjWebDriver.manage().window().maximize();
+				break;
+			case "safari":
+				gobjWebDriver = new SafariDriver();
+				gobjWebDriver.get(gobjJsonObjectStep.get("strInputValue").toString());
+				gobjWebDriver.manage().window().maximize();
+				break;
+			case "opera":
+				// TODO OperaDriver setup latest driver and test desiredCapabilities = DesiredCapabilities.internetExplorer();
+				// desiredCapabilities.setJavascriptEnabled(true);
+				gobjWebDriver = new OperaDriver();
+				gobjWebDriver.get(gobjJsonObjectStep.get("strInputValue").toString());
+				// gobjWebDriver.manage().window().maximize();
+				// gobjWebDriver.manage().window().setPosition(new Point(0, 0));
+				// Dimension dim = new Dimension(1382, 754);
+				// gobjWebDriver.manage().window().setSize(dim);
+				// Selenium selenium;
+				// gobjWebDriver = new OperaDriver();
+				// selenium = new WebDriverBackedSelenium(gobjWebDriver, "https://www.google.com/");
+				// return gobjWebDriver;
+				break;
+			default:
+				jsonObjectStepPut("blnStatus", "false");
+				jsonObjectStepPut("strStatus", "fail");
+				throw new BrowserDriverNotSupportedException("Browser '" + gobjJsonObjectStep.get("strTagName").toString() + "' not supported");
+			}
+		} catch (Exception e) {
+			logger("browserLaunch: Exception" + e.toString());
+		} finally {
+			jsonObjectStepPut("strCurrentWindowHandle", gobjWebDriver.getWindowHandle());
+			coordinatesElement();
+			coordinateHighlightScreenshot(gobjJsonObjectStep);
+			stepDuration("browserLaunch", lngTimeStart, "launch");
+		}
+		return gobjWebDriver;
+	}
+
+	public static void browserLaunchSync() {
+		// TODO create a browserLaunchSync to manage reporting and sync
+		try {
+			gobjWebDriver = browserLaunch();
+		} catch (BrowserDriverNotSupportedException e) {
+			// TODO confirm the exceptions to catch in main some may need to be removed
+			logger("main: " + e.toString());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static void browserRefresh() {
+		logger("  ==start==>webDriverRefresh " + dateTimestamp());
+		gobjWebDriver.navigate().refresh();
+	}
+
+	public static void browserRefreshSync() {
+		browserRefresh();
+	}
+
+	public static void logger(String strTextToAdd) {
+		System.out.println(strTextToAdd);
+		if (gstrLog.length() == 0) {
+			gstrLog = strTextToAdd;
+		} else {
+			gstrLog = gstrLog + System.getProperty("line.separator") + strTextToAdd;
+		}
+	}
+
+	public static String oSType() {
+		logger("  ==start==>oSType " + dateTimestamp());
+		String strOS = System.getProperty("os.name").toLowerCase();
+		if (strOS.contains("win")) {
+			return "Windows";
+		} else if (strOS.contains("nux") || strOS.contains("nix")) {
+			return "Linux";
+		} else if (strOS.contains("mac")) {
+			return "Mac";
+		} else if (strOS.contains("sunos")) {
+			return "Solaris";
+		} else {
+			return "Other";
+		}
+	}
+
+	public static String jvmBitVersion() {
+		logger("jvmBitVersion: System.getProperty(sun.arch.data.model) =" + System.getProperty("sun.arch.data.model"));
+		return System.getProperty("sun.arch.data.model");
+	}
+
+	public static void windowsMinimizeAll() {
+		logger("  ==start==>windowsMinimizeAll " + dateTimestamp());
+		Robot objRobot = null;
+		switch (gstrOperatingSystem) {
+		case "Windows":
+			try {
+				objRobot = new Robot();
+				objRobot.keyPress(KeyEvent.VK_WINDOWS);
+				objRobot.keyPress(KeyEvent.VK_D);
+				objRobot.keyRelease(KeyEvent.VK_D);
+				objRobot.keyRelease(KeyEvent.VK_WINDOWS);
+				logger("windowsMinimizeAll: Windows operating system minimize all windows.");
+			} catch (Exception e) {
+				logger("windowsMinimizeAll: Exception = " + e.toString());
+			}
+			break;
+		case "default":
+			logger("windowsMinimizeAll: the operating system not supported at this time " + gstrOperatingSystem);
+		}
+	}
+
+	public static void windowsProcessKill(String strProcessToKill) {
+		logger("  ==start==>windowsProcessKill " + dateTimestamp());
+		try {
+			Runtime.getRuntime().exec(strProcessToKill);
+			logger("windowsProcessKill: process killed = " + strProcessToKill);
+		} catch (Exception e) {
+			logger("windowsProcessKill: Exception = " + e.toString());
+		}
+	}
+
+	public static void sleepMilliseconds(int intMillisecondsToWait) {
+		logger("  ==start==>sleepMilliseconds " + dateTimestamp());
+		try {
+			TimeUnit.MILLISECONDS.sleep(intMillisecondsToWait);
+		} catch (Exception e) {
+			logger("sleepMilliseconds: Exception = " + e.toString());
+		}
+	}
+
+	public static void internetExplorerVersion() throws IOException {
+		logger("  ==start==>internetExplorerVersion " + dateTimestamp());
+		//Process objProcess = Runtime.getRuntime().exec("REG QUERY \"HKLM\\SOFTWARE\\Microsoft\\Internet Explorer\" /v svcKBNumber");
+		//Process objProcess = Runtime.getRuntime().exec("REG QUERY \"HKLM\\SOFTWARE\\Microsoft\\Internet Explorer\" /v svcUpdateVersion");
+	Process objProcess = Runtime.getRuntime().exec("REG QUERY \"HKLM\\SOFTWARE\\Microsoft\\Internet Explorer\" /v svcVersion");
+		//	svcUpdateVersion
+	//	svcVersion
+		
+		StringWriter objStringWriter = new StringWriter();
+		try {
+			int intCount;
+			while ((intCount = objProcess.getInputStream().read()) != -1)
+				objStringWriter.write(intCount);
+		} catch (IOException e) {
+		}
+		String strOutput = objStringWriter.toString();
+		String[] arrParsed = strOutput.split("\t");
+		String strKB = arrParsed[arrParsed.length - 1];
+		logger(strKB.replaceAll("\\s+", " ").trim());
+		String[] arrKB = strKB.replaceAll("\\s+", " ").trim().split(" ");
+		String strKB2 = arrKB[arrKB.length - 1];
+		logger(strKB2);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static void jsonOrder() {
+		Map obj = new LinkedHashMap();
+		obj.put("name", "foo");
+		obj.put("num", new Integer(100));
+		obj.put("balance", new Double(1000.21));
+		obj.put("is_vip", new Boolean(true));
+		obj.put("nickname", null);
+		String jsonText = JSONValue.toJSONString(obj);
+		System.out.print(jsonText);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static void jsonOrder2() {
+		Map obj = new LinkedHashMap();
+		//		String strKeys = "intBrowserOuterHeight|strOutputLinkName|intBrowserInnerWidth|strType|intBrowserOuterX|intBrowserOuterY|strFunction";
+		//		strKeys = strKeys + "|strAttributeValues|blnHighlight|intElementX|strScreenshotFilePath|intElementY|strAssert|intLoop|strAssistiveProperties";
+		//		strKeys = strKeys + "|intElementHeight|intElementScreenY|strAttributeNames|strLogicalName|intElementScreenX|strStepActual|strOutputValue";
+		//		strKeys = strKeys + "|strAction|strScreenshotArea|strStartTimestamp|strTagType|intMillisecondsToWait|intElementWidth|intBrowserOuterWidth";
+		//		strKeys = strKeys + "|blnOptional|strCurrentWindowHandle|strStepExpected|blnScreenshot|blnExitOnFail|intFrame|intBrowserInnerHeight";
+		//		strKeys = strKeys + "|strEndTimestamp|blnPleaseWait|strStepDuration|strInputValue|strTagName|strStatus";
+		//		String strKeys = "strAction|strTagName|strAttributeNames|strAttributeValues|strInputValue|strLogicalName|intMillisecondsToWait|blnOptional|strAssert|";
+		//		strKeys = strKeys + "blnPleaseWait|blnHighlight|blnScreenshot|strFunction|strAssistiveProperties|blnExitOnFail|strOutputLinkName|strOutputValue|intLoop|";
+		//		strKeys = strKeys + "intBrowserInnerHeight|intBrowserInnerWidth|intBrowserOuterHeight|intBrowserOuterWidth|intBrowserOuterX|intBrowserOuterY|intElementHeight|";
+		//		strKeys = strKeys + "intElementScreenX|intElementScreenY|intElementWidth|intElementX|intElementY|intFrame|strTagType|strType|strCurrentWindowHandle|";
+		//		strKeys = strKeys + "strURL|strStepExpected|strStepActual|strStartTimestamp|strEndTimestamp|strStepDuration|strScreenshotArea|strScreenshotFilePath|strStatus|blnStatus";
+		String strKey = "";
+		String[] arrKeys;
+		//	arrKeys = strKeys.split("\\|");
+		arrKeys = stepsNamesCompleteArray();
+		for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
+			strKey = (String) arrKeys[intKeysEach].toString();
+			obj.put(strKey, "");
+		}
+		String jsonText = JSONValue.toJSONString(obj);
+		System.out.print(jsonText);
+		JSONObject objTestStep = null;
+		try {
+			objTestStep = (JSONObject) gobjJsonParser.parse(jsonText);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for (Iterator<?> iterator = objTestStep.keySet().iterator(); iterator.hasNext();) {
+			String key = (String) iterator.next();
+			logger("jsonOrder2: " + key + " = " + objTestStep.get(key));
+		}
+		logger("jsonOrder2: ````````````````````````````");
+		for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
+			strKey = (String) arrKeys[intKeysEach].toString();
+			logger("jsonOrder2: " + strKey + " = " + objTestStep.get(strKey));
+		}
+	}
+
 	//	public static int loopEndFind(JSONObject objJSONObject) {
 	//		logger("  ==start==>loopEndFind " + dateTimestamp());
 	//		JSONArray objTestSteps2 = null;
@@ -771,30 +906,30 @@ public class Dragonfly {
 	//		}
 	//		return 0;
 	//	}
-	public static void jSONObjectValidateKey(JSONObject objJSONObject, String strKeyName) throws JSONKeyNotPresentException {
-		logger("  ==start==>jSONObjectValidateKey " + dateTimestamp());
+	public static void jsonObjectValidateKey(JSONObject objJSONObject, String strKeyName) throws JSONKeyNotPresentException {
+		logger("  ==start==>jsonObjectValidateKey " + dateTimestamp());
 		if (!objJSONObject.containsKey(strKeyName)) {
 			throw new JSONKeyNotPresentException("JSON Key " + strKeyName + " not present");
 		}
 	}
 
-	public static String jSONObjectGetValue(JSONObject objJSONObject, String strInputValue, String strKeywordName) throws JSONKeyNotPresentException {
-		//logger("  ==start==>jSONObjectGetValue " + dateTimestamp());
+	public static String jsonObjectGetValue(JSONObject objJSONObject, String strInputValue, String strKeywordName) throws JSONKeyNotPresentException {
+		//logger("  ==start==>jsonObjectGetValue " + dateTimestamp());
 		String strJSONObjectKey = strInputValue.replace(strKeywordName, "");
 		String strJSONObjectValue = "";
 		if (objJSONObject.containsKey(strJSONObjectKey)) {
 			strJSONObjectValue = objJSONObject.get(strJSONObjectKey).toString();
-			logger("jSONObjectGetValue: strJSONObjectValue = " + strJSONObjectValue);
+			logger("jsonObjectGetValue: strJSONObjectValue = " + strJSONObjectValue);
 			return strJSONObjectValue;
 		} else {
-			logger("jSONObjectGetValue: JSON Key " + strJSONObjectKey + " for keyword link name " + strKeywordName + " not present");
+			logger("jsonObjectGetValue: JSON Key " + strJSONObjectKey + " for keyword link name " + strKeywordName + " not present");
 			throw new JSONKeyNotPresentException("JSON Key " + strJSONObjectKey + " for keyword link name " + strKeywordName + " not present");
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void jSONObjectStepPut(String strKeyName, String strKeyValue) {
-		//logger("  ==start==>jSONObjectStepPut " + dateTimestamp());
+	public static void jsonObjectStepPut(String strKeyName, String strKeyValue) {
+		//logger("  ==start==>jsonObjectStepPut " + dateTimestamp());
 		gobjJsonObjectStep.put(strKeyName, strKeyValue);
 	}
 
@@ -918,73 +1053,6 @@ public class Dragonfly {
 		}
 	}
 
-	public static void elementGetSync() {
-		logger("  ==start==>elementGetSync " + dateTimestamp());
-		Long lngTimeStart = System.currentTimeMillis();
-		Boolean blnExit = false;
-		Boolean blnFound = false;
-		Boolean blnGet = false;
-		Boolean blnStatus = false;
-		Boolean blnVisible = false;
-		String strGetValue = "";
-		while (true) {
-			try {
-				if (blnFound == false) {
-					elementFind();
-					blnFound = true;
-				}
-				if (blnVisible == false) {
-					elementVisible();
-					blnVisible = true;
-				}
-				if (blnGet == false) {
-					strGetValue = elementGet();
-					jSONObjectStepPut("strOutputValue", strGetValue);
-					blnGet = true;
-				}
-				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
-				blnFound = false;
-				logger("elementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotVisibleException e) {
-				blnVisible = false;
-				logger("elementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementTagNameNotSupportedException e) {
-				logger("elementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				blnExit = true;
-			} finally {
-				if (blnExit == true) {
-					jSONObjectStepPut("strStatus", "fail");
-				} else {
-					if (blnStatus == true) {
-						jSONObjectStepPut("strStatus", "pass");
-						blnExit = true;
-					} else if (blnStatus == false) {
-						if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-							if (blnFound == false) {
-								blnVisible = false;
-								blnGet = false;
-							}
-						} else {
-							if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-								jSONObjectStepPut("strStatus", "warning");
-								blnExit = true;
-							} else {
-								jSONObjectStepPut("strStatus", "fail");
-								blnExit = true;
-							}
-						}
-					}
-				}
-				if (blnExit == true) {
-					coordinateHighlightScreenshot(gobjJsonObjectStep);
-					stepDuration("elementGetSync", lngTimeStart, "get");
-					return;
-				}
-			}
-		}
-	}
-
 	public static void elementOnMouseOver() {
 		logger("  ==start==>elementOnMouseOver " + dateTimestamp());
 		logger("elementOnMouseOverSync: " + gobjWebElement.toString());
@@ -1034,7 +1102,7 @@ public class Dragonfly {
 				logger("elementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
 				if (blnStatus == true) {
-					jSONObjectStepPut("strStatus", "pass");
+					jsonObjectStepPut("strStatus", "pass");
 					blnExit = true;
 				} else if (blnStatus == false) {
 					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
@@ -1043,10 +1111,10 @@ public class Dragonfly {
 						}
 					} else {
 						if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-							jSONObjectStepPut("strStatus", "warning");
+							jsonObjectStepPut("strStatus", "warning");
 							blnExit = true;
 						} else {
-							jSONObjectStepPut("strStatus", "fail");
+							jsonObjectStepPut("strStatus", "fail");
 							blnExit = true;
 						}
 					}
@@ -1246,9 +1314,226 @@ public class Dragonfly {
 		}
 	}
 
+	public static void elementSetSync() {
+		logger("  ==start==>elementSetSync " + dateTimestamp());
+		Long lngTimeStart = System.currentTimeMillis();
+		Boolean blnAssert = false;
+		Boolean blnEnabled = false;
+		Boolean blnExit = false;
+		Boolean blnFound = false;
+		Boolean blnSet = false;
+		Boolean blnSetSync = false;
+		Boolean blnStatus = false;
+		Boolean blnVisible = false;
+		String strOuterHTML = "";
+		jsonObjectStepPut("strOutputValue", gobjJsonObjectStep.get("strInputValue").toString());
+		while (true) {
+			try {
+				if (blnFound == false) {
+					elementFind();
+					logger("elementSetSync: elementFind over");
+					if (gobjWebElement != null) {
+						strOuterHTML = gobjWebElement.getAttribute("outerHTML");
+						logger("elementSetSync: " + strOuterHTML);
+						logger("elementSetSync: outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+					}
+					logger("elementSetSync: strOuterHTML over");
+					blnFound = true;
+				}
+				if (blnVisible == false) {
+					elementVisible();
+					blnVisible = true;
+				}
+				if (blnEnabled == false) {
+					elementEnabled();
+					blnEnabled = true;
+				}
+				switch (gobjJsonObjectStep.get("strAssert").toString().toLowerCase()) {
+				case "off":
+					jsonObjectStepPut("strStatus", "pass");
+					// TODO complete Alert Set, move or consider how to handle assert
+					if (blnSet == false) {
+						// if (gobjJsonObjectStep.get("strTagName").toString().toLowerCase().equals("alert")) {coordinateHighlightScreenshot(gobjJsonObjectStep, gobjWebDriver, null, gobjJsonObjectStep);
+						// } else {
+						coordinateHighlightScreenshot(gobjJsonObjectStep);
+						// }
+						elementSet(strOuterHTML);
+						blnSet = true;
+						blnAssert = true;
+					}
+					if (blnSetSync == false) {
+						elementSetSyncComplete(strOuterHTML);
+						blnSetSync = true;
+					}
+					blnStatus = true;
+					break;
+				case "hidden":
+					if (blnSet == false) {
+						jsonObjectStepPut("strStatus", "pass");
+						coordinateHighlightScreenshot(gobjJsonObjectStep);
+						elementSet(strOuterHTML);
+						blnSet = true;
+					}
+					if (blnSetSync == false) {
+						elementSetSyncComplete(strOuterHTML);
+						blnSetSync = true;
+					}
+					if (blnAssert == false) {
+						elementHidden();
+						blnAssert = true;
+					}
+					blnStatus = true;
+					break;
+				case "value":
+					if (blnSet == false) {
+						elementSet(strOuterHTML);
+						blnSet = true;
+					}
+					if (blnSetSync == false) {
+						elementSetSyncComplete(strOuterHTML);
+						blnSetSync = true;
+					}
+					if (blnAssert == false) {
+						elementVerifyValue();
+						blnAssert = true;
+					}
+					jsonObjectStepPut("strStatus", "pass");
+					coordinateHighlightScreenshot(gobjJsonObjectStep);
+					blnStatus = true;
+					break;
+				case "visible":
+					if (blnSet == false) {
+						elementSet(strOuterHTML);
+						blnSet = true;
+					}
+					if (blnSetSync == false) {
+						elementSetSyncComplete(strOuterHTML);
+						blnSetSync = true;
+					}
+					if (blnAssert == false) {
+						elementVisible();
+						blnAssert = true;
+					}
+					jsonObjectStepPut("strStatus", "pass");
+					coordinateHighlightScreenshot(gobjJsonObjectStep);
+					blnStatus = true;
+					break;
+				case "enabled":
+					if (blnSet == false) {
+						elementSet(strOuterHTML);
+						blnSet = true;
+					}
+					if (blnSetSync == false) {
+						elementSetSyncComplete(strOuterHTML);
+						blnSetSync = true;
+					}
+					if (blnAssert == false) {
+						elementVisible();
+						elementEnabled();
+						blnAssert = true;
+					}
+					jsonObjectStepPut("strStatus", "pass");
+					coordinateHighlightScreenshot(gobjJsonObjectStep);
+					blnStatus = true;
+					break;
+				case "disabled":
+					if (blnSet == false) {
+						elementSet(strOuterHTML);
+						blnSet = true;
+					}
+					if (blnSetSync == false) {
+						elementSetSyncComplete(strOuterHTML);
+						blnSetSync = true;
+					}
+					if (blnAssert == false) {
+						elementVisible();
+						elementDisabled();
+						blnAssert = true;
+					}
+					jsonObjectStepPut("strStatus", "pass");
+					coordinateHighlightScreenshot(gobjJsonObjectStep);
+					blnStatus = true;
+					break;
+				}
+				blnStatus = true;
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
+				blnFound = false;
+				logger("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+			} catch (ElementNotVisibleException e) {
+				blnVisible = false;
+				logger("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+			} catch (ElementNotEnabledException e) {
+				blnEnabled = false;
+				logger("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+			} catch (ElementTagNameNotSupportedException e) {
+				logger("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				blnExit = true;
+			} catch (ElementNotHiddenException e) {
+				logger("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				blnAssert = false;
+			} catch (ValueNotMatchedException e) {
+				logger("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				blnFound = false;
+				blnAssert = false;
+			} catch (ElementNotSetException e) {
+				blnSet = true;
+				blnAssert = false;
+			} catch (ElementNotDisabledException e) {
+				blnAssert = false;
+				logger("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+			} catch (DoPostBackNotCompleteException | JQueryAjaxNotCompleteException | JQueryAnimationNotCompleteException | AngularJsNotCompleteException e) {
+				blnSetSync = false;
+			} finally {
+				if (blnExit == true) {
+				} else {
+					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
+						if (blnStatus == true) {
+							blnExit = true;
+						}
+					} else {
+						if (blnStatus == true) {
+							jsonObjectStepPut("strStatus", "pass");
+							blnExit = true;
+						} else if (blnStatus == false) {
+							if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
+								jsonObjectStepPut("strStatus", "warning");
+								coordinateHighlightScreenshot(gobjJsonObjectStep);
+								blnExit = true;
+							} else {
+								jsonObjectStepPut("strStatus", "fail");
+								coordinateHighlightScreenshot(gobjJsonObjectStep);
+								blnExit = true;
+							}
+						}
+					}
+				}
+				if (blnExit == true) {
+					stepDuration("elementSetSync", lngTimeStart, "set");
+					return;
+				}
+			}
+		}
+	}
+
+	public static ExpectedCondition<Boolean> waitForAngularFinishProcessing() {
+		logger("  ==start==>waitForAngularFinishProcessing " + dateTimestamp());
+		return new ExpectedCondition<Boolean>() {
+			@Override
+			public Boolean apply(WebDriver driver) {
+				return Boolean.valueOf(((JavascriptExecutor) driver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)").toString());
+			}
+		};
+	}
+
 	public static void waitForAngularRequestsToFinish(JavascriptExecutor objDriver) {
 		logger("  ==start==>waitForAngularRequestsToFinish " + dateTimestamp());
 		objDriver.executeAsyncScript("var callback = arguments[arguments.length - 1];" + "angular.element(document.body).injector().get('$browser').notifyWhenNoOutstandingRequests(callback);");
+	}
+
+	public static boolean waitForReadyState() {
+		logger("  ==start==>waitForReadyState " + dateTimestamp());
+		logger("waitForReadyState: document.readyState MillisecondsWaited = " + ((JavascriptExecutor) gobjWebDriver).executeScript("return document.readyState"));
+		return false;
 	}
 
 	public static void elementSetSyncComplete(String strOuterHTML) throws DoPostBackNotCompleteException, JQueryAjaxNotCompleteException, JQueryAnimationNotCompleteException, AngularJsNotCompleteException {
@@ -1342,223 +1627,6 @@ public class Dragonfly {
 		}
 	}
 
-	public static ExpectedCondition<Boolean> angularHasFinishedProcessing() {
-		logger("  ==start==>ExpectedCondition " + dateTimestamp());
-		return new ExpectedCondition<Boolean>() {
-			@Override
-			public Boolean apply(WebDriver driver) {
-				return Boolean.valueOf(((JavascriptExecutor) driver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)").toString());
-			}
-		};
-	}
-
-	public static boolean waitForReadyState() {
-		logger("  ==start==>waitForReadyState " + dateTimestamp());
-		logger("waitForReadyState: document.readyState MillisecondsWaited = " + ((JavascriptExecutor) gobjWebDriver).executeScript("return document.readyState"));
-		return false;
-	}
-
-	public static void elementSetSync() {
-		logger("  ==start==>elementSetSync " + dateTimestamp());
-		Long lngTimeStart = System.currentTimeMillis();
-		Boolean blnAssert = false;
-		Boolean blnEnabled = false;
-		Boolean blnExit = false;
-		Boolean blnFound = false;
-		Boolean blnSet = false;
-		Boolean blnSetSync = false;
-		Boolean blnStatus = false;
-		Boolean blnVisible = false;
-		String strOuterHTML = "";
-		jSONObjectStepPut("strOutputValue", gobjJsonObjectStep.get("strInputValue").toString());
-		while (true) {
-			try {
-				if (blnFound == false) {
-					elementFind();
-					logger("elementSetSync: elementFind over");
-					if (gobjWebElement != null) {
-						strOuterHTML = gobjWebElement.getAttribute("outerHTML");
-						logger("elementSetSync: " + strOuterHTML);
-						logger("elementSetSync: outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
-					}
-					logger("elementSetSync: strOuterHTML over");
-					blnFound = true;
-				}
-				if (blnVisible == false) {
-					elementVisible();
-					blnVisible = true;
-				}
-				if (blnEnabled == false) {
-					elementEnabled();
-					blnEnabled = true;
-				}
-				switch (gobjJsonObjectStep.get("strAssert").toString().toLowerCase()) {
-				case "off":
-					jSONObjectStepPut("strStatus", "pass");
-					// TODO complete Alert Set, move or consider how to handle assert
-					if (blnSet == false) {
-						// if (gobjJsonObjectStep.get("strTagName").toString().toLowerCase().equals("alert")) {coordinateHighlightScreenshot(gobjJsonObjectStep, gobjWebDriver, null, gobjJsonObjectStep);
-						// } else {
-						coordinateHighlightScreenshot(gobjJsonObjectStep);
-						// }
-						elementSet(strOuterHTML);
-						blnSet = true;
-						blnAssert = true;
-					}
-					if (blnSetSync == false) {
-						elementSetSyncComplete(strOuterHTML);
-						blnSetSync = true;
-					}
-					blnStatus = true;
-					break;
-				case "hidden":
-					if (blnSet == false) {
-						jSONObjectStepPut("strStatus", "pass");
-						coordinateHighlightScreenshot(gobjJsonObjectStep);
-						elementSet(strOuterHTML);
-						blnSet = true;
-					}
-					if (blnSetSync == false) {
-						elementSetSyncComplete(strOuterHTML);
-						blnSetSync = true;
-					}
-					if (blnAssert == false) {
-						elementHidden();
-						blnAssert = true;
-					}
-					blnStatus = true;
-					break;
-				case "value":
-					if (blnSet == false) {
-						elementSet(strOuterHTML);
-						blnSet = true;
-					}
-					if (blnSetSync == false) {
-						elementSetSyncComplete(strOuterHTML);
-						blnSetSync = true;
-					}
-					if (blnAssert == false) {
-						elementVerifyValue();
-						blnAssert = true;
-					}
-					jSONObjectStepPut("strStatus", "pass");
-					coordinateHighlightScreenshot(gobjJsonObjectStep);
-					blnStatus = true;
-					break;
-				case "visible":
-					if (blnSet == false) {
-						elementSet(strOuterHTML);
-						blnSet = true;
-					}
-					if (blnSetSync == false) {
-						elementSetSyncComplete(strOuterHTML);
-						blnSetSync = true;
-					}
-					if (blnAssert == false) {
-						elementVisible();
-						blnAssert = true;
-					}
-					jSONObjectStepPut("strStatus", "pass");
-					coordinateHighlightScreenshot(gobjJsonObjectStep);
-					blnStatus = true;
-					break;
-				case "enabled":
-					if (blnSet == false) {
-						elementSet(strOuterHTML);
-						blnSet = true;
-					}
-					if (blnSetSync == false) {
-						elementSetSyncComplete(strOuterHTML);
-						blnSetSync = true;
-					}
-					if (blnAssert == false) {
-						elementVisible();
-						elementEnabled();
-						blnAssert = true;
-					}
-					jSONObjectStepPut("strStatus", "pass");
-					coordinateHighlightScreenshot(gobjJsonObjectStep);
-					blnStatus = true;
-					break;
-				case "disabled":
-					if (blnSet == false) {
-						elementSet(strOuterHTML);
-						blnSet = true;
-					}
-					if (blnSetSync == false) {
-						elementSetSyncComplete(strOuterHTML);
-						blnSetSync = true;
-					}
-					if (blnAssert == false) {
-						elementVisible();
-						elementDisabled();
-						blnAssert = true;
-					}
-					jSONObjectStepPut("strStatus", "pass");
-					coordinateHighlightScreenshot(gobjJsonObjectStep);
-					blnStatus = true;
-					break;
-				}
-				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
-				blnFound = false;
-				logger("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotVisibleException e) {
-				blnVisible = false;
-				logger("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotEnabledException e) {
-				blnEnabled = false;
-				logger("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementTagNameNotSupportedException e) {
-				logger("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				blnExit = true;
-			} catch (ElementNotHiddenException e) {
-				logger("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				blnAssert = false;
-			} catch (ValueNotMatchedException e) {
-				logger("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				blnFound = false;
-				blnAssert = false;
-			} catch (ElementNotSetException e) {
-				blnSet = true;
-				blnAssert = false;
-			} catch (ElementNotDisabledException e) {
-				blnAssert = false;
-				logger("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (DoPostBackNotCompleteException | JQueryAjaxNotCompleteException | JQueryAnimationNotCompleteException | AngularJsNotCompleteException e) {
-				blnSetSync = false;
-			} finally {
-				if (blnExit == true) {
-				} else {
-					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-						if (blnStatus == true) {
-							blnExit = true;
-						}
-					} else {
-						if (blnStatus == true) {
-							jSONObjectStepPut("strStatus", "pass");
-							blnExit = true;
-						} else if (blnStatus == false) {
-							if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-								jSONObjectStepPut("strStatus", "warning");
-								coordinateHighlightScreenshot(gobjJsonObjectStep);
-								blnExit = true;
-							} else {
-								jSONObjectStepPut("strStatus", "fail");
-								coordinateHighlightScreenshot(gobjJsonObjectStep);
-								blnExit = true;
-							}
-						}
-					}
-				}
-				if (blnExit == true) {
-					stepDuration("elementSetSync", lngTimeStart, "set");
-					return;
-				}
-			}
-		}
-	}
-
 	public static void elementDragSync() {
 		logger("  ==start==>elementDragSync " + dateTimestamp());
 		Long lngTimeStart = System.currentTimeMillis();
@@ -1612,15 +1680,15 @@ public class Dragonfly {
 						}
 					} else {
 						if (blnStatus == true) {
-							jSONObjectStepPut("strStatus", "pass");
+							jsonObjectStepPut("strStatus", "pass");
 							blnExit = true;
 						} else if (blnStatus == false) {
 							if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-								jSONObjectStepPut("strStatus", "warning");
+								jsonObjectStepPut("strStatus", "warning");
 								coordinateHighlightScreenshot(gobjJsonObjectStep);
 								blnExit = true;
 							} else {
-								jSONObjectStepPut("strStatus", "fail");
+								jsonObjectStepPut("strStatus", "fail");
 								coordinateHighlightScreenshot(gobjJsonObjectStep);
 								blnExit = true;
 							}
@@ -1699,15 +1767,15 @@ public class Dragonfly {
 						}
 					} else {
 						if (blnStatus == true) {
-							jSONObjectStepPut("strStatus", "pass");
+							jsonObjectStepPut("strStatus", "pass");
 							blnExit = true;
 						} else if (blnStatus == false) {
 							if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-								jSONObjectStepPut("strStatus", "warning");
+								jsonObjectStepPut("strStatus", "warning");
 								coordinateHighlightScreenshot(gobjJsonObjectStep);
 								blnExit = true;
 							} else {
-								jSONObjectStepPut("strStatus", "fail");
+								jsonObjectStepPut("strStatus", "fail");
 								coordinateHighlightScreenshot(gobjJsonObjectStep);
 								blnExit = true;
 							}
@@ -1720,6 +1788,21 @@ public class Dragonfly {
 				}
 			}
 		}
+	}
+
+	public static String elementVerifyValue() throws ValueNotMatchedException, ElementTagNameNotSupportedException {
+		logger("  ==start==>elementVerifyValue " + dateTimestamp());
+		long lngStartTimeElementVerify = System.currentTimeMillis();
+		String strActualValue = "";
+		String strGetValue = "";
+		String strValueExpected = gobjJsonObjectStep.get("strInputValue").toString();
+		try {
+			strGetValue = elementGet();
+			strActualValue = verifyMatch(strGetValue, strValueExpected);
+		} finally {
+			logger("elementVerifyValue: finally strGetValue = {" + strGetValue + "} strValueExpected = {" + strValueExpected + "} intMillisecondsWaited = " + (int) (System.currentTimeMillis() - lngStartTimeElementVerify));
+		}
+		return strActualValue;
 	}
 
 	public static void elementVerifyValueSync() {
@@ -1766,13 +1849,13 @@ public class Dragonfly {
 				logger("elementVerifyValueSync: " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
 				if (blnExit == true) {
-					jSONObjectStepPut("strStatus", "fail");
+					jsonObjectStepPut("strStatus", "fail");
 					blnExit = true;
 				}
 				if (blnStatus == true) {
 					logger("elementVerifyValueSync: finally blnStatus = " + blnStatus);
-					jSONObjectStepPut("strOutputValue", strActualValue);
-					jSONObjectStepPut("strStatus", "pass");
+					jsonObjectStepPut("strOutputValue", strActualValue);
+					jsonObjectStepPut("strStatus", "pass");
 					blnExit = true;
 				} else if (blnStatus == false) {
 					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
@@ -1782,12 +1865,12 @@ public class Dragonfly {
 						}
 					} else {
 						if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-							jSONObjectStepPut("strOutputValue", strActualValue);
-							jSONObjectStepPut("strStatus", "warning");
+							jsonObjectStepPut("strOutputValue", strActualValue);
+							jsonObjectStepPut("strStatus", "warning");
 							blnExit = true;
 						} else {
-							jSONObjectStepPut("strOutputValue", strActualValue);
-							jSONObjectStepPut("strStatus", "fail");
+							jsonObjectStepPut("strOutputValue", strActualValue);
+							jsonObjectStepPut("strStatus", "fail");
 							blnExit = true;
 						}
 					}
@@ -1799,21 +1882,6 @@ public class Dragonfly {
 				}
 			}
 		}
-	}
-
-	public static String elementVerifyValue() throws ValueNotMatchedException, ElementTagNameNotSupportedException {
-		logger("  ==start==>elementVerifyValue " + dateTimestamp());
-		long lngStartTimeElementVerify = System.currentTimeMillis();
-		String strActualValue = "";
-		String strGetValue = "";
-		String strValueExpected = gobjJsonObjectStep.get("strInputValue").toString();
-		try {
-			strGetValue = elementGet();
-			strActualValue = verifyMatch(strGetValue, strValueExpected);
-		} finally {
-			logger("elementVerifyValue: finally strGetValue = {" + strGetValue + "} strValueExpected = {" + strValueExpected + "} intMillisecondsWaited = " + (int) (System.currentTimeMillis() - lngStartTimeElementVerify));
-		}
-		return strActualValue;
 	}
 
 	public static String verifyMatch(String strActual, String strExpected) throws ValueNotMatchedException {
@@ -1845,371 +1913,22 @@ public class Dragonfly {
 		return strMatchedString;
 	}
 
-	public static void elementVisibleSync() {
-		logger("  ==start==>elementVisibleSync " + dateTimestamp());
-		Long lngTimeStart = System.currentTimeMillis();
-		Boolean blnExit = false;
-		Boolean blnFound = false;
-		Boolean blnStatus = false;
-		Boolean blnVisible = false;
-		while (true) {
-			try {
-				if (blnFound == false) {
-					elementFind();
-					blnFound = true;
-				}
-				if (blnVisible == false) {
-					elementVisible();
-					blnVisible = true;
-				}
-				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException | ElementNotVisibleException e) {
-				blnFound = false;
-				blnVisible = false;
-				logger("elementVisibleSync: " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
-			} finally {
-				if (blnStatus == true) {
-					logger("elementVisibleSync: finally blnStatus = " + blnStatus);
-					jSONObjectStepPut("strStatus", "pass");
-					blnExit = true;
-				} else if (blnStatus == false) {
-					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-						if (blnFound == false) {
-							blnVisible = false;
-						}
-					} else {
-						if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-							jSONObjectStepPut("strStatus", "warning");
-							blnExit = true;
-						} else {
-							jSONObjectStepPut("strStatus", "fail");
-							blnExit = true;
-						}
-					}
-				}
-				if (blnExit == true) {
-					coordinateHighlightScreenshot(gobjJsonObjectStep);
-					stepDuration("elementVisibleSync", lngTimeStart, "syncvisible");
-					return;
-				}
-			}
-		}
+	public static void sleep() {
+		sleepMilliseconds(Integer.parseInt(gobjJsonObjectStep.get("strInputValue").toString()));
 	}
 
-	public static void elementHiddenSync() {
-		logger("  ==start==>elementHiddenSync " + dateTimestamp());
-		Long lngTimeStart = System.currentTimeMillis();
-		Boolean blnExit = false;
-		Boolean blnFound = false;
-		Boolean blnHidden = false;
-		Boolean blnStatus = false;
-		while (true) {
-			try {
-				if (blnFound == false) {
-					elementFind();
-					blnFound = true;
-				}
-				if (blnFound == true && blnHidden == false) {
-					elementHidden();
-					blnHidden = true;
-				}
-				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException | ElementNotFoundException e) {
-				blnFound = false;
-				blnHidden = true;
-				blnStatus = true;
-				logger("elementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (MultipleElementsFoundException e) {
-				blnFound = false;
-				blnHidden = false;
-				logger("elementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotHiddenException e) {
-				blnHidden = false;
-				logger("elementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (Exception e) {
-				blnFound = false;
-				blnHidden = false;
-				logger("elementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} finally {
-				if (blnStatus == true) {
-					jSONObjectStepPut("strStatus", "pass");
-					coordinatesElement();
-					blnExit = true;
-				} else if (blnStatus == false) {
-					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-						if (blnFound == false) {
-							blnHidden = false;
-						}
-					} else {
-						coordinatesElement();
-						if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-							jSONObjectStepPut("strStatus", "warning");
-							blnExit = true;
-						} else {
-							jSONObjectStepPut("strStatus", "fail");
-							blnExit = true;
-						}
-					}
-				}
-				if (blnExit == true) {
-					coordinateHighlightScreenshot(gobjJsonObjectStep);
-					stepDuration("elementHiddenSync", lngTimeStart, "synchidden");
-					return;
-				}
-			}
-		}
-	}
-
-	public static void elementEnabledSync() {
-		logger("  ==start==>elementEnabledSync " + dateTimestamp());
-		Long lngTimeStart = System.currentTimeMillis();
-		Boolean blnEnabled = false;
-		Boolean blnExit = false;
-		Boolean blnFound = false;
-		Boolean blnStatus = false;
-		Boolean blnVisible = false;
-		while (true) {
-			try {
-				if (blnFound == false) {
-					elementFind();
-					blnFound = true;
-				}
-				if (blnVisible == false) {
-					elementVisible();
-					blnVisible = true;
-				}
-				if (blnEnabled == false) {
-					elementEnabled();
-					blnEnabled = true;
-				}
-				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException | ElementNotVisibleException e) {
-				blnFound = false;
-				blnVisible = false;
-				blnEnabled = false;
-				logger("elementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotEnabledException e) {
-				blnEnabled = false;
-				logger("elementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} finally {
-				if (blnStatus == true) {
-					jSONObjectStepPut("strStatus", "pass");
-					blnExit = true;
-				} else if (blnStatus == false) {
-					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-						if (blnFound == false) {
-							blnEnabled = false;
-						}
-					} else {
-						if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-							jSONObjectStepPut("strStatus", "warning");
-							blnExit = true;
-						} else {
-							jSONObjectStepPut("strStatus", "fail");
-							blnExit = true;
-						}
-					}
-				}
-				if (blnExit == true) {
-					coordinateHighlightScreenshot(gobjJsonObjectStep);
-					stepDuration("elementEnabledSync", lngTimeStart, "syncenabled");
-					return;
-				}
-			}
-		}
-	}
-
-	public static void elementDisabledSync() {
-		logger("  ==start==>elementDisabledSync " + dateTimestamp());
-		Long lngTimeStart = System.currentTimeMillis();
-		Boolean blnDisabled = false;
-		Boolean blnExit = false;
-		Boolean blnFound = false;
-		Boolean blnStatus = false;
-		Boolean blnVisible = false;
-		while (true) {
-			try {
-				if (blnFound == false) {
-					elementFind();
-					blnFound = true;
-				}
-				if (blnVisible == false) {
-					elementVisible();
-					blnVisible = true;
-				}
-				if (blnDisabled == false) {
-					elementDisabled();
-					blnDisabled = true;
-				}
-				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException | ElementNotVisibleException e) {
-				blnFound = false;
-				blnVisible = false;
-				blnDisabled = false;
-				logger("elementDisabledSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotDisabledException e) {
-				blnDisabled = false;
-				logger("elementDisabledSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
-			} finally {
-				if (blnStatus == true) {
-					jSONObjectStepPut("strStatus", "pass");
-					blnExit = true;
-				} else if (blnStatus == false) {
-					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-						if (blnFound == false) {
-							blnDisabled = false;
-						}
-					} else {
-						if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-							jSONObjectStepPut("strStatus", "warning");
-							blnExit = true;
-						} else {
-							jSONObjectStepPut("strStatus", "fail");
-							blnExit = true;
-						}
-					}
-				}
-				if (blnExit == true) {
-					coordinateHighlightScreenshot(gobjJsonObjectStep);
-					stepDuration("elementDisabledSync", lngTimeStart, "syncdisabled");
-					return;
-				}
-			}
-		}
-	}
-
-	public static WebDriver browserLaunch() throws BrowserDriverNotSupportedException {
-		// TODO combine duplicate code
-		// TODO add desiredCapabilities.setJavascriptEnabled(true); to all browsers
-		logger("  ==start==>browserLaunch " + dateTimestamp());
-		Long lngTimeStart = System.currentTimeMillis();
-		DesiredCapabilities desiredCapabilities = null;
-		try {
-			jSONObjectStepPut("blnStatus", "true");
-			jSONObjectStepPut("strStatus", "pass");
-			jSONObjectStepPut("intFrame", "-1");
-			switch (gobjJsonObjectStep.get("strTagName").toString()) {
-			case "firefox":
-				gobjWebDriver = new FirefoxDriver();
-				gobjWebDriver.get(gobjJsonObjectStep.get("strInputValue").toString());
-				gobjWebDriver.manage().window().maximize();
-				Actions myAction = new Actions(gobjWebDriver);
-				myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL).build().perform();
-				break;
-			case "ie":
-				// internetExplorerProcessKill();
-				windowsProcessKill("taskkill /F /IM iexplore.exe");
-				sleepMilliseconds(1000);
-				logger("browserLaunch: DesiredCapabilities");
-				desiredCapabilities = DesiredCapabilities.internetExplorer();
-				logger("browserLaunch: setJavascriptEnabled");
-				desiredCapabilities.setJavascriptEnabled(true);
-				//desiredCapabilities.setCapability("unexpectedAlertBehaviour", "ignore");
-				logger("browserLaunch: UNEXPECTED_ALERT_BEHAVIOR");
-				desiredCapabilities.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, "ignore");
-				logger("browserLaunch: IE_ENSURE_CLEAN_SESSION");
-				desiredCapabilities.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
-				logger("browserLaunch: REQUIRE_WINDOW_FOCUS");
-				desiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
-				logger("browserLaunch: webdriver.ie.driver" + System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
-				System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
-				logger("browserLaunch: new InternetExplorerDriver(desiredCapabilities)");
-				gobjWebDriver = new InternetExplorerDriver(desiredCapabilities);
-				//try {
-				//C:\Users\perrj115\Documents\GitHub\dragonfly\Dragonfly\Drivers\IEDriverServer.exe
-				//	File file = new File(System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
-				//	logger("browserLaunch file.getAbsolutePath() " + file.getAbsolutePath());
-				//System.setProperty("webdriver.ie.driver", file.getAbsolutePath());
-				//	WebDriver driver = new InternetExplorerDriver();
-				//	gobjWebDriver = new InternetExplorerDriver();
-				//} catch (Exception e) {
-				//	logger("browserLaunch new InternetExplorerDriver " + e.toString());
-				//	}
-				// gobjWebDriver.manage().deleteCookieNamed("JSESSIONID");
-				logger("browserLaunch: gobjJsonObjectStep.get(strInputValue).toString() = " + gobjJsonObjectStep.get("strInputValue").toString());
-				gobjWebDriver.get(gobjJsonObjectStep.get("strInputValue").toString());
-				// gobjWebDriver.navigate().to(gobjJsonObjectStep.get("strInputValue").toString());
-				logger("browserLaunch: gobjWebDriver.manage().window().maximize()");
-				gobjWebDriver.manage().window().maximize();
-				//	Capabilities getCapabilities();
-				// gobjWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-				// // gobjWebDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
-				break;
-			case "chrome":
-				switch (gstrOperatingSystem) {
-				case "Windows":
-					System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir") + "\\Drivers\\chromedriver.exe");
-					break;
-				case "Mac":
-					System.setProperty("webdriver.chrome.driver", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome");
-					break;
-				default:
-					// TODO need to raise an error and log
-					break;
-				}
-				gobjWebDriver = new ChromeDriver();
-				gobjWebDriver.get(gobjJsonObjectStep.get("strInputValue").toString());
-				gobjWebDriver.manage().window().maximize();
-				break;
-			case "safari":
-				gobjWebDriver = new SafariDriver();
-				gobjWebDriver.get(gobjJsonObjectStep.get("strInputValue").toString());
-				gobjWebDriver.manage().window().maximize();
-				break;
-			case "opera":
-				// TODO OperaDriver setup latest driver and test desiredCapabilities = DesiredCapabilities.internetExplorer();
-				// desiredCapabilities.setJavascriptEnabled(true);
-				gobjWebDriver = new OperaDriver();
-				gobjWebDriver.get(gobjJsonObjectStep.get("strInputValue").toString());
-				// gobjWebDriver.manage().window().maximize();
-				// gobjWebDriver.manage().window().setPosition(new Point(0, 0));
-				// Dimension dim = new Dimension(1382, 754);
-				// gobjWebDriver.manage().window().setSize(dim);
-				// Selenium selenium;
-				// gobjWebDriver = new OperaDriver();
-				// selenium = new WebDriverBackedSelenium(gobjWebDriver, "https://www.google.com/");
-				// return gobjWebDriver;
-				break;
-			default:
-				jSONObjectStepPut("blnStatus", "false");
-				jSONObjectStepPut("strStatus", "fail");
-				throw new BrowserDriverNotSupportedException("Browser '" + gobjJsonObjectStep.get("strTagName").toString() + "' not supported");
-			}
-		} catch (Exception e) {
-			logger("browserLaunch: Exception" + e.toString());
-		} finally {
-			jSONObjectStepPut("strCurrentWindowHandle", gobjWebDriver.getWindowHandle());
-			coordinatesElement();
-			coordinateHighlightScreenshot(gobjJsonObjectStep);
-			stepDuration("browserLaunch", lngTimeStart, "launch");
-		}
-		return gobjWebDriver;
-	}
-
-	public static void webDriverRefresh() {
-		logger("  ==start==>webDriverRefresh " + dateTimestamp());
-		gobjWebDriver.navigate().refresh();
-	}
-
-	public static void webDriverTest() {
-		System.setProperty("webdriver.ie.driver", "C:/Users/perrj115/Documents/GitHub/dragonfly/Dragonfly/Drivers/IEDriverServer.exe");
-		WebDriver driver;
-		driver = new InternetExplorerDriver();
-		//		driver = new FirefoxDriver();
-		//		driver = new HtmlUnitDriver(true);
-		//	assertTrue(true);
-		driver.close();
-		driver.quit();
+	public static void sleepSync() {
+		sleep();
 	}
 
 	public static void stepDuration(String strMethodName, Long lngTimeStart, String strStepType) {
 		logger("  ==start==>stepDuration " + dateTimestamp());
 		Long lngTimeEnd = System.currentTimeMillis();
-		jSONObjectStepPut("strStepExpected", stepCreateExpected());
-		jSONObjectStepPut("strStepActual", stepCreateActual(strStepType));
-		jSONObjectStepPut("strStartTimestamp", dateTimeFormat(lngTimeStart));
-		jSONObjectStepPut("strStepDuration", Long.toString(lngTimeEnd - lngTimeStart));
-		jSONObjectStepPut("strEndTimestamp", dateTimeFormat(lngTimeEnd));
+		jsonObjectStepPut("strStepExpected", stepCreateExpected());
+		jsonObjectStepPut("strStepActual", stepCreateActual(strStepType));
+		jsonObjectStepPut("strStartTimestamp", dateTimeFormat(lngTimeStart));
+		jsonObjectStepPut("strStepDuration", Long.toString(lngTimeEnd - lngTimeStart));
+		jsonObjectStepPut("strEndTimestamp", dateTimeFormat(lngTimeEnd));
 		//logger(strMetodName + ": Milliseconds Waited = " + strStepDuration);
 		logger("stepDuration: " + strMethodName + " strStatus = " + gobjJsonObjectStep.get("strStatus").toString() + " Milliseconds Waited = " + gobjJsonObjectStep.get("strStepDuration").toString());
 	}
@@ -2306,28 +2025,6 @@ public class Dragonfly {
 		return strClipboardData;
 	}
 
-	public static boolean alertFind() {
-		logger("  ==start==>alertFind " + dateTimestamp());
-		try {
-			logger("alertFind: gobjWebDriver.getTitle() = " + gobjWebDriver.getTitle());
-			gobjWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-			logger("alertFind: implicitlyWait  ");
-			String strAlertPresent = gobjWebDriver.switchTo().alert().getText();
-			logger("alertFind: alert switch to which did not fail:  " + strAlertPresent);
-			return true;
-		} catch (UnhandledAlertException e) {
-			//logger("alertFind getText " + gobjWebDriver.switchTo().alert().getText());
-			logger("alertFind: UnhandledAlertException = " + e.toString());
-			return true;
-		} catch (NoAlertPresentException e) {
-			logger("alertFind: NoAlertPresentException = " + e.toString());
-			return false;
-		} catch (Exception e) {
-			logger("alertFind: Exception = " + e.toString());
-			return false;
-		}
-	}
-
 	public static boolean validateTagType(String strTagType) {
 		logger("  ==start==>validateTagType " + dateTimestamp());
 		switch (strTagType) {
@@ -2370,42 +2067,21 @@ public class Dragonfly {
 		}
 	}
 
-	public static void browserInnerDimensions() throws WebDriverException {
-		logger("  ==start==>browserInnerDimensions " + dateTimestamp());
-		long lngBrowserInnerWidth = 0;
-		long lngBrowserInnerHeight = 0;
-		try {
-			lngBrowserInnerWidth = (long) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
-			lngBrowserInnerHeight = (long) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
-			// logger("lngBrowserInnerWidth = " + lngBrowserInnerWidth);
-			// logger("lngBrowserInnerHeight = " + lngBrowserInnerHeight);
-		} catch (WebDriverException e) {
-			throw new WebDriverException("WebDriverException returned");
-		} catch (Exception e) {
-			lngBrowserInnerWidth = (long) ((JavascriptExecutor) gobjWebDriver).executeScript("return document.body.offsetWidth;");
-			lngBrowserInnerHeight = (long) ((JavascriptExecutor) gobjWebDriver).executeScript("return document.body.offsetHeight;");
-			// logger("BodyoffsetWidth = " + lngBrowserInnerWidth);
-			// logger("BodyoffsetHeight = " + lngBrowserInnerHeight);
-		}
-		jSONObjectStepPut("intBrowserInnerWidth", Long.toString(lngBrowserInnerWidth));
-		jSONObjectStepPut("intBrowserInnerHeight", Long.toString(lngBrowserInnerHeight));
-	}
-
 	public static void elementFind() throws ElementNotFoundException, MultipleElementsFoundException {
 		logger("  ==start==>elementFind " + dateTimestamp());
 		if (gobjJsonObjectStep.get("strTagName").toString().toLowerCase().equals("alert")) {
 			// TODO elementFind finish alert handling --- will need to consider issue where gobjWebDriver no longer exists maybe place this after setting window
-			jSONObjectStepPut("strTagType", "alert");
+			jsonObjectStepPut("strTagType", "alert");
 			if (alertFind() == true) {
-				jSONObjectStepPut("strHighlightArea", "alert");
+				jsonObjectStepPut("strHighlightArea", "alert");
 				return;
 			} else {
-				jSONObjectStepPut("strHighlightArea", "screen");
+				jsonObjectStepPut("strHighlightArea", "screen");
 				throw new ElementNotFoundException("Alert popup not found!");
 			}
 		}
 		if (gobjJsonObjectStep.get("strTagName").toString().toLowerCase().equals("title")) {
-			jSONObjectStepPut("strTagType", "title");
+			jsonObjectStepPut("strTagType", "title");
 			return;
 		}
 		//String strCurrentWindowHandle = gobjJsonObjectStep.get("strCurrentWindowHandle").toString();
@@ -2431,10 +2107,10 @@ public class Dragonfly {
 				//	if (blnSwitch == true) {
 				logger("elementFind: gobjWebDriver.switchTo().window(strWindowHandle) = " + strWindowHandle);
 				gobjWebDriver.switchTo().window(strWindowHandle);
-				browserInnerDimensions();
+				coordinatesBrowserInner();
 				// logger("elementFind Switched = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
 				logger("elementFind: gobjWebDriver.getTitle = " + gobjWebDriver.getTitle());
-				jSONObjectStepPut("intFrame", "-1");
+				jsonObjectStepPut("intFrame", "-1");
 				//gobjWebDriver.manage().window().maximize();
 				//}
 				List<Integer> arrRouteOriginal = new ArrayList<Integer>();
@@ -2550,7 +2226,7 @@ public class Dragonfly {
 				break;
 			default:
 				if (arrAttributeNames[intAttributeEach].toLowerCase().equals("type")) {
-					jSONObjectStepPut("strType", arrAttributeValues[intAttributeEach]);
+					jsonObjectStepPut("strType", arrAttributeValues[intAttributeEach]);
 				}
 				if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("re:")) {
 					// strXpathAttributesTemp = "contains(@" + arrAttributeNames[intAttributeEach] + ", '" +arrAttributeValues[intAttributeEach].substring(3) + "')";
@@ -2612,14 +2288,14 @@ public class Dragonfly {
 				throw new MultipleElementsFoundException(objWebElementCollection.size() + " elements found. Element properties did not return an element, try refining attributes");
 			}
 		}
-		jSONObjectStepPut("strCurrentWindowHandle", gobjWebDriver.getWindowHandle());
+		jsonObjectStepPut("strCurrentWindowHandle", gobjWebDriver.getWindowHandle());
 		if (gobjJsonObjectStep.get("strTagName").toString().toLowerCase().equals("input")) {
 			if (gobjJsonObjectStep.get("strType").toString().toLowerCase().length() == 0) {
-				jSONObjectStepPut("strType", gobjWebElement.getAttribute("type"));
+				jsonObjectStepPut("strType", gobjWebElement.getAttribute("type"));
 			}
-			jSONObjectStepPut("strTagType", "input_" + gobjJsonObjectStep.get("strType").toString());
+			jsonObjectStepPut("strTagType", "input_" + gobjJsonObjectStep.get("strType").toString());
 		} else {
-			jSONObjectStepPut("strTagType", gobjJsonObjectStep.get("strTagName").toString());
+			jsonObjectStepPut("strTagType", gobjJsonObjectStep.get("strTagName").toString());
 		}
 	}
 
@@ -2715,16 +2391,37 @@ public class Dragonfly {
 			intWinPosHeight = ((intWinPosHeight - intClientSizeHeight) - ((intWinPosWidth - intClientSizeWidth) / 2));
 			break;
 		}
-		jSONObjectStepPut("intElementScreenX", Integer.toString(intWinPosX));
-		jSONObjectStepPut("intElementScreenY", Integer.toString(intWinPosY));
-		jSONObjectStepPut("intElementWidth", Integer.toString(intWinPosWidth));
-		jSONObjectStepPut("intElementHeight", Integer.toString(intWinPosHeight));
+		jsonObjectStepPut("intElementScreenX", Integer.toString(intWinPosX));
+		jsonObjectStepPut("intElementScreenY", Integer.toString(intWinPosY));
+		jsonObjectStepPut("intElementWidth", Integer.toString(intWinPosWidth));
+		jsonObjectStepPut("intElementHeight", Integer.toString(intWinPosHeight));
 		logger("coordinatesAlert: winGetTitle: = " + strWinTitle);
 		logger("coordinatesAlert: gobjJsonObjectStep.get(intElementHeight): = " + gobjJsonObjectStep.get("intElementHeight"));
 		logger("coordinatesAlert: gobjJsonObjectStep.get(intElementWidth): = " + gobjJsonObjectStep.get("intElementWidth"));
 		logger("coordinatesAlert: gobjJsonObjectStep.get(intElementScreenX): = " + gobjJsonObjectStep.get("intElementScreenX"));
 		logger("coordinatesAlert: gobjJsonObjectStep.get(intElementScreenY): = " + gobjJsonObjectStep.get("intElementScreenY"));
 		logger("coordinatesAlert: coordinatesAlert finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementCoordinatesAlert));
+	}
+
+	public static void coordinatesBrowserInner() throws WebDriverException {
+		logger("  ==start==>coordinatesBrowserInner " + dateTimestamp());
+		long lngBrowserInnerWidth = 0;
+		long lngBrowserInnerHeight = 0;
+		try {
+			lngBrowserInnerWidth = (long) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
+			lngBrowserInnerHeight = (long) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
+			// logger("lngBrowserInnerWidth = " + lngBrowserInnerWidth);
+			// logger("lngBrowserInnerHeight = " + lngBrowserInnerHeight);
+		} catch (WebDriverException e) {
+			throw new WebDriverException("WebDriverException returned");
+		} catch (Exception e) {
+			lngBrowserInnerWidth = (long) ((JavascriptExecutor) gobjWebDriver).executeScript("return document.body.offsetWidth;");
+			lngBrowserInnerHeight = (long) ((JavascriptExecutor) gobjWebDriver).executeScript("return document.body.offsetHeight;");
+			// logger("BodyoffsetWidth = " + lngBrowserInnerWidth);
+			// logger("BodyoffsetHeight = " + lngBrowserInnerHeight);
+		}
+		jsonObjectStepPut("intBrowserInnerWidth", Long.toString(lngBrowserInnerWidth));
+		jsonObjectStepPut("intBrowserInnerHeight", Long.toString(lngBrowserInnerHeight));
 	}
 
 	public static void coordinatesElement() {
@@ -2738,18 +2435,18 @@ public class Dragonfly {
 			Dimension objWebDriverDimension = gobjWebDriver.manage().window().getSize();
 			int intBrowserOuterWidth = objWebDriverDimension.width;
 			int intBrowserOuterHeight = objWebDriverDimension.height;
-			jSONObjectStepPut("intBrowserOuterX", Integer.toString(intBrowserOuterX));
-			jSONObjectStepPut("intBrowserOuterY", Integer.toString(intBrowserOuterY));
-			jSONObjectStepPut("intBrowserOuterWidth", Integer.toString(intBrowserOuterWidth));
-			jSONObjectStepPut("intBrowserOuterHeight", Integer.toString(intBrowserOuterHeight));
+			jsonObjectStepPut("intBrowserOuterX", Integer.toString(intBrowserOuterX));
+			jsonObjectStepPut("intBrowserOuterY", Integer.toString(intBrowserOuterY));
+			jsonObjectStepPut("intBrowserOuterWidth", Integer.toString(intBrowserOuterWidth));
+			jsonObjectStepPut("intBrowserOuterHeight", Integer.toString(intBrowserOuterHeight));
 			if (gobjWebElement != null) {
 				Coordinates objElementCoordinates = ((Locatable) gobjWebElement).getCoordinates();
 				Point objElementPoint = objElementCoordinates.inViewPort();
 				Dimension objElementDimension = gobjWebElement.getSize();
-				jSONObjectStepPut("intElementX", Integer.toString(objElementPoint.x));
-				jSONObjectStepPut("intElementY", Integer.toString(objElementPoint.y));
-				jSONObjectStepPut("intElementWidth", Integer.toString(objElementDimension.width));
-				jSONObjectStepPut("intElementHeight", Integer.toString(objElementDimension.height));
+				jsonObjectStepPut("intElementX", Integer.toString(objElementPoint.x));
+				jsonObjectStepPut("intElementY", Integer.toString(objElementPoint.y));
+				jsonObjectStepPut("intElementWidth", Integer.toString(objElementDimension.width));
+				jsonObjectStepPut("intElementHeight", Integer.toString(objElementDimension.height));
 			}
 			logger("coordinatesElement: coordinatesElement gobjJsonObjectStep.containsKey = " + gobjJsonObjectStep.containsKey("intElementX"));
 			if (gobjJsonObjectStep.containsKey("intElementX")) {
@@ -2760,8 +2457,8 @@ public class Dragonfly {
 				int intWindowBorder = (int) ((intBrowserOuterWidth - intBrowserInnerWidth - intScrollbar) / 2);
 				int intElementScreenX = ((intBrowserOuterX + intElementX) + intWindowBorder);
 				int intElementScreenY = (int) ((intBrowserOuterY + intElementY) + (intBrowserOuterHeight - intBrowserInnerHeight) - intWindowBorder);
-				jSONObjectStepPut("intElementScreenX", Integer.toString(intElementScreenX));
-				jSONObjectStepPut("intElementScreenY", Integer.toString(intElementScreenY));
+				jsonObjectStepPut("intElementScreenX", Integer.toString(intElementScreenX));
+				jsonObjectStepPut("intElementScreenY", Integer.toString(intElementScreenY));
 			}
 		} catch (Exception e) {
 			logger("coordinatesElement: Exception = " + e.toString());
@@ -2784,7 +2481,7 @@ public class Dragonfly {
 			if (gobjJsonObjectStep.get("strTagName").toString().toLowerCase().equals("alert")) {
 				if (alertFind() == true) {
 					blnVisible = true;
-					jSONObjectStepPut("strHighlightArea", "alert");
+					jsonObjectStepPut("strHighlightArea", "alert");
 					coordinatesAlert();
 					return true;
 				} else {
@@ -2816,6 +2513,57 @@ public class Dragonfly {
 		}
 	}
 
+	public static void elementVisibleSync() {
+		logger("  ==start==>elementVisibleSync " + dateTimestamp());
+		Long lngTimeStart = System.currentTimeMillis();
+		Boolean blnExit = false;
+		Boolean blnFound = false;
+		Boolean blnStatus = false;
+		Boolean blnVisible = false;
+		while (true) {
+			try {
+				if (blnFound == false) {
+					elementFind();
+					blnFound = true;
+				}
+				if (blnVisible == false) {
+					elementVisible();
+					blnVisible = true;
+				}
+				blnStatus = true;
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException | ElementNotVisibleException e) {
+				blnFound = false;
+				blnVisible = false;
+				logger("elementVisibleSync: " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
+			} finally {
+				if (blnStatus == true) {
+					logger("elementVisibleSync: finally blnStatus = " + blnStatus);
+					jsonObjectStepPut("strStatus", "pass");
+					blnExit = true;
+				} else if (blnStatus == false) {
+					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
+						if (blnFound == false) {
+							blnVisible = false;
+						}
+					} else {
+						if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
+							jsonObjectStepPut("strStatus", "warning");
+							blnExit = true;
+						} else {
+							jsonObjectStepPut("strStatus", "fail");
+							blnExit = true;
+						}
+					}
+				}
+				if (blnExit == true) {
+					coordinateHighlightScreenshot(gobjJsonObjectStep);
+					stepDuration("elementVisibleSync", lngTimeStart, "syncvisible");
+					return;
+				}
+			}
+		}
+	}
+
 	public static boolean elementHidden() throws ElementNotHiddenException {
 		logger("  ==start==>elementHidden " + dateTimestamp());
 		long lngStartTimeElementHidden = System.currentTimeMillis();
@@ -2823,7 +2571,7 @@ public class Dragonfly {
 			// TODO Alert complete
 			if (gobjJsonObjectStep.get("strTagName").toString().toLowerCase().equals("alert")) {
 				if (alertFind() == false) {
-					jSONObjectStepPut("strHighlightArea", "screen");
+					jsonObjectStepPut("strHighlightArea", "screen");
 					logger("elementHidden: strAreaObjectName = " + gobjJsonObjectStep.get("strHighlightArea"));
 					return true;
 				} else {
@@ -2841,6 +2589,70 @@ public class Dragonfly {
 			return true;
 		} finally {
 			logger("elementHidden: finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
+		}
+	}
+
+	public static void elementHiddenSync() {
+		logger("  ==start==>elementHiddenSync " + dateTimestamp());
+		Long lngTimeStart = System.currentTimeMillis();
+		Boolean blnExit = false;
+		Boolean blnFound = false;
+		Boolean blnHidden = false;
+		Boolean blnStatus = false;
+		while (true) {
+			try {
+				if (blnFound == false) {
+					elementFind();
+					blnFound = true;
+				}
+				if (blnFound == true && blnHidden == false) {
+					elementHidden();
+					blnHidden = true;
+				}
+				blnStatus = true;
+			} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException | ElementNotFoundException e) {
+				blnFound = false;
+				blnHidden = true;
+				blnStatus = true;
+				logger("elementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+			} catch (MultipleElementsFoundException e) {
+				blnFound = false;
+				blnHidden = false;
+				logger("elementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+			} catch (ElementNotHiddenException e) {
+				blnHidden = false;
+				logger("elementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+			} catch (Exception e) {
+				blnFound = false;
+				blnHidden = false;
+				logger("elementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+			} finally {
+				if (blnStatus == true) {
+					jsonObjectStepPut("strStatus", "pass");
+					coordinatesElement();
+					blnExit = true;
+				} else if (blnStatus == false) {
+					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
+						if (blnFound == false) {
+							blnHidden = false;
+						}
+					} else {
+						coordinatesElement();
+						if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
+							jsonObjectStepPut("strStatus", "warning");
+							blnExit = true;
+						} else {
+							jsonObjectStepPut("strStatus", "fail");
+							blnExit = true;
+						}
+					}
+				}
+				if (blnExit == true) {
+					coordinateHighlightScreenshot(gobjJsonObjectStep);
+					stepDuration("elementHiddenSync", lngTimeStart, "synchidden");
+					return;
+				}
+			}
 		}
 	}
 
@@ -2865,6 +2677,65 @@ public class Dragonfly {
 		}
 	}
 
+	public static void elementEnabledSync() {
+		logger("  ==start==>elementEnabledSync " + dateTimestamp());
+		Long lngTimeStart = System.currentTimeMillis();
+		Boolean blnEnabled = false;
+		Boolean blnExit = false;
+		Boolean blnFound = false;
+		Boolean blnStatus = false;
+		Boolean blnVisible = false;
+		while (true) {
+			try {
+				if (blnFound == false) {
+					elementFind();
+					blnFound = true;
+				}
+				if (blnVisible == false) {
+					elementVisible();
+					blnVisible = true;
+				}
+				if (blnEnabled == false) {
+					elementEnabled();
+					blnEnabled = true;
+				}
+				blnStatus = true;
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException | ElementNotVisibleException e) {
+				blnFound = false;
+				blnVisible = false;
+				blnEnabled = false;
+				logger("elementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+			} catch (ElementNotEnabledException e) {
+				blnEnabled = false;
+				logger("elementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+			} finally {
+				if (blnStatus == true) {
+					jsonObjectStepPut("strStatus", "pass");
+					blnExit = true;
+				} else if (blnStatus == false) {
+					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
+						if (blnFound == false) {
+							blnEnabled = false;
+						}
+					} else {
+						if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
+							jsonObjectStepPut("strStatus", "warning");
+							blnExit = true;
+						} else {
+							jsonObjectStepPut("strStatus", "fail");
+							blnExit = true;
+						}
+					}
+				}
+				if (blnExit == true) {
+					coordinateHighlightScreenshot(gobjJsonObjectStep);
+					stepDuration("elementEnabledSync", lngTimeStart, "syncenabled");
+					return;
+				}
+			}
+		}
+	}
+
 	public static boolean elementDisabled() throws ElementNotDisabledException {
 		logger("  ==start==>elementDisabled " + dateTimestamp());
 		long lngStartTimeElementDisabled = System.currentTimeMillis();
@@ -2883,6 +2754,65 @@ public class Dragonfly {
 			}
 		} finally {
 			logger("elementDisabled: finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementDisabled));
+		}
+	}
+
+	public static void elementDisabledSync() {
+		logger("  ==start==>elementDisabledSync " + dateTimestamp());
+		Long lngTimeStart = System.currentTimeMillis();
+		Boolean blnDisabled = false;
+		Boolean blnExit = false;
+		Boolean blnFound = false;
+		Boolean blnStatus = false;
+		Boolean blnVisible = false;
+		while (true) {
+			try {
+				if (blnFound == false) {
+					elementFind();
+					blnFound = true;
+				}
+				if (blnVisible == false) {
+					elementVisible();
+					blnVisible = true;
+				}
+				if (blnDisabled == false) {
+					elementDisabled();
+					blnDisabled = true;
+				}
+				blnStatus = true;
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException | ElementNotVisibleException e) {
+				blnFound = false;
+				blnVisible = false;
+				blnDisabled = false;
+				logger("elementDisabledSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+			} catch (ElementNotDisabledException e) {
+				blnDisabled = false;
+				logger("elementDisabledSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+			} finally {
+				if (blnStatus == true) {
+					jsonObjectStepPut("strStatus", "pass");
+					blnExit = true;
+				} else if (blnStatus == false) {
+					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
+						if (blnFound == false) {
+							blnDisabled = false;
+						}
+					} else {
+						if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
+							jsonObjectStepPut("strStatus", "warning");
+							blnExit = true;
+						} else {
+							jsonObjectStepPut("strStatus", "fail");
+							blnExit = true;
+						}
+					}
+				}
+				if (blnExit == true) {
+					coordinateHighlightScreenshot(gobjJsonObjectStep);
+					stepDuration("elementDisabledSync", lngTimeStart, "syncdisabled");
+					return;
+				}
+			}
 		}
 	}
 
@@ -2970,6 +2900,73 @@ public class Dragonfly {
 		//return strElementGet;
 	}
 
+	public static void elementGetSync() {
+		logger("  ==start==>elementGetSync " + dateTimestamp());
+		Long lngTimeStart = System.currentTimeMillis();
+		Boolean blnExit = false;
+		Boolean blnFound = false;
+		Boolean blnGet = false;
+		Boolean blnStatus = false;
+		Boolean blnVisible = false;
+		String strGetValue = "";
+		while (true) {
+			try {
+				if (blnFound == false) {
+					elementFind();
+					blnFound = true;
+				}
+				if (blnVisible == false) {
+					elementVisible();
+					blnVisible = true;
+				}
+				if (blnGet == false) {
+					strGetValue = elementGet();
+					jsonObjectStepPut("strOutputValue", strGetValue);
+					blnGet = true;
+				}
+				blnStatus = true;
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
+				blnFound = false;
+				logger("elementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+			} catch (ElementNotVisibleException e) {
+				blnVisible = false;
+				logger("elementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+			} catch (ElementTagNameNotSupportedException e) {
+				logger("elementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				blnExit = true;
+			} finally {
+				if (blnExit == true) {
+					jsonObjectStepPut("strStatus", "fail");
+				} else {
+					if (blnStatus == true) {
+						jsonObjectStepPut("strStatus", "pass");
+						blnExit = true;
+					} else if (blnStatus == false) {
+						if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
+							if (blnFound == false) {
+								blnVisible = false;
+								blnGet = false;
+							}
+						} else {
+							if (Boolean.parseBoolean(gobjJsonObjectStep.get("blnOptional").toString()) == true) {
+								jsonObjectStepPut("strStatus", "warning");
+								blnExit = true;
+							} else {
+								jsonObjectStepPut("strStatus", "fail");
+								blnExit = true;
+							}
+						}
+					}
+				}
+				if (blnExit == true) {
+					coordinateHighlightScreenshot(gobjJsonObjectStep);
+					stepDuration("elementGetSync", lngTimeStart, "get");
+					return;
+				}
+			}
+		}
+	}
+
 	public class syncTime {
 		public long startTime;
 		public long endTime;
@@ -3037,7 +3034,7 @@ public class Dragonfly {
 				strScreenshotFilePath = gobjJsonObjectStep.get("strScreenshotFilePath").toString() + "Screenshot_" + dateTimestamp() + ".jpg";
 				Thread objThread = new Thread(new threadSaveImage(screenShot, "jpg", strScreenshotFilePath));
 				objThread.start();
-				jSONObjectStepPut("strScreenshotFilePath", strScreenshotFilePath);
+				jsonObjectStepPut("strScreenshotFilePath", strScreenshotFilePath);
 			} catch (AWTException e) {
 				// TODO handle coordinateHighlightScreenshot AWTException
 				logger("coordinateHighlightScreenshot: Exception " + e.toString());
@@ -3191,7 +3188,7 @@ public class Dragonfly {
 		executor.executeScript("window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
 	}
 
-	public static String[] StepsNamesCompleteArray() {
+	public static String[] stepsNamesCompleteArray() {
 		logger("  ==start==>StepsNamesArray " + dateTimestamp());
 		String strKeys = "strAction|strTagName|strAttributeNames|strAttributeValues|strInputValue|strLogicalName|intMillisecondsToWait|blnOptional|strAssert|";
 		strKeys = strKeys + "blnPleaseWait|blnHighlight|blnScreenshot|strFunction|strAssistiveProperties|blnExitOnFail|strOutputLinkName|strOutputValue|intLoop|";
@@ -3201,158 +3198,11 @@ public class Dragonfly {
 		return strKeys.split("\\|");
 	}
 
-	public static String[] StepsNamesOriginalArray() {
+	public static String[] stepsNamesOriginalArray() {
 		logger("  ==start==>StepsNamesArray " + dateTimestamp());
 		String strKeys = "strAction|strTagName|strAttributeNames|strAttributeValues|strInputValue|strLogicalName|intMillisecondsToWait|blnOptional|strAssert|";
 		strKeys = strKeys + "blnPleaseWait|blnHighlight|blnScreenshot|strFunction|strAssistiveProperties|blnExitOnFail|strOutputLinkName|strOutputValue|intLoop|";
 		return strKeys.split("\\|");
-	}
-
-	public static void writeJsonStepsToHtml(String strStepHeader, JSONArray objTestSteps, String strPath, String strFileName) {
-		logger("  ==start==>writeJsonStepsAfterRunToHtml " + dateTimestamp());
-		String strKey = "";
-		String[] arrKeys = null;
-		switch (strStepHeader) {
-		case "original":
-			arrKeys = StepsNamesOriginalArray();
-			break;
-		case "complete":
-			arrKeys = StepsNamesCompleteArray();
-			break;
-		}
-		StringBuilder objStringBuilder = new StringBuilder();
-		try {
-			objStringBuilder.append("<!DOCTYPE html>");
-			objStringBuilder.append("<html lang=\"en\">");
-			objStringBuilder.append("<head><title> " + strFileName.replace(".html", "") + "</title></head>");
-			objStringBuilder.append("<body><h1>");
-			objStringBuilder.append("<table border=\"1\" cellspacing=\"1\" cellpadding=\"5\">");
-			objStringBuilder.append("<tr>");
-			objStringBuilder.append("<td>Step</td>");
-			for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
-				strKey = (String) arrKeys[intKeysEach].toString();
-				objStringBuilder.append("<th>" + strKey + "</th>");
-			}
-			objStringBuilder.append(" </tr>  ");
-			for (int intTestStepRow = 0; intTestStepRow < objTestSteps.size(); intTestStepRow++) {
-				objStringBuilder.append("</tr>");
-				objStringBuilder.append("<td> " + (intTestStepRow + 1) + "</td>");
-				JSONObject objStepReport = (JSONObject) objTestSteps.get(intTestStepRow);
-				for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
-					strKey = (String) arrKeys[intKeysEach].toString();
-					if (objStepReport.containsKey(strKey) == true) {
-						objStringBuilder.append("<td> " + objStepReport.get(strKey) + "</td>");
-					} else {
-						objStringBuilder.append("<td>  &nbsp; </td>");
-					}
-				}
-				objStringBuilder.append(" </tr>  ");
-			}
-			objStringBuilder.append("</table>");
-			objStringBuilder.append("</h1></body>");
-			objStringBuilder.append("</html>");
-			String html = objStringBuilder.toString();
-			writeFile(strPath + strFileName, html);
-		} catch (Exception e) {
-			logger("writeJsonStepsToHtml: Exception = " + e.toString());
-			logger("writeJsonStepsToHtml: objStringBuilder.toString() = " + objStringBuilder.toString());
-		}
-	}
-
-	public static void writeReportToHtml(JSONArray objJsonArrayReportSteps, String strFile) {
-		logger("  ==start==>writeReportToHtml " + dateTimestamp());
-		logger("writeReportToHtml: strFile = " + strFile);
-		long lngStartTimeWriteReportToHtml = System.currentTimeMillis();
-		JSONObject objJsonObjectReportStep = null;
-		String strScreenshotFilePath = "";
-		String strStatus = "";
-		String strStatusIcon = "";
-		StringBuilder objStringBuilder = new StringBuilder();
-		try {
-			objStringBuilder.append("<!DOCTYPE html>");
-			objStringBuilder.append("<html lang=\"en\">");
-			objStringBuilder.append("<head><title>Run Results</title></head>");
-			objStringBuilder.append("<body>");
-			for (int intTestStepRow = 0; intTestStepRow < objJsonArrayReportSteps.size(); intTestStepRow++) {
-				objJsonObjectReportStep = (JSONObject) objJsonArrayReportSteps.get(intTestStepRow);
-				objStringBuilder.append("<div id=step_" + intTestStepRow + ">");
-				objStringBuilder.append("<TABLE border=1 width=100% height=10%>");
-				objStringBuilder.append("<TR>");
-				switch (objJsonObjectReportStep.get("strStatus").toString().toLowerCase()) {
-				case "pass":
-					strStatus = "Pass";
-					if (objJsonObjectReportStep.get("strAction").toString().toLowerCase().equals("set") && objJsonObjectReportStep.get("strAssert").toString().toLowerCase().equals("off")) {
-						strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:blue\">&#10043</span>";
-					} else {
-						strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:green\">&#10003</span>";
-					}
-					break;
-				case "fail":
-					strStatus = "Fail";
-					strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:red\">&#10007</span>";
-					break;
-				case "warning":
-					strStatus = "Warning";
-					strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:gold\">!</span>";
-					break;
-				case "info":
-					strStatus = "Info";
-					strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:magenta\">?</span>";
-					break;
-				}
-				String strStartTimestamp = objJsonObjectReportStep.get("strStartTimestamp").toString();
-				String strStepDuration = objJsonObjectReportStep.get("strStepDuration").toString();
-				String strEndTimestamp = objJsonObjectReportStep.get("strEndTimestamp").toString();
-				objStringBuilder.append("<TD rowspan=\"2\" width=60px align=center valign=middle>Step " + intTestStepRow + "</TD>");
-				objStringBuilder.append("<TD rowspan=\"2\" width=35px align=center valign=middle>" + strStatusIcon + "<br>" + strStatus + "</TD>");
-				objStringBuilder.append("<TD width= 75px align=center valign=middle>Expected</TD>");
-				objStringBuilder.append("<TD align=left valign=middle>" + objJsonObjectReportStep.get("strStepExpected").toString() + "</TD>");
-				objStringBuilder.append("<TD rowspan=\"2\" width=150px align=left valign=middle>Start:" + strStartTimestamp + "<br>End: " + strEndTimestamp + "<br>Duration: " + strStepDuration + " ms</TD>");
-				objStringBuilder.append("</TR>");
-				objStringBuilder.append("<TR>");
-				objStringBuilder.append("<TD align=center valign=middle>Actual</TD>");
-				objStringBuilder.append("<TD align=left valign=middle>" + objJsonObjectReportStep.get("strStepActual").toString() + "</TD>");
-				objStringBuilder.append("</TR>");
-				objStringBuilder.append("</TABLE> ");
-				if (objJsonObjectReportStep.get("strScreenshotFilePath").toString().trim().length() != 0) {
-					strScreenshotFilePath = objJsonObjectReportStep.get("strScreenshotFilePath").toString().replaceAll("\\\\\\\\", "\\");
-					try {
-						BufferedImage objBufferedImage = ImageIO.read(new File(strScreenshotFilePath));
-						objStringBuilder.append("<img src=\"data:image/jpg;base64," + imageEncodeToString(objBufferedImage, "jpg") + "\" alt=\"Step " + intTestStepRow + "\" > ");
-					} catch (Exception e) {
-						logger("writeReportToHtml: Exception = " + e.toString());
-					}
-				}
-				objStringBuilder.append("</div>");
-				objStringBuilder.append("<br>");
-				objStringBuilder.append("<br>");
-				if (objJsonObjectReportStep.get("strAction").toString().toLowerCase().equals("break")) {
-					break;
-				}
-			}
-		} catch (Exception e) {
-			logger("writeReportToHtml: " + e.toString());
-		} finally {
-			objStringBuilder.append("</body>");
-			objStringBuilder.append("</html>");
-			String strHTML = objStringBuilder.toString();
-			writeFile(strFile, strHTML);
-			logger("writeReportToHtml: finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeWriteReportToHtml));
-		}
-	}
-
-	public static void writeFile(String strPathFullFile, String strTextToWrite) {
-		logger("  ==start==>writeFile " + dateTimestamp());
-		logger("writeFile: strPathFullFile = " + strPathFullFile);
-		// logger("writeFile strTextToWrite = " + strTextToWrite);
-		BufferedWriter objBufferedWriter = null;
-		try {
-			objBufferedWriter = new BufferedWriter(new FileWriter(strPathFullFile));
-			objBufferedWriter.write(strTextToWrite);
-			objBufferedWriter.close();
-		} catch (Exception e) {
-			logger("writeReportToHtml: IOException" + e.getMessage());
-		}
 	}
 
 	public static String stepCreateExpected() {
@@ -3568,14 +3418,6 @@ public class Dragonfly {
 		return strActualText;
 	}
 
-	public static void writeJsonKeys(JSONObject objJsonObjectKeySet, String file) throws IOException {
-		logger("  ==start==>writeJsonKeysToHtml " + dateTimestamp());
-		for (Iterator<?> iterator = objJsonObjectKeySet.keySet().iterator(); iterator.hasNext();) {
-			String key = (String) iterator.next();
-			logger("writeJsonKeysToHtml: " + key + " = " + objJsonObjectKeySet.get(key));
-		}
-	}
-
 	public static void webElementCollectionTable(String strTagName) {
 		logger("  ==start==>webElementCollectionTable " + dateTimestamp());
 		// TODO webElementCollectionTable send output to html file
@@ -3772,5 +3614,212 @@ public class Dragonfly {
 		logger("  ==start==>randomNumberRange " + dateTimestamp());
 		Random objRandom = new Random();
 		return objRandom.nextInt((intNumberMaximum - intNumberMinimum) + 1) + intNumberMinimum;
+	}
+
+	public static void webDriverTest() {
+		System.setProperty("webdriver.ie.driver", "C:/Users/perrj115/Documents/GitHub/dragonfly/Dragonfly/Drivers/IEDriverServer.exe");
+		WebDriver driver;
+		driver = new InternetExplorerDriver();
+		//		driver = new FirefoxDriver();
+		//		driver = new HtmlUnitDriver(true);
+		//	assertTrue(true);
+		driver.close();
+		driver.quit();
+	}
+
+	public static void writeFile(String strPathFullFile, String strTextToWrite) {
+		logger("  ==start==>writeFile " + dateTimestamp());
+		logger("writeFile: strPathFullFile = " + strPathFullFile);
+		// logger("writeFile strTextToWrite = " + strTextToWrite);
+		BufferedWriter objBufferedWriter = null;
+		try {
+			objBufferedWriter = new BufferedWriter(new FileWriter(strPathFullFile));
+			objBufferedWriter.write(strTextToWrite);
+			objBufferedWriter.close();
+		} catch (Exception e) {
+			logger("writeReportToHtml: IOException" + e.getMessage());
+		}
+	}
+
+	public static void writeJsonKeys(JSONObject objJsonObjectKeySet, String file) throws IOException {
+		logger("  ==start==>writeJsonKeysToHtml " + dateTimestamp());
+		for (Iterator<?> iterator = objJsonObjectKeySet.keySet().iterator(); iterator.hasNext();) {
+			String key = (String) iterator.next();
+			logger("writeJsonKeysToHtml: " + key + " = " + objJsonObjectKeySet.get(key));
+		}
+	}
+
+	public static void writeJsonStepsToHtml(String strStepHeader, JSONArray objTestSteps, String strPath, String strFileName) {
+		logger("  ==start==>writeJsonStepsAfterRunToHtml " + dateTimestamp());
+		String strKey = "";
+		String[] arrKeys = null;
+		switch (strStepHeader) {
+		case "original":
+			arrKeys = stepsNamesOriginalArray();
+			break;
+		case "complete":
+			arrKeys = stepsNamesCompleteArray();
+			break;
+		}
+		StringBuilder objStringBuilder = new StringBuilder();
+		try {
+			objStringBuilder.append("<!DOCTYPE html>");
+			objStringBuilder.append("<html lang=\"en\">");
+			objStringBuilder.append("<head><title> " + strFileName.replace(".html", "") + "</title></head>");
+			objStringBuilder.append("<body><h1>");
+			objStringBuilder.append("<table border=\"1\" cellspacing=\"1\" cellpadding=\"5\">");
+			objStringBuilder.append("<tr>");
+			objStringBuilder.append("<td>Step</td>");
+			for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
+				strKey = (String) arrKeys[intKeysEach].toString();
+				objStringBuilder.append("<th>" + strKey + "</th>");
+			}
+			objStringBuilder.append(" </tr>  ");
+			for (int intTestStepRow = 0; intTestStepRow < objTestSteps.size(); intTestStepRow++) {
+				objStringBuilder.append("</tr>");
+				objStringBuilder.append("<td> " + (intTestStepRow + 1) + "</td>");
+				JSONObject objStepReport = (JSONObject) objTestSteps.get(intTestStepRow);
+				for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
+					strKey = (String) arrKeys[intKeysEach].toString();
+					if (objStepReport.containsKey(strKey) == true) {
+						objStringBuilder.append("<td> " + objStepReport.get(strKey) + "</td>");
+					} else {
+						objStringBuilder.append("<td>  &nbsp; </td>");
+					}
+				}
+				objStringBuilder.append(" </tr>  ");
+			}
+			objStringBuilder.append("</table>");
+			objStringBuilder.append("</h1></body>");
+			objStringBuilder.append("</html>");
+			String html = objStringBuilder.toString();
+			writeFile(strPath + strFileName, html);
+		} catch (Exception e) {
+			logger("writeJsonStepsToHtml: Exception = " + e.toString());
+			logger("writeJsonStepsToHtml: objStringBuilder.toString() = " + objStringBuilder.toString());
+		}
+	}
+
+	public static void writeReportToHtml(JSONArray objJsonArrayReportSteps, String strFile) {
+		logger("  ==start==>writeReportToHtml " + dateTimestamp());
+		logger("writeReportToHtml: strFile = " + strFile);
+		long lngStartTimeWriteReportToHtml = System.currentTimeMillis();
+		JSONObject objJsonObjectReportStep = null;
+		String strScreenshotFilePath = "";
+		String strStatus = "";
+		String strStatusIcon = "";
+		StringBuilder objStringBuilder = new StringBuilder();
+		try {
+			objStringBuilder.append("<!DOCTYPE html>");
+			objStringBuilder.append("<html lang=\"en\">");
+			objStringBuilder.append("<head><title>Run Results</title></head>");
+			objStringBuilder.append("<body>");
+			for (int intTestStepRow = 0; intTestStepRow < objJsonArrayReportSteps.size(); intTestStepRow++) {
+				objJsonObjectReportStep = (JSONObject) objJsonArrayReportSteps.get(intTestStepRow);
+				objStringBuilder.append("<div id=step_" + intTestStepRow + ">");
+				objStringBuilder.append("<TABLE border=1 width=100% height=10%>");
+				objStringBuilder.append("<TR>");
+				switch (objJsonObjectReportStep.get("strStatus").toString().toLowerCase()) {
+				case "pass":
+					strStatus = "Pass";
+					if (objJsonObjectReportStep.get("strAction").toString().toLowerCase().equals("set") && objJsonObjectReportStep.get("strAssert").toString().toLowerCase().equals("off")) {
+						strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:blue\">&#10043</span>";
+					} else {
+						strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:green\">&#10003</span>";
+					}
+					break;
+				case "fail":
+					strStatus = "Fail";
+					strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:red\">&#10007</span>";
+					break;
+				case "warning":
+					strStatus = "Warning";
+					strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:gold\">!</span>";
+					break;
+				case "info":
+					strStatus = "Info";
+					strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:magenta\">?</span>";
+					break;
+				}
+				String strStartTimestamp = objJsonObjectReportStep.get("strStartTimestamp").toString();
+				String strStepDuration = objJsonObjectReportStep.get("strStepDuration").toString();
+				String strEndTimestamp = objJsonObjectReportStep.get("strEndTimestamp").toString();
+				objStringBuilder.append("<TD rowspan=\"2\" width=60px align=center valign=middle>Step " + intTestStepRow + "</TD>");
+				objStringBuilder.append("<TD rowspan=\"2\" width=35px align=center valign=middle>" + strStatusIcon + "<br>" + strStatus + "</TD>");
+				objStringBuilder.append("<TD width= 75px align=center valign=middle>Expected</TD>");
+				objStringBuilder.append("<TD align=left valign=middle>" + objJsonObjectReportStep.get("strStepExpected").toString() + "</TD>");
+				objStringBuilder.append("<TD rowspan=\"2\" width=150px align=left valign=middle>Start:" + strStartTimestamp + "<br>End: " + strEndTimestamp + "<br>Duration: " + strStepDuration + " ms</TD>");
+				objStringBuilder.append("</TR>");
+				objStringBuilder.append("<TR>");
+				objStringBuilder.append("<TD align=center valign=middle>Actual</TD>");
+				objStringBuilder.append("<TD align=left valign=middle>" + objJsonObjectReportStep.get("strStepActual").toString() + "</TD>");
+				objStringBuilder.append("</TR>");
+				objStringBuilder.append("</TABLE> ");
+				if (objJsonObjectReportStep.get("strScreenshotFilePath").toString().trim().length() != 0) {
+					strScreenshotFilePath = objJsonObjectReportStep.get("strScreenshotFilePath").toString().replaceAll("\\\\\\\\", "\\");
+					try {
+						BufferedImage objBufferedImage = ImageIO.read(new File(strScreenshotFilePath));
+						objStringBuilder.append("<img src=\"data:image/jpg;base64," + imageEncodeToString(objBufferedImage, "jpg") + "\" alt=\"Step " + intTestStepRow + "\" > ");
+					} catch (Exception e) {
+						logger("writeReportToHtml: Exception = " + e.toString());
+					}
+				}
+				objStringBuilder.append("</div>");
+				objStringBuilder.append("<br>");
+				objStringBuilder.append("<br>");
+				if (objJsonObjectReportStep.get("strAction").toString().toLowerCase().equals("break")) {
+					break;
+				}
+			}
+		} catch (Exception e) {
+			logger("writeReportToHtml: " + e.toString());
+		} finally {
+			objStringBuilder.append("</body>");
+			objStringBuilder.append("</html>");
+			String strHTML = objStringBuilder.toString();
+			writeFile(strFile, strHTML);
+			logger("writeReportToHtml: finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeWriteReportToHtml));
+		}
+	}
+
+	public String data_DateDaysOut(String strDaysOut) {
+		logger("  ==start==>data_DateDaysOut " + dateTimestamp());
+		Integer intDaysOut = Integer.parseInt(strDaysOut);
+		SimpleDateFormat FormattedDATE = new SimpleDateFormat("MM/dd/yyyy");
+		Calendar objCalendar = Calendar.getInstance();
+		objCalendar.add(Calendar.DATE, intDaysOut);
+		String strNewDate = (String) (FormattedDATE.format(objCalendar.getTime()));
+		return strNewDate;
+	}
+
+	public String data_EnvironmentURL(String strApplication_Environment) {
+		logger("  ==start==>data_EnvironmentURL " + dateTimestamp());
+		String strURL = "";
+		String strPathFullTestData = gstrPathTestData + "/Environment.json";
+		try {
+			JSONObject objJsonObjectFile = (JSONObject) gobjJsonParser.parse(new FileReader(strPathFullTestData));
+			strURL = objJsonObjectFile.get(strApplication_Environment).toString();
+			logger("data_EnvironmentURL: strURL = " + strURL);
+		} catch (Exception e) {
+			logger("data_EnvironmentURL: Exception = " + e.toString());
+		}
+		return strURL;
+	}
+
+	public String data_localWebsiteFilePath(String strWebsite) {
+		logger("  ==start==>data_localWebsiteFilePath " + dateTimestamp());
+		String strLocalWebsiteFilePath = "file:///" + System.getProperty("user.dir").replaceAll("\\\\", "/") + "/Websites/" + strWebsite;
+		logger("data_localWebsiteFilePath: strLocalWebsiteFilePath = " + strLocalWebsiteFilePath);
+		return strLocalWebsiteFilePath;
+	}
+
+	public String data_RandomFourNumbers(String strDaysOut) {
+		logger("  ==start==>data_RandomFourNumbers " + dateTimestamp());
+		return Integer.toString(randomNumberRange(1000, 9999));
+	}
+
+	public String data_RandomRangeFiveNumbers(String strDataInput) {
+		logger("  ==start==>data_RandomRangeFiveNumbers " + dateTimestamp());
+		return Integer.toString(randomNumberRange(1, 99999));
 	}
 }
