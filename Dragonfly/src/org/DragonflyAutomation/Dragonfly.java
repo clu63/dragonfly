@@ -117,138 +117,138 @@ public class Dragonfly {
 		}
 	}
 
-	public static class ElementNotFoundException extends Exception {
+	public static class ExceptionElementNotFound extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public ElementNotFoundException(String message) {
+		public ExceptionElementNotFound(String message) {
 			super(message);
 		}
 	}
 
-	public static class MultipleElementsFoundException extends Exception {
+	public static class ExceptionMultipleElementsFound extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public MultipleElementsFoundException(String message) {
+		public ExceptionMultipleElementsFound(String message) {
 			super(message);
 		}
 	}
 
-	public static class ElementNotSetException extends Exception {
+	public static class ExceptionElementNotSet extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public ElementNotSetException(String message) {
+		public ExceptionElementNotSet(String message) {
 			super(message);
 		}
 	}
 
-	public static class ElementNotVisibleException extends Exception {
+	public static class ExceptionElementNotVisible extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public ElementNotVisibleException(String message) {
+		public ExceptionElementNotVisible(String message) {
 			super(message);
 		}
 	}
 
-	public static class ElementNotHiddenException extends Exception {
+	public static class ExceptionElementNotHidden extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public ElementNotHiddenException(String message) {
+		public ExceptionElementNotHidden(String message) {
 			super(message);
 		}
 	}
 
-	public static class ElementNotEnabledException extends Exception {
+	public static class ExceptionElementNotEnabled extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public ElementNotEnabledException(String message) {
+		public ExceptionElementNotEnabled(String message) {
 			super(message);
 		}
 	}
 
-	public static class ElementNotDisabledException extends Exception {
+	public static class ExceptionElementNotDisabled extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public ElementNotDisabledException(String message) {
+		public ExceptionElementNotDisabled(String message) {
 			super(message);
 		}
 	}
 
-	public static class ValueNotMatchedException extends Exception {
+	public static class ExceptionValueNotMatched extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public ValueNotMatchedException(String message) {
+		public ExceptionValueNotMatched(String message) {
 			super(message);
 		}
 	}
 
-	public static class ElementValueNotVerifiedException extends Exception {
+	public static class ExceptionElementValueNotVerified extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public ElementValueNotVerifiedException(String message) {
+		public ExceptionElementValueNotVerified(String message) {
 			super(message);
 		}
 	}
 
-	public static class ElementTagNameNotSupportedException extends Exception {
+	public static class ExceptionElementTagNameNotSupported extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public ElementTagNameNotSupportedException(String message) {
+		public ExceptionElementTagNameNotSupported(String message) {
 			super(message);
 		}
 	}
 
-	public static class BrowserDriverNotSupportedException extends Exception {
+	public static class ExceptionBrowserDriverNotSupported extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public BrowserDriverNotSupportedException(String message) {
+		public ExceptionBrowserDriverNotSupported(String message) {
 			super(message);
 		}
 	}
 
-	public static class DoPostBackNotCompleteException extends Exception {
+	public static class ExceptionDoPostBackNotComplete extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public DoPostBackNotCompleteException(String message) {
+		public ExceptionDoPostBackNotComplete(String message) {
 			super(message);
 		}
 	}
 
-	public static class JQueryAjaxNotCompleteException extends Exception {
+	public static class ExceptionJQueryAjaxNotComplete extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public JQueryAjaxNotCompleteException(String message) {
+		public ExceptionJQueryAjaxNotComplete(String message) {
 			super(message);
 		}
 	}
 
-	public static class JQueryAnimationNotCompleteException extends Exception {
+	public static class ExceptionJQueryAnimationNotComplete extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public JQueryAnimationNotCompleteException(String message) {
+		public ExceptionJQueryAnimationNotComplete(String message) {
 			super(message);
 		}
 	}
 
-	public static class AngularJsNotCompleteException extends Exception {
+	public static class ExceptionAngularJsNotComplete extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public AngularJsNotCompleteException(String message) {
+		public ExceptionAngularJsNotComplete(String message) {
 			super(message);
 		}
 	}
 
-	public static class JSONKeyNotPresentException extends Exception {
+	public static class ExceptionJSONKeyNotPresent extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public JSONKeyNotPresentException(String message) {
+		public ExceptionJSONKeyNotPresent(String message) {
 			super(message);
 		}
 	}
 
-	public static class TestInstanceMoreThanOneException extends Exception {
+	public static class ExceptionTestInstanceMoreThanOne extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		public TestInstanceMoreThanOneException(String message) {
+		public ExceptionTestInstanceMoreThanOne(String message) {
 			super(message);
 		}
 	}
@@ -685,7 +685,7 @@ public class Dragonfly {
 		browserClose(objDragonfly);
 	}
 
-	public static void browserLaunch(Dragonfly objDragonfly) throws BrowserDriverNotSupportedException {
+	public static void browserLaunch(Dragonfly objDragonfly) throws ExceptionBrowserDriverNotSupported {
 		//Dragonfly objDragonfly = new Dragonfly();
 		// TODO combine duplicate code
 		// TODO add desiredCapabilities.setJavascriptEnabled(true); to all browsers
@@ -790,7 +790,7 @@ public class Dragonfly {
 			default:
 				jsonObjectStepPut("blnStatus", "false");
 				jsonObjectStepPut("strStatus", "fail");
-				throw new BrowserDriverNotSupportedException("Browser '" + gobjJsonObjectStep.get("strTagName").toString() + "' not supported");
+				throw new ExceptionBrowserDriverNotSupported("Browser '" + gobjJsonObjectStep.get("strTagName").toString() + "' not supported");
 			}
 		} catch (Exception e) {
 			objDragonfly.objLogger.setLogRow("browserLaunch: Exception" + e.toString());
@@ -810,7 +810,7 @@ public class Dragonfly {
 		// TODO create a browserLaunchSync to manage reporting and sync
 		try {
 			browserLaunch(objDragonfly);
-		} catch (BrowserDriverNotSupportedException e) {
+		} catch (ExceptionBrowserDriverNotSupported e) {
 			// TODO confirm the exceptions to catch in main some may need to be removed
 			objDragonfly.objLogger.setLogRow("main: " + e.toString());
 		} catch (Exception e) {
@@ -1021,15 +1021,15 @@ public class Dragonfly {
 	//		}
 	//		return 0;
 	//	}
-	public static void jsonObjectValidateKey(Dragonfly objDragonfly, JSONObject objJSONObject, String strKeyName) throws JSONKeyNotPresentException {
+	public static void jsonObjectValidateKey(Dragonfly objDragonfly, JSONObject objJSONObject, String strKeyName) throws ExceptionJSONKeyNotPresent {
 		//Dragonfly objDragonfly = new Dragonfly();
 		objDragonfly.objLogger.setLogRow("  ==start==>jsonObjectValidateKey " + dateTimestamp());
 		if (!objJSONObject.containsKey(strKeyName)) {
-			throw new JSONKeyNotPresentException("JSON Key " + strKeyName + " not present");
+			throw new ExceptionJSONKeyNotPresent("JSON Key " + strKeyName + " not present");
 		}
 	}
 
-	public static String jsonObjectGetValue(Dragonfly objDragonfly, JSONObject objJSONObject, String strInputValue, String strKeywordName) throws JSONKeyNotPresentException {
+	public static String jsonObjectGetValue(Dragonfly objDragonfly, JSONObject objJSONObject, String strInputValue, String strKeywordName) throws ExceptionJSONKeyNotPresent {
 		//objDragonfly.objLogger.setLogRow("  ==start==>jsonObjectGetValue " + dateTimestamp());
 		//Dragonfly objDragonfly = new Dragonfly();
 		String strJSONObjectKey = strInputValue.replace(strKeywordName, "");
@@ -1040,7 +1040,7 @@ public class Dragonfly {
 			return strJSONObjectValue;
 		} else {
 			objDragonfly.objLogger.setLogRow("jsonObjectGetValue: JSON Key " + strJSONObjectKey + " for keyword link name " + strKeywordName + " not present");
-			throw new JSONKeyNotPresentException("JSON Key " + strJSONObjectKey + " for keyword link name " + strKeywordName + " not present");
+			throw new ExceptionJSONKeyNotPresent("JSON Key " + strJSONObjectKey + " for keyword link name " + strKeywordName + " not present");
 		}
 	}
 
@@ -1102,7 +1102,7 @@ public class Dragonfly {
 				} else if (intJsonArrayTestInstanceSize > 1) {
 					gintTestInstanceSize = 0;
 					objDragonfly.objLogger.setLogRow("testMatrixSetup: " + intJsonArrayTestInstanceSize + " Test Instances " + objJsonArrayTestInstance.toString() + " exceeds requirements of one. Update test matrix to have only one test instance.");
-					throw new TestInstanceMoreThanOneException(intJsonArrayTestInstanceSize + " Test Instances " + objJsonArrayTestInstance.toString() + " exceeds requirements of one. Update test matrix to have only one test instance.");
+					throw new ExceptionTestInstanceMoreThanOne(intJsonArrayTestInstanceSize + " Test Instances " + objJsonArrayTestInstance.toString() + " exceeds requirements of one. Update test matrix to have only one test instance.");
 				}
 				// element_repository
 				objJsonArrayElementRepository = (JSONArray) objJsonObjectTestMatrixFile.get("element_repository");
@@ -1222,13 +1222,13 @@ public class Dragonfly {
 					blnOnMouseOver = true;
 				}
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 				blnFound = false;
 				objDragonfly.objLogger.setLogRow("elementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotVisibleException e) {
+			} catch (ExceptionElementNotVisible e) {
 				blnVisible = false;
 				objDragonfly.objLogger.setLogRow("elementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotEnabledException e) {
+			} catch (ExceptionElementNotEnabled e) {
 				blnEnabled = false;
 				objDragonfly.objLogger.setLogRow("elementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
@@ -1259,7 +1259,7 @@ public class Dragonfly {
 		}
 	}
 
-	public static void elementSet(Dragonfly objDragonfly, String strOuterHTML) throws ElementTagNameNotSupportedException, ElementNotSetException {
+	public static void elementSet(Dragonfly objDragonfly, String strOuterHTML) throws ExceptionElementTagNameNotSupported, ExceptionElementNotSet {
 		//Dragonfly objDragonfly = new Dragonfly();
 		objDragonfly.objLogger.setLogRow("  ==start==>elementSet " + dateTimestamp());
 		long lngStartTimeElementSet = System.currentTimeMillis();
@@ -1434,13 +1434,13 @@ public class Dragonfly {
 				}
 				break;
 			default:
-				throw new ElementTagNameNotSupportedException("Element tag not supported");
+				throw new ExceptionElementTagNameNotSupported("Element tag not supported");
 			}
 		} catch (Exception e) {
 			objDragonfly.objLogger.setLogRow("elementSet: Exception = " + e.toString());
 		} finally {
 			if (blnSet == false) {
-				throw new ElementNotSetException("Element not set");
+				throw new ExceptionElementNotSet("Element not set");
 			}
 			objDragonfly.objLogger.setLogRow("elementSet: finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet));
 		}
@@ -1589,32 +1589,32 @@ public class Dragonfly {
 					break;
 				}
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 				blnFound = false;
 				objDragonfly.objLogger.setLogRow("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotVisibleException e) {
+			} catch (ExceptionElementNotVisible e) {
 				blnVisible = false;
 				objDragonfly.objLogger.setLogRow("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotEnabledException e) {
+			} catch (ExceptionElementNotEnabled e) {
 				blnEnabled = false;
 				objDragonfly.objLogger.setLogRow("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementTagNameNotSupportedException e) {
+			} catch (ExceptionElementTagNameNotSupported e) {
 				objDragonfly.objLogger.setLogRow("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				blnExit = true;
-			} catch (ElementNotHiddenException e) {
+			} catch (ExceptionElementNotHidden e) {
 				objDragonfly.objLogger.setLogRow("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				blnAssert = false;
-			} catch (ValueNotMatchedException e) {
+			} catch (ExceptionValueNotMatched e) {
 				objDragonfly.objLogger.setLogRow("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				blnFound = false;
 				blnAssert = false;
-			} catch (ElementNotSetException e) {
+			} catch (ExceptionElementNotSet e) {
 				blnSet = true;
 				blnAssert = false;
-			} catch (ElementNotDisabledException e) {
+			} catch (ExceptionElementNotDisabled e) {
 				blnAssert = false;
 				objDragonfly.objLogger.setLogRow("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (DoPostBackNotCompleteException | JQueryAjaxNotCompleteException | JQueryAnimationNotCompleteException | AngularJsNotCompleteException e) {
+			} catch (ExceptionDoPostBackNotComplete | ExceptionJQueryAjaxNotComplete | ExceptionJQueryAnimationNotComplete | ExceptionAngularJsNotComplete e) {
 				blnSetSync = false;
 			} finally {
 				if (blnExit == true) {
@@ -1672,7 +1672,7 @@ public class Dragonfly {
 		return false;
 	}
 
-	public static void elementSetSyncComplete(Dragonfly objDragonfly, String strOuterHTML) throws DoPostBackNotCompleteException, JQueryAjaxNotCompleteException, JQueryAnimationNotCompleteException, AngularJsNotCompleteException {
+	public static void elementSetSyncComplete(Dragonfly objDragonfly, String strOuterHTML) throws ExceptionDoPostBackNotComplete, ExceptionJQueryAjaxNotComplete, ExceptionJQueryAnimationNotComplete, ExceptionAngularJsNotComplete {
 		//Dragonfly objDragonfly = new Dragonfly();
 		objDragonfly.objLogger.setLogRow("  ==start==>elementSetSyncComplete " + dateTimestamp());
 		long lngTimeStart = System.currentTimeMillis();
@@ -1697,7 +1697,7 @@ public class Dragonfly {
 				}
 				objDragonfly.objLogger.setLogRow("elementSetSyncComplete: blnEventTarget = " + blnEventTarget);
 				if (blnEventTarget == true) {
-					throw new AngularJsNotCompleteException("");
+					throw new ExceptionAngularJsNotComplete("");
 				}
 				objDragonfly.objLogger.setLogRow("elementSetSyncComplete: lngStartTimeElementSet__EVENTTARGET MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet__EVENTTARGET));
 			}
@@ -1717,7 +1717,7 @@ public class Dragonfly {
 			}
 			if (lngJqueryActive > 0) {
 				// blnResult = false;
-				throw new JQueryAjaxNotCompleteException("");
+				throw new ExceptionJQueryAjaxNotComplete("");
 			}
 			// long lngStartTimeElementSetJQueryAnimate = System.currentTimeMillis();
 			long lngElementsAnimated = 0;
@@ -1733,7 +1733,7 @@ public class Dragonfly {
 				objDragonfly.objLogger.setLogRow("elementSetSyncComplete: JQueryAnimate Exception = " + e.toString());
 			}
 			if (lngElementsAnimated > 0) {
-				throw new JQueryAnimationNotCompleteException("");
+				throw new ExceptionJQueryAnimationNotComplete("");
 			}
 			//long lngStartTimeElementSetAngularJS = System.currentTimeMillis();
 			boolean blnAngularJs = false;
@@ -1755,7 +1755,7 @@ public class Dragonfly {
 				objDragonfly.objLogger.setLogRow("elementSetSyncComplete: AngularJS Exception = " + e.toString());
 			}
 			if (lngAngularJsInjectorActive > 0) {
-				throw new AngularJsNotCompleteException("");
+				throw new ExceptionAngularJsNotComplete("");
 			}
 		} catch (NoSuchWindowException e) {
 			objDragonfly.objLogger.setLogRow("elementSetSyncComplete: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
@@ -1797,16 +1797,16 @@ public class Dragonfly {
 				}
 				objDragonfly.objSeleniumVariables.gobjWebElementDrag = objDragonfly.objSeleniumVariables.gobjWebElement;
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 				blnFound = false;
 				objDragonfly.objLogger.setLogRow("elementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotVisibleException e) {
+			} catch (ExceptionElementNotVisible e) {
 				blnVisible = false;
 				objDragonfly.objLogger.setLogRow("elementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotEnabledException e) {
+			} catch (ExceptionElementNotEnabled e) {
 				blnEnabled = false;
 				objDragonfly.objLogger.setLogRow("elementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				//} catch (ElementTagNameNotSupportedException e) {
+				//} catch (ExceptionElementTagNameNotSupported e) {
 				//objDragonfly.objLogger.setLogRow("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				//	blnExit = true;
 			} finally {
@@ -1885,16 +1885,16 @@ public class Dragonfly {
 				//				action.dragAndDrop(objDragonfly.objSeleniumVariables.gobjWebElementDrag, objDragonfly.objSeleniumVariables.gobjWebElementDrop).build().perform();
 				sleepMilliseconds(objDragonfly, 10000);
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 				blnFound = false;
 				objDragonfly.objLogger.setLogRow("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotVisibleException e) {
+			} catch (ExceptionElementNotVisible e) {
 				blnVisible = false;
 				objDragonfly.objLogger.setLogRow("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotEnabledException e) {
+			} catch (ExceptionElementNotEnabled e) {
 				blnEnabled = false;
 				objDragonfly.objLogger.setLogRow("elementDropSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				//} catch (ElementTagNameNotSupportedException e) {
+				//} catch (ExceptionElementTagNameNotSupported e) {
 				//objDragonfly.objLogger.setLogRow("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				//	blnExit = true;
 			} finally {
@@ -1929,7 +1929,7 @@ public class Dragonfly {
 		}
 	}
 
-	public static String elementVerifyValue(Dragonfly objDragonfly) throws ValueNotMatchedException, ElementTagNameNotSupportedException {
+	public static String elementVerifyValue(Dragonfly objDragonfly) throws ExceptionValueNotMatched, ExceptionElementTagNameNotSupported {
 		//Dragonfly objDragonfly = new Dragonfly();
 		objDragonfly.objLogger.setLogRow("  ==start==>elementVerifyValue " + dateTimestamp());
 		long lngStartTimeElementVerify = System.currentTimeMillis();
@@ -1970,19 +1970,19 @@ public class Dragonfly {
 					blnVerified = true;
 				}
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 				blnFound = false;
 				blnVisible = false;
 				blnVerified = false;
 				blnStatus = false;
 				objDragonfly.objLogger.setLogRow("elementVerifyValueSync: " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotVisibleException e) {
+			} catch (ExceptionElementNotVisible e) {
 				blnVisible = false;
 				objDragonfly.objLogger.setLogRow("elementVerifyValueSync: " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementTagNameNotSupportedException e) {
+			} catch (ExceptionElementTagNameNotSupported e) {
 				objDragonfly.objLogger.setLogRow("elementVerifyValueSync: " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
 				blnExit = true;
-			} catch (ValueNotMatchedException e) {
+			} catch (ExceptionValueNotMatched e) {
 				blnFound = false;
 				blnVisible = false;
 				blnVerified = false;
@@ -2025,7 +2025,7 @@ public class Dragonfly {
 		}
 	}
 
-	public static String verifyMatch(Dragonfly objDragonfly, String strActual, String strExpected) throws ValueNotMatchedException {
+	public static String verifyMatch(Dragonfly objDragonfly, String strActual, String strExpected) throws ExceptionValueNotMatched {
 		//Dragonfly objDragonfly = new Dragonfly();
 		objDragonfly.objLogger.setLogRow("  ==start==>verifyMatch " + dateTimestamp());
 		long lngStartTimeVerifyMatch = System.currentTimeMillis();
@@ -2038,7 +2038,7 @@ public class Dragonfly {
 				if (strExpected.equals(strActual)) {
 					return strActual;
 				} else {
-					throw new ValueNotMatchedException("verifyMatch did not match strActual = {" + strActual + "} strExpected = {" + strExpected + "}");
+					throw new ExceptionValueNotMatched("verifyMatch did not match strActual = {" + strActual + "} strExpected = {" + strExpected + "}");
 				}
 			}
 		} finally {
@@ -2216,7 +2216,7 @@ public class Dragonfly {
 		}
 	}
 
-	public static void elementFind(Dragonfly objDragonfly) throws ElementNotFoundException, MultipleElementsFoundException {
+	public static void elementFind(Dragonfly objDragonfly) throws ExceptionElementNotFound, ExceptionMultipleElementsFound {
 		//Dragonfly objDragonfly = new Dragonfly();
 		objDragonfly.objLogger.setLogRow("  ==start==>elementFind " + dateTimestamp());
 		if (gobjJsonObjectStep.get("strTagName").toString().toLowerCase().equals("alert")) {
@@ -2227,7 +2227,7 @@ public class Dragonfly {
 				return;
 			} else {
 				jsonObjectStepPut("strHighlightArea", "screen");
-				throw new ElementNotFoundException("Alert popup not found!");
+				throw new ExceptionElementNotFound("Alert popup not found!");
 			}
 		}
 		if (gobjJsonObjectStep.get("strTagName").toString().toLowerCase().equals("title")) {
@@ -2279,10 +2279,10 @@ public class Dragonfly {
 				objDragonfly.objLogger.setLogRow("elementFind: Exception = " + e.toString());
 			}
 		}
-		throw new ElementNotFoundException("Element properties did not return an element, try refining attributes");
+		throw new ExceptionElementNotFound("Element properties did not return an element, try refining attributes");
 	}
 
-	public static boolean framesSearch(Dragonfly objDragonfly, List<Integer> arrFramePath) throws ElementNotFoundException, MultipleElementsFoundException {
+	public static boolean framesSearch(Dragonfly objDragonfly, List<Integer> arrFramePath) throws ExceptionElementNotFound, ExceptionMultipleElementsFound {
 		//Dragonfly objDragonfly = new Dragonfly();
 		objDragonfly.objLogger.setLogRow("  ==start==>framesSearch " + dateTimestamp());
 		boolean blnReturn;
@@ -2298,7 +2298,7 @@ public class Dragonfly {
 			objDragonfly.objLogger.setLogRow("framesSearch: gobjWebElement outerHTML = " + objDragonfly.objSeleniumVariables.gobjWebElement.getAttribute("outerHTML"));
 			objDragonfly.objLogger.setLogRow("framesSearch: return");
 			return true;
-		} catch (ElementNotFoundException | MultipleElementsFoundException e) {
+		} catch (ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 			blnReturn = false;
 			objDragonfly.objLogger.setLogRow("framesSearch: Exception = " + e.toString());
 		}
@@ -2339,7 +2339,7 @@ public class Dragonfly {
 		return blnReturn;
 	}
 
-	public static void elementFindXpath(Dragonfly objDragonfly) throws ElementNotFoundException, MultipleElementsFoundException {
+	public static void elementFindXpath(Dragonfly objDragonfly) throws ExceptionElementNotFound, ExceptionMultipleElementsFound {
 		//Dragonfly objDragonfly = new Dragonfly();
 		objDragonfly.objLogger.setLogRow("  ==start==>elementFindXpath " + dateTimestamp());
 		int intAttributeEach = 0;
@@ -2423,7 +2423,7 @@ public class Dragonfly {
 		//}
 		switch (objWebElementCollection.size()) {
 		case 0:
-			throw new ElementNotFoundException("Element properties did not return an element, try refining attributes");
+			throw new ExceptionElementNotFound("Element properties did not return an element, try refining attributes");
 		case 1:
 			objDragonfly.objSeleniumVariables.gobjWebElement = objWebElementCollection.get(0);
 			break;
@@ -2437,7 +2437,7 @@ public class Dragonfly {
 				break;
 			} else {
 				objDragonfly.objLogger.setLogRow("elementFindXpath: Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
-				throw new MultipleElementsFoundException(objWebElementCollection.size() + " elements found. Element properties did not return an element, try refining attributes");
+				throw new ExceptionMultipleElementsFound(objWebElementCollection.size() + " elements found. Element properties did not return an element, try refining attributes");
 			}
 		}
 		jsonObjectStepPut("strCurrentWindowHandle", objDragonfly.objSeleniumVariables.gobjWebDriver.getWindowHandle());
@@ -2654,7 +2654,7 @@ public class Dragonfly {
 		}
 	}
 
-	public static boolean elementVisible(Dragonfly objDragonfly) throws ElementNotVisibleException {
+	public static boolean elementVisible(Dragonfly objDragonfly) throws ExceptionElementNotVisible {
 		//Dragonfly objDragonfly = new Dragonfly();
 		// TODO elementVisible add check for class and css, commented code needs to be tested
 		objDragonfly.objLogger.setLogRow("  ==start==>elementVisible " + dateTimestamp());
@@ -2673,7 +2673,7 @@ public class Dragonfly {
 					coordinatesAlert(objDragonfly);
 					return true;
 				} else {
-					throw new ElementNotVisibleException("Alert popup was not found.");
+					throw new ExceptionElementNotVisible("Alert popup was not found.");
 				}
 			}
 			if (objDragonfly.objSeleniumVariables.gobjWebElement.isDisplayed()) {
@@ -2686,15 +2686,15 @@ public class Dragonfly {
 				// objDragonfly.objLogger.setLogRow("elementVisible intElementWidth = " + intElementWidth);
 				// objDragonfly.objLogger.setLogRow("elementVisible intElementHeight = " + intElementHeight);
 				// if (intElementWidth == 0 || intElementHeight == 0) {
-				// throw new ElementNotVisibleException("Element's heigh or width is 0");
+				// throw new ExceptionElementNotVisible("Element's heigh or width is 0");
 				// } else {
 				// return true;
 				// }
 				// } else {
-				// throw new ElementNotVisibleException("Element's heigh or width is 0");
+				// throw new ExceptionElementNotVisible("Element's heigh or width is 0");
 				// }
 			} else {
-				throw new ElementNotVisibleException("Element isDisplayed failed");
+				throw new ExceptionElementNotVisible("Element isDisplayed failed");
 			}
 		} finally {
 			objDragonfly.objLogger.setLogRow("elementVisible: finally blnVisible = " + blnVisible + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTimeElementVisible));
@@ -2720,7 +2720,7 @@ public class Dragonfly {
 					blnVisible = true;
 				}
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException | ElementNotVisibleException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound | ExceptionElementNotVisible e) {
 				blnFound = false;
 				blnVisible = false;
 				objDragonfly.objLogger.setLogRow("elementVisibleSync: " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
@@ -2753,7 +2753,7 @@ public class Dragonfly {
 		}
 	}
 
-	public static boolean elementHidden(Dragonfly objDragonfly) throws ElementNotHiddenException {
+	public static boolean elementHidden(Dragonfly objDragonfly) throws ExceptionElementNotHidden {
 		//Dragonfly objDragonfly = new Dragonfly();
 		objDragonfly.objLogger.setLogRow("  ==start==>elementHidden " + dateTimestamp());
 		long lngStartTimeElementHidden = System.currentTimeMillis();
@@ -2765,14 +2765,14 @@ public class Dragonfly {
 					objDragonfly.objLogger.setLogRow("elementHidden: strAreaObjectName = " + gobjJsonObjectStep.get("strHighlightArea"));
 					return true;
 				} else {
-					throw new ElementNotHiddenException("Alert popup was not hidden.");
+					throw new ExceptionElementNotHidden("Alert popup was not hidden.");
 				}
 			}
 			if (objDragonfly.objSeleniumVariables.gobjWebElement.isDisplayed() == false) {
 				return true;
 			} else {
 				objDragonfly.objLogger.setLogRow("elementHidden: gobjWebElement.isDisplayed() = return true MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
-				throw new ElementNotHiddenException("Element is displayed.");
+				throw new ExceptionElementNotHidden("Element is displayed.");
 			}
 		} catch (NullPointerException | WebDriverException e) {
 			objDragonfly.objLogger.setLogRow("elementHidden: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTimeElementHidden));
@@ -2801,16 +2801,16 @@ public class Dragonfly {
 					blnHidden = true;
 				}
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException | ElementNotFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException | ExceptionElementNotFound e) {
 				blnFound = false;
 				blnHidden = true;
 				blnStatus = true;
 				objDragonfly.objLogger.setLogRow("elementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (MultipleElementsFoundException e) {
+			} catch (ExceptionMultipleElementsFound e) {
 				blnFound = false;
 				blnHidden = false;
 				objDragonfly.objLogger.setLogRow("elementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotHiddenException e) {
+			} catch (ExceptionElementNotHidden e) {
 				blnHidden = false;
 				objDragonfly.objLogger.setLogRow("elementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} catch (Exception e) {
@@ -2847,7 +2847,7 @@ public class Dragonfly {
 		}
 	}
 
-	public static boolean elementEnabled(Dragonfly objDragonfly) throws ElementNotEnabledException {
+	public static boolean elementEnabled(Dragonfly objDragonfly) throws ExceptionElementNotEnabled {
 		//Dragonfly objDragonfly = new Dragonfly();
 		objDragonfly.objLogger.setLogRow("  ==start==>elementEnabled " + dateTimestamp());
 		long lngStartTimeElementEnabled = System.currentTimeMillis();
@@ -2856,13 +2856,13 @@ public class Dragonfly {
 				if (alertFind(objDragonfly) == true) {
 					return true;
 				} else {
-					throw new ElementNotEnabledException("Alert popup was not found.");
+					throw new ExceptionElementNotEnabled("Alert popup was not found.");
 				}
 			}
 			if (objDragonfly.objSeleniumVariables.gobjWebElement.isEnabled()) {
 				return true;
 			} else {
-				throw new ElementNotEnabledException("elementEnabled - Element is not enabled");
+				throw new ExceptionElementNotEnabled("elementEnabled - Element is not enabled");
 			}
 		} finally {
 			objDragonfly.objLogger.setLogRow("elementEnabled: finally intMillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementEnabled));
@@ -2893,12 +2893,12 @@ public class Dragonfly {
 					blnEnabled = true;
 				}
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException | ElementNotVisibleException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound | ExceptionElementNotVisible e) {
 				blnFound = false;
 				blnVisible = false;
 				blnEnabled = false;
 				objDragonfly.objLogger.setLogRow("elementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotEnabledException e) {
+			} catch (ExceptionElementNotEnabled e) {
 				blnEnabled = false;
 				objDragonfly.objLogger.setLogRow("elementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
@@ -2929,7 +2929,7 @@ public class Dragonfly {
 		}
 	}
 
-	public static boolean elementDisabled(Dragonfly objDragonfly) throws ElementNotDisabledException {
+	public static boolean elementDisabled(Dragonfly objDragonfly) throws ExceptionElementNotDisabled {
 		//Dragonfly objDragonfly = new Dragonfly();
 		objDragonfly.objLogger.setLogRow("  ==start==>elementDisabled " + dateTimestamp());
 		long lngStartTimeElementDisabled = System.currentTimeMillis();
@@ -2938,11 +2938,11 @@ public class Dragonfly {
 			//				if (alertFind() == true) {
 			//					return true;
 			//				} else {
-			//					throw new ElementNotDisabledException("Alert popup was not found.");
+			//					throw new ExceptionElementNotDisabled("Alert popup was not found.");
 			//				}
 			//			}
 			if (objDragonfly.objSeleniumVariables.gobjWebElement.isEnabled()) {
-				throw new ElementNotDisabledException("elementDisabled - Element is not disabled");
+				throw new ExceptionElementNotDisabled("elementDisabled - Element is not disabled");
 			} else {
 				return true;
 			}
@@ -2975,12 +2975,12 @@ public class Dragonfly {
 					blnDisabled = true;
 				}
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException | ElementNotVisibleException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound | ExceptionElementNotVisible e) {
 				blnFound = false;
 				blnVisible = false;
 				blnDisabled = false;
 				objDragonfly.objLogger.setLogRow("elementDisabledSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotDisabledException e) {
+			} catch (ExceptionElementNotDisabled e) {
 				blnDisabled = false;
 				objDragonfly.objLogger.setLogRow("elementDisabledSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 			} finally {
@@ -3011,7 +3011,7 @@ public class Dragonfly {
 		}
 	}
 
-	public static String elementGet(Dragonfly objDragonfly) throws ElementTagNameNotSupportedException {
+	public static String elementGet(Dragonfly objDragonfly) throws ExceptionElementTagNameNotSupported {
 		//Dragonfly objDragonfly = new Dragonfly();
 		objDragonfly.objLogger.setLogRow("  ==start==>elementGet " + dateTimestamp());
 		long lngStartTimeElementGet = System.currentTimeMillis();
@@ -3087,7 +3087,7 @@ public class Dragonfly {
 				return strElementGet;
 			default:
 				strElementGet = "elementGet tag not supported";
-				throw new ElementTagNameNotSupportedException("Element tag not supported");
+				throw new ExceptionElementTagNameNotSupported("Element tag not supported");
 			}
 			//		} catch (Exception e) {
 			//			// TODO handle ElementGet Exception
@@ -3096,7 +3096,7 @@ public class Dragonfly {
 			objDragonfly.objLogger.setLogRow("ElementGet: finally strElementGet = {" + strElementGet + "} MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementGet));
 		}
 		//		if (strElementGet.equals("elementGet tag not supported")) {
-		//			throw new ElementTagNameNotSupportedException(strElementGet);
+		//			throw new ExceptionElementTagNameNotSupported(strElementGet);
 		//		} else {
 		//			return strElementGet;
 		//		}
@@ -3129,13 +3129,13 @@ public class Dragonfly {
 					blnGet = true;
 				}
 				blnStatus = true;
-			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ElementNotFoundException | MultipleElementsFoundException e) {
+			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 				blnFound = false;
 				objDragonfly.objLogger.setLogRow("elementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementNotVisibleException e) {
+			} catch (ExceptionElementNotVisible e) {
 				blnVisible = false;
 				objDragonfly.objLogger.setLogRow("elementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-			} catch (ElementTagNameNotSupportedException e) {
+			} catch (ExceptionElementTagNameNotSupported e) {
 				objDragonfly.objLogger.setLogRow("elementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				blnExit = true;
 			} finally {
@@ -3723,7 +3723,7 @@ public class Dragonfly {
 				// (System.currentTimeMillis() - lngStartTimeJS));
 				//
 				// }
-				// } catch (ElementNotVisibleException e) {
+				// } catch (ExceptionElementNotVisible e) {
 				// // e.printStackTrace();
 				// }
 			}
