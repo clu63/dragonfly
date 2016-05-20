@@ -2,6 +2,27 @@
 	"steps": 
 	[
 		{
+			"strAction": "kill_ie",
+			"strTagName": "",
+			"strAttributeNames": "",
+			"strAttributeValues": "",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"intLoop": ""
+		},
+
+		{
 			"strAction": "launch",
 			"strTagName": "ie",
 			"strAttributeNames": "",
