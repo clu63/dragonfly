@@ -543,7 +543,7 @@ public class Dragonfly {
 					//					}
 				}
 			} catch (Exception e) {
-				objDragonfly.objLogger.setLogRow("main: " + e.toString());
+				objDragonfly.objLogger.setLogRow("main: Exception " + e.toString());
 			} finally {
 				writeFile(objDragonfly, strFolderPathResults + "StepsWithDefaults.json", gobjJsonArrayTestSteps.toString());
 				writeFile(objDragonfly, strFolderPathResults + "StepsAfterRun.json", objDragonfly.objJsonVariables.gobjJsonObjectStepsFile.toString());
@@ -1598,35 +1598,71 @@ public class Dragonfly {
 				} catch (ExceptionDoPostBackNotComplete | ExceptionJQueryAjaxNotComplete | ExceptionJQueryAnimationNotComplete | ExceptionAngularJsNotComplete e) {
 					blnSetSync = false;
 				} finally {
-					if (blnExit == true) {
-					} else {
-						if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-							if (blnStatus == true) {
-								blnExit = true;
-							}
-						} else {
-							if (blnStatus == true) {
-								objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
-								blnExit = true;
-							} else if (blnStatus == false) {
-								if (Boolean.parseBoolean(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-									objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "warning");
-									coordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-									blnExit = true;
-								} else {
-									objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-									coordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-									blnExit = true;
-								}
-							}
-						}
-					}
-					if (blnExit == true) {
-						new Dragonfly().new StepDuration(objDragonfly, "elementSetSync", lngTimeStart, "set");
+					//					if (blnExit == true) {
+					//					} else {
+					//						if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
+					//							if (blnStatus == true) {
+					//								blnExit = true;
+					//							}
+					//						} else {
+					//							if (blnStatus == true) {
+					//								objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
+					//								blnExit = true;
+					//							} else if (blnStatus == false) {
+					//								if (Boolean.parseBoolean(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("blnOptional").toString()) == true) {
+					//									objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "warning");
+					//									coordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
+					//									blnExit = true;
+					//								} else {
+					//									objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
+					//									coordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
+					//									blnExit = true;
+					//								}
+					//							}
+					//						}
+					//					}
+					//					if (blnExit == true) {
+					//						new Dragonfly().new StepDuration(objDragonfly, "elementSetSync", lngTimeStart, "set");
+					//						return;
+					//					}
+					//	int intMillisecondsToWait = Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString());
+					if (objDragonfly.new SyncFinally().run(objDragonfly, blnExit, blnStatus, blnFound, "elementSetSync", "set", lngTimeStart) == true) {
 						return;
 					}
 				}
 			}
+		}
+	}
+
+	public class SyncFinally {
+		public Boolean run(Dragonfly objDragonfly, Boolean blnExit, Boolean blnStatus, Boolean blnFound, String strMethodeName, String strAction, Long lngTimeStart) {
+			if (blnExit == true) {
+				objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
+			} else {
+				if (blnStatus == true) {
+					objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
+					blnExit = true;
+				} else if (blnStatus == false) {
+					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
+						if (blnFound == false) {
+							blnExit = false;
+						}
+					} else {
+						if (Boolean.parseBoolean(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("blnOptional").toString()) == true) {
+							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "warning");
+							blnExit = true;
+						} else {
+							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
+							blnExit = true;
+						}
+					}
+				}
+			}
+			if (blnExit == true) {
+				//coordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
+				objDragonfly.new StepDuration(objDragonfly, strMethodeName, lngTimeStart, strAction);
+			}
+			return blnExit;
 		}
 	}
 
@@ -1914,7 +1950,7 @@ public class Dragonfly {
 			String strValueExpected = objDragonfly.objJsonVariables.gobjJsonObjectStep.get("strInputValue").toString();
 			try {
 				strGetValue = objDragonfly.new ElementGet().run(objDragonfly);
-				strActualValue = verifyMatch(objDragonfly, strGetValue, strValueExpected);
+				strActualValue = new VerifyMatch().run(objDragonfly, strGetValue, strValueExpected);
 			} finally {
 				objDragonfly.objLogger.setLogRow("elementVerifyValue: finally strGetValue = {" + strGetValue + "} strValueExpected = {" + strValueExpected + "} intMillisecondsWaited = " + (int) (System.currentTimeMillis() - lngStartTimeElementVerify));
 			}
@@ -1960,15 +1996,20 @@ public class Dragonfly {
 					objDragonfly.objLogger.setLogRow("elementVerifyValueSync: " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
 					blnExit = true;
 				} catch (ExceptionValueNotMatched e) {
-					blnFound = false;
-					blnVisible = false;
+					//blnFound = false;
+					//blnVisible = false;
 					blnVerified = false;
 					blnStatus = false;
 					objDragonfly.objLogger.setLogRow("elementVerifyValueSync: " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
+				} catch (Exception e) {
+					objDragonfly.objLogger.setLogRow("elementVerifyValueSync: " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
+					//blnFound = false;
+					//blnVisible = false;
+					blnVerified = false;
+					blnStatus = false;
 				} finally {
 					if (blnExit == true) {
 						objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-						blnExit = true;
 					}
 					if (blnStatus == true) {
 						objDragonfly.objLogger.setLogRow("elementVerifyValueSync: finally blnStatus = " + blnStatus);
@@ -2003,33 +2044,44 @@ public class Dragonfly {
 		}
 	}
 
-	public static String verifyMatch(Dragonfly objDragonfly, String strActual, String strExpected) throws ExceptionValueNotMatched {
-		objDragonfly.objLogger.setLogRow("  ==start==>verifyMatch " + objDragonfly.new DateTimestamp().get());
-		long lngStartTimeVerifyMatch = System.currentTimeMillis();
-		try {
-			if (strExpected.toLowerCase().startsWith("re:")) {
-				String strPattern = strExpected.substring(3);
-				objDragonfly.objLogger.setLogRow("verifyMatch: regularExpressionMatch = " + regularExpressionMatch(objDragonfly, strPattern, strActual));
-				return regularExpressionMatch(objDragonfly, strPattern, strActual);
-			} else {
-				if (strExpected.equals(strActual)) {
-					return strActual;
+	public class VerifyMatch {
+		public String run(Dragonfly objDragonfly, String strActual, String strExpected) throws ExceptionValueNotMatched {
+			objDragonfly.objLogger.setLogRow("  ==start==>verifyMatch " + objDragonfly.new DateTimestamp().get());
+			long lngStartTimeVerifyMatch = System.currentTimeMillis();
+			try {
+				if (strExpected.toLowerCase().startsWith("re:")) {
+					String strPattern = strExpected.substring(3);
+					return new RegularExpressionMatch().run(objDragonfly, strPattern, strActual);
 				} else {
-					throw new ExceptionValueNotMatched("verifyMatch did not match strActual = {" + strActual + "} strExpected = {" + strExpected + "}");
+					if (strExpected.equals(strActual)) {
+						return strActual;
+					} else {
+						throw new ExceptionValueNotMatched("verifyMatch did not match strActual = {" + strActual + "} strExpected = {" + strExpected + "}");
+					}
 				}
+			} catch (Exception e) {
+				throw new ExceptionValueNotMatched("verifyMatch did not match strActual = {" + strActual + "} strExpected = {" + e.toString() + "}");
+			} finally {
+				objDragonfly.objLogger.setLogRow("verifyMatch: finally strActual = {" + strActual + "} strExpected = {" + strExpected + "} MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeVerifyMatch));
 			}
-		} finally {
-			objDragonfly.objLogger.setLogRow("verifyMatch: strActual = {" + strActual + "} strExpected = {" + strExpected + "} MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeVerifyMatch));
 		}
 	}
 
-	public static String regularExpressionMatch(Dragonfly objDragonfly, String strPattern, String strActualValue) {
-		objDragonfly.objLogger.setLogRow("  ==start==>regularExpressionMatch " + objDragonfly.new DateTimestamp().get());
-		Pattern objPattern = Pattern.compile(strPattern);
-		Matcher objMatcher = objPattern.matcher(strActualValue);
-		objMatcher.matches();
-		String strMatchedString = objMatcher.group(0);
-		return strMatchedString;
+	public class RegularExpressionMatch {
+		public String run(Dragonfly objDragonfly, String strPattern, String strActualValue) {
+			objDragonfly.objLogger.setLogRow("  ==start==>regularExpressionMatch " + objDragonfly.new DateTimestamp().get());
+			//			Pattern objPattern = Pattern.compile(strPattern);
+			//			Matcher objMatcher = objPattern.matcher(strActualValue);
+			//			objMatcher.matches();
+			//			String strMatchedString = objMatcher.group(0);
+			//Matcher objMatcher = Pattern.compile(strPattern).matcher(strActualValue).matches();
+			//String strMatchedString = Pattern.compile(strPattern).matcher(strActualValue).group(0);
+			Matcher objMatcher = Pattern.compile(strPattern).matcher(strActualValue);
+			boolean blnMatches = objMatcher.matches();
+			String strMatchedString = objMatcher.group(0);
+			objDragonfly.objLogger.setLogRow("RegularExpressionMatch: regularExpressionMatch = " + strMatchedString);
+			return strMatchedString;
+		}
 	}
 
 	public static void sleep(Dragonfly objDragonfly) {
@@ -2141,16 +2193,18 @@ public class Dragonfly {
 		objProcess.waitFor();
 	}
 
-	public static String clipboardGet(Dragonfly objDragonfly) {
-		objDragonfly.objLogger.setLogRow("  ==start==>clipboardGet " + objDragonfly.new DateTimestamp().get());
-		String strClipboardData = "";
-		try {
-			strClipboardData = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
-			objDragonfly.objLogger.setLogRow("clipboardGet: strClipboardData = " + strClipboardData);
-		} catch (Exception e) {
-			objDragonfly.objLogger.setLogRow("clipboardGet: Exception = " + e.toString());
+	public class clipboardGet {
+		public String run(Dragonfly objDragonfly) {
+			objDragonfly.objLogger.setLogRow("  ==start==>clipboardGet " + objDragonfly.new DateTimestamp().get());
+			String strClipboardData = "";
+			try {
+				strClipboardData = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+				objDragonfly.objLogger.setLogRow("clipboardGet: strClipboardData = " + strClipboardData);
+			} catch (Exception e) {
+				objDragonfly.objLogger.setLogRow("clipboardGet: Exception = " + e.toString());
+			}
+			return strClipboardData;
 		}
-		return strClipboardData;
 	}
 
 	public static boolean validateTagType(Dragonfly objDragonfly, String strTagType) {
@@ -3078,6 +3132,7 @@ public class Dragonfly {
 						blnGet = true;
 					}
 					blnStatus = true;
+					
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					objDragonfly.objLogger.setLogRow("elementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
@@ -3088,33 +3143,40 @@ public class Dragonfly {
 					objDragonfly.objLogger.setLogRow("elementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 					blnExit = true;
 				} finally {
-					if (blnExit == true) {
-						objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-					} else {
-						if (blnStatus == true) {
-							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
-							blnExit = true;
-						} else if (blnStatus == false) {
-							if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-								if (blnFound == false) {
-									blnVisible = false;
-									blnGet = false;
-								}
-							} else {
-								if (Boolean.parseBoolean(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-									objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "warning");
-									blnExit = true;
-								} else {
-									objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-									blnExit = true;
-								}
-							}
-						}
-					}
-					if (blnExit == true) {
+					//					if (blnExit == true) {
+					//						objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
+					//					} else {
+					//						if (blnStatus == true) {
+					//							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
+					//							blnExit = true;
+					//						} else if (blnStatus == false) {
+					//							if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
+					//								if (blnFound == false) {
+					//									blnVisible = false;
+					//									blnGet = false;
+					//								}
+					//							} else {
+					//								if (Boolean.parseBoolean(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("blnOptional").toString()) == true) {
+					//									objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "warning");
+					//									blnExit = true;
+					//								} else {
+					//									objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
+					//									blnExit = true;
+					//								}
+					//							}
+					//						}
+					//					}
+					//					if (blnExit == true) {
+					//						coordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
+					//						objDragonfly.new StepDuration(objDragonfly, "elementGetSync", lngTimeStart, "get");
+					//						return;
+					//					}
+					if (objDragonfly.new SyncFinally().run(objDragonfly, blnExit, blnStatus, blnFound, "elementGetSync", "get", lngTimeStart) == true) {
 						coordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-						new Dragonfly().new StepDuration(objDragonfly, "elementGetSync", lngTimeStart, "get");
 						return;
+					} else {
+						blnVisible = false;
+						blnGet = false;
 					}
 				}
 			}

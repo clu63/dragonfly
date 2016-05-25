@@ -16,7 +16,9 @@
 	function alert_with_text(text) {
 		alert(text);
 	}
-
+function allowDrop(ev) {
+    ev.preventDefault();
+}
 	function disableElementsForm() {
 		document.getElementById("text").disabled = true;
 		document.getElementById("password").disabled = true;
@@ -71,6 +73,16 @@
 		document.getElementById("image1").disabled = true;
 	}
 
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+}
 	function enableElementsForm() {
 		document.getElementById("text").disabled = false;
 		document.getElementById("password").disabled = false;
@@ -218,8 +230,10 @@
 	<a id="element_hidden" href="./SupportingFiles/element_hidden.html">Element
 		Hidden Page</a>
 	<br>
-	<a id="onmouseover" href="./SupportingFiles/onmouseover.html">OnMouseOver
-		Page</a>
+	<a id="onmouseover" href="./SupportingFiles/onmouseover.html">OnMouseOver Page</a>
+		<br>
+		<a id="drag_drop" href="./SupportingFiles/DragCombined.html">Drag and Drop Page</a>
+	<br>	
 	<hr>
 	<br>
 	<h2>Dialog</h2>
