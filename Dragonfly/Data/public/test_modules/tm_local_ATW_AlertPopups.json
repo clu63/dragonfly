@@ -877,7 +877,7 @@
 			"blnScreenshot": "",
 			"strFunction": "",
 			"strAssistiveProperties": "",
-			"blnExitOnFail": "",
+			"blnExitOnFail": "false",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
 			"intLoop": ""
