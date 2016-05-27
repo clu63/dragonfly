@@ -1203,29 +1203,6 @@ public class Dragonfly {
 					blnEnabled = false;
 					objDragonfly.objLogger.setLogRow("elementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					//				if (blnStatus == true) {
-					//					objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
-					//					blnExit = true;
-					//				} else if (blnStatus == false) {
-					//					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-					//						if (blnFound == false) {
-					//							blnOnMouseOver = false;
-					//						}
-					//					} else {
-					//						if (Boolean.parseBoolean(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-					//							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "warning");
-					//							blnExit = true;
-					//						} else {
-					//							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-					//							blnExit = true;
-					//						}
-					//					}
-					//				}
-					//				if (blnExit == true) {
-					//					new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-					//					objDragonfly.new StepDuration(objDragonfly, "elementOnMouseOverSync", lngTimeStart, "mouseover");
-					//					return;
-					//				}
 					if (new SyncFinally().run(objDragonfly, blnExit, blnStatus, blnFound, "elementOnMouseOverSync", "mouseover", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
 						return;
@@ -1596,34 +1573,6 @@ public class Dragonfly {
 				} catch (ExceptionDoPostBackNotComplete | ExceptionJQueryAjaxNotComplete | ExceptionJQueryAnimationNotComplete | ExceptionAngularJsNotComplete e) {
 					blnSetSync = false;
 				} finally {
-					//					if (blnExit == true) {
-					//					} else {
-					//						if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-					//							if (blnStatus == true) {
-					//								blnExit = true;
-					//							}
-					//						} else {
-					//							if (blnStatus == true) {
-					//								objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
-					//								blnExit = true;
-					//							} else if (blnStatus == false) {
-					//								if (Boolean.parseBoolean(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-					//									objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "warning");
-					//									new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-					//									blnExit = true;
-					//								} else {
-					//									objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-					//									new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-					//									blnExit = true;
-					//								}
-					//							}
-					//						}
-					//					}
-					//					if (blnExit == true) {
-					//						objDragonfly.new StepDuration(objDragonfly, "elementSetSync", lngTimeStart, "set");
-					//						return;
-					//					}
-					//	int intMillisecondsToWait = Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString());
 					if (new SyncFinally().run(objDragonfly, blnExit, blnStatus, blnFound, "elementSetSync", "set", lngTimeStart) == true) {
 						return;
 					}
@@ -1657,7 +1606,6 @@ public class Dragonfly {
 				}
 			}
 			if (blnExit == true) {
-				//new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
 				new StepDuration(objDragonfly, strMethodeName, lngTimeStart, strAction);
 			}
 			return blnExit;
@@ -1827,33 +1775,6 @@ public class Dragonfly {
 					//objDragonfly.objLogger.setLogRow("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 					//	blnExit = true;
 				} finally {
-					//				if (blnExit == true) {
-					//				} else {
-					//					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-					//						if (blnStatus == true) {
-					//							blnExit = true;
-					//						}
-					//					} else {
-					//						if (blnStatus == true) {
-					//							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
-					//							blnExit = true;
-					//						} else if (blnStatus == false) {
-					//							if (Boolean.parseBoolean(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-					//								objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "warning");
-					//								new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-					//								blnExit = true;
-					//							} else {
-					//								objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-					//								new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-					//								blnExit = true;
-					//							}
-					//						}
-					//					}
-					//				}
-					//				if (blnExit == true) {
-					//					objDragonfly.new StepDuration(objDragonfly, "elementDragSync", lngTimeStart, "drag");
-					//					return;
-					//				}
 					if (new SyncFinally().run(objDragonfly, blnExit, blnStatus, blnFound, "elementDragSync", "drag", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
 						return;
@@ -1921,38 +1842,9 @@ public class Dragonfly {
 					//objDragonfly.objLogger.setLogRow("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 					//	blnExit = true;
 				} finally {
-					//				if (blnExit == true) {
-					//				} else {
-					//					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-					//						if (blnStatus == true) {
-					//							blnExit = true;
-					//						}
-					//					} else {
-					//						if (blnStatus == true) {
-					//							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
-					//							blnExit = true;
-					//						} else if (blnStatus == false) {
-					//							if (Boolean.parseBoolean(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-					//								objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "warning");
-					//								new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-					//								blnExit = true;
-					//							} else {
-					//								objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-					//								new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-					//								blnExit = true;
-					//							}
-					//						}
-					//					}
-					//				}
-					//				if (blnExit == true) {
-					//					objDragonfly.new StepDuration(objDragonfly, "elementDropSync", lngTimeStart, "drop");
-					//					return;
-					//				}
 					if (new SyncFinally().run(objDragonfly, blnExit, blnStatus, blnFound, "elementDropSync", "drop", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
 						return;
-						//				} else {
-						//					blnDisabled = false;
 					}
 				}
 			}
@@ -2026,37 +1918,6 @@ public class Dragonfly {
 					blnVerified = false;
 					blnStatus = false;
 				} finally {
-					//					if (blnExit == true) {
-					//						objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-					//					}
-					//					if (blnStatus == true) {
-					//						objDragonfly.objLogger.setLogRow("elementVerifyValueSync: finally blnStatus = " + blnStatus);
-					//						objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strOutputValue", strActualValue);
-					//						objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
-					//						blnExit = true;
-					//					} else if (blnStatus == false) {
-					//						if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-					//							if (blnFound == false) {
-					//								blnVisible = false;
-					//								blnVerified = false;
-					//							}
-					//						} else {
-					//							if (Boolean.parseBoolean(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-					//								objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strOutputValue", strActualValue);
-					//								objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "warning");
-					//								blnExit = true;
-					//							} else {
-					//								objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strOutputValue", strActualValue);
-					//								objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-					//								blnExit = true;
-					//							}
-					//						}
-					//					}
-					//					if (blnExit == true) {
-					//						new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-					//						new StepDuration(objDragonfly, "elementVerifyValueSync", lngTimeStart, "verify");
-					//						return;
-					//					}
 					if (new SyncFinally().run(objDragonfly, blnExit, blnStatus, blnFound, "elementVerifyValueSync", "verify", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
 						return;
@@ -2804,30 +2665,6 @@ public class Dragonfly {
 					blnVisible = false;
 					objDragonfly.objLogger.setLogRow("elementVisibleSync: " + e.toString() + "  lngMillisecondsWaitedAll = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					//				if (blnStatus == true) {
-					//					objDragonfly.objLogger.setLogRow("elementVisibleSync: finally blnStatus = " + blnStatus);
-					//					objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
-					//					blnExit = true;
-					//				} else if (blnStatus == false) {
-					//					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-					//						if (blnFound == false) {
-					//							blnVisible = false;
-					//						}
-					//					} else {
-					//						if (Boolean.parseBoolean(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-					//							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "warning");
-					//							blnExit = true;
-					//						} else {
-					//							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-					//							blnExit = true;
-					//						}
-					//					}
-					//				}
-					//				if (blnExit == true) {
-					//					new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-					//					objDragonfly.new StepDuration(objDragonfly, "elementVisibleSync", lngTimeStart, "syncvisible");
-					//					return;
-					//				}
 					if (new SyncFinally().run(objDragonfly, blnExit, blnStatus, blnFound, "elementVisibleSync", "syncvisible", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
 						return;
@@ -2905,31 +2742,6 @@ public class Dragonfly {
 					blnHidden = false;
 					objDragonfly.objLogger.setLogRow("elementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					//				if (blnStatus == true) {
-					//					objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
-					//					coordinatesElement(objDragonfly);
-					//					blnExit = true;
-					//				} else if (blnStatus == false) {
-					//					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-					//						if (blnFound == false) {
-					//							blnHidden = false;
-					//						}
-					//					} else {
-					//						coordinatesElement(objDragonfly);
-					//						if (Boolean.parseBoolean(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-					//							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "warning");
-					//							blnExit = true;
-					//						} else {
-					//							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-					//							blnExit = true;
-					//						}
-					//					}
-					//				}
-					//				if (blnExit == true) {
-					//					new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-					//					objDragonfly.new StepDuration(objDragonfly, "elementHiddenSync", lngTimeStart, "synchidden");
-					//					return;
-					//				}
 					if (new SyncFinally().run(objDragonfly, blnExit, blnStatus, blnFound, "elementHiddenSync", "synchidden", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
 						return;
@@ -2997,30 +2809,6 @@ public class Dragonfly {
 					blnEnabled = false;
 					objDragonfly.objLogger.setLogRow("elementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					//				if (blnStatus == true) {
-					//					objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
-					//					blnExit = true;
-					//				} else if (blnStatus == false) {
-					//					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-					//						if (blnFound == false) {
-					//							blnEnabled = false;
-					//						}
-					//					} else {
-					//						if (Boolean.parseBoolean(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-					//							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "warning");
-					//							blnExit = true;
-					//						} else {
-					//							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-					//							blnExit = true;
-					//						}
-					//					}
-					//				}
-					//				if (blnExit == true) {
-					//					new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-					//					objDragonfly.new StepDuration(objDragonfly, "elementEnabledSync", lngTimeStart, "syncenabled");
-					//					return;
-					//				}
-					//				
 					if (new SyncFinally().run(objDragonfly, blnExit, blnStatus, blnFound, "elementEnabledSync", "syncenabled", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
 						return;
@@ -3088,29 +2876,6 @@ public class Dragonfly {
 					blnDisabled = false;
 					objDragonfly.objLogger.setLogRow("elementDisabledSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					//				if (blnStatus == true) {
-					//					objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
-					//					blnExit = true;
-					//				} else if (blnStatus == false) {
-					//					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-					//						if (blnFound == false) {
-					//							blnDisabled = false;
-					//						}
-					//					} else {
-					//						if (Boolean.parseBoolean(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-					//							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "warning");
-					//							blnExit = true;
-					//						} else {
-					//							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-					//							blnExit = true;
-					//						}
-					//					}
-					//				}
-					//				if (blnExit == true) {
-					//					new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-					//					objDragonfly.new StepDuration(objDragonfly, "elementDisabledSync", lngTimeStart, "syncdisabled");
-					//					return;
-					//				}
 					if (new SyncFinally().run(objDragonfly, blnExit, blnStatus, blnFound, "elementDisabledSync", "syncdisabled", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
 						return;
@@ -3236,34 +3001,6 @@ public class Dragonfly {
 					objDragonfly.objLogger.setLogRow("elementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 					blnExit = true;
 				} finally {
-					//					if (blnExit == true) {
-					//						objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-					//					} else {
-					//						if (blnStatus == true) {
-					//							objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
-					//							blnExit = true;
-					//						} else if (blnStatus == false) {
-					//							if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("intMillisecondsToWait").toString())) {
-					//								if (blnFound == false) {
-					//									blnVisible = false;
-					//									blnGet = false;
-					//								}
-					//							} else {
-					//								if (Boolean.parseBoolean(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("blnOptional").toString()) == true) {
-					//									objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "warning");
-					//									blnExit = true;
-					//								} else {
-					//									objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "fail");
-					//									blnExit = true;
-					//								}
-					//							}
-					//						}
-					//					}
-					//					if (blnExit == true) {
-					//						new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-					//						new StepDuration(objDragonfly, "elementGetSync", lngTimeStart, "get");
-					//						return;
-					//					}
 					if (new SyncFinally().run(objDragonfly, blnExit, blnStatus, blnFound, "elementGetSync", "get", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
 						return;
@@ -4009,7 +3746,7 @@ public class Dragonfly {
 			//objDragonfly.objLogger.setLogRow("  ==start==>writeJsonStepsAfterRunToHtml " + new DateTimestamp().get());
 			String strKey = "";
 			String[] arrKeys = null;
-			StepNames objStepNames =new StepNames();
+			StepNames objStepNames = new StepNames();
 			switch (strStepHeader) {
 			case "original":
 				//arrKeys = stepsNamesOriginalArray();
@@ -4149,10 +3886,10 @@ public class Dragonfly {
 	public String data_DateDaysOut(Dragonfly objDragonfly, String strDaysOut) {
 		objDragonfly.objLogger.setLogRow("  ==start==>data_DateDaysOut " + new DateTimestamp().get());
 		Integer intDaysOut = Integer.parseInt(strDaysOut);
-		SimpleDateFormat FormattedDATE = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat objFormattedDATE = new SimpleDateFormat("MM/dd/yyyy");
 		Calendar objCalendar = Calendar.getInstance();
 		objCalendar.add(Calendar.DATE, intDaysOut);
-		String strNewDate = (String) (FormattedDATE.format(objCalendar.getTime()));
+		String strNewDate = (String) (objFormattedDATE.format(objCalendar.getTime()));
 		return strNewDate;
 	}
 
