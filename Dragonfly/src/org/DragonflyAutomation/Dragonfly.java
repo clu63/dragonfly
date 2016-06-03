@@ -1411,20 +1411,13 @@ public class Dragonfly {
 	public class ElementSet {
 		public ElementSet(Dragonfly objDragonfly, String strOuterHTML) throws ExceptionElementTagNameNotSupported, ExceptionElementNotSet {
 			objDragonfly.objLogger.setLogRow("  ==start==>elementSet " + new DateTimestamp().get());
+			objDragonfly.objLogger.setLogRow("elementSet: " + objDragonfly.objJsonVariables.gobjJsonObjectStep.get("strAttributeValues").toString().toLowerCase());
 			long lngStartTimeElementSet = System.currentTimeMillis();
 			Boolean blnSet = false;
-			JavascriptExecutor objJavascriptExecutor = null;
-			// String strOuterHTML = "";
-			if (objDragonfly.objSeleniumVariables.gobjWebElement != null) {
-				objJavascriptExecutor = (JavascriptExecutor) objDragonfly.objSeleniumVariables.gobjWebDriver;
-			}
+			String strTagNameNotSupported = "";
 			try {
 				// objDragonfly.objSeleniumVariables.gobjWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
 				// objDragonfly.objSeleniumVariables.gobjWebDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
-				//long lngStartTimeOuterHTML = System.currentTimeMillis();
-				// strOuterHTML = objDragonfly.objSeleniumVariables.gobjWebElement.getAttribute("outerHTML");
-				// objDragonfly.objLogger.setLogRow("elementSet outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeOuterHTML));
-				// objDragonfly.objLogger.setLogRow(strOuterHTML);
 				switch (objDragonfly.objJsonVariables.gobjJsonObjectStep.get("strTagType").toString().toLowerCase()) {
 				case "a":
 				case "button":
@@ -1446,109 +1439,47 @@ public class Dragonfly {
 				case "td":
 				case "th":
 				case "tr":
-					blnSet = true;
 					switch (objDragonfly.objJsonVariables.gobjJsonObjectStep.get("strInputValue").toString().toLowerCase()) {
 					case "":
 					case "<click>":
-						//objJavascriptExecutor.executeScript("arguments[0].focus();", objDragonfly.objSeleniumVariables.gobjWebElement);
 						objDragonfly.objSeleniumVariables.gobjWebElement.click();
-						// set_js
-						//objJavascriptExecutor.executeScript("arguments[0].focus();", objDragonfly.objSeleniumVariables.gobjWebElement);
-						// objJavascriptExecutor.executeScript("arguments[0].click();", objDragonfly.objSeleniumVariables.gobjWebElement);
-						// ///objJavascriptExecutor.executeScript("arguments[0].blur();", objDragonfly.objSeleniumVariables.gobjWebElement);
-						// objJavascriptExecutor.executeScript("arguments[0].focus();", objDragonfly.objSeleniumVariables.gobjWebElement);
-						// objJavascriptExecutor.executeScript("arguments[0].click();", objDragonfly.objSeleniumVariables.gobjWebElement);
-						// objJavascriptExecutor.executeScript("arguments[0].blur();", objDragonfly.objSeleniumVariables.gobjWebElement);
 						break;
 					case "<doubleclick>":
 						Actions objAction = new Actions(objDragonfly.objSeleniumVariables.gobjWebDriver);
 						objAction.moveToElement(objDragonfly.objSeleniumVariables.gobjWebElement).doubleClick().build().perform();
 						break;
 					}
+					blnSet = true;
 					break;
 				case "input_text":
 				case "input_password":
 				case "textarea":
 				case "input_email":
-					blnSet = true;
 					if (objDragonfly.objSeleniumVariables.gobjWebElement.getAttribute("value").isEmpty() == false) {
 						objDragonfly.objSeleniumVariables.gobjWebElement.clear();
 					}
 					objDragonfly.objSeleniumVariables.gobjWebElement.sendKeys(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("strInputValue").toString());
-					//					objJavascriptExecutor.executeScript("arguments[0].focus();", objDragonfly.objSeleniumVariables.gobjWebElement);
-					//					objJavascriptExecutor.executeScript("arguments[0].value = '';", objDragonfly.objSeleniumVariables.gobjWebElement);
-					//					objDragonfly.objSeleniumVariables.gobjWebElement.sendKeys(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("strInputValue").toString());
-					//					objJavascriptExecutor.executeScript("arguments[0].blur();", objDragonfly.objSeleniumVariables.gobjWebElement);
-					break;
-				// //objDragonfly.objSeleniumVariables.gobjWebElement.click();
-				// objJavascriptExecutor.executeScript("arguments[0].focus();", objDragonfly.objSeleniumVariables.gobjWebElement);
-				// objJavascriptExecutor.executeScript("arguments[0].value = '';", objDragonfly.objSeleniumVariables.gobjWebElement);
-				// objJavascriptExecutor.executeScript("arguments[0].value = '" + objDragonfly.objJsonVariables.gobjJsonObjectStep.get("strInputValue").toString() + "';", objDragonfly.objSeleniumVariables.gobjWebElement);
-				// objJavascriptExecutor.executeScript("arguments[0].onkeydown();", objDragonfly.objSeleniumVariables.gobjWebElement);
-				// // objJavascriptExecutor.executeScript("arguments[0].onkeyup();", objDragonfly.objSeleniumVariables.gobjWebElement);
-				// objJavascriptExecutor.executeScript("arguments[0].blur();", objDragonfly.objSeleniumVariables.gobjWebElement);
-				// objDragonfly.objLogger.setLogRow("onchange before");
-				// if (strOuterHTML.toLowerCase().contains("onchange")) {
-				// try {
-				// objJavascriptExecutor.executeScript("arguments[0].onchange();", objDragonfly.objSeleniumVariables.gobjWebElement);
-				// } catch (WebDriverException e) {
-				// objDragonfly.objLogger.setLogRow("elementSet = " + e.toString());
-				// }
-				// }
-				// break;
-				case "input_radio":
 					blnSet = true;
+					break;
+				case "input_radio":
 					objDragonfly.objSeleniumVariables.gobjWebElement.click();
-					//					objJavascriptExecutor.executeScript("arguments[0].focus();", objDragonfly.objSeleniumVariables.gobjWebElement);
-					//					// objJavascriptExecutor.executeScript("arguments[0].click();", objDragonfly.objSeleniumVariables.gobjWebElement);
-					//					objDragonfly.objSeleniumVariables.gobjWebElement.click();
-					//					objJavascriptExecutor.executeScript("arguments[0].blur();", objDragonfly.objSeleniumVariables.gobjWebElement);
-					// if (strOuterHTML.toLowerCase().contains("onchange")) {
-					// try {
-					// objJavascriptExecutor.executeScript("arguments[0].onchange();", objDragonfly.objSeleniumVariables.gobjWebElement);
-					//
-					// } catch (WebDriverException e) {
-					// objDragonfly.objLogger.setLogRow("elementSet = " + e.toString());
-					// }
-					// }
+					blnSet = true;
 					break;
 				case "input_checkbox":
-					blnSet = true;
 					switch (objDragonfly.objJsonVariables.gobjJsonObjectStep.get("strInputValue").toString().toLowerCase()) {
 					case "<on>":
 						if (objDragonfly.objSeleniumVariables.gobjWebElement.isSelected() == false) {
 							objDragonfly.objSeleniumVariables.gobjWebElement.click();
-							//							objJavascriptExecutor.executeScript("arguments[0].focus();", objDragonfly.objSeleniumVariables.gobjWebElement);
-							//							// objJavascriptExecutor.executeScript("arguments[0].click();", objDragonfly.objSeleniumVariables.gobjWebElement);
-							//							objDragonfly.objSeleniumVariables.gobjWebElement.click();
-							//							objJavascriptExecutor.executeScript("arguments[0].blur();", objDragonfly.objSeleniumVariables.gobjWebElement);
-							// if (strOuterHTML.toLowerCase().contains("onchange")) {
-							// try {
-							// objJavascriptExecutor.executeScript("arguments[0].onchange();", objDragonfly.objSeleniumVariables.gobjWebElement);
-							// } catch (WebDriverException e) {
-							// objDragonfly.objLogger.setLogRow("elementSet = " + e.toString());
-							// }
-							// }
 						}
 						break;
 					case "<off>":
 						blnSet = true;
 						if (objDragonfly.objSeleniumVariables.gobjWebElement.isSelected() == true) {
 							objDragonfly.objSeleniumVariables.gobjWebElement.click();
-							//							objJavascriptExecutor.executeScript("arguments[0].focus();", objDragonfly.objSeleniumVariables.gobjWebElement);
-							//							// objJavascriptExecutor.executeScript("arguments[0].click();", objDragonfly.objSeleniumVariables.gobjWebElement);
-							//							objDragonfly.objSeleniumVariables.gobjWebElement.click();
-							//							objJavascriptExecutor.executeScript("arguments[0].blur();", objDragonfly.objSeleniumVariables.gobjWebElement);
-							// if (strOuterHTML.toLowerCase().contains("onchange")) {
-							// try {
-							// objJavascriptExecutor.executeScript("arguments[0].onchange();", objDragonfly.objSeleniumVariables.gobjWebElement);
-							// } catch (WebDriverException e) {
-							// objDragonfly.objLogger.setLogRow("elementSet = " + e.toString());
-							// }
-							// }
 						}
 						break;
 					}
+					blnSet = true;
 					break;
 				case "select":
 					Select objSelect = new Select(objDragonfly.objSeleniumVariables.gobjWebElement);
@@ -1580,38 +1511,35 @@ public class Dragonfly {
 					//							break;
 					//						}
 					//					}
+					blnSet = true;
 					break;
 				case "table":
 					// Set objDragonfly.objSeleniumVariables.gobjWebElement = objDragonfly.objSeleniumVariables.gobjWebElement.AsTable
 					break;
 				case "alert":
-					blnSet = true;
-					//Alert alert = objDragonfly.objSeleniumVariables.gobjWebDriver.switchTo().alert();
-					//objDragonfly.objLogger.setLogRow(gobjAlert.getText()); // Print Alert popup
-					objDragonfly.objLogger.setLogRow("elementSet: " + objDragonfly.objJsonVariables.gobjJsonObjectStep.get("strAttributeValues").toString().toLowerCase());
 					switch (objDragonfly.objJsonVariables.gobjJsonObjectStep.get("strAttributeValues").toString().toLowerCase()) {
 					case "edit":
-						//gobjAlert.sendKeys(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("strInputValue").toString());
 						objDragonfly.objSeleniumVariables.gobjWebDriver.switchTo().alert().sendKeys(objDragonfly.objJsonVariables.gobjJsonObjectStep.get("strInputValue").toString());
 						break;
 					case "accept":
-						//	gobjAlert.accept(); // Close Alert popup
-						objDragonfly.objSeleniumVariables.gobjWebDriver.switchTo().alert().accept(); // Close Alert popup
+						objDragonfly.objSeleniumVariables.gobjWebDriver.switchTo().alert().accept();
 						break;
 					case "dismiss":
-						//gobjAlert.dismiss();// Close Alert popup
-						objDragonfly.objSeleniumVariables.gobjWebDriver.switchTo().alert().dismiss();// Close Alert popup
+						objDragonfly.objSeleniumVariables.gobjWebDriver.switchTo().alert().dismiss();
 						break;
 					}
+					blnSet = true;
 					break;
 				default:
-					throw new ExceptionElementTagNameNotSupported("Element tag not supported");
+					strTagNameNotSupported = "Element tag {" + objDragonfly.objJsonVariables.gobjJsonObjectStep.get("strTagType").toString().toLowerCase() + "} not supported";
 				}
-			} catch (Exception e) {
-				objDragonfly.objLogger.setLogRow("elementSet: Exception = " + e.toString());
 			} finally {
-				if (blnSet == false) {
-					throw new ExceptionElementNotSet("Element not set");
+				if (strTagNameNotSupported.isEmpty() == false) {
+					throw new ExceptionElementTagNameNotSupported(strTagNameNotSupported);
+				} else {
+					if (blnSet == false) {
+						throw new ExceptionElementNotSet("Element not set");
+					}
 				}
 				objDragonfly.objLogger.setLogRow("elementSet: finally MillisecondsWaited = " + (System.currentTimeMillis() - lngStartTimeElementSet));
 			}
@@ -1619,6 +1547,7 @@ public class Dragonfly {
 	}
 
 	public class ElementSetSync {
+		public ElementSetSync(Dragonfly objDragonfly, boolean blnJavascriptExecutor) {
 			objDragonfly.objLogger.setLogRow("  ==start==>elementSetSync " + new DateTimestamp().get());
 			Long lngTimeStart = System.currentTimeMillis();
 			Boolean blnAssert = false;
@@ -1635,13 +1564,11 @@ public class Dragonfly {
 				try {
 					if (blnFound == false) {
 						new ElementFind(objDragonfly);
-						objDragonfly.objLogger.setLogRow("elementSetSync: elementFind over");
 						if (objDragonfly.objSeleniumVariables.gobjWebElement != null) {
 							strOuterHTML = objDragonfly.objSeleniumVariables.gobjWebElement.getAttribute("outerHTML");
 							objDragonfly.objLogger.setLogRow("elementSetSync: " + strOuterHTML);
 							objDragonfly.objLogger.setLogRow("elementSetSync: outerHTML MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 						}
-						objDragonfly.objLogger.setLogRow("elementSetSync: strOuterHTML over");
 						blnFound = true;
 					}
 					if (blnVisible == false) {
@@ -1655,13 +1582,9 @@ public class Dragonfly {
 					switch (objDragonfly.objJsonVariables.gobjJsonObjectStep.get("strAssert").toString().toLowerCase()) {
 					case "off":
 						objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
-						// TODO complete Alert Set, move or consider how to handle assert
 						if (blnSet == false) {
-							// if (objDragonfly.objJsonVariables.gobjJsonObjectStep.get("strTagName").toString().toLowerCase().equals("alert")) {new CoordinateHighlightScreenshot(objDragonfly.objJsonVariables.gobjJsonObjectStep, objDragonfly.objSeleniumVariables.gobjWebDriver, null, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-							// } else {
 							new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.objJsonVariables.gobjJsonObjectStep);
-							// }
-							new ElementSet(objDragonfly, strOuterHTML);
+							if (blnJavascriptExecutor == true) {
 								new ElementSetJavascriptExecutor(objDragonfly, strOuterHTML);
 							} else {
 								new ElementSet(objDragonfly, strOuterHTML);
@@ -1811,6 +1734,15 @@ public class Dragonfly {
 					objDragonfly.objLogger.setLogRow("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionDoPostBackNotComplete | ExceptionJQueryAjaxNotComplete | ExceptionJQueryAnimationNotComplete | ExceptionAngularJsNotComplete e) {
 					blnSetSync = false;
+					objDragonfly.objLogger.setLogRow("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				} catch (Exception e) {
+					blnAssert = false;
+					blnEnabled = false;
+					blnFound = false;
+					blnSet = false;
+					blnSetSync = false;
+					blnVisible = false;
+					objDragonfly.objLogger.setLogRow("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					if (new SyncFinally().run(objDragonfly, blnExit, blnStatus, blnFound, "elementSetSync", "set", lngTimeStart) == true) {
 						return;
