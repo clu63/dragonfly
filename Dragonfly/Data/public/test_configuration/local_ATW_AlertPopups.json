@@ -8,12 +8,12 @@
 
 	"test_instances": 
 	[
-	
+		
 	],
 
-	"element_repository": 
+	"test_elements": 
 	[
-	
+		
 	],
 
 	"test_modules": 
@@ -23,6 +23,6 @@
 
 	"test_data": 
 	[
-	
+		
 	]
 }

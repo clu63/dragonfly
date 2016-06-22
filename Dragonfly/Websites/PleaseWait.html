@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p>Click the button to demonstrate line-breaks in a popup box.</p>
+
+<button onclick="myFunction()">Try it</button>
+
+<script>
+window.onload = function () {
+    var popup = window.open('','pop','width=200px, height=10px'),
+        popdoc, msg, script;
+    if (popup) {
+        popdoc = popup.document;
+        msg = popdoc.body.appendChild(popdoc.createElement('p'));
+        msg.innerHTML = 'Please, wait until process has finished.';
+        script = popdoc.createElement('script');
+        script.text = '(function () {setTimeout(function () {self.close();}, 30000);}());';
+        popdoc.body.appendChild(script);
+    }
+}
+</script>
+
+</body>
+</html>
