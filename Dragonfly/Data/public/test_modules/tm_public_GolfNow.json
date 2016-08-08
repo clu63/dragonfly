@@ -19,7 +19,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"strLoopOrIf": ""
 		},
 
 		{
@@ -40,7 +40,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"strLoopOrIf": ""
 		},
 
 		{
@@ -61,7 +61,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"strLoopOrIf": ""
 		},
 
 		{
@@ -82,7 +82,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"strLoopOrIf": ""
 		},
 
 		{
@@ -103,7 +103,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"strLoopOrIf": ""
 		},
 
 		{
@@ -124,7 +124,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"strLoopOrIf": ""
 		},
 
 		{
@@ -145,7 +145,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"strLoopOrIf": ""
 		},
 
 		{
@@ -166,7 +166,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"strLoopOrIf": ""
 		},
 
 		{
@@ -187,7 +187,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"strLoopOrIf": ""
 		},
 
 		{
@@ -208,7 +208,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"strLoopOrIf": ""
 		},
 
 		{
@@ -229,7 +229,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"strLoopOrIf": ""
 		},
 
 		{
@@ -250,7 +250,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"strLoopOrIf": ""
 		},
 
 		{
@@ -271,7 +271,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"strLoopOrIf": ""
 		},
 
 		{
@@ -292,7 +292,7 @@
 			"blnExitOnFail": "",
 			"strOutputLinkName": "",
 			"strOutputValue": "",
-			"intLoop": ""
+			"strLoopOrIf": ""
 		}
 	],
 
