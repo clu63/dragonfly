@@ -1,0 +1,179 @@
+{
+	"steps": 
+	[
+		{
+			"strAction": "launch",
+			"strTagName": "chrome",
+			"strAttributeNames": "",
+			"strAttributeValues": "",
+			"strInputValue": "AngularCalc/AngularCalc.html",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "data_localWebsiteFilePath",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "verify",
+			"strTagName": "h3",
+			"strAttributeNames": "index",
+			"strAttributeValues": "1",
+			"strInputValue": "Super Calculator",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "set",
+			"strTagName": "input",
+			"strAttributeNames": "ng-model|type",
+			"strAttributeValues": "first|text",
+			"strInputValue": "27",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "value",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "set",
+			"strTagName": "select",
+			"strAttributeNames": "ng-model",
+			"strAttributeValues": "operator",
+			"strInputValue": "-",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "value",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "set",
+			"strTagName": "input",
+			"strAttributeNames": "ng-model|type",
+			"strAttributeValues": "second|text",
+			"strInputValue": "72",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "value",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "set",
+			"strTagName": "button",
+			"strAttributeNames": "id",
+			"strAttributeValues": "gobutton",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "verify",
+			"strTagName": "h2",
+			"strAttributeNames": "index",
+			"strAttributeValues": "1",
+			"strInputValue": "-45",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "Result",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "verify",
+			"strTagName": "td",
+			"strAttributeNames": "index",
+			"strAttributeValues": "3",
+			"strInputValue": "<link>Result",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		}
+	],
+
+	"link": 
+	[
+		{
+			
+		}
+	]
+}

@@ -1,0 +1,28 @@
+{
+	"test_details": 
+	{
+		"test_name": "DragAndDrop",
+		"test_description": "http://www.dhtmlgoodies.com/index.html",
+		"test_type": "Positive"
+	},
+
+	"test_instances": 
+	[
+		
+	],
+
+	"test_elements": 
+	[
+		
+	],
+
+	"test_modules": 
+	[
+		"tm_local_DragAndDrop.json"
+	],
+
+	"test_data": 
+	[
+		
+	]
+}

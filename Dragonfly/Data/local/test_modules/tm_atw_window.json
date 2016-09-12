@@ -1,0 +1,137 @@
+{
+	"steps": 
+	[
+		{
+			"strAction": "launch",
+			"strTagName": "firefox",
+			"strAttributeNames": "",
+			"strAttributeValues": "",
+			"strInputValue": "ATW/Automation_Test_Website.html",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "data_localWebsiteFilePath",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "sync_visible",
+			"strTagName": "body",
+			"strAttributeNames": "index",
+			"strAttributeValues": "1",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "set",
+			"strTagName": "input",
+			"strAttributeNames": "id",
+			"strAttributeValues": "window_open",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "off",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "sync_visible",
+			"strTagName": "h1",
+			"strAttributeNames": "id",
+			"strAttributeValues": "window1_title",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "set",
+			"strTagName": "input",
+			"strAttributeNames": "id",
+			"strAttributeValues": "closeWin",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "sync_hidden",
+			"strTagName": "input",
+			"strAttributeNames": "id",
+			"strAttributeValues": "closeWin",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "1000",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		}
+	],
+
+	"link": 
+	[
+		{
+			
+		}
+	]
+}

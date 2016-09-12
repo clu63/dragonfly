@@ -1,0 +1,53 @@
+{
+	"steps": 
+	[
+		{
+			"strAction": "launch",
+			"strTagName": "chrome",
+			"strAttributeNames": "",
+			"strAttributeValues": "",
+			"strInputValue": "http://www.bitrepository.com/demo/dynamic-dependent-dropdown-list/",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "sync_visible",
+			"strTagName": "body",
+			"strAttributeNames": "index",
+			"strAttributeValues": "1",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		}
+	],
+
+	"link": 
+	[
+		{
+			
+		}
+	]
+}

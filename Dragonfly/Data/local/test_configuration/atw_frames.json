@@ -1,0 +1,28 @@
+{
+	"test_details": 
+	{
+		"test_name": "ATW.Frames",
+		"test_description": "",
+		"test_type": "Positive"
+	},
+
+	"test_instances": 
+	[
+		
+	],
+
+	"test_elements": 
+	[
+		
+	],
+
+	"test_modules": 
+	[
+		"tm_local_atw_frames.json"
+	],
+
+	"test_data": 
+	[
+		
+	]
+}

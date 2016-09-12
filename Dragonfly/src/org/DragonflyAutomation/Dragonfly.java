@@ -44,10 +44,13 @@
 package org.DragonflyAutomation;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
@@ -56,16 +59,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -74,12 +80,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JRadioButton;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+//import org.DragonflyAutomation.DragonflyLaunch.DragonflyLaunchDialog;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
@@ -109,7 +124,6 @@ import sun.misc.BASE64Encoder;
 import autoitx4java.AutoItX;
 import com.jacob.com.LibraryLoader;
 import com.opera.core.systems.OperaDriver;
-import java.lang.reflect.Field;
 
 public class Dragonfly {
 	// System.exit(0);
@@ -307,7 +321,21 @@ public class Dragonfly {
 		objDragonfly.objLogger.setLogRow("  ==start==>main " + objDragonfly.new DateTimestamp().get());
 		objDragonfly.objAutoItSetObject.createObject(objDragonfly);
 		objDragonfly.objOperatingSystem.set(objDragonfly);
-		String strNameTestConfiguration = "local_ATW_AlertPopups.json";
+		String strNameTestConfiguration;
+		try {
+			DragonflyLaunchDialog dialog = objDragonfly.new DragonflyLaunchDialog(objDragonfly);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		objDragonfly.objLogger.setLogRow("main while dialog open");
+		System.out.println("objDragonfly.objPaths.gstrTestArea = " + objDragonfly.objPaths.gstrTestArea);
+		System.out.println("objDragonfly.objPaths.gstrPathData = " + objDragonfly.objPaths.gstrPathData);
+		System.out.println("objDragonfly.objPaths.gstrPathTestConfiguration = " + objDragonfly.objPaths.gstrPathTestConfiguration);
+		System.out.println("objDragonfly.objPaths.gstrPathSystemUserDir = " + objDragonfly.objPaths.gstrPathSystemUserDir);
+		strNameTestConfiguration = objDragonfly.objPaths.gstrNameTest;
+		System.out.println("strNameTestConfiguration = " + strNameTestConfiguration);
+		//System.exit(0);
 		int intStep = 0;
 		int intLoopCount = 0;
 		int intLoopEach = 0;
@@ -559,17 +587,16 @@ public class Dragonfly {
 			arrKeys = objStepNames.getRuntime();
 			String strKey = "";
 			for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
-				strKey = (String) arrKeys[intKeysEach].toString();
-				objDragonfly.objLogger.setLogRow("StepSetupDefaults strKey =" + strKey);
+				strKey = arrKeys[intKeysEach].toString();
 				objDragonfly.objJsonObjectStepPut.run(objDragonfly, strKey, "");
 			}
 			String strInputValue = objDragonfly.objVariablesJson.gobjJsonObjectStep.get("strInputValue").toString();
 			String strLogicalName = objDragonfly.objVariablesJson.gobjJsonObjectStep.get("strLogicalName").toString();
-			objDragonfly.objLogger.setLogRow("StepSetupDefaults: strInputValue = " + strInputValue);
 			try {
-				if (strLogicalName.trim().length() != 0) {
-					objDragonfly.objLogger.setLogRow("StepSetupDefaults: strLogicalName.substring(0, 4) = " + strLogicalName.substring(0, 4));
-					objDragonfly.objLogger.setLogRow("StepSetupDefaults: strLogicalName.substring(4) = " + strLogicalName.substring(4));
+				if (strLogicalName.substring(0, 4) == "<te>") {
+					//if (strLogicalName.trim().length() != 0) {
+					//objDragonfly.objLogger.setLogRow("StepSetupDefaults: strLogicalName.substring(0, 4) = " + strLogicalName.substring(0, 4));
+					//objDragonfly.objLogger.setLogRow("StepSetupDefaults: strLogicalName.substring(4) = " + strLogicalName.substring(4));
 					//case "<te>":
 					strLogicalName = strLogicalName.replace("<te>", "");
 					objDragonfly.new JsonObjectValidateKey(objDragonfly, objDragonfly.objVariablesJson.gobjJsonObjectElement, strLogicalName);
@@ -578,67 +605,55 @@ public class Dragonfly {
 					objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strAttributeNames", objDragonfly.new JsonObjectGetValue().run(objDragonfly, objJsonObjectElementNode, "strAttributeNames", ""));
 					objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strAttributeValues", objDragonfly.new JsonObjectGetValue().run(objDragonfly, objJsonObjectElementNode, "strAttributeValues", ""));
 				}
-				if (strInputValue.trim().length() != 0) {
-					objDragonfly.objLogger.setLogRow("StepSetupDefaults: strInputValue.substring(0, 4) = " + strInputValue.substring(0, 4));
-					objDragonfly.objLogger.setLogRow("StepSetupDefaults: strInputValue.substring(4) = " + strInputValue.substring(4));
-					switch (strInputValue.substring(0, 4)) {
-					case "<td>":
-						strInputValue = objDragonfly.new JsonObjectGetValue().run(objDragonfly, objDragonfly.objVariablesJson.gobjJsonObjectTestData, strInputValue, "<td>");
-						objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strInputValue", strInputValue);
-						break;
-					case "<ti>":
-						strInputValue = objDragonfly.new JsonObjectGetValue().run(objDragonfly, objDragonfly.objVariablesJson.gobjJsonObjectTestInstancesEach, strInputValue, "<ti>");
-						objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strInputValue", strInputValue);
-						break;
-					case "<tl>":
-						strInputValue = objDragonfly.new JsonObjectGetValue().run(objDragonfly, objDragonfly.objVariablesJson.gobjJsonObjectLinks, strInputValue, "<tl>");
-						objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strInputValue", strInputValue);
-						break;
-					}
+				//if (strInputValue.trim().length() != 0) {
+				//objDragonfly.objLogger.setLogRow("StepSetupDefaults: strInputValue.substring(0, 4) = " + strInputValue.substring(0, 4));
+				//objDragonfly.objLogger.setLogRow("StepSetupDefaults: strInputValue.substring(4) = " + strInputValue.substring(4));
+				switch (strInputValue.substring(0, 4)) {
+				case "<td>":
+					strInputValue = objDragonfly.new JsonObjectGetValue().run(objDragonfly, objDragonfly.objVariablesJson.gobjJsonObjectTestData, strInputValue, "<td>");
+					objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strInputValue", strInputValue);
+					break;
+				case "<ti>":
+					strInputValue = objDragonfly.new JsonObjectGetValue().run(objDragonfly, objDragonfly.objVariablesJson.gobjJsonObjectTestInstancesEach, strInputValue, "<ti>");
+					objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strInputValue", strInputValue);
+					break;
+				case "<tl>":
+					strInputValue = objDragonfly.new JsonObjectGetValue().run(objDragonfly, objDragonfly.objVariablesJson.gobjJsonObjectLinks, strInputValue, "<tl>");
+					objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strInputValue", strInputValue);
+					break;
 				}
+				//}
 			} catch (Exception e) {
-				objDragonfly.objLogger.setLogRow("StepSetupDefaults: Keyword Exception " + e.toString());
+				objDragonfly.objLogger.setLogRow("StepSetupDefaults: Keyword strInputValue = " + strInputValue + " Exception = " + e.toString());
 			}
 			Class<?> objClass = null;
 			try {
 				objDragonfly.objLogger.setLogRow("StepSetupDefaults: Class.forName start");
 				objClass = Class.forName("org.DragonflyAutomation.Dragonfly$StepSetupDefaults");
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				objDragonfly.objLogger.setLogRow("StepSetupDefaults: ClassNotFoundException = " + e1.toString());
-				e1.printStackTrace();
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				objDragonfly.objLogger.setLogRow("StepSetupDefaults: Class.forName Exception = " + e1.toString());
-				e1.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				objDragonfly.objLogger.setLogRow("StepSetupDefaults: ClassNotFoundException = " + e.toString());
+			} catch (Exception e) {
+				objDragonfly.objLogger.setLogRow("StepSetupDefaults: Class.forName Exception = " + e.toString());
 			}
 			for (int intKeysEach = 0; intKeysEach < arrDefaultKeys.length; intKeysEach++) {
-				strKey = (String) arrDefaultKeys[intKeysEach].toString();
+				strKey = arrDefaultKeys[intKeysEach].toString();
 				Field objField = null;
 				try {
-					objDragonfly.objLogger.setLogRow("StepSetupDefaults strDefault_ + strKey = " + "strDefault_" + strKey);
+					//objDragonfly.objLogger.setLogRow("StepSetupDefaults strDefault_ + strKey = " + "strDefault_" + strKey);
 					objField = objClass.getDeclaredField("strDefault_" + strKey);
-				} catch (NoSuchFieldException | SecurityException e1) {
-					// TODO Auto-generated catch block
-					objDragonfly.objLogger.setLogRow("StepSetupDefaults: NoSuchFieldException = " + e1.toString());
-					e1.printStackTrace();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					objDragonfly.objLogger.setLogRow("StepSetupDefaults: Exception = " + e1.toString());
-					e1.printStackTrace();
+				} catch (NoSuchFieldException | SecurityException e) {
+					objDragonfly.objLogger.setLogRow("StepSetupDefaults: NoSuchFieldException = " + e.toString());
+				} catch (Exception e) {
+					objDragonfly.objLogger.setLogRow("StepSetupDefaults: Exception = " + e.toString());
 				}
-				//objField.setInt(this, i);
 				if (objDragonfly.objVariablesJson.gobjJsonObjectStep.get(strKey).toString().trim().length() == 0) {
 					try {
 						objDragonfly.objJsonObjectStepPut.run(objDragonfly, strKey, (String) objField.get(this));
 					} catch (IllegalArgumentException | IllegalAccessException e) {
-						// TODO Auto-generated catch block
 						objDragonfly.objLogger.setLogRow("StepSetupDefaults: IllegalArgumentException = " + e.toString());
 						e.printStackTrace();
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						objDragonfly.objLogger.setLogRow("StepSetupDefaults: Exception = " + e1.toString());
-						e1.printStackTrace();
+					} catch (Exception e) {
+						objDragonfly.objLogger.setLogRow("StepSetupDefaults: Exception = " + e.toString());
 					}
 				}
 			}
@@ -647,17 +662,31 @@ public class Dragonfly {
 	}
 
 	public class PathCreation {
-		private String gstrPathData = "Data/public/";//"Data/internal/";//
+		//		private String gstrPathData="Data/internal/";//"Data/";  //public/";//"Data/internal/";//
+		//		public String gstrTestArea;
+		//		//public String gstrPathData = "Data/" + gstrTestArea + "/";
+		//
+		//		public String gstrPathSystemUserDir = System.getProperty("user.dir");
+		//		public String gstrPathTestConfiguration = gstrPathData + "test_configuration/";
+		//		//public String gstrPathTestConfiguration = "Data/" + gstrTestArea + "/test_configuration/";
+		//		public String gstrPathTestData = gstrPathData + "test_data/";
+		//		public String gstrPathTestElements = gstrPathData + "test_elements/";
+		//		public String gstrPathTestInstances = gstrPathData + "test_instances/";
+		//		public String gstrPathTestModules = gstrPathData + "test_modules/";
+		//		public String gstrPathTestSteps = gstrPathData + "test_steps/";
+		public String gstrPathSystemUserDir = System.getProperty("user.dir");
+		public String gstrTestArea;
+		private String gstrPathData;
+		public String gstrPathTestConfiguration;
+		public String gstrPathTestData;
+		public String gstrPathTestElements;
+		public String gstrPathTestInstances;
+		public String gstrPathTestModules;
+		public String gstrPathTestSteps;
+		public String gstrPathImages;
 		private String gstrPathResults;
 		private String gstrPathResultsTop;
-		public String gstrPathSystemUserDir = System.getProperty("user.dir");
-		public String gstrPathTestConfiguration = gstrPathData + "test_configuration/";
-		public String gstrPathTestData = gstrPathData + "test_data/";
-		public String gstrPathTestElements = gstrPathData + "test_elements/";
-		public String gstrPathTestInstances = gstrPathData + "test_instances/";
-		public String gstrPathTestModules = gstrPathData + "test_modules/";
-		public String gstrPathTestSteps = gstrPathData + "test_steps/";
-		public String gstrPathImages;
+		public String gstrNameTest;
 
 		public void setPathResults(Dragonfly objDragonfly, int intTestInstanceSize, String strTestConfigurationFileName) {
 			objDragonfly.objLogger.setLogRow("PathCreation:setPathResults intTestInstanceSize = " + intTestInstanceSize);
@@ -688,6 +717,16 @@ public class Dragonfly {
 			File objDirectoryNew = new File(strPathResultsNew);
 			objDirectoryOld.renameTo(objDirectoryNew);
 			gstrPathResults = strPathResultsNew;
+		}
+
+		public void setDirectory(String strTestArea) {
+			gstrPathData = "Data/" + strTestArea + "/";
+			gstrPathTestConfiguration = gstrPathData + "test_configuration/";
+			gstrPathTestData = gstrPathData + "test_data/";
+			gstrPathTestElements = gstrPathData + "test_elements/";
+			gstrPathTestInstances = gstrPathData + "test_instances/";
+			gstrPathTestModules = gstrPathData + "test_modules/";
+			gstrPathTestSteps = gstrPathData + "test_steps/";
 		}
 	}
 
@@ -1294,7 +1333,7 @@ public class Dragonfly {
 			try {
 				arrKeys = new StepNames().getOriginal();
 				for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
-					strKey = (String) arrKeys[intKeysEach].toString();
+					strKey = arrKeys[intKeysEach].toString();
 					if (objDragonfly.objVariablesJson.gobjJsonObjectStep.containsKey(strKey) == true) {
 						objDragonfly.objLogger.setLogRow("LogStepDetails: " + strKey + " = " + objDragonfly.objVariablesJson.gobjJsonObjectStep.get(strKey).toString());
 					}
@@ -3214,9 +3253,9 @@ public class Dragonfly {
 					int intBrowserInnerHeight = Integer.parseInt(objDragonfly.objVariablesJson.gobjJsonObjectStep.get("intBrowserInnerHeight").toString());
 					int intElementX = Integer.parseInt(objDragonfly.objVariablesJson.gobjJsonObjectStep.get("intElementX").toString());
 					int intElementY = Integer.parseInt(objDragonfly.objVariablesJson.gobjJsonObjectStep.get("intElementY").toString());
-					int intWindowBorder = (int) ((intBrowserOuterWidth - intBrowserInnerWidth - intScrollbar) / 2);
+					int intWindowBorder = (intBrowserOuterWidth - intBrowserInnerWidth - intScrollbar) / 2;
 					int intElementScreenX = ((intBrowserOuterX + intElementX) + intWindowBorder);
-					int intElementScreenY = (int) ((intBrowserOuterY + intElementY) + (intBrowserOuterHeight - intBrowserInnerHeight) - intWindowBorder);
+					int intElementScreenY = (intBrowserOuterY + intElementY) + (intBrowserOuterHeight - intBrowserInnerHeight) - intWindowBorder;
 					objDragonfly.objJsonObjectStepPut.run(objDragonfly, "intElementScreenX", Integer.toString(intElementScreenX));
 					objDragonfly.objJsonObjectStepPut.run(objDragonfly, "intElementScreenY", Integer.toString(intElementScreenY));
 				}
@@ -3802,6 +3841,7 @@ public class Dragonfly {
 			this.objDragonfly = objDragonfly;
 		}
 
+		@Override
 		public void run() {
 			try {
 				ImageIO.write(objScreenShot, strImageType.toUpperCase(), new File(strPathFileName));
@@ -3923,8 +3963,8 @@ public class Dragonfly {
 			String[] arrAttributeValues = strAttributeValues.split("\\|");
 			String[] arrObjectNames = strObjectNames.split("\\|");
 			for (int intEach = 0; intEach < arrObjectNames.length; intEach++) {
-				strObjectName = (String) arrObjectNames[intEach].toString();
-				strAttributeValue = (String) arrAttributeValues[intEach].toString();
+				strObjectName = arrObjectNames[intEach].toString();
+				strAttributeValue = arrAttributeValues[intEach].toString();
 				if (intEach == 0) {
 					strObjectsAttributes = strObjectName + "=" + strAttributeValue;
 					objDragonfly.objLogger.setLogRow("createObjectName strObjectAttribute =" + strObjectsAttributes);
@@ -4033,7 +4073,6 @@ public class Dragonfly {
 				break;
 			}
 			objDragonfly.objStepsManual.set(strStepExpected);
-			
 			objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStepExpected", strStepExpected);
 		}
 	}
@@ -4525,7 +4564,7 @@ public class Dragonfly {
 				objStringBuilder.append("<tr>");
 				objStringBuilder.append("<td>Step</td>");
 				for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
-					strKey = (String) arrKeys[intKeysEach].toString();
+					strKey = arrKeys[intKeysEach].toString();
 					objStringBuilder.append("<th>" + strKey + "</th>");
 				}
 				objStringBuilder.append(" </tr>  ");
@@ -4534,7 +4573,7 @@ public class Dragonfly {
 					objStringBuilder.append("<td> " + (intTestStepRow) + "</td>");
 					JSONObject objStepReport = (JSONObject) objTestSteps.get(intTestStepRow);
 					for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
-						strKey = (String) arrKeys[intKeysEach].toString();
+						strKey = arrKeys[intKeysEach].toString();
 						if (objStepReport.containsKey(strKey) == true) {
 							strValue = objStepReport.get(strKey).toString().replaceAll("<", "&lt;");
 							strValue.replaceAll(">", "&gt;");
@@ -4673,11 +4712,10 @@ public class Dragonfly {
 					objStringBuilder.append("</div>");
 					objStringBuilder.append("<br>");
 					objStringBuilder.append("<br>");
-					
 					//TODO this should be removed.  check what happens and add step details for the break.
-					if (objJsonObjectReportStep.get("strAction").toString().toLowerCase().equals("break")) {
-						break;
-					}
+					//					if (objJsonObjectReportStep.get("strAction").toString().toLowerCase().equals("break")) {
+					//						break;
+					//					}
 				}
 			} catch (Exception e) {
 				objDragonfly.objLogger.setLogRow("WriteReportToHtml: " + e.toString());
@@ -4692,13 +4730,230 @@ public class Dragonfly {
 		}
 	}
 
+	public class DragonflyLaunchDialog extends JDialog implements ActionListener {
+		private static final long serialVersionUID = 1L;
+		private JRadioButton rdbtnLocal = new JRadioButton("local");
+		private JRadioButton rdbtnPublic = new JRadioButton("public");
+		private JRadioButton rdbtnInternal = new JRadioButton("internal");
+		private JComboBox<String> comboApplication = new JComboBox<String>();
+		private JComboBox<String> comboTest = new JComboBox<String>();
+		private JButton btnRun = new JButton("Run");
+		private JButton btnCancel = new JButton("Cancel");
+		private FilenameFilter objFilter;
+		private String dirPath = "";
+		private String[] arrDropEmpty = new String[0];
+		Dragonfly objDragonfly;
+		public String gstrTestArea;
+		public String gstrNameTest;
+
+		public DragonflyLaunchDialog(Dragonfly objDragonfly) {
+			//JFrame f = new JFrame();
+			//f.setSize(new Dimension(750, 500));
+			//JPanel p = new JPanel();
+			//p.setLayout(new FlowLayout());
+			//f.createBufferStrategy(1);
+			this.objDragonfly = objDragonfly;
+			this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			this.setModalityType(DEFAULT_MODALITY_TYPE);
+			this.setSize(750, 500);
+			Toolkit tk = Toolkit.getDefaultToolkit();
+			java.awt.Dimension dim = tk.getScreenSize();
+			int xPos = (dim.width / 2) - (this.getWidth() / 2);
+			int yPos = (dim.height / 2) - (this.getHeight() / 2);
+			this.setLocation(xPos, yPos);
+			setAlwaysOnTop(true);
+			setTitle("Dragonfly Local Test Runner");
+			getContentPane().setLayout(null);
+			JLabel lblSelectTheTestArea = new JLabel("Select the test area");
+			lblSelectTheTestArea.setHorizontalAlignment(SwingConstants.LEFT);
+			lblSelectTheTestArea.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			lblSelectTheTestArea.setBounds(12, 15, 398, 35);
+			getContentPane().add(lblSelectTheTestArea);
+			rdbtnLocal.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			rdbtnLocal.setBounds(12, 45, 127, 25);
+			getContentPane().add(rdbtnLocal);
+			rdbtnPublic.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			rdbtnPublic.setBounds(12, 70, 127, 25);
+			getContentPane().add(rdbtnPublic);
+			rdbtnInternal.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			rdbtnInternal.setBounds(12, 95, 127, 25);
+			getContentPane().add(rdbtnInternal);
+			//Group the radio buttons.
+			ButtonGroup group = new ButtonGroup();
+			group.add(rdbtnLocal);
+			group.add(rdbtnPublic);
+			group.add(rdbtnInternal);
+			//Register a listener for the radio buttons.
+			rdbtnLocal.addActionListener(this);
+			rdbtnPublic.addActionListener(this);
+			rdbtnInternal.addActionListener(this);
+			JLabel lblSelectTheApplication = new JLabel("Select the application");
+			lblSelectTheApplication.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			lblSelectTheApplication.setHorizontalAlignment(SwingConstants.LEFT);
+			lblSelectTheApplication.setBounds(12, 141, 398, 35);
+			getContentPane().add(lblSelectTheApplication);
+			comboApplication.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			comboApplication.setToolTipText("Tip the tool");
+			comboApplication.setBounds(12, 175, 410, 40);
+			comboApplication.setEnabled(false);
+			getContentPane().add(comboApplication);
+			comboApplication.addActionListener(this);
+			JLabel lblSelectTheTest = new JLabel("Select the test");
+			lblSelectTheTest.setHorizontalAlignment(SwingConstants.LEFT);
+			lblSelectTheTest.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			lblSelectTheTest.setBounds(12, 252, 398, 35);
+			getContentPane().add(lblSelectTheTest);
+			comboTest.setToolTipText("Tip the tool");
+			comboTest.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			comboTest.setBounds(12, 283, 708, 40);
+			comboTest.setEnabled(false);
+			getContentPane().add(comboTest);
+			comboTest.addActionListener(this);
+			btnRun.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			btnRun.setBounds(12, 373, 310, 55);
+			btnRun.setEnabled(false);
+			getContentPane().add(btnRun);
+			btnRun.addActionListener(this);
+			btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			btnCancel.setBounds(410, 373, 310, 55);
+			getContentPane().add(btnCancel);
+			btnCancel.addActionListener(this);
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == rdbtnLocal) {
+				this.gstrTestArea = "local";
+				objDragonfly.objPaths.gstrTestArea = "local";
+				objDragonfly.objPaths.setDirectory("local");
+				System.out.println("objDragonfly.objPaths.gstrTestArea = " + objDragonfly.objPaths.gstrTestArea);
+				System.out.println(objDragonfly.objPaths.gstrPathSystemUserDir);
+				System.out.println(objDragonfly.objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
+				dirPath = objDragonfly.objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
+				dirPath = dirPath + "/" + objDragonfly.objPaths.gstrPathTestConfiguration;
+				System.out.println("dirPath = " + dirPath);
+				//dirPath = "C:/Users/perrj115/Documents/GitHub/dragonfly/Dragonfly/Data/local/test_configuration";
+				this.getApplications();
+			}
+			if (e.getSource() == rdbtnPublic) {
+				this.gstrTestArea = "public";
+				objDragonfly.objPaths.gstrTestArea = "public";
+				objDragonfly.objPaths.setDirectory("public");
+				System.out.println("objDragonfly.objPaths.gstrTestArea = " + objDragonfly.objPaths.gstrTestArea);
+				System.out.println(objDragonfly.objPaths.gstrPathSystemUserDir);
+				System.out.println(objDragonfly.objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
+				dirPath = objDragonfly.objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
+				dirPath = dirPath + "/" + objDragonfly.objPaths.gstrPathTestConfiguration;
+				System.out.println("dirPath = " + dirPath);
+				//dirPath = "C:/Users/perrj115/Documents/GitHub/dragonfly/Dragonfly/Data/public/test_configuration";
+				this.getApplications();
+			}
+			if (e.getSource() == rdbtnInternal) {
+				this.gstrTestArea = "internal";
+				objDragonfly.objPaths.gstrTestArea = "internal";
+				objDragonfly.objPaths.setDirectory("internal");
+				System.out.println("objDragonfly.objPaths.gstrTestArea = " + objDragonfly.objPaths.gstrTestArea);
+				System.out.println(objDragonfly.objPaths.gstrPathSystemUserDir);
+				System.out.println(objDragonfly.objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
+				dirPath = objDragonfly.objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
+				dirPath = dirPath + "/" + objDragonfly.objPaths.gstrPathTestConfiguration;
+				System.out.println("dirPath = " + dirPath);
+				//dirPath = "C:/Users/perrj115/Documents/GitHub/dragonfly/Dragonfly/Data/internal/test_configuration";
+				this.getApplications();
+			}
+			if (e.getSource() == comboApplication) {
+				System.out.println(comboApplication.getSelectedItem());
+				this.getTests();
+			}
+			if (e.getSource() == comboTest) {
+				System.out.println("comboTest");
+				btnRun.setEnabled(true);
+			}
+			if (e.getSource() == btnRun) {
+				System.out.println(comboTest.getSelectedItem());
+				objDragonfly.objPaths.gstrNameTest = (String) comboTest.getSelectedItem();
+				dispose();
+				return;
+			}
+			if (e.getSource() == btnCancel) {
+				dispose();
+				return;
+			}
+		}
+
+		public void getApplications() {
+			String[] arrDrop = null;
+			HashSet<String> hs = new HashSet<String>();
+			File dir = new File(dirPath);
+			objFilter = new FilenameFilter() {
+				public boolean accept(File file, String name) {
+					if (name.endsWith(".json")) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			};
+			File[] files = dir.listFiles(objFilter);
+			comboApplication.setEnabled(true);
+			if (files.length == 0) {
+				System.out.println("The directory is empty");
+				comboApplication.setModel(new DefaultComboBoxModel<String>(arrDrop));
+			} else {
+				for (File aFile : files) {
+					System.out.println(aFile.getName());
+					String strKeyword = "";
+					int intRightArrowPosition = aFile.getName().indexOf("_");
+					if (intRightArrowPosition > -1) {
+						strKeyword = aFile.getName().substring(0, intRightArrowPosition);
+					}
+					if (hs.contains(strKeyword) == false) {
+						hs.add(strKeyword);
+					}
+				}
+				arrDrop = hs.toArray(new String[0]);
+				Arrays.sort(arrDrop);
+				comboApplication.setModel(new DefaultComboBoxModel<String>(arrDrop));
+			}
+			System.out.println(hs);
+			comboTest.setModel(new DefaultComboBoxModel<String>(arrDropEmpty));
+			comboTest.setEnabled(false);
+		}
+
+		public void getTests() {
+			int intCount = 0;
+			File dir = new File(dirPath);
+			objFilter = new FilenameFilter() {
+				public boolean accept(File file, String name) {
+					if (name.startsWith((String) comboApplication.getSelectedItem())) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			};
+			File[] files = dir.listFiles(objFilter);
+			String[] arrDrop = new String[files.length];
+			if (files.length == 0) {
+				System.out.println("The directory is empty");
+			} else {
+				for (File aFile : files) {
+					arrDrop[intCount] = aFile.getName();
+					intCount++;
+				}
+				Arrays.sort(arrDrop);
+			}
+			comboTest.setModel(new DefaultComboBoxModel<String>(arrDrop));
+			comboTest.setEnabled(true);
+		}
+	}
+
 	public String data_DateDaysOut(Dragonfly objDragonfly, String strDaysOut) {
 		objDragonfly.objLogger.setLogRow("  ==start==>data_DateDaysOut " + new DateTimestamp().get());
 		Integer intDaysOut = Integer.parseInt(strDaysOut);
 		SimpleDateFormat objFormattedDATE = new SimpleDateFormat("MM/dd/yyyy");
 		Calendar objCalendar = Calendar.getInstance();
 		objCalendar.add(Calendar.DATE, intDaysOut);
-		String strNewDate = (String) (objFormattedDATE.format(objCalendar.getTime()));
+		String strNewDate = (objFormattedDATE.format(objCalendar.getTime()));
 		return strNewDate;
 	}
 

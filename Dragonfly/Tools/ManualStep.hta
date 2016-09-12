@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<hta:Application
+SHOWINTASKBAR=""no""
+SYSMENU=""no""
+SINGLEINSTANCE=""yes""
+CONTEXTMENU=""no""
+SCROLL=""no""
+BORDERSTYLE=""sunken""
+INNERBORDER=""yes""
+/>
+<head>
+<title>Test Results</title>
+</head>
+<script language=""vbscript"">
+Public blnShutdownConfirmed
+Sub WriteResponses
+blnFound = False
+For Each objButton in TestStepStatus
+If objButton.Checked Then
+WriteResponse ""TestStepStatus"", objButton.Value
+blnFound = True
+End If
+Next
+If blnFound = False Then
+MsgBox ""Please select a status.""
+Exit Sub
+End If
+If Instr(TestStepDetails.Value, ""Add a comment"") Or Trim(TestStepDetails.Value) = """" Then
+MsgBox ""Please enter a comment.""
+TestStepDetails.select
+Exit Sub
+End If
+WriteResponse ""TestStepDetails"", TestStepDetails.Value
+WriteResponse ""ClosedFromSystemTray"", ""False""
+blnShutdownConfirmed = True
+self.close
+End Sub
+Sub WriteResponse(strKey, strValue)
+Set WshShell = CreateObject(""WScript.Shell"")
+WshShell.RegWrite ""HKEY_CURRENT_USER\Volatile Environment\"" & strKey, strValue
+Set WshShell = Nothing
+End Sub
+Sub ClosedFromSystemTray
+If blnShutdownConfirmed = True Then
+Exit Sub
+End If
+WriteResponse ""ClosedFromSystemTray"", ""True""
+end sub
+sub Shutdown
+If blnShutdownConfirmed = True Then
+Exit Sub
+End If
+strResponse = msgbox(""This will stop test execution."" & vbCrLf & ""Do you wish to stop?"", 4)
+If strResponse = 6 Then'Yes
+blnShutdownConfirmed = True
+WriteResponse ""ClosedFromSystemTray"", ""False""
+self.close
+ElseIf strResponse = 7 Then'No
+Exit Sub
+End If
+end sub
+Sub ChangeTestStepDetailsOnSelect
+TestStepDetails.style.color = ""black""
+End Sub
+Sub ShowTestStepDetails
+TestStepDetails.style.display = ""inline""
+End Sub
+Sub Window_Onload
+WriteResponse ""ClosedFromSystemTray"", """"
+WriteResponse ""TestStepStatus"", """"
+WriteResponse ""TestStepDetails"", """"
+Set objWMIService = GetObject(""winmgmts:\\.\root\cimv2"")
+Set colItems = objWMIService.ExecQuery(""Select * From Win32_DesktopMonitor"")
+For Each objItem in colItems
+intHorizontal = objItem.ScreenWidth
+intVertical = objItem.ScreenHeight
+Next
+intLeft = (intHorizontal - 800) / 2
+intTop = (intVertical - 600) / 2
+window.resizeTo 600,350
+window.moveTo intLeft, intTop
+run_button.focus
+End Sub
+</script>
+<body onbeforeunload=ClosedFromSystemTray>
+<p><b>Test Step Results</b></p>
+<input type=""radio"" name=""TestStepStatus"" value=""micPass"" onclick=""vbscript:TestStepDetails.focus""/>PASS<BR>
+<input type=""radio"" name=""TestStepStatus"" value=""micFail"" onclick=""vbscript:TestStepDetails.focus""/>FAIL<BR><BR>
+<textarea name=""TestStepDetails""  rows=""4"" cols=""50"" maxlength=""255"" onselect=""ChangeTestStepDetailsOnSelect"" onfocus=""vbscript:TestStepDetails.select"" style=""color: grey; font-family: arial;"">Add a comment explaining test step results.</textarea><BR>
+<input type=""button"" name=""run_button"" value=""Update Test Results"" onclick=""WriteResponses"" id=""runbutton"" class=""button""/>
+<input type=""button"" name=""Shutdown"" value=""Stop Test Execution"" onclick=""Shutdown""/>
+</body>
+</html>

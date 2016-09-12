@@ -1,0 +1,179 @@
+{
+	"steps": 
+	[
+		{
+			"strAction": "launch",
+			"strTagName": "chrome",
+			"strAttributeNames": "",
+			"strAttributeValues": "",
+			"strInputValue": "jqueryFade.html",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "data_localWebsiteFilePath",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "get",
+			"strTagName": "title",
+			"strAttributeNames": "",
+			"strAttributeValues": "",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "verify",
+			"strTagName": "p",
+			"strAttributeNames": "id",
+			"strAttributeValues": "title",
+			"strInputValue": "Demonstrate fadeIn() with different parameters.",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "set",
+			"strTagName": "button",
+			"strAttributeNames": "text",
+			"strAttributeValues": "Click to fade in boxes",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "enabled",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "sync_visible",
+			"strTagName": "div",
+			"strAttributeNames": "id",
+			"strAttributeValues": "div1",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "sync_visible",
+			"strTagName": "div",
+			"strAttributeNames": "id",
+			"strAttributeValues": "div2",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "sync_visible",
+			"strTagName": "div",
+			"strAttributeNames": "id",
+			"strAttributeValues": "div3",
+			"strInputValue": "",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		},
+
+		{
+			"strAction": "verify",
+			"strTagName": "p",
+			"strAttributeNames": "id",
+			"strAttributeValues": "title",
+			"strInputValue": "Animation is complete!",
+			"strLogicalName": "",
+			"intMillisecondsToWait": "0",
+			"blnOptional": "",
+			"strAssert": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strFunction": "",
+			"strAssistiveProperties": "",
+			"blnExitOnFail": "",
+			"strOutputLinkName": "",
+			"strOutputValue": "",
+			"strLoopOrIf": ""
+		}
+	],
+
+	"link": 
+	[
+		{
+			
+		}
+	]
+}
