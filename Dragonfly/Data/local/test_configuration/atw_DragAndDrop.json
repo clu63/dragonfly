@@ -1,7 +1,7 @@
 {
 	"test_details": 
 	{
-		"test_name": "atw.AlertPopups",
+		"test_name": "atw.DragAndDrop",
 		"test_description": "",
 		"test_type": "Positive"
 	},
@@ -18,7 +18,7 @@
 
 	"test_modules": 
 	[
-		"tm_atw_AlertPopups.json"
+		"tm_atw_DragAndDrop.json"
 	],
 
 	"test_data": 

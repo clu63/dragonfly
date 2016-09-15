@@ -1,7 +1,7 @@
 {
 	"test_details": 
 	{
-		"test_name": "ATW.Frames",
+		"test_name": "atw.Frames",
 		"test_description": "",
 		"test_type": "Positive"
 	},
@@ -18,7 +18,7 @@
 
 	"test_modules": 
 	[
-		"tm_local_atw_frames.json"
+		"tm_atw_Frames.json"
 	],
 
 	"test_data": 
