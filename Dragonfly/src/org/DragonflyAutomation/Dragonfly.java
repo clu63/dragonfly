@@ -137,6 +137,7 @@ public class Dragonfly {
 	VariablesSetSync objVariablesSetSync = new VariablesSetSync();
 	JsonObjectStepPut objJsonObjectStepPut = new JsonObjectStepPut();
 	StepsManual objStepsManual = new StepsManual();
+	VariablesCommon objVariablesCommon = new VariablesCommon();
 
 	public class ExceptionElementNotFound extends Exception {
 		private static final long serialVersionUID = 1L;
@@ -323,8 +324,7 @@ public class Dragonfly {
 		objDragonfly.objOperatingSystem.set(objDragonfly);
 		String strNameTestConfiguration;
 		try {
-			DialogLaunch dialog = objDragonfly.new DialogLaunch(objDragonfly);
-			dialog.setVisible(true);
+			objDragonfly.new DialogLaunch(objDragonfly);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -335,7 +335,9 @@ public class Dragonfly {
 		System.out.println("objDragonfly.objPaths.gstrPathSystemUserDir = " + objDragonfly.objPaths.gstrPathSystemUserDir);
 		strNameTestConfiguration = objDragonfly.objPaths.gstrNameTest;
 		System.out.println("strNameTestConfiguration = " + strNameTestConfiguration);
-		//System.exit(0);
+		if (strNameTestConfiguration == null) {
+			System.exit(0);
+		}
 		int intStep = 0;
 		int intLoopCount = 0;
 		int intLoopEach = 0;
@@ -810,6 +812,9 @@ public class Dragonfly {
 			// TODO add desiredCapabilities.setJavascriptEnabled(true); to all browsers
 			objDragonfly.objLogger.setLogRow("  ==start==>BrowserLaunch " + new DateTimestamp().get());
 			Long lngTimeStart = System.currentTimeMillis();
+			if (objDragonfly.objVariablesCommon.gstrBrowserSelection != "TestValue") {
+				objDragonfly.new JsonObjectStepPut().run(objDragonfly, "strTagName", objDragonfly.objVariablesCommon.gstrBrowserSelection);
+			}
 			DesiredCapabilities objDesiredCapabilities = null;
 			try {
 				objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
@@ -949,6 +954,7 @@ public class Dragonfly {
 	}
 
 	public class VariablesCommon {
+		public String gstrBrowserSelection;
 	}
 
 	public class VariablesSelenium {
@@ -4767,13 +4773,13 @@ public class Dragonfly {
 		private JButton btnRun = new JButton("Run");
 		private JComboBox<String> comboApplication = new JComboBox<String>();
 		private JComboBox<String> comboTest = new JComboBox<String>();
+		private JRadioButton rdbtnTestValue = new JRadioButton("Value in test", true);
 		private JRadioButton rdbtnChrome = new JRadioButton("Chrome");
 		private JRadioButton rdbtnFirefox = new JRadioButton("Firefox");
 		private JRadioButton rdbtnIE = new JRadioButton("IE");
 		private JRadioButton rdbtnInternal = new JRadioButton("internal");
 		private JRadioButton rdbtnLocal = new JRadioButton("local");
 		private JRadioButton rdbtnPublic = new JRadioButton("public");
-		private JRadioButton rdbtnTestValue = new JRadioButton("Value in test");
 		private static final long serialVersionUID = 1L;
 		private String dirPath = "";
 		private String[] arrDropEmpty = new String[0];
@@ -4801,12 +4807,15 @@ public class Dragonfly {
 			getContentPane().add(lblSelectTheTestArea);
 			rdbtnLocal.setFont(new Font("Tahoma", Font.PLAIN, 20));
 			rdbtnLocal.setBounds(12, 45, 127, 25);
+			rdbtnLocal.addActionListener(this);
 			getContentPane().add(rdbtnLocal);
 			rdbtnPublic.setFont(new Font("Tahoma", Font.PLAIN, 20));
 			rdbtnPublic.setBounds(12, 70, 127, 25);
+			rdbtnPublic.addActionListener(this);
 			getContentPane().add(rdbtnPublic);
 			rdbtnInternal.setFont(new Font("Tahoma", Font.PLAIN, 20));
 			rdbtnInternal.setBounds(12, 95, 127, 25);
+			rdbtnInternal.addActionListener(this);
 			getContentPane().add(rdbtnInternal);
 			ButtonGroup group = new ButtonGroup();
 			group.add(rdbtnLocal);
@@ -4819,7 +4828,7 @@ public class Dragonfly {
 			lblSelectTheBrowser.setBounds(427, 15, 398, 35);
 			getContentPane().add(lblSelectTheBrowser);
 			rdbtnTestValue.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			rdbtnTestValue.setBounds(427, 45, 127, 25);
+			rdbtnTestValue.setBounds(427, 45, 150, 25);
 			rdbtnTestValue.addActionListener(this);
 			getContentPane().add(rdbtnTestValue);
 			rdbtnIE.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -4832,8 +4841,8 @@ public class Dragonfly {
 			getContentPane().add(rdbtnChrome);
 			rdbtnFirefox.setFont(new Font("Tahoma", Font.PLAIN, 20));
 			rdbtnFirefox.setBounds(427, 120, 127, 25);
-			rdbtnFirefox.addActionListener(this);
 			getContentPane().add(rdbtnFirefox);
+			rdbtnFirefox.addActionListener(this);
 			ButtonGroup groupBrowser = new ButtonGroup();
 			groupBrowser.add(rdbtnTestValue);
 			groupBrowser.add(rdbtnIE);
@@ -4849,8 +4858,8 @@ public class Dragonfly {
 			comboApplication.setToolTipText("Tip the tool");
 			comboApplication.setBounds(12, 175, 410, 40);
 			comboApplication.setEnabled(false);
-			getContentPane().add(comboApplication);
 			comboApplication.addActionListener(this);
+			getContentPane().add(comboApplication);
 			//lblSelectTheTest
 			JLabel lblSelectTheTest = new JLabel("Select the test");
 			lblSelectTheTest.setHorizontalAlignment(SwingConstants.LEFT);
@@ -4861,17 +4870,18 @@ public class Dragonfly {
 			comboTest.setFont(new Font("Tahoma", Font.PLAIN, 20));
 			comboTest.setBounds(12, 283, 708, 40);
 			comboTest.setEnabled(false);
-			getContentPane().add(comboTest);
 			comboTest.addActionListener(this);
+			getContentPane().add(comboTest);
 			btnRun.setFont(new Font("Tahoma", Font.PLAIN, 20));
 			btnRun.setBounds(12, 373, 310, 55);
 			btnRun.setEnabled(false);
-			getContentPane().add(btnRun);
 			btnRun.addActionListener(this);
+			getContentPane().add(btnRun);
 			btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 20));
 			btnCancel.setBounds(410, 373, 310, 55);
-			getContentPane().add(btnCancel);
 			btnCancel.addActionListener(this);
+			getContentPane().add(btnCancel);
+			this.setVisible(true);
 		}
 
 		public void actionPerformed(ActionEvent e) {
@@ -4918,6 +4928,18 @@ public class Dragonfly {
 			if (e.getSource() == comboTest) {
 				System.out.println("comboTest");
 				btnRun.setEnabled(true);
+			}
+			if (e.getSource() == rdbtnTestValue) {
+				objDragonfly.objVariablesCommon.gstrBrowserSelection = "TestValue";
+			}
+			if (e.getSource() == rdbtnChrome) {
+				objDragonfly.objVariablesCommon.gstrBrowserSelection = "chrome";
+			}
+			if (e.getSource() == rdbtnFirefox) {
+				objDragonfly.objVariablesCommon.gstrBrowserSelection = "firefox";
+			}
+			if (e.getSource() == rdbtnIE) {
+				objDragonfly.objVariablesCommon.gstrBrowserSelection = "ie";
 			}
 			if (e.getSource() == btnRun) {
 				System.out.println(comboTest.getSelectedItem());
