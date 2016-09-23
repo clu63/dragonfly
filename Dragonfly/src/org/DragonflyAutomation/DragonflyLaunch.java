@@ -15,16 +15,12 @@ public class DragonflyLaunch extends JFrame {
 	public DragonflyLaunch() {
 		//headers for the table
 		//"strAction", "strLogicalName", "strTagName", "strAttributeNames", "strAttributeValues", "strInputValue", "strAssert", "blnOptional", "blnExitOnFail", "intMillisecondsToWait", "strFunction", "strOutputLinkName", "strLoopOrIf", "blnPleaseWait", "blnHighlight", "blnScreenshot", "strAssistiveProperties", "strOutputValue";
-		
-		String[] columns = new String[] { "Id", "Name", "Hourly Rate", "Part Time" };
+		String[] columns = new String[] { "+", "Step", "strAction", "strLogicalName", "strTagName", "strAttributeNames", "strAttributeValues", "strInputValue", "strAssert", "blnOptional", "blnExitOnFail", "intMillisecondsToWait", "strFunction", "strOutputLinkName", "strLoopOrIf", "blnPleaseWait", "blnHighlight", "blnScreenshot", "strAssistiveProperties", "strOutputValue" };
 		//actual data for the table in a 2d array
-		Object[][] data = new Object[][] { { 1, "John", 40.0, false }, { 2, "Rambo", 70.0, false }, { 3, "Zorro", 60.0, true }, };
+		Object[][] data = new Object[][] { { 1, "John", 40.0, false, "John", "strAttributeNames", "strAttributeValues", "strInputValue", "strAssert", "blnOptional", "blnExitOnFail", "intMillisecondsToWait", "strFunction", "strOutputLinkName", "strLoopOrIf", "blnPleaseWait", "blnHighlight", "blnScreenshot", "strAssistiveProperties", "strOutputValue" }, };
 		//create table with data
 		JTable table = new JTable(data, columns);
 		table.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		//actual data for the table in a 2d array
-		//Object[][] data = new Object[][] { { 1, "John", 40.0, false }, { 2, "Rambo", 70.0, false }, { 3, "Zorro", 60.0, true }, };
-		//create table with data
 		//	JTable table = new JTable(data, columns);
 		TableColumn sportColumn = table.getColumnModel().getColumn(2);
 		JComboBox comboBox = new JComboBox();
