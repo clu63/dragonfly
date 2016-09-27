@@ -126,8 +126,6 @@ import com.jacob.com.LibraryLoader;
 import com.opera.core.systems.OperaDriver;
 
 public class Dragonfly {
-	public int x = 1;
-
 	public class AlertFind {
 		public boolean run(Dragonfly objDragonfly) {
 			objDragonfly.logger.add("  ==start==>AlertFind " + new DateTimestamp().get());
@@ -182,7 +180,7 @@ public class Dragonfly {
 			objDragonfly.objVariablesSelenium.gobjWebDriver.close();
 			objDragonfly.objVariablesSelenium.gobjWebDriver.quit();
 			//objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
-			objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "pass");
+			objDragonfly.variablesJSON.objectStep.putValue("strStatus", "pass");
 			new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.variablesJSON.objectStep);
 		}
 	}
@@ -203,16 +201,16 @@ public class Dragonfly {
 			objDragonfly.logger.add(" objDragonfly.objVariablesCommon.gstrBrowserSelection = " + objDragonfly.objVariablesCommon.gstrBrowserSelection);
 			if (objDragonfly.objVariablesCommon.gstrBrowserSelection != "TestValue") {
 				//objDragonfly.new JsonObjectStepPut().run(objDragonfly, "strTagName", objDragonfly.objVariablesCommon.gstrBrowserSelection);
-				objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strTagName", objDragonfly.objVariablesCommon.gstrBrowserSelection);
+				objDragonfly.variablesJSON.objectStep.putValue("strTagName", objDragonfly.objVariablesCommon.gstrBrowserSelection);
 			}
 			DesiredCapabilities objDesiredCapabilities = null;
 			try {
 				//objDragonfly.objJsonObjectStepPut.run(objDragonfly, "strStatus", "pass");
-				objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "pass");
-				switch (objDragonfly.variablesJSON.objectStep.get("strTagName").toString()) {
+				objDragonfly.variablesJSON.objectStep.putValue("strStatus", "pass");
+				switch (objDragonfly.variablesJSON.objectStep.getString("strTagName")) {
 				case "firefox":
 					objDragonfly.objVariablesSelenium.gobjWebDriver = new FirefoxDriver();
-					objDragonfly.objVariablesSelenium.gobjWebDriver.get(objDragonfly.variablesJSON.objectStep.get("strInputValue").toString());
+					objDragonfly.objVariablesSelenium.gobjWebDriver.get(objDragonfly.variablesJSON.objectStep.getString("strInputValue"));
 					objDragonfly.objVariablesSelenium.gobjWebDriver.manage().window().maximize();
 					Actions myAction = new Actions(objDragonfly.objVariablesSelenium.gobjWebDriver);
 					myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL).build().perform();
@@ -240,11 +238,11 @@ public class Dragonfly {
 					objDragonfly.objVariablesSelenium.gobjWebDriver = new InternetExplorerDriver(objDesiredCapabilities);
 					//objDragonfly.objVariablesSelenium.gobjWebDriver.manage().getCookieNamed("JSESSIONID");
 					// objDragonfly.objVariablesSelenium.gobjWebDriver.manage().deleteCookieNamed("JSESSIONID");
-					objDragonfly.logger.add("BrowserLaunch: objDragonfly.variablesJSON.objectStep.get(strInputValue).toString() = " + objDragonfly.variablesJSON.objectStep.get("strInputValue").toString());
+					objDragonfly.logger.add("BrowserLaunch: objDragonfly.variablesJSON.objectStep.getString(strInputValue)  = " + objDragonfly.variablesJSON.objectStep.getString("strInputValue"));
 					objDragonfly.objVariablesSelenium.gobjWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
 					//objDragonfly.objVariablesSelenium.gobjWebDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
 					objDragonfly.objVariablesSelenium.gobjWebDriver.manage().timeouts().setScriptTimeout(0, TimeUnit.SECONDS);
-					objDragonfly.objVariablesSelenium.gobjWebDriver.get(objDragonfly.variablesJSON.objectStep.get("strInputValue").toString());
+					objDragonfly.objVariablesSelenium.gobjWebDriver.get(objDragonfly.variablesJSON.objectStep.getString("strInputValue"));
 					//objDragonfly.logger.add("browserLaunch: getCookieNamed(JSESSIONID) = " + objDragonfly.objVariablesSelenium.gobjWebDriver.manage().getCookieNamed("JSESSIONID").toString());
 					objDragonfly.logger.add("BrowserLaunch: objDragonfly.objVariablesSelenium.gobjWebDriver.manage().window().maximize()");
 					objDragonfly.objVariablesSelenium.gobjWebDriver.manage().window().maximize();
@@ -263,12 +261,12 @@ public class Dragonfly {
 						break;
 					}
 					objDragonfly.objVariablesSelenium.gobjWebDriver = new ChromeDriver();
-					objDragonfly.objVariablesSelenium.gobjWebDriver.get(objDragonfly.variablesJSON.objectStep.get("strInputValue").toString());
+					objDragonfly.objVariablesSelenium.gobjWebDriver.get(objDragonfly.variablesJSON.objectStep.getString("strInputValue"));
 					objDragonfly.objVariablesSelenium.gobjWebDriver.manage().window().maximize();
 					break;
 				case "safari":
 					objDragonfly.objVariablesSelenium.gobjWebDriver = new SafariDriver();
-					objDragonfly.objVariablesSelenium.gobjWebDriver.get(objDragonfly.variablesJSON.objectStep.get("strInputValue").toString());
+					objDragonfly.objVariablesSelenium.gobjWebDriver.get(objDragonfly.variablesJSON.objectStep.getString("strInputValue"));
 					objDragonfly.objVariablesSelenium.gobjWebDriver.manage().window().maximize();
 					break;
 				case "opera":
@@ -277,7 +275,7 @@ public class Dragonfly {
 					//objDragonfly.objVariablesSelenium.gobjWebDriver = new OperaDriver();
 					//objDragonfly.objVariablesSelenium.setGobjWebDriver(new OperaDriver());
 					objDragonfly.objVariablesSelenium.gobjWebDriver = new OperaDriver();
-					objDragonfly.objVariablesSelenium.gobjWebDriver.get(objDragonfly.variablesJSON.objectStep.get("strInputValue").toString());
+					objDragonfly.objVariablesSelenium.gobjWebDriver.get(objDragonfly.variablesJSON.objectStep.getString("strInputValue"));
 					// objDragonfly.objVariablesSelenium.gobjWebDriver.manage().window().maximize();
 					// objDragonfly.objVariablesSelenium.gobjWebDriver.manage().window().setPosition(new Point(0, 0));
 					// Dimension dim = new Dimension(1382, 754);
@@ -288,13 +286,13 @@ public class Dragonfly {
 					// return objDragonfly.objVariablesSelenium.gobjWebDriver;
 					break;
 				default:
-					objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "fail");
-					throw new ExceptionBrowserDriverNotSupported("Browser '" + objDragonfly.variablesJSON.objectStep.get("strTagName").toString() + "' not supported");
+					objDragonfly.variablesJSON.objectStep.putValue("strStatus", "fail");
+					throw new ExceptionBrowserDriverNotSupported("Browser '" + objDragonfly.variablesJSON.objectStep.getString("strTagName") + "' not supported");
 				}
 			} catch (Exception e) {
 				objDragonfly.logger.add("BrowserLaunch: Exception" + e.toString());
 			} finally {
-				objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strCurrentWindowHandle", objDragonfly.objVariablesSelenium.gobjWebDriver.getWindowHandle());
+				objDragonfly.variablesJSON.objectStep.putValue("strCurrentWindowHandle", objDragonfly.objVariablesSelenium.gobjWebDriver.getWindowHandle());
 				new CoordinatesElement(objDragonfly);
 				new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.variablesJSON.objectStep);
 				new StepDuration(objDragonfly, "BrowserLaunch", lngTimeStart, "launch");
@@ -412,7 +410,6 @@ public class Dragonfly {
 				private static final long serialVersionUID = 1L;
 				{
 					Rectangle objHighlightArea = new Rectangle(0, 0, 0, 0);
-					//if (Boolean.parseBoolean(objJsonObjectStepHighlightArea.get("blnHighlight").toString()) == true) {
 					if (objJsonObjectStepHighlightArea.getBoolean("blnHighlight") == true) {
 						int intThickness = 5;
 						Color objHighlightColor = null;
@@ -435,8 +432,8 @@ public class Dragonfly {
 							break;
 						}
 						setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-						objDragonfly.logger.add("CoordinateHighlightScreenshot: strHighlightArea = " + objDragonfly.variablesJSON.objectStep.get("strHighlightArea").toString());
-						new RectangleAreaByName(objDragonfly, intThickness, objDragonfly.variablesJSON.objectStep.get("strHighlightArea").toString(), objHighlightArea);
+						objDragonfly.logger.add("CoordinateHighlightScreenshot: strHighlightArea = " + objDragonfly.variablesJSON.objectStep.getString("strHighlightArea"));
+						new RectangleAreaByName(objDragonfly, intThickness, objDragonfly.variablesJSON.objectStep.getString("strHighlightArea"), objHighlightArea);
 						setBounds(objHighlightArea.x, objHighlightArea.y, objHighlightArea.width, objHighlightArea.height);
 						setUndecorated(true);
 						setBackground(new Color(0, 0, 0, 0));
@@ -446,21 +443,21 @@ public class Dragonfly {
 				}
 			};
 			int intSleepMilliseconds = 0;
-			if (Boolean.parseBoolean(objDragonfly.variablesJSON.objectStep.get("blnScreenshot").toString()) == true) {
+			if (objDragonfly.variablesJSON.objectStep.getBoolean("blnScreenshot") == true) {
 				Rectangle objHighlightArea = new Rectangle(0, 0, 0, 0);
 				String strScreenshotFilePath = "";
 				try {
-					new RectangleAreaByName(objDragonfly, 0, objDragonfly.variablesJSON.objectStep.get("strScreenshotArea").toString(), objHighlightArea);
+					new RectangleAreaByName(objDragonfly, 0, objDragonfly.variablesJSON.objectStep.getString("strScreenshotArea"), objHighlightArea);
 					BufferedImage objScreenShot = new Robot().createScreenCapture(objHighlightArea);
 					strScreenshotFilePath = objDragonfly.objPaths.gstrPathImages + "Screenshot_" + new DateTimestamp().get() + ".jpg";
 					Thread objThread = new Thread(new ThreadSaveImage(objDragonfly, objScreenShot, "jpg", strScreenshotFilePath));
 					objThread.start();
-					objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strScreenshotFilePath", strScreenshotFilePath);
+					objDragonfly.variablesJSON.objectStep.putValue("strScreenshotFilePath", strScreenshotFilePath);
 				} catch (Exception e) {
 					objDragonfly.logger.add("CoordinateHighlightScreenshot: Exception " + e.toString());
 				}
 			}
-			if (Boolean.parseBoolean(objDragonfly.variablesJSON.objectStep.get("blnHighlight").toString()) == true) {
+			if (objDragonfly.variablesJSON.objectStep.getBoolean("blnHighlight") == true) {
 				try {
 					Thread.sleep(intSleepMilliseconds);
 				} catch (InterruptedException e) {
@@ -1151,17 +1148,17 @@ public class Dragonfly {
 		public ElementFind(Dragonfly objDragonfly) throws ExceptionElementNotFound, ExceptionMultipleElementsFound {
 			objDragonfly.logger.add("  ==start==>ElementFind " + new DateTimestamp().get());
 			if (objDragonfly.variablesJSON.objectStep.verifyEquals("strTagName", "alert")) {
-				objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strTagType", "alert");
+				objDragonfly.variablesJSON.objectStep.putValue("strTagType", "alert");
 				if (new AlertFind().run(objDragonfly) == true) {
-					objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strHighlightArea", "alert");
+					objDragonfly.variablesJSON.objectStep.putValue("strHighlightArea", "alert");
 					return;
 				} else {
-					objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strHighlightArea", "screen");
+					objDragonfly.variablesJSON.objectStep.putValue("strHighlightArea", "screen");
 					throw new ExceptionElementNotFound("Alert popup not found!");
 				}
 			}
 			if (objDragonfly.variablesJSON.objectStep.get("strTagName").toString().toLowerCase().equals("title")) {
-				objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strTagType", "title");
+				objDragonfly.variablesJSON.objectStep.putValue("strTagType", "title");
 				return;
 			}
 			String strWindowHandle = "";
@@ -1238,7 +1235,7 @@ public class Dragonfly {
 						break;
 					default:
 						if (arrAttributeNames[intAttributeEach].toLowerCase().equals("type")) {
-							objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strType", arrAttributeValues[intAttributeEach]);
+							objDragonfly.variablesJSON.objectStep.putValue("strType", arrAttributeValues[intAttributeEach]);
 						}
 						if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("<re>")) {
 							strXpathAttributesTemp = "contains(translate(@" + arrAttributeNames[intAttributeEach] + ",'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), '" + arrAttributeValues[intAttributeEach].substring(4).toLowerCase() + "')";
@@ -1297,18 +1294,18 @@ public class Dragonfly {
 			boolean blnReturn;
 			int intMaximumDepth = 100;
 			String strTagName = objDragonfly.variablesJSON.objectStep.getLowerCase("strTagName");
-			String strAttributeNames = objDragonfly.variablesJSON.objectStep.get("strAttributeNames").toString();
-			String strAttributeValues = objDragonfly.variablesJSON.objectStep.get("strAttributeValues").toString();
+			String strAttributeNames = objDragonfly.variablesJSON.objectStep.getString("strAttributeNames");
+			String strAttributeValues = objDragonfly.variablesJSON.objectStep.getString("strAttributeValues");
 			try {
 				new ElementFindBy(objDragonfly, strAttributeNames, strAttributeValues, strTagName);
-				objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strCurrentWindowHandle", objDragonfly.objVariablesSelenium.gobjWebDriver.getWindowHandle());
+				objDragonfly.variablesJSON.objectStep.putValue("strCurrentWindowHandle", objDragonfly.objVariablesSelenium.gobjWebDriver.getWindowHandle());
 				if (objDragonfly.variablesJSON.objectStep.verifyEquals("strTagName", "input")) {
-					if (objDragonfly.variablesJSON.objectStep.get("strType").toString().length() == 0) {
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strType", objDragonfly.objVariablesSelenium.gobjWebElement.getAttribute("type"));
+					if (objDragonfly.variablesJSON.objectStep.getString("strType").length() == 0) {
+						objDragonfly.variablesJSON.objectStep.putValue("strType", objDragonfly.objVariablesSelenium.gobjWebElement.getAttribute("type"));
 					}
-					objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strTagType", "input_" + objDragonfly.variablesJSON.objectStep.get("strType").toString());
+					objDragonfly.variablesJSON.objectStep.putValue("strTagType", "input_" + objDragonfly.variablesJSON.objectStep.getString("strType"));
 				} else {
-					objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strTagType", objDragonfly.variablesJSON.objectStep.get("strTagName").toString());
+					objDragonfly.variablesJSON.objectStep.putValue("strTagType", objDragonfly.variablesJSON.objectStep.getString("strTagName"));
 				}
 				objDragonfly.logger.add("ElementFindFramesSearch: gobjWebElement outerHTML = " + objDragonfly.objVariablesSelenium.gobjWebElement.getAttribute("outerHTML"));
 				return true;
@@ -1425,7 +1422,7 @@ public class Dragonfly {
 					}
 					if (blnGet == false) {
 						strGetValue = new ElementGet().run(objDragonfly);
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strOutputValue", strGetValue);
+						objDragonfly.variablesJSON.objectStep.putValue("strOutputValue", strGetValue);
 						blnGet = true;
 					}
 					blnStatus = true;
@@ -1458,7 +1455,7 @@ public class Dragonfly {
 			try {
 				if (objDragonfly.variablesJSON.objectStep.verifyEquals("strTagName", "alert")) {
 					if (new AlertFind().run(objDragonfly) == false) {
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strHighlightArea", "screen");
+						objDragonfly.variablesJSON.objectStep.putValue("strHighlightArea", "screen");
 						return;
 					} else {
 						throw new ExceptionElementNotHidden("Alert popup was not hidden.");
@@ -1666,7 +1663,7 @@ public class Dragonfly {
 		public ElementPleaseWait(Dragonfly objDragonfly) throws ExceptionElementNotHidden {
 			objDragonfly.logger.add("  ==start==>ElementPleaseWait " + new DateTimestamp().get());
 			long lngStartTime = System.currentTimeMillis();
-			Boolean blnPleaseWait = Boolean.parseBoolean(objDragonfly.variablesJSON.objectStep.get("blnPleaseWait").toString());
+			Boolean blnPleaseWait = Boolean.parseBoolean(objDragonfly.variablesJSON.objectStep.getString("blnPleaseWait"));
 			Integer intPleaseWaitEach;
 			String strAttributeNames = null;
 			String strAttributeValues = null;
@@ -1763,7 +1760,7 @@ public class Dragonfly {
 			objDragonfly.logger.add("  ==start==>ElementSet " + new DateTimestamp().get());
 			objDragonfly.logger.add("ElementSet: " + objDragonfly.variablesJSON.objectStep.getLowerCase("strAttributeValues"));
 			long lngStartTime = System.currentTimeMillis();
-			String strInputValue = objDragonfly.variablesJSON.objectStep.get("strInputValue").toString();
+			String strInputValue = objDragonfly.variablesJSON.objectStep.getString("strInputValue");
 			String strValueToSelect = "";
 			String strAttributeValues = objDragonfly.variablesJSON.objectStep.getLowerCase("strAttributeValues");
 			String strTagType = objDragonfly.variablesJSON.objectStep.getLowerCase("strTagType");
@@ -1795,7 +1792,7 @@ public class Dragonfly {
 					switch (strInputValue.toLowerCase()) {
 					case "":
 					case "<click>":
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strInputValue", "<click>");
+						objDragonfly.variablesJSON.objectStep.putValue("strInputValue", "<click>");
 						objDragonfly.objVariablesSelenium.gobjWebElement.click();
 						strSetType = "click";
 						break;
@@ -1831,7 +1828,7 @@ public class Dragonfly {
 					switch (strInputValue.toLowerCase()) {
 					case "":
 					case "<on>":
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strInputValue", "<on>");
+						objDragonfly.variablesJSON.objectStep.putValue("strInputValue", "<on>");
 						if (objDragonfly.objVariablesSelenium.gobjWebElement.isSelected() == false) {
 							objDragonfly.objVariablesSelenium.gobjWebElement.click();
 						}
@@ -1845,7 +1842,7 @@ public class Dragonfly {
 					switch (strInputValue.toLowerCase()) {
 					case "":
 					case "<on>":
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strInputValue", "<on>");
+						objDragonfly.variablesJSON.objectStep.putValue("strInputValue", "<on>");
 						if (objDragonfly.objVariablesSelenium.gobjWebElement.isSelected() == false) {
 							objDragonfly.objVariablesSelenium.gobjWebElement.click();
 						}
@@ -1959,7 +1956,7 @@ public class Dragonfly {
 					throw new ExceptionElementTagNameNotSupported("ElementSet: Element tag {" + strTagType + "} not supported");
 				}
 			} finally {
-				objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStepExpected", strSetType);
+				objDragonfly.variablesJSON.objectStep.putValue("strStepExpected", strSetType);
 				objDragonfly.logger.add("ElementSet: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
@@ -1969,7 +1966,7 @@ public class Dragonfly {
 		public ElementSetJavascriptExecutor(Dragonfly objDragonfly, String strOuterHTML) throws ExceptionElementTagNameNotSupported, ExceptionElementNotSet, ExceptionKeywordNotValid {
 			objDragonfly.logger.add("  ==start==>ElementSetJavascriptExecutor " + new DateTimestamp().get());
 			long lngStartTime = System.currentTimeMillis();
-			String strInputValue = objDragonfly.variablesJSON.objectStep.get("strInputValue").toString();
+			String strInputValue = objDragonfly.variablesJSON.objectStep.getString("strInputValue");
 			String strValueToSelect = "";
 			String strAttributeValues = objDragonfly.variablesJSON.objectStep.getLowerCase("strAttributeValues");
 			String strTagType = objDragonfly.variablesJSON.objectStep.getLowerCase("strTagType");
@@ -2046,7 +2043,7 @@ public class Dragonfly {
 					switch (strInputValue.toLowerCase()) {
 					case "":
 					case "<on>":
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strInputValue", "<on>");
+						objDragonfly.variablesJSON.objectStep.putValue("strInputValue", "<on>");
 						if (objDragonfly.objVariablesSelenium.gobjWebElement.isSelected() == false) {
 							objJavascriptExecutor.executeScript("arguments[0].focus();", objDragonfly.objVariablesSelenium.gobjWebElement);
 							objJavascriptExecutor.executeScript("arguments[0].click();", objDragonfly.objVariablesSelenium.gobjWebElement);
@@ -2218,7 +2215,7 @@ public class Dragonfly {
 			Boolean blnStatus = false;
 			Boolean blnVisible = false;
 			String strOuterHTML = "";
-			objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strOutputValue", objDragonfly.variablesJSON.objectStep.get("strInputValue").toString());
+			objDragonfly.variablesJSON.objectStep.putValue("strOutputValue", objDragonfly.variablesJSON.objectStep.getString("strInputValue"));
 			while (true) {
 				try {
 					if (blnFound == false) {
@@ -2240,7 +2237,7 @@ public class Dragonfly {
 					}
 					switch (objDragonfly.variablesJSON.objectStep.getLowerCase("strAssert")) {
 					case "off":
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "pass");
+						objDragonfly.variablesJSON.objectStep.putValue("strStatus", "pass");
 						if (blnSet == false) {
 							new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.variablesJSON.objectStep);
 							if (blnJavascriptExecutor == true) {
@@ -2259,7 +2256,7 @@ public class Dragonfly {
 						break;
 					case "hidden":
 						if (blnSet == false) {
-							objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "pass");
+							objDragonfly.variablesJSON.objectStep.putValue("strStatus", "pass");
 							new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.variablesJSON.objectStep);
 							if (blnJavascriptExecutor == true) {
 								new ElementSetJavascriptExecutor(objDragonfly, strOuterHTML);
@@ -2295,7 +2292,7 @@ public class Dragonfly {
 							new ElementVerifyValue().run(objDragonfly);
 							blnAssert = true;
 						}
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "pass");
+						objDragonfly.variablesJSON.objectStep.putValue("strStatus", "pass");
 						new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.variablesJSON.objectStep);
 						blnStatus = true;
 						break;
@@ -2316,7 +2313,7 @@ public class Dragonfly {
 							new ElementVisible(objDragonfly);
 							blnAssert = true;
 						}
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "pass");
+						objDragonfly.variablesJSON.objectStep.putValue("strStatus", "pass");
 						new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.variablesJSON.objectStep);
 						blnStatus = true;
 						break;
@@ -2338,7 +2335,7 @@ public class Dragonfly {
 							new ElementEnabled(objDragonfly);
 							blnAssert = true;
 						}
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "pass");
+						objDragonfly.variablesJSON.objectStep.putValue("strStatus", "pass");
 						new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.variablesJSON.objectStep);
 						blnStatus = true;
 						break;
@@ -2360,7 +2357,7 @@ public class Dragonfly {
 							new ElementDisabled(objDragonfly);
 							blnAssert = true;
 						}
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "pass");
+						objDragonfly.variablesJSON.objectStep.putValue("strStatus", "pass");
 						new CoordinateHighlightScreenshot(objDragonfly, objDragonfly.variablesJSON.objectStep);
 						blnStatus = true;
 						break;
@@ -2471,7 +2468,7 @@ public class Dragonfly {
 			long lngStartTime = System.currentTimeMillis();
 			String strActualValue = "";
 			String strGetValue = "";
-			String strValueExpected = objDragonfly.variablesJSON.objectStep.get("strInputValue").toString();
+			String strValueExpected = objDragonfly.variablesJSON.objectStep.getString("strInputValue");
 			try {
 				strGetValue = new ElementGet().run(objDragonfly);
 				strActualValue = new VerifyNotMatch().run(objDragonfly, strGetValue, strValueExpected);
@@ -2547,7 +2544,7 @@ public class Dragonfly {
 			long lngStartTime = System.currentTimeMillis();
 			String strActualValue = "";
 			String strGetValue = "";
-			String strValueExpected = objDragonfly.variablesJSON.objectStep.get("strInputValue").toString();
+			String strValueExpected = objDragonfly.variablesJSON.objectStep.getString("strInputValue");
 			try {
 				strGetValue = new ElementGet().run(objDragonfly);
 				strActualValue = new VerifyMatch().run(objDragonfly, strGetValue, strValueExpected);
@@ -2628,7 +2625,7 @@ public class Dragonfly {
 				if (objDragonfly.variablesJSON.objectStep.verifyEquals("strTagName", "alert")) {
 					if (new AlertFind().run(objDragonfly) == true) {
 						blnVisible = true;
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strHighlightArea", "alert");
+						objDragonfly.variablesJSON.objectStep.putValue("strHighlightArea", "alert");
 						new CoordinatesAlert(objDragonfly);
 						return;
 					} else {
@@ -3008,13 +3005,17 @@ public class Dragonfly {
 			return this.get(strKeyName).toString().toLowerCase();
 		}
 
+		public String getString(String strKeyName) {
+			return this.get(strKeyName).toString();
+		}
+
 		public String getValue(String strInputValue, String strKeywordName) throws ExceptionJSONKeyNotPresent {
 			Dragonfly.this.logger.add("  ==start==>JSONObjectExtended: getValue " + new DateTimestamp().get());
 			String strJSONObjectKey = strInputValue.replace(strKeywordName, "");
 			String strJSONObjectValue = "";
 			Dragonfly.this.logger.add("JSONObjectExtended: getValue strJSONObjectKey = " + strJSONObjectKey);
 			this.validateKey(strJSONObjectKey);
-			strJSONObjectValue = this.get(strJSONObjectKey).toString();
+			strJSONObjectValue = this.getString(strJSONObjectKey);
 			Dragonfly.this.logger.add("JSONObjectExtended: getValue strJSONObjectValue = " + strJSONObjectValue);
 			//objDragonfly.logger.add(super().objVariablesCommon.gstrBrowserSelection);
 			//			
@@ -3041,7 +3042,7 @@ public class Dragonfly {
 		}
 
 		@SuppressWarnings("unchecked")
-		public void putValue(Dragonfly objDragonfly, String strKeyName, String strKeyValue) {
+		public void putValue(String strKeyName, String strKeyValue) {
 			this.put(strKeyName, strKeyValue);
 		}
 
@@ -3053,7 +3054,7 @@ public class Dragonfly {
 		}
 
 		public Boolean verifyEquals(String strKeyName, String strLowerCaseValue) {
-			return this.get(strKeyName).toString().toLowerCase().equals(strLowerCaseValue);
+			return this.get(strKeyName).toString().trim().toLowerCase().equals(strLowerCaseValue);
 		}
 
 		public Boolean verifyKeyValue(String file) throws IOException {
@@ -3070,58 +3071,11 @@ public class Dragonfly {
 		}
 	}
 
-	//	public class JsonObjectGetValue {
-	//		public String run(Dragonfly objDragonfly, JSONObject objJSONObject, String strInputValue, String strKeywordName) throws ExceptionJSONKeyNotPresent {
-	//			objDragonfly.logger.add("  ==start==>JsonObjectGetValue run " + new DateTimestamp().get());
-	//			String strJSONObjectKey = strInputValue.replace(strKeywordName, "");
-	//			String strJSONObjectValue = "";
-	//			objDragonfly.logger.add("JsonObjectGetValue run strJSONObjectKey = " + strJSONObjectKey);
-	//			if (objJSONObject.containsKey(strJSONObjectKey)) {
-	//				strJSONObjectValue = objJSONObject.get(strJSONObjectKey).toString();
-	//				objDragonfly.logger.add("JsonObjectGetValue: strJSONObjectValue = " + strJSONObjectValue);
-	//				return strJSONObjectValue;
-	//			} else {
-	//				objDragonfly.logger.add("JsonObjectGetValue: JSON Key " + strJSONObjectKey + " for keyword link name " + strKeywordName + " not present");
-	//				throw new ExceptionJSONKeyNotPresent("JSON Key " + strJSONObjectKey + " for keyword link name " + strKeywordName + " not present");
-	//			}
-	//		}
-	//	}
-	//	public class JsonObjectStepPut {
-	//		@SuppressWarnings("unchecked")
-	//		public void run(Dragonfly objDragonfly, String strKeyName, String strKeyValue) {
-	//			objDragonfly.variablesJSON.objectStep.put(strKeyName, strKeyValue);
-	//		}
-	//	}
-	//	public class JsonObjectValidateKey {
-	//		public JsonObjectValidateKey(Dragonfly objDragonfly, JSONObject objJSONObject, String strKeyName) throws ExceptionJSONKeyNotPresent {
-	//			objDragonfly.logger.add("  ==start==>JsonObjectValidateKey " + new DateTimestamp().get());
-	//			if (!objJSONObject.containsKey(strKeyName)) {
-	//				throw new ExceptionJSONKeyNotPresent("JSON Key " + strKeyName + " not present");
-	//			}
-	//		}
-	//	}
 	public class JvmBitVersion {
 		public String get() {
 			String strJvmBitVersion = System.getProperty("sun.arch.data.model");
 			Dragonfly.this.logger.add("JvmBitVersion: System.getProperty(sun.arch.data.model) = " + strJvmBitVersion + " " + new DateTimestamp().get());
 			return strJvmBitVersion;
-		}
-	}
-
-	public class KeywordAndValue {
-		private String strKeyword;
-		private String strValue;
-
-		public KeywordAndValue(Dragonfly objDragonfly, String strValueToFindKeyword) {
-			strKeyword = "";
-			strValue = strValueToFindKeyword;
-			int intRightArrowPosition = strValueToFindKeyword.indexOf(">");
-			if (intRightArrowPosition > -1) {
-				strKeyword = strValueToFindKeyword.substring(0, intRightArrowPosition + 1);
-				strValue = strValueToFindKeyword.replace(strKeyword, "");
-			}
-			objDragonfly.logger.add("KeywordAndValue: strKeyword = " + strKeyword);
-			objDragonfly.logger.add("KeywordAndValue: strValue = " + strValue);
 		}
 	}
 
@@ -3139,28 +3093,25 @@ public class Dragonfly {
 
 	public class KeywordsValid {
 		//TODO KeywordsValid to check all
-		private String strValidKeyword_strLogicalName = "<te>";
-		private String strValidKeyword_strAttributeValues = "<re>|<td>|<ti>|<tl>";
-		private String strValidKeyword_strInputValue = "<re>|<td>|<ti>|<tl>|<click>|<doubleclick>|<rightclick>|<on>|<off>|<blank>|<first>|<second>|<third>|<last>|<random>";
-		private String strValidKeyword_strLoopOrIf = "<if>|<else if>|<else>|<end if>|<loopstart>|<loopexit>|<loopend>";
-		private String strKeywordValue = "";
-		//private String strValueReturnedByKeyword = "";
+		private String[] arrKV_strLogicalName = { "<te>" };
+		private String[] arrKV_strAttributeValues = { "<re>", "<td>", "<ti>", "<tl>" };
+		private String[] arrKV_strInputValue = { "<re>", "<td>", "<ti>", "<tl>", "<click>", "<doubleclick>", "<rightclick>", "<on>", "<off>", "<blank>", "<first>|", "<second>", "<third>", "<last>", "<random>" };
+		private String[] arrKV_strLoopOrIf = { "<if>", "<else if>", "<else>", "<end if>", "<loopstart>", "<loopexit>", "<loopend>" };
 		private String strInputValueFromJson = "";
 		private String strKeywordEach = "";
 		private String[] arrResults;
+		private String strKeywordValue;
 
-		public KeywordsValid(Dragonfly objDragonfly) {
-			objDragonfly.logger.add("  ==start==>KeywordsValid " + new DateTimestamp().get());
+		public KeywordsValid() {
+			Dragonfly.this.logger.add("  ==start==>KeywordsValid " + new DateTimestamp().get());
 			String strKey = "";
 			String[] arrKeys = new StepNames().getOriginal();
 			String strValueToFindKeyword;
-			//String[] arrKeywords;
 			boolean blnValid = false;
 			String[] arrKeywordsValid;
 			for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
 				strKey = arrKeys[intKeysEach].toString();
-				objDragonfly.logger.add("KeywordsValid: ----------------->strKey = " + strKey);
-				//objDragonfly.objJsonObjectStepPut.run(objDragonfly, strKey, "");
+				Dragonfly.this.logger.add("KeywordsValid: ----------------->strKey = " + strKey);
 				switch (strKey) {
 				case "strAction":
 				case "strTagName":
@@ -3176,29 +3127,29 @@ public class Dragonfly {
 				case "blnScreenshot":
 				case "strAssistiveProperties":
 				case "strOutputValue":
-					strValueToFindKeyword = objDragonfly.variablesJSON.objectStep.get(strKey).toString();
-					String[] arrKeywords1 = this.getKeywordsAndValue(objDragonfly, strValueToFindKeyword);
-					if (arrKeywords1.length > 0) {
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "fail");
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "blnExitOnFail", "true");
+					strValueToFindKeyword = Dragonfly.this.variablesJSON.objectStep.getString(strKey);
+					this.getKeywordsAndValue(strValueToFindKeyword);
+					if (arrResults.length > 0) {
+						Dragonfly.this.variablesJSON.objectStep.putValue("strStatus", "fail");
+						Dragonfly.this.variablesJSON.objectStep.putValue("blnExitOnFail", "true");
 					}
 					break;
 				case "strLogicalName":
-					arrKeywordsValid = strValidKeyword_strLogicalName.split("\\|");
-					strValueToFindKeyword = objDragonfly.variablesJSON.objectStep.get(strKey).toString();
-					String[] arrKeywords2 = this.getKeywordsAndValue(objDragonfly, strValueToFindKeyword);
-					objDragonfly.logger.add("KeywordsValid: arrKeywords2.length = " + arrKeywords2.length);
-					for (int intKeywordsEach = 0; intKeywordsEach < arrKeywords2.length; intKeywordsEach++) {
-						objDragonfly.logger.add("KeywordsValid: arrKeywords2[intKeywordsEach].toString() = " + arrKeywords2[intKeywordsEach].toString());
+					strValueToFindKeyword = Dragonfly.this.variablesJSON.objectStep.getString(strKey);
+					arrKeywordsValid = arrKV_strLogicalName;
+					this.getKeywordsAndValue(strValueToFindKeyword);
+					Dragonfly.this.logger.add("KeywordsValid: arrKeywords2.length = " + arrResults.length);
+					for (int intKeywordsEach = 0; intKeywordsEach < arrResults.length; intKeywordsEach++) {
+						Dragonfly.this.logger.add("KeywordsValid: arrResults[intKeywordsEach].toString() = " + arrResults[intKeywordsEach].toString());
 						for (int intKeywordsValidEach = 0; intKeywordsValidEach < arrKeywordsValid.length; intKeywordsValidEach++) {
-							if (arrKeywords2[intKeywordsEach].toString().equals(arrKeywordsValid[intKeywordsValidEach].toString())) {
+							if (arrResults[intKeywordsEach].toString().equals(arrKeywordsValid[intKeywordsValidEach].toString())) {
 								blnValid = true;
 								//TODO this should be moved to the TestConfiguration setup
-								JSONObjectExtended objJsonObjectElementNode = objDragonfly.new JSONObjectExtended((JSONObject) objDragonfly.variablesJSON.objectElement.get(strKeywordValue));
+								JSONObjectExtended objJsonObjectElementNode = Dragonfly.this.new JSONObjectExtended((JSONObject) Dragonfly.this.variablesJSON.objectElement.get(strKeywordValue));
 								try {
-									objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strTagName", objJsonObjectElementNode.getValue("strTagName", ""));
-									objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strAttributeNames", objJsonObjectElementNode.getValue("strAttributeNames", ""));
-									objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strAttributeValues", objJsonObjectElementNode.getValue("strAttributeValues", ""));
+									Dragonfly.this.variablesJSON.objectStep.putValue("strTagName", objJsonObjectElementNode.getValue("strTagName", ""));
+									Dragonfly.this.variablesJSON.objectStep.putValue("strAttributeNames", objJsonObjectElementNode.getValue("strAttributeNames", ""));
+									Dragonfly.this.variablesJSON.objectStep.putValue("strAttributeValues", objJsonObjectElementNode.getValue("strAttributeValues", ""));
 								} catch (ExceptionJSONKeyNotPresent e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -3207,86 +3158,62 @@ public class Dragonfly {
 							}
 						}
 						if (blnValid = false) {
-							objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "fail");
-							objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "blnExitOnFail", "true");
+							Dragonfly.this.variablesJSON.objectStep.putValue("strStatus", "fail");
+							Dragonfly.this.variablesJSON.objectStep.putValue("blnExitOnFail", "true");
 							break;
 						}
 					}
 					break;
 				case "strAttributeValues":
-					arrKeywordsValid = strValidKeyword_strAttributeValues.split("\\|");
-					strValueToFindKeyword = objDragonfly.variablesJSON.objectStep.get(strKey).toString();
-					strKeywordValue = strValueToFindKeyword;
-					String[] arrKeywords3 = this.getKeywordsAndValue(objDragonfly, strValueToFindKeyword);
-					for (int intKeywordsEach = 0; intKeywordsEach < arrKeywords3.length; intKeywordsEach++) {
-						objDragonfly.logger.add("KeywordsValid: arrKeywords3[intKeywordsEach].toString() = " + arrKeywords3[intKeywordsEach].toString());
-						//for (int intKeywordsValidEach = 0; intKeywordsValidEach < arrKeywordsValid.length; intKeywordsValidEach++) {
+					arrKeywordsValid = arrKV_strAttributeValues;
+					strValueToFindKeyword = Dragonfly.this.variablesJSON.objectStep.getString(strKey);
+					this.getKeywordsAndValue(strValueToFindKeyword);
+					for (int intKeywordsEach = 0; intKeywordsEach < arrResults.length; intKeywordsEach++) {
+						Dragonfly.this.logger.add("KeywordsValid: arrResults[intKeywordsEach].toString() = " + arrResults[intKeywordsEach].toString());
 						for (int intKeywordsValidEach = arrKeywordsValid.length; intKeywordsValidEach < 0; intKeywordsValidEach--) {
-							strKeywordEach = arrKeywords3[intKeywordsEach].toString();
+							strKeywordEach = arrResults[intKeywordsEach].toString();
 							if (strKeywordEach.equals(arrKeywordsValid[intKeywordsValidEach].toString())) {
 								blnValid = true;
-								strKeywordValue = this.getJsonValue(objDragonfly, strKeywordEach, strKeywordValue);
+								this.getJsonValue(strKeywordEach, strKeywordValue);
 								break;
 							}
 						}
 						if (blnValid = false) {
-							objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "fail");
-							objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "blnExitOnFail", "true");
+							Dragonfly.this.variablesJSON.objectStep.putValue("strStatus", "fail");
+							Dragonfly.this.variablesJSON.objectStep.putValue("blnExitOnFail", "true");
 							break;
 						}
-						//strValueReturnedByKeyword= objDragonfly.new JsonObjectGetValue().run(objDragonfly, objJSONObject, strInputValue, arrKeywords[intKeywordsEach].toString());
 					}
-					objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strAttributeValues", strKeywordValue);
+					Dragonfly.this.variablesJSON.objectStep.putValue("strAttributeValues", strKeywordValue);
 					break;
 				case "strInputValue":
-					arrKeywordsValid = strValidKeyword_strInputValue.split("\\|");
-					strValueToFindKeyword = objDragonfly.variablesJSON.objectStep.get(strKey).toString();
-					strKeywordValue = strValueToFindKeyword;
-					String[] arrKeywords4 = this.getKeywordsAndValue(objDragonfly, strValueToFindKeyword);
-					objDragonfly.logger.add("KeywordsValid: arrKeywords.length = " + arrKeywords4.length);
-					objDragonfly.logger.add("KeywordsValid: arrResults.length = " + arrResults.length);
-					for (int intKeywordsEach = arrKeywords4.length - 1; intKeywordsEach >= 0; intKeywordsEach--) {
-						//for (int intKeywordsEach = 0; intKeywordsEach < arrKeywords.length; intKeywordsEach++) {
-						objDragonfly.logger.add("KeywordsValid: intKeywordsEach = " + intKeywordsEach);
-						objDragonfly.logger.add("KeywordsValid: arrKeywords4[intKeywordsEach].toString() = " + arrKeywords4[intKeywordsEach].toString());
-						objDragonfly.logger.add("KeywordsValid: arrKeywordsValid.length = " + arrKeywordsValid.length);
+					arrKeywordsValid = arrKV_strInputValue;
+					strValueToFindKeyword = Dragonfly.this.variablesJSON.objectStep.getString(strKey);
+					this.getKeywordsAndValue(strValueToFindKeyword);
+					Dragonfly.this.logger.add("KeywordsValid: arrKeywords.length = " + arrResults.length);
+					Dragonfly.this.logger.add("KeywordsValid: arrResults.length = " + arrResults.length);
+					for (int intKeywordsEach = arrResults.length - 1; intKeywordsEach >= 0; intKeywordsEach--) {
+						Dragonfly.this.logger.add("KeywordsValid: intKeywordsEach = " + intKeywordsEach);
+						Dragonfly.this.logger.add("KeywordsValid: arrKeywords4[intKeywordsEach].toString() = " + arrResults[intKeywordsEach].toString());
+						Dragonfly.this.logger.add("KeywordsValid: arrKeywordsValid.length = " + arrKeywordsValid.length);
 						for (int intKeywordsValidEach = 0; intKeywordsValidEach < arrKeywordsValid.length; intKeywordsValidEach++) {
-							strKeywordEach = arrKeywords4[intKeywordsEach].toString();
-							objDragonfly.logger.add("KeywordsValid: strInputValue strKeywordEach = " + strKeywordEach);
+							strKeywordEach = arrResults[intKeywordsEach].toString();
+							Dragonfly.this.logger.add("KeywordsValid: strInputValue strKeywordEach = " + strKeywordEach);
 							if (strKeywordEach.equals(arrKeywordsValid[intKeywordsValidEach].toString())) {
 								blnValid = true;
-								strKeywordValue = this.getJsonValue(objDragonfly, strKeywordEach, strKeywordValue);
-								objDragonfly.logger.add("KeywordsValid: strInputValue strKeywordValue = " + strKeywordValue);
+								this.getJsonValue(strKeywordEach, strKeywordValue);
+								Dragonfly.this.logger.add("KeywordsValid: strInputValue strKeywordValue = " + strKeywordValue);
 								break;
 							}
 						}
 						if (blnValid = false) {
-							objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "fail");
-							objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "blnExitOnFail", "true");
+							Dragonfly.this.variablesJSON.objectStep.putValue("strStatus", "fail");
+							Dragonfly.this.variablesJSON.objectStep.putValue("blnExitOnFail", "true");
 							break;
 						}
-						//strValueReturnedByKeyword= objDragonfly.new JsonObjectGetValue().run(objDragonfly, objJSONObject, strInputValue, arrKeywords[intKeywordsEach].toString());
 					}
-					objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strInputValue", strKeywordValue);
+					Dragonfly.this.variablesJSON.objectStep.putValue("strInputValue", strKeywordValue);
 					break;
-				//					strValueToFindKeyword = objDragonfly.variablesJSON.objectStep.get(strKey).toString();
-				//					//arrKeywords = objDragonfly.new KeywordReturnArray().run(objDragonfly, strValueToFindKeyword);
-				//					arrKeywords = this.getKeywordsAndValue(objDragonfly, strValueToFindKeyword);
-				//					for (int intKeywordsEach = 0; intKeysEach < arrKeywords.length; intKeysEach++) {
-				//						objDragonfly.logger.add("KeywordsValid: arrKeywords[intKeywordsEach].toString() = " + arrKeywords[intKeywordsEach].toString());
-				//						for (int intKeywordsValidEach = 0; intKeywordsValidEach < arrKeywordsValid.length; intKeywordsValidEach++) {
-				//							if (arrKeywords[intKeywordsEach].toString().equals(arrKeywordsValid[intKeywordsValidEach].toString())) {
-				//								blnValid = true;
-				//								strKeywordValue = strValueToFindKeyword.replace(strValueToFindKeyword, arrKeywords[intKeywordsEach].toString());
-				//								break;
-				//							}
-				//						}
-				//						if (blnValid = false) {
-				//							objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "fail");
-				//							objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "blnExitOnFail", "true");
-				//						}
-				//					}
-				//					break;
 				case "strLoopOrIf":
 					//					arrKeywordsValid = strValidKeyword_strLoopOrIf.split("\\|");
 					//					strValueToFindKeyword = objDragonfly.variablesJSON.objectStep.get(strKey).toString();
@@ -3302,15 +3229,15 @@ public class Dragonfly {
 					//						}
 					//					}
 					//					if (blnValid = false) {
-					//						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "fail");
-					//						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "blnExitOnFail", "true");
+					//						objDragonfly.variablesJSON.objectStep.putValue( "strStatus", "fail");
+					//						objDragonfly.variablesJSON.objectStep.putValue( "blnExitOnFail", "true");
 					//					}
 					break;
 				}
 			}
 		}
 
-		public String getJsonValue(Dragonfly objDragonfly, String strKeyword, String strInputValue) {
+		public void getJsonValue(String strKeyword, String strInputValue) {
 			Dragonfly.this.logger.add("  ==start==>getJsonValue " + new DateTimestamp().get());
 			try {
 				switch (strKeyword) {
@@ -3331,13 +3258,11 @@ public class Dragonfly {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			return strInputValueFromJson;
 		}
 
-		public String[] getKeywordsAndValue(Dragonfly objDragonfly, String strValueToFindKeyword) {
-			objDragonfly.logger.add("  ==start==>getKeywordsAndValue " + new DateTimestamp().get());
+		public void getKeywordsAndValue(String strValueToFindKeyword) {
+			Dragonfly.this.logger.add("  ==start==>getKeywordsAndValue " + new DateTimestamp().get());
 			String strKeyword = "";
-			//String[] arrResults = null;
 			int intLeftArrowPositionEach = 0;
 			int intLeftArrowPosition = -1;
 			int intRightArrowPosition = -1;
@@ -3356,15 +3281,14 @@ public class Dragonfly {
 			}
 			//TODO start here need to search for > from the right to get keyword
 			strKeywordValue = strValueToFindKeyword.substring(intRightArrowPosition + 1, strValueToFindKeyword.length());
-			objDragonfly.logger.add("getKeywordsAndValue: strValueToFindKeyword = " + strValueToFindKeyword);
-			objDragonfly.logger.add("getKeywordsAndValue: strKeywordValue = " + strKeywordValue);
+			Dragonfly.this.logger.add("getKeywordsAndValue: strValueToFindKeyword = " + strValueToFindKeyword);
+			Dragonfly.this.logger.add("getKeywordsAndValue: strKeywordValue = " + strKeywordValue);
 			arrResults = strKeyword.split("\\|");
-			objDragonfly.logger.add("getKeywordsAndValue: strKeyword = " + strKeyword);
-			objDragonfly.logger.add("getKeywordsAndValue: arrResults.length = " + arrResults.length);
+			Dragonfly.this.logger.add("getKeywordsAndValue: strKeyword = " + strKeyword);
+			Dragonfly.this.logger.add("getKeywordsAndValue: arrResults.length = " + arrResults.length);
 			for (int intKeysEach = 0; intKeysEach < arrResults.length; intKeysEach++) {
-				objDragonfly.logger.add("getKeywordsAndValue: arrResults[intKeysEach].toString() = " + arrResults[intKeysEach].toString());
+				Dragonfly.this.logger.add("getKeywordsAndValue: arrResults[intKeysEach].toString() = " + arrResults[intKeysEach].toString());
 			}
-			return arrResults;
 		}
 	}
 
@@ -3393,7 +3317,7 @@ public class Dragonfly {
 	}
 
 	public class LogStepDetails {
-		public LogStepDetails(Dragonfly objDragonfly, int intStep) {
+		public LogStepDetails(int intStep) {
 			Long lngTimeStart = System.currentTimeMillis();
 			Dragonfly.this.logger.add("  ==start==>LogStepDetails " + new DateTimestamp().get());
 			String[] arrKeys;
@@ -3403,7 +3327,7 @@ public class Dragonfly {
 				for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
 					strKey = arrKeys[intKeysEach].toString();
 					if (Dragonfly.this.variablesJSON.objectStep.containsKey(strKey) == true) {
-						Dragonfly.this.logger.add("LogStepDetails: " + strKey + " = " + objDragonfly.variablesJSON.objectStep.get(strKey).toString());
+						Dragonfly.this.logger.add("LogStepDetails: " + strKey + " = " + Dragonfly.this.variablesJSON.objectStep.getString(strKey));
 					}
 				}
 			} catch (Exception e) {
@@ -3418,26 +3342,6 @@ public class Dragonfly {
 		public String run(Dragonfly objDragonfly, int month) {
 			objDragonfly.logger.add("  ==start==>MonthGet " + new DateTimestamp().get());
 			return new DateFormatSymbols().getMonths()[month];
-		}
-	}
-
-	public class OperatingSystem {
-		String strOS = "";
-
-		public void set(Dragonfly objDragonfly) {
-			objDragonfly.logger.add("  ==start==>OperatingSystem " + new DateTimestamp().get());
-			strOS = System.getProperty("os.name").toLowerCase();
-			if (strOS.contains("win")) {
-				strOS = "Windows";
-			} else if (strOS.contains("nux") || strOS.contains("nix")) {
-				strOS = "Linux";
-			} else if (strOS.contains("mac")) {
-				strOS = "Mac";
-			} else if (strOS.contains("sunos")) {
-				strOS = "Solaris";
-			} else {
-				strOS = "Other";
-			}
 		}
 	}
 
@@ -3563,10 +3467,9 @@ public class Dragonfly {
 					break;
 				case "window":
 					intX = objDragonfly.variablesJSON.objectStep.getInt("intBrowserOuterX");
-					intX = Integer.parseInt(objDragonfly.variablesJSON.objectStep.get("intBrowserOuterX").toString());
-					intY = Integer.parseInt(objDragonfly.variablesJSON.objectStep.get("intBrowserOuterY").toString());
-					intWidth = Integer.parseInt(objDragonfly.variablesJSON.objectStep.get("intBrowserOuterWidth").toString());
-					intHeight = Integer.parseInt(objDragonfly.variablesJSON.objectStep.get("intBrowserOuterHeight").toString());
+					intY = objDragonfly.variablesJSON.objectStep.getInt("intBrowserOuterY");
+					intWidth = objDragonfly.variablesJSON.objectStep.getInt("intBrowserOuterWidth");
+					intHeight = objDragonfly.variablesJSON.objectStep.getInt("intBrowserOuterHeight");
 					break;
 				case "page":
 					// TODO change this to get absolute screen coordinates
@@ -3578,10 +3481,10 @@ public class Dragonfly {
 					break;
 				case "element":
 				case "alert":
-					intX = Integer.parseInt(objDragonfly.variablesJSON.objectStep.get("intElementScreenX").toString()) - intThickness;
-					intY = Integer.parseInt(objDragonfly.variablesJSON.objectStep.get("intElementScreenY").toString()) - intThickness;
-					intWidth = Integer.parseInt(objDragonfly.variablesJSON.objectStep.get("intElementWidth").toString()) + (2 * intThickness);
-					intHeight = Integer.parseInt(objDragonfly.variablesJSON.objectStep.get("intElementHeight").toString()) + (2 * intThickness);
+					intX = objDragonfly.variablesJSON.objectStep.getInt("intElementScreenX") - intThickness;
+					intY = objDragonfly.variablesJSON.objectStep.getInt("intElementScreenY") - intThickness;
+					intWidth = objDragonfly.variablesJSON.objectStep.getInt("intElementWidth") + (2 * intThickness);
+					intHeight = objDragonfly.variablesJSON.objectStep.getInt("intElementHeight") + (2 * intThickness);
 					break;
 				default:
 					objDragonfly.logger.add("RectangleAreaByName: epected values = screen, window, page and element not " + strAreaObjectName);
@@ -3634,7 +3537,7 @@ public class Dragonfly {
 
 	public class Sleep {
 		public Sleep(Dragonfly objDragonfly) {
-			new SleepMilliseconds(objDragonfly, Integer.parseInt(objDragonfly.variablesJSON.objectStep.get("strInputValue").toString()));
+			new SleepMilliseconds(objDragonfly, objDragonfly.variablesJSON.objectStep.getInt("strInputValue"));
 		}
 	}
 
@@ -3666,12 +3569,12 @@ public class Dragonfly {
 			String strActualReturnHTML = "";
 			String strActualText = "";
 			String strInputParameterValueHTML = "";
-			String strInputValue = objDragonfly.variablesJSON.objectStep.get("strInputValue").toString();
-			String strOutputValue = objDragonfly.variablesJSON.objectStep.get("strOutputValue").toString();
-			String strOutputValueHtml = objDragonfly.variablesJSON.objectStep.get("strOutputValue").toString();
+			String strInputValue = objDragonfly.variablesJSON.objectStep.getString("strInputValue");
+			String strOutputValue = objDragonfly.variablesJSON.objectStep.getString("strOutputValue");
+			String strOutputValueHtml = objDragonfly.variablesJSON.objectStep.getString("strOutputValue");
 			String strParameterName = "";
 			String strStepParameterName = "";
-			String strTagName = objDragonfly.variablesJSON.objectStep.get("strTagName").toString();
+			String strTagName = objDragonfly.variablesJSON.objectStep.getString("strTagName");
 			switch (strStepType.toLowerCase()) {
 			case "launch":
 				strActualHtml = "Launch {" + strTagName + "} browser to url {" + strInputValue + "} then expect navigation within {" + intWaited + "} milliseconds";
@@ -3852,8 +3755,8 @@ public class Dragonfly {
 			strActualHtml = "<DIV align='left/>" + strActualHtml + "</DIV>";
 			//return strActualText;
 			objDragonfly.logger.add("StepCreateActual: strActualText = " + strActualText);
-			objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStepActual", strActualText);
-			objDragonfly.logger.add("StepCreateActual: objectStep.get(strStepActual) = " + objDragonfly.variablesJSON.objectStep.get("strStepActual").toString());
+			objDragonfly.variablesJSON.objectStep.putValue("strStepActual", strActualText);
+			objDragonfly.logger.add("StepCreateActual: objectStep.getString(strStepActual) = " + objDragonfly.variablesJSON.objectStep.getString("strStepActual"));
 		}
 	}
 
@@ -3862,16 +3765,15 @@ public class Dragonfly {
 			objDragonfly.logger.add("  ==start==>StepCreateExpected " + new DateTimestamp().get());
 			String strStepExpected = "";
 			String strAction = "";
-			//String strAction = objDragonfly.variablesJSON.objectStep.get("strAction").toString();
-			String strInputValue = objDragonfly.variablesJSON.objectStep.get("strInputValue").toString();
-			String strMillisecondsToWait = objDragonfly.variablesJSON.objectStep.get("intMillisecondsToWait").toString();
+			String strInputValue = objDragonfly.variablesJSON.objectStep.getString("strInputValue");
+			String strMillisecondsToWait = objDragonfly.variablesJSON.objectStep.getString("intMillisecondsToWait");
 			String strObjectName = this.createObjectName(objDragonfly);
-			String strTagName = objDragonfly.variablesJSON.objectStep.get("strTagName").toString();
-			String strAssert = objDragonfly.variablesJSON.objectStep.get("strAssert").toString();
+			String strTagName = objDragonfly.variablesJSON.objectStep.getString("strTagName");
+			String strAssert = objDragonfly.variablesJSON.objectStep.getString("strAssert");
 			if (objDragonfly.variablesJSON.objectStep.get("strStepExpected").toString().length() != 0) {
-				strAction = objDragonfly.variablesJSON.objectStep.get("strStepExpected").toString();
+				strAction = objDragonfly.variablesJSON.objectStep.getString("strStepExpected");
 			} else {
-				strAction = objDragonfly.variablesJSON.objectStep.get("strAction").toString();
+				strAction = objDragonfly.variablesJSON.objectStep.getString("strAction");
 			}
 			switch (strAction.toLowerCase()) {
 			case "launch":
@@ -3951,15 +3853,15 @@ public class Dragonfly {
 				break;
 			}
 			objDragonfly.objStepsManual.set(strStepExpected);
-			objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStepExpected", strStepExpected);
+			objDragonfly.variablesJSON.objectStep.putValue("strStepExpected", strStepExpected);
 		}
 
 		public String createObjectName(Dragonfly objDragonfly) {
 			String strAttributeValue = "";
-			String strAttributeValues = objDragonfly.variablesJSON.objectStep.get("strAttributeValues").toString();
+			String strAttributeValues = objDragonfly.variablesJSON.objectStep.getString("strAttributeValues");
 			String strObjectsAttributes = "";
 			String strObjectName = "";
-			String strObjectNames = objDragonfly.variablesJSON.objectStep.get("strAttributeNames").toString();
+			String strObjectNames = objDragonfly.variablesJSON.objectStep.getString("strAttributeNames");
 			String[] arrAttributeValues = strAttributeValues.split("\\|");
 			String[] arrObjectNames = strObjectNames.split("\\|");
 			for (int intEach = 0; intEach < arrObjectNames.length; intEach++) {
@@ -3987,11 +3889,11 @@ public class Dragonfly {
 			Long lngTimeEnd = System.currentTimeMillis();
 			new StepCreateExpected(objDragonfly);
 			new StepCreateActual(objDragonfly, strStepType);
-			//objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStepActual", new StepCreateActual().run(objDragonfly, strStepType));
-			Dragonfly.this.variablesJSON.objectStep.putValue(objDragonfly, "strStartTimestamp", new DateTimeFormat().set(objDragonfly, lngTimeStart));
-			Dragonfly.this.variablesJSON.objectStep.putValue(objDragonfly, "strStepDuration", Long.toString(lngTimeEnd - lngTimeStart));
-			Dragonfly.this.variablesJSON.objectStep.putValue(objDragonfly, "strEndTimestamp", new DateTimeFormat().set(objDragonfly, lngTimeEnd));
-			Dragonfly.this.logger.add("StepDuration: " + strMethodName + " strStatus = " + objDragonfly.variablesJSON.objectStep.get("strStatus").toString() + " Milliseconds Waited = " + objDragonfly.variablesJSON.objectStep.get("strStepDuration").toString());
+			//objDragonfly.variablesJSON.objectStep.putValue( "strStepActual", new StepCreateActual().run(objDragonfly, strStepType));
+			Dragonfly.this.variablesJSON.objectStep.putValue("strStartTimestamp", new DateTimeFormat().set(objDragonfly, lngTimeStart));
+			Dragonfly.this.variablesJSON.objectStep.putValue("strStepDuration", Long.toString(lngTimeEnd - lngTimeStart));
+			Dragonfly.this.variablesJSON.objectStep.putValue("strEndTimestamp", new DateTimeFormat().set(objDragonfly, lngTimeEnd));
+			Dragonfly.this.logger.add("StepDuration: " + strMethodName + " strStatus = " + objDragonfly.variablesJSON.objectStep.getString("strStatus") + " Milliseconds Waited = " + objDragonfly.variablesJSON.objectStep.getString("strStepDuration"));
 		}
 	}
 
@@ -4043,8 +3945,8 @@ public class Dragonfly {
 		String strDefault_strScreenshotArea = "screen";
 		String strDefault_strStatus = "info";
 
-		public StepSetupDefaults(Dragonfly objDragonfly, String strCurrentWindowHandle) {
-			objDragonfly.logger.add("  ==start==>StepSetupDefaults " + new DateTimestamp().get());
+		public StepSetupDefaults(String strCurrentWindowHandle) {
+			Dragonfly.this.logger.add("  ==start==>StepSetupDefaults " + new DateTimestamp().get());
 			String[] arrDefaultKeys = new StepNames().getDefault();
 			String[] arrKeys = new StepNames().getRuntime();
 			String strKey = "";
@@ -4052,43 +3954,43 @@ public class Dragonfly {
 			String strLogicalName = "";
 			for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
 				strKey = arrKeys[intKeysEach].toString();
-				//objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, strKey, "");
-				objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, strKey, "");
+				//objDragonfly.variablesJSON.objectStep.putValue( strKey, "");
+				Dragonfly.this.variablesJSON.objectStep.putValue(strKey, "");
 			}
 			try {
-				strInputValue = objDragonfly.variablesJSON.objectStep.getValue("strInputValue", "");
-				strLogicalName = objDragonfly.variablesJSON.objectStep.getValue("strLogicalName", "");
+				strInputValue = Dragonfly.this.variablesJSON.objectStep.getValue("strInputValue", "");
+				strLogicalName = Dragonfly.this.variablesJSON.objectStep.getValue("strLogicalName", "");
 			} catch (ExceptionJSONKeyNotPresent e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			//String strInputValue = objDragonfly.variablesJSON.objectStep.get("strInputValue").toString();
 			//String strLogicalName = objDragonfly.variablesJSON.objectStep.get("strLogicalName").toString();
-			objDragonfly.logger.add("StepSetupDefaults: strLogicalName = " + strLogicalName);
+			Dragonfly.this.logger.add("StepSetupDefaults: strLogicalName = " + strLogicalName);
 			//objDragonfly.logger.add("StepSetupDefaults: new KeywordAndValue(objDragonfly, strLogicalName).strKeyword = " + new KeywordAndValue(objDragonfly, strLogicalName).strKeyword);
-			objDragonfly.new KeywordsValid(objDragonfly);
+			Dragonfly.this.new KeywordsValid();
 			//			try {
 			//				if (new KeywordAndValue(objDragonfly, strLogicalName).strKeyword == "<te>") {
 			//					strLogicalName = new KeywordAndValue(objDragonfly, strLogicalName).strValue;
 			//					objDragonfly.new JsonObjectValidateKey(objDragonfly, objDragonfly.variablesJSON.objectElement, strLogicalName);
 			//					JSONObject objJsonObjectElementNode = (JSONObject) objDragonfly.variablesJSON.objectElement.get(strLogicalName);
-			//					objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strTagName", objDragonfly.new JsonObjectGetValue().run(objDragonfly, objJsonObjectElementNode, "strTagName", ""));
-			//					objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strAttributeNames", objDragonfly.new JsonObjectGetValue().run(objDragonfly, objJsonObjectElementNode, "strAttributeNames", ""));
-			//					objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strAttributeValues", objDragonfly.new JsonObjectGetValue().run(objDragonfly, objJsonObjectElementNode, "strAttributeValues", ""));
+			//					objDragonfly.variablesJSON.objectStep.putValue( "strTagName", objDragonfly.new JsonObjectGetValue().run(objDragonfly, objJsonObjectElementNode, "strTagName", ""));
+			//					objDragonfly.variablesJSON.objectStep.putValue( "strAttributeNames", objDragonfly.new JsonObjectGetValue().run(objDragonfly, objJsonObjectElementNode, "strAttributeNames", ""));
+			//					objDragonfly.variablesJSON.objectStep.putValue( "strAttributeValues", objDragonfly.new JsonObjectGetValue().run(objDragonfly, objJsonObjectElementNode, "strAttributeValues", ""));
 			//					//objDragonfly.logger.add(	objDragonfly.new JsonObjectGetValue().run(objDragonfly, objJsonObjectElementNode, "strAttributeValues", "");
 			//				}
 			//				switch (new KeywordAndValue(objDragonfly, strInputValue).strKeyword) {
 			//				case "<td>":
 			//					strInputValue = objDragonfly.new JsonObjectGetValue().run(objDragonfly, objDragonfly.variablesJSON.objectTestData, strInputValue, "<td>");
-			//					objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strInputValue", strInputValue);
+			//					objDragonfly.variablesJSON.objectStep.putValue( "strInputValue", strInputValue);
 			//					break;
 			//				case "<ti>":
 			//					strInputValue = objDragonfly.new JsonObjectGetValue().run(objDragonfly, objDragonfly.variablesJSON.objectTestInstancesEach, strInputValue, "<ti>");
-			//					objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strInputValue", strInputValue);
+			//					objDragonfly.variablesJSON.objectStep.putValue( "strInputValue", strInputValue);
 			//					break;
 			//				case "<tl>":
 			//					strInputValue = objDragonfly.new JsonObjectGetValue().run(objDragonfly, objDragonfly.variablesJSON.objectLinks, strInputValue, "<tl>");
-			//					objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strInputValue", strInputValue);
+			//					objDragonfly.variablesJSON.objectStep.putValue( "strInputValue", strInputValue);
 			//					break;
 			//				}
 			//			} catch (Exception e) {
@@ -4096,12 +3998,12 @@ public class Dragonfly {
 			//			}
 			Class<?> objClass = null;
 			try {
-				objDragonfly.logger.add("StepSetupDefaults: Class.forName start");
+				Dragonfly.this.logger.add("StepSetupDefaults: Class.forName start");
 				objClass = Class.forName("org.DragonflyAutomation.Dragonfly$StepSetupDefaults");
 			} catch (ClassNotFoundException e) {
-				objDragonfly.logger.add("StepSetupDefaults: ClassNotFoundException = " + e.toString());
+				Dragonfly.this.logger.add("StepSetupDefaults: ClassNotFoundException = " + e.toString());
 			} catch (Exception e) {
-				objDragonfly.logger.add("StepSetupDefaults: Class.forName Exception = " + e.toString());
+				Dragonfly.this.logger.add("StepSetupDefaults: Class.forName Exception = " + e.toString());
 			}
 			for (int intKeysEach = 0; intKeysEach < arrDefaultKeys.length; intKeysEach++) {
 				strKey = arrDefaultKeys[intKeysEach].toString();
@@ -4110,22 +4012,22 @@ public class Dragonfly {
 					//objDragonfly.logger.add("StepSetupDefaults strDefault_ + strKey = " + "strDefault_" + strKey);
 					objField = objClass.getDeclaredField("strDefault_" + strKey);
 				} catch (NoSuchFieldException | SecurityException e) {
-					objDragonfly.logger.add("StepSetupDefaults: NoSuchFieldException = " + e.toString());
+					Dragonfly.this.logger.add("StepSetupDefaults: NoSuchFieldException = " + e.toString());
 				} catch (Exception e) {
-					objDragonfly.logger.add("StepSetupDefaults: Exception = " + e.toString());
+					Dragonfly.this.logger.add("StepSetupDefaults: Exception = " + e.toString());
 				}
-				if (objDragonfly.variablesJSON.objectStep.get(strKey).toString().trim().length() == 0) {
+				if (Dragonfly.this.variablesJSON.objectStep.get(strKey).toString().trim().length() == 0) {
 					try {
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, strKey, (String) objField.get(this));
+						Dragonfly.this.variablesJSON.objectStep.putValue(strKey, (String) objField.get(this));
 					} catch (IllegalArgumentException | IllegalAccessException e) {
-						objDragonfly.logger.add("StepSetupDefaults: IllegalArgumentException = " + e.toString());
+						Dragonfly.this.logger.add("StepSetupDefaults: IllegalArgumentException = " + e.toString());
 						e.printStackTrace();
 					} catch (Exception e) {
-						objDragonfly.logger.add("StepSetupDefaults: Exception = " + e.toString());
+						Dragonfly.this.logger.add("StepSetupDefaults: Exception = " + e.toString());
 					}
 				}
 			}
-			objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strCurrentWindowHandle", strCurrentWindowHandle);
+			Dragonfly.this.variablesJSON.objectStep.putValue("strCurrentWindowHandle", strCurrentWindowHandle);
 		}
 	}
 
@@ -4206,23 +4108,23 @@ public class Dragonfly {
 		public Boolean run(Dragonfly objDragonfly, Boolean blnExit, Boolean blnStatus, Boolean blnFound, String strMethodeName, String strAction, Long lngTimeStart) {
 			objDragonfly.logger.add("SyncFinally:  blnExit = {" + blnExit + "} blnStatus = {" + blnStatus + "} blnFound = {" + blnFound + "} strMethodeName = {" + strMethodeName + "} strAction = {" + strAction + "}");
 			if (blnExit == true) {
-				objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "fail");
-				objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "blnExitOnFail", "true");
+				objDragonfly.variablesJSON.objectStep.putValue("strStatus", "fail");
+				objDragonfly.variablesJSON.objectStep.putValue("blnExitOnFail", "true");
 			} else {
 				if (blnStatus == true) {
-					objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "pass");
+					objDragonfly.variablesJSON.objectStep.putValue("strStatus", "pass");
 					blnExit = true;
 				} else if (blnStatus == false) {
-					if ((int) (System.currentTimeMillis() - lngTimeStart) <= Integer.parseInt(objDragonfly.variablesJSON.objectStep.get("intMillisecondsToWait").toString())) {
+					if ((int) (System.currentTimeMillis() - lngTimeStart) <= objDragonfly.variablesJSON.objectStep.getInt("intMillisecondsToWait")) {
 						if (blnFound == false) {
 							blnExit = false;
 						}
 					} else {
-						if (Boolean.parseBoolean(objDragonfly.variablesJSON.objectStep.get("blnOptional").toString()) == true) {
-							objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "warning");
+						if (objDragonfly.variablesJSON.objectStep.getBoolean("blnOptional") == true) {
+							objDragonfly.variablesJSON.objectStep.putValue("strStatus", "warning");
 							blnExit = true;
 						} else {
-							objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strStatus", "fail");
+							objDragonfly.variablesJSON.objectStep.putValue("strStatus", "fail");
 							blnExit = true;
 						}
 					}
@@ -4329,62 +4231,59 @@ public class Dragonfly {
 	}
 
 	public class TestConfigurationSetup {
-		int intTestInstanceSize;
-		String gstrTestStepsCombinedOriginal;
-		JSONObjectExtended objJsonObjectTestConfigurationFile = null;
+		private int intTestInstanceSize;
+		//private String gstrTestStepsCombinedOriginal;
+		private JSONObjectExtended objJsonObjectTestConfigurationFile = null;
 		private JSONParser objJsonParser = new JSONParser();
 
-		public void run(Dragonfly objDragonfly, String strFileNameTestConfiguration) {
+		public void run(String strFileNameTestConfiguration) {
 			// TODO complete TestConfigurationSetup method to create json objects for test
-			objDragonfly.logger.add("  ==start==>TestConfigurationSetup " + new DateTimestamp().get());
-			//JSONArray gobjJsonArrayLink = null;
+			Dragonfly.this.logger.add("  ==start==>TestConfigurationSetup " + new DateTimestamp().get());
 			long lngStartTime = System.currentTimeMillis();
 			String strFilePathTestConfiguration = "";
 			try {
-				strFilePathTestConfiguration = objDragonfly.objPaths.gstrPathTestConfiguration + strFileNameTestConfiguration;
-				objDragonfly.logger.add("TestConfigurationSetup: strPathTestConfiguration = " + strFilePathTestConfiguration);
-				//objJsonObjectTestConfigurationFile = (JSONObjectExtended) objJsonParser.parse(new FileReader(strFilePathTestConfiguration));
-				objJsonObjectTestConfigurationFile = objDragonfly.new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathTestConfiguration)));
-				objDragonfly.logger.add("TestConfigurationSetup: objJsonObjectTestConfigurationFile = " + objJsonObjectTestConfigurationFile);
+				strFilePathTestConfiguration = Dragonfly.this.objPaths.gstrPathTestConfiguration + strFileNameTestConfiguration;
+				Dragonfly.this.logger.add("TestConfigurationSetup: strPathTestConfiguration = " + strFilePathTestConfiguration);
+				objJsonObjectTestConfigurationFile = Dragonfly.this.new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathTestConfiguration)));
+				Dragonfly.this.logger.add("TestConfigurationSetup: objJsonObjectTestConfigurationFile = " + objJsonObjectTestConfigurationFile);
 				// test_instances
 				//				objDragonfly.logger.add("TestConfigurationSetup: test_instances");
 				//				objDragonfly.variablesJSON.gobjJsonArrayTestInstances = this.putAllArrays(objDragonfly, "test_instances", "test_instances", objDragonfly.objPaths.gstrPathTestInstances);
 				//				intTestInstanceSize = objDragonfly.variablesJSON.gobjJsonArrayTestInstances.size();
 				//
-				objDragonfly.logger.add("TestConfigurationSetup: test_instances");
-				if (this.putAllArrays(objDragonfly, "test_instances", "test_instances", objDragonfly.objPaths.gstrPathTestInstances) == null) {
-					objDragonfly.variablesJSON.gobjJsonArrayTestInstances = null;
+				Dragonfly.this.logger.add("TestConfigurationSetup: test_instances");
+				if (this.putAllArrays("test_instances", "test_instances", Dragonfly.this.objPaths.gstrPathTestInstances) == null) {
+					Dragonfly.this.variablesJSON.gobjJsonArrayTestInstances = null;
 					intTestInstanceSize = 0;
 				} else {
-					objDragonfly.variablesJSON.gobjJsonArrayTestInstances = this.putAllArrays(objDragonfly, "test_instances", "test_instances", objDragonfly.objPaths.gstrPathTestInstances);
-					intTestInstanceSize = objDragonfly.variablesJSON.gobjJsonArrayTestInstances.size();
+					Dragonfly.this.variablesJSON.gobjJsonArrayTestInstances = this.putAllArrays("test_instances", "test_instances", Dragonfly.this.objPaths.gstrPathTestInstances);
+					intTestInstanceSize = Dragonfly.this.variablesJSON.gobjJsonArrayTestInstances.size();
 				}
 				// test_elements
-				objDragonfly.logger.add("TestConfigurationSetup: test_elements");
-				objDragonfly.variablesJSON.objectElement = this.putAllObjects(objDragonfly, "test_elements", "elements", objDragonfly.objPaths.gstrPathTestElements);
+				Dragonfly.this.logger.add("TestConfigurationSetup: test_elements");
+				Dragonfly.this.variablesJSON.objectElement = this.putAllObjects("test_elements", "elements", Dragonfly.this.objPaths.gstrPathTestElements);
 				// processing
-				objDragonfly.logger.add("TestConfigurationSetup: processing");
-				objDragonfly.variablesJSON.objectProcessing = this.putAllObjects(objDragonfly, "test_elements", "processing", objDragonfly.objPaths.gstrPathTestElements);
+				Dragonfly.this.logger.add("TestConfigurationSetup: processing");
+				Dragonfly.this.variablesJSON.objectProcessing = this.putAllObjects("test_elements", "processing", Dragonfly.this.objPaths.gstrPathTestElements);
 				// test_modules
-				objDragonfly.logger.add("TestConfigurationSetup: test_modules");
-				objDragonfly.variablesJSON.gobjJsonArrayTestSteps = this.putAllArrays(objDragonfly, "test_modules", "steps", objDragonfly.objPaths.gstrPathTestModules);
-				objDragonfly.logger.add("TestConfigurationSetup: gobjJsonArrayTestSteps.toString = " + objDragonfly.variablesJSON.gobjJsonArrayTestSteps.toString());
+				Dragonfly.this.logger.add("TestConfigurationSetup: test_modules");
+				Dragonfly.this.variablesJSON.gobjJsonArrayTestSteps = this.putAllArrays("test_modules", "steps", Dragonfly.this.objPaths.gstrPathTestModules);
+				Dragonfly.this.logger.add("TestConfigurationSetup: gobjJsonArrayTestSteps.toString = " + Dragonfly.this.variablesJSON.gobjJsonArrayTestSteps.toString());
 				// TODO add error handling, report no test modules and fail
 				// test_links
-				//objDragonfly.variablesJSON.objectLinks = (JSONObjectExtended) objJsonParser.parse("{\"link\":[{}]}");
-				objDragonfly.variablesJSON.objectLinks = objDragonfly.new JSONObjectExtended((JSONObject) objJsonParser.parse("{\"link\":[{}]}"));
+				Dragonfly.this.variablesJSON.objectLinks = Dragonfly.this.new JSONObjectExtended((JSONObject) objJsonParser.parse("{\"link\":[{}]}"));
 				// test_data
-				objDragonfly.logger.add("TestConfigurationSetup: test_data");
-				objDragonfly.variablesJSON.objectTestData = this.putAllObjects(objDragonfly, "test_data", "test_data", objDragonfly.objPaths.gstrPathTestData);
+				Dragonfly.this.logger.add("TestConfigurationSetup: test_data");
+				Dragonfly.this.variablesJSON.objectTestData = this.putAllObjects("test_data", "test_data", Dragonfly.this.objPaths.gstrPathTestData);
 			} catch (Exception e) {
-				objDragonfly.logger.add("TestConfigurationSetup: Exception = " + e.toString());
+				Dragonfly.this.logger.add("TestConfigurationSetup: Exception = " + e.toString());
 			} finally {
-				objDragonfly.logger.add("TestConfigurationSetup: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Dragonfly.this.logger.add("TestConfigurationSetup: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 
 		@SuppressWarnings("unchecked")
-		private JSONArray putAllArrays(Dragonfly objDragonfly, String strJsonArrayName, String strJsonObjectName, String strPath) {
+		private JSONArray putAllArrays(String strJsonArrayName, String strJsonObjectName, String strPath) {
 			int intJsonArrayEach = 0;
 			JSONArray objJsonArray = null;
 			JSONArray objJsonArrayEach = null;
@@ -4399,14 +4298,13 @@ public class Dragonfly {
 				for (intJsonArrayEach = 0; intJsonArrayEach < objJsonArrayList.size(); intJsonArrayEach++) {
 					strFileNameEach = objJsonArrayList.get(intJsonArrayEach).toString();
 					strFilePathJsonArray = strPath + strFileNameEach;
-					objDragonfly.logger.add("TestConfigurationSetup:putAllArrays strFilePathJsonArray = " + strFilePathJsonArray);
+					Dragonfly.this.logger.add("TestConfigurationSetup:putAllArrays strFilePathJsonArray = " + strFilePathJsonArray);
 					try {
-						//objJsonObjectFileEach = (JSONObjectExtended) objJsonParser.parse(new FileReader(strFilePathJsonArray));
-						objJsonObjectFileEach = objDragonfly.new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathJsonArray)));
+						objJsonObjectFileEach = Dragonfly.this.new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathJsonArray)));
 						objJsonArrayEach = (JSONArray) objJsonObjectFileEach.get(strJsonObjectName);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
-						objDragonfly.logger.add("TestConfigurationSetup:putAllArrays objJsonArray = " + objJsonArray);
+						Dragonfly.this.logger.add("TestConfigurationSetup:putAllArrays objJsonArray = " + objJsonArray);
 						e.printStackTrace();
 					}
 					if (intJsonArrayEach == 0) {
@@ -4416,13 +4314,13 @@ public class Dragonfly {
 					}
 				}
 			}
-			objDragonfly.logger.add("TestConfigurationSetup:putAllArrays objJsonArray = " + objJsonArray);
+			Dragonfly.this.logger.add("TestConfigurationSetup:putAllArrays objJsonArray = " + objJsonArray);
 			return objJsonArray;
 		}
 
 		@SuppressWarnings("unchecked")
-		private JSONObjectExtended putAllObjects(Dragonfly objDragonfly, String strJsonArrayName, String strJsonObjectName, String strPath) {
-			objDragonfly.logger.add("  ==start==>putAllObjects " + new DateTimestamp().get());
+		private JSONObjectExtended putAllObjects(String strJsonArrayName, String strJsonObjectName, String strPath) {
+			Dragonfly.this.logger.add("  ==start==>putAllObjects " + new DateTimestamp().get());
 			Integer intJsonObjectEach = 0;
 			JSONArray objJsonArrayList = null;
 			JSONObjectExtended objJsonObject = null;
@@ -4431,17 +4329,19 @@ public class Dragonfly {
 			String strFileNameEach = "";
 			String strFilePathJsonArray = "";
 			objJsonArrayList = (JSONArray) objJsonObjectTestConfigurationFile.get(strJsonArrayName);
-			objDragonfly.logger.add("TestConfigurationSetup:putAllObjects objJsonArrayList.size() " + objJsonArrayList.size());
+			Dragonfly.this.logger.add("TestConfigurationSetup:putAllObjects objJsonArrayList.size() " + objJsonArrayList.size());
 			for (intJsonObjectEach = 0; intJsonObjectEach < objJsonArrayList.size(); intJsonObjectEach++) {
 				strFileNameEach = objJsonArrayList.get(intJsonObjectEach).toString();
-				objDragonfly.logger.add("TestConfigurationSetup:putAllObjects strFileNameEach " + strFileNameEach);
+				Dragonfly.this.logger.add("TestConfigurationSetup:putAllObjects strFileNameEach " + strFileNameEach);
 				strFilePathJsonArray = strPath + strFileNameEach;
-				objDragonfly.logger.add("TestConfigurationSetup:putAllObjects strFilePathJsonArray = " + strFilePathJsonArray);
+				Dragonfly.this.logger.add("TestConfigurationSetup:putAllObjects strFilePathJsonArray = " + strFilePathJsonArray);
 				try {
-					//objJsonObjectFileEach = (JSONObjectExtended) objJsonParser.parse(new FileReader(strFilePathJsonArray));
-					//objJsonObjectEach = (JSONObjectExtended) objJsonObjectFileEach.get(strJsonObjectName);
-					objJsonObjectFileEach = objDragonfly.new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathJsonArray)));
-					objJsonObjectEach = objDragonfly.new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathJsonArray)));
+					objJsonObjectFileEach = Dragonfly.this.new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathJsonArray)));
+					Dragonfly.this.logger.add("TestConfigurationSetup:putAllObjects objJsonObjectFileEach = " + objJsonObjectFileEach);
+					//objJsonObjectEach = Dragonfly.this.new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathJsonArray)));
+					//JSONObjectExtended objJsonObjectElementNode = Dragonfly.this.new JSONObjectExtended((JSONObject) objJsonObjectFileEach.get(strKeywordValue));
+					objJsonObjectEach = Dragonfly.this.new JSONObjectExtended((JSONObject) objJsonObjectFileEach.get(strJsonObjectName));
+					Dragonfly.this.logger.add("TestConfigurationSetup:putAllObjects objJsonObjectEach = " + objJsonObjectEach);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -4452,7 +4352,7 @@ public class Dragonfly {
 					objJsonObject.putAll(objJsonObjectEach);
 				}
 			}
-			objDragonfly.logger.add("TestConfigurationSetup:putAllObjects objJsonObject = " + objJsonObject);
+			Dragonfly.this.logger.add("TestConfigurationSetup:putAllObjects objJsonObject = " + objJsonObject);
 			return objJsonObject;
 		}
 	}
@@ -4485,6 +4385,7 @@ public class Dragonfly {
 	}
 
 	public class VariablesJSON {
+		private JSONParser objJsonParser = new JSONParser();
 		//JSONObjectExtended
 		//objDragonfly.VariablesJSON.JSONObjectStep
 		public JSONArray gobjJsonArrayTestInstances = null;
@@ -4493,8 +4394,10 @@ public class Dragonfly {
 		public JSONObjectExtended objectLinks = null;
 		public JSONObjectExtended objectProcessing = null;
 		public JSONObjectExtended objectStep = null;
+		//public JSONObjectExtended  objectStep = Dragonfly.this.new JSONObjectExtended((JSONObject) null);
 		public JSONObjectExtended objectTestData = null;
 		public JSONObjectExtended objectTestInstancesEach = null;
+		//private JSONObjectExtended objJsonObjectFileEachTest = (JSONObjectExtended) new JSONObject();
 	}
 
 	public class VariablesSelenium {
@@ -4845,15 +4748,6 @@ public class Dragonfly {
 		}
 	}
 
-	//	public class WriteJsonKeys {
-	//		public WriteJsonKeys(Dragonfly objDragonfly, JSONObject objJsonObjectKeySet, String file) throws IOException {
-	//			objDragonfly.logger.add("  ==start==>WriteJsonKeys " + new DateTimestamp().get());
-	//			for (Iterator<?> iterator = objJsonObjectKeySet.keySet().iterator(); iterator.hasNext();) {
-	//				String key = (String) iterator.next();
-	//				objDragonfly.logger.add("WriteJsonKeys: " + key + " = " + objJsonObjectKeySet.get(key));
-	//			}
-	//		}
-	//	}
 	public class WriteJsonStepsToHtml {
 		public WriteJsonStepsToHtml(Dragonfly objDragonfly, String strStepHeader, JSONArray objTestSteps, String strPath, String strFileName) {
 			objDragonfly.logger.add("  ==start==>WriteJsonStepsToHtml " + new DateTimestamp().get());
@@ -4976,9 +4870,7 @@ public class Dragonfly {
 				objStringBuilder.append("<br>");
 				objStringBuilder.append("<br>");
 				for (intTestStepRow = 0; intTestStepRow < objJsonArrayReportSteps.size(); intTestStepRow++) {
-					//objJsonObjectReportStep = (JSONObjectExtended) objJsonArrayReportSteps.get(intTestStepRow)
 					objJsonObjectReportStep = objDragonfly.new JSONObjectExtended((JSONObject) objJsonArrayReportSteps.get(intTestStepRow));
-					//objJsonObjectReportStep = (JSONObjectExtended) objJsonArrayReportSteps.get(intTestStepRow);
 					objStringBuilder.append("<div id=step_" + intTestStepRow + ">");
 					objStringBuilder.append("<TABLE border=1 width=100% height=10%>");
 					objStringBuilder.append("<TR>");
@@ -5004,18 +4896,18 @@ public class Dragonfly {
 						strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:magenta\">?</span>";
 						break;
 					}
-					String strStartTimestamp = objJsonObjectReportStep.get("strStartTimestamp").toString();
-					String strStepDuration = objJsonObjectReportStep.get("strStepDuration").toString();
-					String strEndTimestamp = objJsonObjectReportStep.get("strEndTimestamp").toString();
+					String strStartTimestamp = objJsonObjectReportStep.getString("strStartTimestamp");
+					String strStepDuration = objJsonObjectReportStep.getString("strStepDuration");
+					String strEndTimestamp = objJsonObjectReportStep.getString("strEndTimestamp");
 					objStringBuilder.append("<TD onclick=\"scrollToTop()\" rowspan=\"2\" width=60px align=center valign=middle>Step " + intTestStepRow + "</TD>");
 					objStringBuilder.append("<TD rowspan=\"2\" width=35px align=center valign=middle>" + strStatusIcon + "<br>" + strStatus + "</TD>");
 					objStringBuilder.append("<TD width= 75px align=center valign=middle>Expected</TD>");
-					objStringBuilder.append("<TD align=left valign=middle>" + objJsonObjectReportStep.get("strStepExpected").toString() + "</TD>");
+					objStringBuilder.append("<TD align=left valign=middle>" + objJsonObjectReportStep.getString("strStepExpected") + "</TD>");
 					objStringBuilder.append("<TD rowspan=\"2\" width=150px align=left valign=middle>Start:" + strStartTimestamp + "<br>End: " + strEndTimestamp + "<br>Duration: " + strStepDuration + " ms</TD>");
 					objStringBuilder.append("</TR>");
 					objStringBuilder.append("<TR>");
 					objStringBuilder.append("<TD align=center valign=middle>Actual</TD>");
-					objStringBuilder.append("<TD align=left valign=middle>" + objJsonObjectReportStep.get("strStepActual").toString() + "</TD>");
+					objStringBuilder.append("<TD align=left valign=middle>" + objJsonObjectReportStep.getString("strStepActual") + "</TD>");
 					objStringBuilder.append("</TR>");
 					objStringBuilder.append("</TABLE> ");
 					if (objJsonObjectReportStep.get("strScreenshotFilePath").toString().trim().length() != 0) {
@@ -5048,20 +4940,33 @@ public class Dragonfly {
 		}
 	}
 
+	private class OperatingSystem {
+		private String strOS = "";
+
+		private OperatingSystem() {
+			Dragonfly.this.logger.add("  ==start==>OperatingSystem " + new DateTimestamp().get());
+			strOS = System.getProperty("os.name").toLowerCase();
+			if (strOS.contains("win")) {
+				strOS = "Windows";
+			} else if (strOS.contains("nux") || strOS.contains("nix")) {
+				strOS = "Linux";
+			} else if (strOS.contains("mac")) {
+				strOS = "Mac";
+			} else if (strOS.contains("sunos")) {
+				strOS = "Solaris";
+			} else {
+				strOS = "Other";
+			}
+		}
+	}
+
 	public static void main(String[] args) {
 		JSONArray objJsonArrayTestSteps = null;
 		JSONArray objJsonArrayTestStepsRun = new JSONArray();
 		JSONParser objJsonParser = new JSONParser();
 		Dragonfly objDragonfly = new Dragonfly();
 		objDragonfly.logger.add("  ==start==>main " + objDragonfly.new DateTimestamp().get());
-		//String strValueToFindKeyword = "<ti><td><tl>key value";
-		//String strValueToFindKeyword = "<ti><td>key value";
-		//String strValueToFindKeyword = "<re>key value";
-		//String[] arrKeywords = objDragonfly.new KeywordReturnArray().run(objDragonfly, strValueToFindKeyword);
-		//System.out.println("	arrKeywords.length = " + arrKeywords.length);
-		//System.exit(0);
 		objDragonfly.objAutoItSetObject.createObject(objDragonfly);
-		objDragonfly.objOperatingSystem.set(objDragonfly);
 		String strNameTestConfiguration;
 		try {
 			objDragonfly.new DialogLaunch(objDragonfly);
@@ -5089,7 +4994,7 @@ public class Dragonfly {
 		String strTestStatus = "";
 		String strLoopExitValue = "";
 		objDragonfly.new WindowsMinimizeAll(objDragonfly);
-		objDragonfly.objTestConfigurationSetup.run(objDragonfly, strNameTestConfiguration);
+		objDragonfly.objTestConfigurationSetup.run(strNameTestConfiguration);
 		int intTestInstanceSize = objDragonfly.objTestConfigurationSetup.intTestInstanceSize;
 		objDragonfly.logger.add("main: intTestInstanceSize = " + intTestInstanceSize);
 		String strTestStepsCombinedOriginal = objDragonfly.variablesJSON.gobjJsonArrayTestSteps.toString();
@@ -5109,27 +5014,26 @@ public class Dragonfly {
 				}
 				strFileTestSteps = objDragonfly.objPaths.gstrPathTestSteps + strNameTestConfiguration.replace(".json", ".html");
 				objDragonfly.new WriteJsonStepsToHtml(objDragonfly, "original", objJsonArrayTestSteps, objDragonfly.objPaths.gstrPathResults, "StepsOriginal.html");
-				//objDragonfly.logger.add("main: objJsonArrayTestSteps.size() = " + objJsonArrayTestSteps.size());
 				for (intStep = 0; intStep < objJsonArrayTestSteps.size(); intStep++) {
 					objDragonfly.logger.add("main: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
 					objDragonfly.objVariablesSelenium.gobjWebElement = null;
 					objDragonfly.variablesJSON.objectStep = objDragonfly.new JSONObjectExtended((JSONObject) objJsonArrayTestSteps.get(intStep));
-					//objDragonfly.variablesJSON.objectStep =   (  JSONObjectExtended) objJsonParser.parse(objJsonArrayTestSteps.get(intStep).toString());
-					objDragonfly.new StepSetupDefaults(objDragonfly, strCurrentWindowHandle);
-					String strInputValue = objDragonfly.variablesJSON.objectStep.get("strInputValue").toString();
-					objDragonfly.new LogStepDetails(objDragonfly, intStep);
+					//objDragonfly.variablesJSON.objectStep = (JSONObjectExtended) objJsonArrayTestSteps.get(intStep);
+					objDragonfly.new StepSetupDefaults(strCurrentWindowHandle);
+					String strInputValue = objDragonfly.variablesJSON.objectStep.getString("strInputValue");
+					objDragonfly.new LogStepDetails(intStep);
 					if (objDragonfly.variablesJSON.objectStep.get("strLoopOrIf").toString().trim().length() > 0) {
 						if (objDragonfly.variablesJSON.objectStep.get("strLoopOrIf").toString().toLowerCase().startsWith("<loopstart>") == true) {
 							if (intLoopEach == 0) {
 								intLoopCount = Integer.parseInt(objDragonfly.variablesJSON.objectStep.get("strLoopOrIf").toString().substring(11));
-								objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strLoopOrIf", "");
+								objDragonfly.variablesJSON.objectStep.putValue("strLoopOrIf", "");
 								intLoopEach = 1;
 								intLoopStep = intStep;
 							}
 						}
 					}
-					if (!objDragonfly.variablesJSON.objectStep.get("strFunction").toString().trim().equals("")) {
-						String strMethodName = objDragonfly.variablesJSON.objectStep.get("strFunction").toString();
+					if (!objDragonfly.variablesJSON.objectStep.verifyEquals("strFunction", "")) {
+						String strMethodName = objDragonfly.variablesJSON.objectStep.getString("strFunction");
 						String strArguments = strInputValue;
 						Class<?> objClass = Class.forName("org.DragonflyAutomation.Dragonfly");
 						Class<?> objParameterTypes[] = new Class[2];
@@ -5142,7 +5046,7 @@ public class Dragonfly {
 						Object objReturn = objMethod.invoke(objDragonfly, arrArgumentList);
 						String strReturnValue = (String) objReturn;
 						strInputValue = strReturnValue.toString();
-						objDragonfly.variablesJSON.objectStep.putValue(objDragonfly, "strInputValue", strInputValue);
+						objDragonfly.variablesJSON.objectStep.putValue("strInputValue", strInputValue);
 						objDragonfly.logger.add("main: call function return value = " + strInputValue);
 					}
 					if (objDragonfly.variablesJSON.objectStep.get("strLoopOrIf").toString().toLowerCase().startsWith("<else if") == true) {
@@ -5220,23 +5124,24 @@ public class Dragonfly {
 								objDragonfly.logger.add("main: switch strAction = " + objDragonfly.variablesJSON.objectStep.getLowerCase("strAction") + "  not supported");
 								return;
 							}
-							strCurrentWindowHandle = objDragonfly.variablesJSON.objectStep.get("strCurrentWindowHandle").toString();
+							strCurrentWindowHandle = objDragonfly.variablesJSON.objectStep.getString("strCurrentWindowHandle");
 						}
 					}
-					if (objDragonfly.variablesJSON.objectStep.get("strOutputLinkName").toString().trim().length() != 0) {
-						objDragonfly.variablesJSON.objectLinks.put(objDragonfly.variablesJSON.objectStep.get("strOutputLinkName").toString(), objDragonfly.variablesJSON.objectStep.get("strOutputValue").toString());
+					if (objDragonfly.variablesJSON.objectStep.getString("strOutputLinkName").trim().length() != 0) {
+						objDragonfly.variablesJSON.objectLinks.putValue(objDragonfly.variablesJSON.objectStep.getString("strOutputLinkName"), objDragonfly.variablesJSON.objectStep.getString("strOutputValue"));
 					}
 					if (objDragonfly.variablesJSON.objectStep.verifyEquals("strStatus", "fail")) {
 						strTestStatus = "fail";
-						if (Boolean.parseBoolean(objDragonfly.variablesJSON.objectStep.get("blnExitOnFail").toString()) == true) {
-							objDragonfly.new WebElementCollectionTable(objDragonfly, objDragonfly.variablesJSON.objectStep.get("strTagName").toString());
+						if (objDragonfly.variablesJSON.objectStep.getBoolean("blnExitOnFail") == true) {
+							objDragonfly.new WebElementCollectionTable(objDragonfly, objDragonfly.variablesJSON.objectStep.getString("strTagName"));
 							break;
 						}
 					}
 					switch (objDragonfly.new KeywordReturn().run(objDragonfly, objDragonfly.variablesJSON.objectStep.getLowerCase("strLoopOrIf"))) {
 					case "<loopexit>":
 						strLoopExitValue = objDragonfly.variablesJSON.objectStep.get("strLoopOrIf").toString().substring(10);
-						if (objDragonfly.variablesJSON.objectStep.get("strOutputValue").toString().equals(strLoopExitValue)) {
+						if (objDragonfly.variablesJSON.objectStep.verifyEquals("strOutputValue", strLoopExitValue)) {
+							//if (objDragonfly.variablesJSON.objectStep.get("strOutputValue").toString().equals(strLoopExitValue)) {
 							intLoopCount = 0;
 							intLoopEach = 0;
 						}
@@ -5308,7 +5213,6 @@ public class Dragonfly {
 	TestConfigurationSetup objTestConfigurationSetup = new TestConfigurationSetup();
 	VariablesJSON variablesJSON = new VariablesJSON();
 	VariablesSetSync objVariablesSetSync = new VariablesSetSync();
-	//JsonObjectStepPut objJsonObjectStepPut = new JsonObjectStepPut();
 	StepsManual objStepsManual = new StepsManual();
 	VariablesCommon objVariablesCommon = new VariablesCommon();
 
@@ -5332,7 +5236,7 @@ public class Dragonfly {
 		try {
 			JSONObjectExtended objJsonObjectFile = objDragonfly.new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathTestData)));
 			objDragonfly.logger.add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
-			strURL = objJsonObjectFile.get(strApplication_Environment).toString();
+			strURL = objJsonObjectFile.getString(strApplication_Environment);
 			objDragonfly.logger.add("data_EnvironmentURL: strURL = " + strURL);
 		} catch (Exception e) {
 			objDragonfly.logger.add("data_EnvironmentURL: Exception = " + e.toString());

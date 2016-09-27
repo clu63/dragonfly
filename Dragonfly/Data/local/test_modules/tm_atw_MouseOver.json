@@ -45,11 +45,11 @@
 
 		{
 			"strAction": "set",
-			"strTagName": "a",
-			"strAttributeNames": "id",
-			"strAttributeValues": "onmouseover",
+			"strTagName": "",
+			"strAttributeNames": "",
+			"strAttributeValues": "",
 			"strInputValue": "",
-			"strLogicalName": "",
+			"strLogicalName": "<te>MouseOverLink",
 			"intMillisecondsToWait": "",
 			"blnOptional": "",
 			"strAssert": "",
