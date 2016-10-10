@@ -3018,14 +3018,14 @@ public class Dragonfly {
 		}
 
 		private int getInt(String strKeyName) {
-			if (this.get(strKeyName).toString().equals("")) {
+			if (this.getString(strKeyName).equals("")) {
 				return 0;
 			}
 			return Integer.parseInt(this.get(strKeyName).toString());
 		}
 
 		private String getLowerCase(String strKeyName) {
-			return this.get(strKeyName).toString().toLowerCase();
+			return this.getString(strKeyName).toLowerCase();
 		}
 
 		private String getString(String strKeyName) {
@@ -3038,6 +3038,17 @@ public class Dragonfly {
 				Dragonfly.this.logger.add("JSONObjectExtended:getString JSON Key " + strKeyName + " for keyword link name " + strKeyName + " not present");
 				return "";
 			}
+		}
+
+		private String returnKeyword(String strKeyName1) {
+			String strValueToFindKeyword = this.getLowerCase(strKeyName1);
+			int intRightArrowPosition = strValueToFindKeyword.indexOf(">");
+			String strKeyword = "";
+			if (intRightArrowPosition > -1) {
+				strKeyword = strValueToFindKeyword.substring(0, intRightArrowPosition + 1);
+			}
+			Dragonfly.this.logger.add("KeywordReturn: strKeyword " + strKeyword);
+			return strKeyword;
 		}
 
 		private String getValue(String strInputValue, String strKeywordName) throws ExceptionJSONKeyNotPresent {
@@ -3126,18 +3137,6 @@ public class Dragonfly {
 		}
 	}
 
-	private class KeywordReturn {
-		private String run(String strValueToFindKeyword) {
-			String strKeyword = "";
-			int intRightArrowPosition = strValueToFindKeyword.indexOf(">");
-			if (intRightArrowPosition > -1) {
-				strKeyword = strValueToFindKeyword.substring(0, intRightArrowPosition + 1);
-			}
-			Dragonfly.this.logger.add("KeywordReturn: strKeyword " + strKeyword);
-			return strKeyword;
-		}
-	}
-
 	private class KeywordsValid {
 		//TODO KeywordsValid to check all
 		private String[] arrKV_strLogicalName = { "<te>" };
@@ -3203,8 +3202,11 @@ public class Dragonfly {
 					String strKeywordValueCombined = "";
 					String arrAttributeValues[] = Dragonfly.this.variablesJSON.objectStep.getString(strKey).split("\\|", -1);
 					for (String strAttributeValuesEach : arrAttributeValues) {
+						Dragonfly.this.logger.add("strAttributeValuesEach = " + strAttributeValuesEach);
 						this.getKeywordsAndValue(strAttributeValuesEach);
 						for (String strResultsEach : arrResults) {
+							Dragonfly.this.logger.add("strResultsEach = " + strResultsEach);
+							Dragonfly.this.logger.add("strKeywordValue = " + strKeywordValue);
 							for (String strKeywordsValidEach : arrKV_strAttributeValues) {
 								if (strResultsEach.equals(strKeywordsValidEach)) {
 									blnValid = true;
@@ -3236,6 +3238,8 @@ public class Dragonfly {
 						}
 					}
 					Dragonfly.this.variablesJSON.objectStep.putValue("strInputValue", strKeywordValue);
+					Dragonfly.this.logger.add("strKeywordValue = " + strKeywordValue);
+					Dragonfly.this.logger.add("strInputValueFromJson = " + strInputValueFromJson);
 					break;
 				case "strLoopOrIf":
 					//					arrKeywordsValid = strValidKeyword_strLoopOrIf.split("\\|");
@@ -3278,7 +3282,10 @@ public class Dragonfly {
 					strInputValueFromJson = Dragonfly.this.variablesJSON.objectLinks.getValue(strInputValue, "<tl>");
 					break;
 				case "<re>":
-					strInputValueFromJson = strKeyword + strInputValue;
+					strInputValueFromJson = strInputValue;
+					Dragonfly.this.logger.add(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>getJsonValue:<re> strKeyword =" + strKeyword);
+					Dragonfly.this.logger.add(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>getJsonValue:<re> strInputValue =" + strInputValue);
+					Dragonfly.this.logger.add(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>getJsonValue:<re> strInputValueFromJson =" + strInputValueFromJson);
 					break;
 				default:
 					strInputValueFromJson = strKeyword + strInputValue;
@@ -3291,27 +3298,38 @@ public class Dragonfly {
 		}
 
 		private void getKeywordsAndValue(String strValueToFindKeyword) {
-			//			Dragonfly.this.logger.add("  ==start==>getKeywordsAndValue " + new DateTimestamp().get());
-			Dragonfly.this.logger.add("getKeywordsAndValue strValueToFindKeyword" + strValueToFindKeyword);
+			Dragonfly.this.logger.add("  ==start==>getKeywordsAndValue " + new DateTimestamp().get());
+			Dragonfly.this.logger.add("getKeywordsAndValue strValueToFindKeyword = " + strValueToFindKeyword);
 			String strKeyword = "";
+			String strKeywordCombined = "";
 			int intLeftArrowPositionEach = 0;
 			int intLeftArrowPosition = -1;
 			int intRightArrowPosition = -1;
 			int intKeywordCount = strValueToFindKeyword.length() - strValueToFindKeyword.replace("<", "").length();
+			strKeywordValue = strValueToFindKeyword.substring(intRightArrowPosition + 1, strValueToFindKeyword.length());
 			for (int intKeywordEach = 0; intKeywordEach < intKeywordCount; intKeywordEach++) {
 				intLeftArrowPositionEach = intLeftArrowPosition + 1;
 				intLeftArrowPosition = strValueToFindKeyword.indexOf("<", intLeftArrowPositionEach);
 				intRightArrowPosition = strValueToFindKeyword.indexOf(">", intLeftArrowPosition);
 				if (intLeftArrowPosition > -1) {
-					if (strKeyword.length() == 0) {
-						strKeyword = strValueToFindKeyword.substring(intLeftArrowPosition, intRightArrowPosition + 1);
+					strKeyword = strValueToFindKeyword.substring(intLeftArrowPosition, intRightArrowPosition + 1);
+					strKeywordValue = strValueToFindKeyword.substring(intRightArrowPosition + 1, strValueToFindKeyword.length());
+					if (strKeyword.equals("<re>")) {
+						strKeywordValue = strKeyword + strKeywordValue;
+					}
+					Dragonfly.this.logger.add("getKeywordsAndValue strKeyword = " + strKeyword);
+					Dragonfly.this.logger.add("getKeywordsAndValue strKeywordValue = " + strKeywordValue);
+					if (strKeywordCombined.length() == 0) {
+						strKeywordCombined = strKeyword;
 					} else {
-						strKeyword = strKeyword + "|" + strValueToFindKeyword.substring(intLeftArrowPosition, intRightArrowPosition + 1);
+						strKeywordCombined = strKeywordCombined + "|" + strKeyword;
 					}
 				}
 			}
-			strKeywordValue = strValueToFindKeyword.substring(intRightArrowPosition + 1, strValueToFindKeyword.length());
-			arrResults = strKeyword.split("\\|");
+			Dragonfly.this.logger.add("getKeywordsAndValue after for strKeyword = " + strKeywordCombined);
+			//strKeywordValue = strValueToFindKeyword.substring(intRightArrowPosition + 1, strValueToFindKeyword.length());
+			Dragonfly.this.logger.add("getKeywordsAndValue strKeywordValue = " + strKeywordValue);
+			arrResults = strKeywordCombined.split("\\|");
 			Collections.reverse(Arrays.asList(arrResults));
 		}
 	}
@@ -4373,10 +4391,11 @@ public class Dragonfly {
 
 	private class VariablesCommon {
 		private String gstrBrowserSelection;
+		private String strExitTest;
+		private String strExitTestIterations;
 	}
 
 	private class VariablesJSON {
-		private JSONParser objJsonParser = new JSONParser();
 		private JSONObject obj = new JSONObject();
 		private JSONArray gobjJsonArrayTestInstances = null;
 		private JSONArray gobjJsonArrayTestSteps = null;
@@ -4935,6 +4954,7 @@ public class Dragonfly {
 		int intLoopStep = 0;
 		int intTestInstanceEach = 0;
 		Boolean blnIf = true;
+		Boolean blnIfSet = false;
 		String strCurrentWindowHandle = "";
 		String strFileTestSteps = "";
 		String strTestStatus = "";
@@ -4946,14 +4966,8 @@ public class Dragonfly {
 		if (intTestInstanceSize == 0) {
 			intTestInstanceStart = -1;
 		}
-		objDragonfly.logger.add("main: intTestInstanceEach = " + intTestInstanceEach);
-		objDragonfly.logger.add("main: intTestInstanceStart = " + intTestInstanceStart);
-		objDragonfly.logger.add("main: intTestInstanceSize = " + intTestInstanceSize);
 		String strTestStepsCombinedOriginal = objDragonfly.variablesJSON.gobjJsonArrayTestSteps.toString();
 		for (intTestInstanceEach = intTestInstanceStart; intTestInstanceEach < intTestInstanceSize; intTestInstanceEach++) {
-			objDragonfly.logger.add("main: intTestInstanceEach = " + intTestInstanceEach);
-			objDragonfly.logger.add("main: intTestInstanceStart = " + intTestInstanceStart);
-			objDragonfly.logger.add("main: intTestInstanceSize = " + intTestInstanceSize);
 			try {
 				objDragonfly.logger.add(">>>>>>main: objDragonfly.variablesJSON.objectStep " + objDragonfly.variablesJSON.objectStep);
 				objJsonArrayTestStepsRun.clear();
@@ -5016,21 +5030,27 @@ public class Dragonfly {
 					}
 					objDragonfly.logger.add("main: before blnIf = " + blnIf);
 					objDragonfly.logger.add("strFunction after");
-					if (objDragonfly.variablesJSON.objectStep.get("strLoopOrIf").toString().toLowerCase().startsWith("<else if") == true) {
+					//switch (objDragonfly.new KeywordReturn().run(objDragonfly.variablesJSON.objectStep.getLowerCase("strLoopOrIf"))) {
+					switch (objDragonfly.variablesJSON.objectStep.returnKeyword("strLoopOrIf")) {
+					case "<else if>":
+						//if (objDragonfly.variablesJSON.objectStep.get("strLoopOrIf").toString().toLowerCase().startsWith("<else if") == true) {
 						objDragonfly.logger.add("main: blnIf = " + blnIf);
-						if (blnIf == false) {
-							blnIf = true;
-						} else {
+						if (blnIfSet.equals(true)) {
 							blnIf = false;
+						} else {
+							blnIf = true;
 						}
-					}
-					if (objDragonfly.variablesJSON.objectStep.get("strLoopOrIf").toString().toLowerCase().startsWith("<else>") == true) {
+						//}
+						break;
+					case "<else>":
+						//if (objDragonfly.variablesJSON.objectStep.get("strLoopOrIf").toString().toLowerCase().startsWith("<else>") == true) {
 						objDragonfly.logger.add("main: <else> blnIf = " + blnIf);
-						if (blnIf.equals(true)) {
+						if (blnIfSet.equals(true)) {
 							blnIf = false;
 						} else {
 							blnIf = true;
 						}
+						break;
 					}
 					objDragonfly.logger.add("strLoopOrIf after");
 					objDragonfly.logger.add("main: blnIf = " + blnIf);
@@ -5116,7 +5136,8 @@ public class Dragonfly {
 							}
 						}
 					}
-					switch (objDragonfly.new KeywordReturn().run(objDragonfly.variablesJSON.objectStep.getLowerCase("strLoopOrIf"))) {
+					//switch (objDragonfly.new KeywordReturn().run(objDragonfly.variablesJSON.objectStep.getLowerCase("strLoopOrIf"))) {
+					switch (objDragonfly.variablesJSON.objectStep.returnKeyword("strLoopOrIf")) {
 					case "<loopexit>":
 						strLoopExitValue = objDragonfly.variablesJSON.objectStep.get("strLoopOrIf").toString().substring(10);
 						if (objDragonfly.variablesJSON.objectStep.verifyEquals("strOutputValue", strLoopExitValue)) {
@@ -5137,28 +5158,33 @@ public class Dragonfly {
 					case "<if>":
 						if (objDragonfly.variablesJSON.objectStep.verifyEquals("strStatus", "pass")) {
 							blnIf = true;
+							blnIfSet = true;
 						} else {
 							blnIf = false;
 						}
 						break;
 					case "<else if>":
-						if (objDragonfly.variablesJSON.objectStep.verifyEquals("strStatus", "pass")) {
-							blnIf = true;
-						} else {
-							blnIf = false;
+						if (blnIfSet.equals(false)) {
+							if (objDragonfly.variablesJSON.objectStep.verifyEquals("strStatus", "pass")) {
+								blnIf = true;
+								blnIfSet = true;
+							} else {
+								blnIf = false;
+							}
 						}
 						break;
-						//					case "<else>":
-						//						objDragonfly.logger.add("main: <else> blnIf = " + blnIf);
-						//						if (blnIf.equals(true)) {
-						//							blnIf = false;
-						//						} else {
-						//							blnIf = true;
-						//						}
-						//						break;
+					//					case "<else>":
+					//						objDragonfly.logger.add("main: <else> blnIf = " + blnIf);
+					//						if (blnIf.equals(true)) {
+					//							blnIf = false;
+					//						} else {
+					//							blnIf = true;
+					//						}
+					//						break;
 					case "<end if>":
 						objDragonfly.logger.add("main: blnIf = false");
 						blnIf = true;
+						blnIfSet = false;
 						break;
 					}
 					objDragonfly.logger.add("main: objectStep " + objDragonfly.variablesJSON.objectStep);
@@ -5475,37 +5501,6 @@ public class Dragonfly {
 		}
 	}
 }
-//	private class KeywordReturnArray {
-//		private String[] run(  String strValueToFindKeyword) {
-//			String strKeyword = "";
-//			String[] arrResults = null;
-//			String strKeywordValue = "";
-//			int intLeftArrowPositionEach = 0;
-//			int intLeftArrowPosition = -1;
-//			int intRightArrowPosition = 0;
-//			int intKeywordCount = strValueToFindKeyword.length() - strValueToFindKeyword.replace("<", "").length();
-//			for (int intKeywordEach = 0; intKeywordEach < intKeywordCount; intKeywordEach++) {
-//				intLeftArrowPositionEach = intLeftArrowPosition + 1;
-//				intLeftArrowPosition = strValueToFindKeyword.indexOf("<", intLeftArrowPositionEach);
-//				intRightArrowPosition = strValueToFindKeyword.indexOf(">", intLeftArrowPosition);
-//				if (intLeftArrowPosition > -1) {
-//					if (strKeyword.length() == 0) {
-//						strKeyword = strValueToFindKeyword.substring(intRightArrowPosition + 1, intRightArrowPosition + 1);
-//					} else {
-//						strKeyword = strKeyword + "|" + strValueToFindKeyword.substring(intLeftArrowPosition, intRightArrowPosition + 1);
-//					}
-//				}
-//			}
-//			strKeywordValue = strValueToFindKeyword.substring(intRightArrowPosition + 1, strValueToFindKeyword.length());
-//			arrResults = strKeyword.split("\\|");
-//			Dragonfly.this.logger.add("KeywordReturnArray: strKeyword " + strKeyword);
-//			Dragonfly.this.logger.add("KeywordReturnArray: arrResults " + arrResults.toString());
-//			for (int intKeysEach = 0; intKeysEach < arrResults.length; intKeysEach++) {
-//				Dragonfly.this.logger.add("KeywordReturnArray: arrResults[intKeysEach].toString() " + arrResults[intKeysEach].toString());
-//			}
-//			return arrResults;
-//		}
-//	}
 //	private static ExpectedCondition<Boolean> waitForAngularFinishProcessing() {
 //		Dragonfly.this.logger.add("  ==start==>waitForAngularFinishProcessing " + new DateTimestamp().get());
 //		return new ExpectedCondition<Boolean>() {
@@ -5515,25 +5510,6 @@ public class Dragonfly {
 //			}
 //		};
 //	}
-//private static int loopEndFind(JSONObject objJSONObject) {
-//		Dragonfly.this.logger.add("  ==start==>loopEndFind " + new DateTimestamp().get());
-//		JSONArray objTestSteps2 = null;
-//		int intStep2 = 0;
-//		JSONObject objStep2 = null;
-//		try {
-//			objTestSteps2 = (JSONArray) gobjJsonParser.parse(gstrTestStepsCombinedOriginal);
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		for (intStep2 = 0; intStep2 < objTestSteps2.size(); intStep2++) {
-//			objStep2 = (JSONObject) gobjJsonArrayStepsCombinedOriginal.get(intStep2);
-//			if (objStep2.get("strLoopOrIf").toString().toLowerCase().startsWith("<loopend>") == true) {
-//				return intStep2;
-//			}
-//		}
-//return 0;
-//}
 //Options for private class ClearMyTracksByProcessCookies
 // 1 = Browsing History
 // 2 = Cookies
