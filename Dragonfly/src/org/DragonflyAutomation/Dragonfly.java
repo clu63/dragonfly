@@ -306,7 +306,7 @@ public class Dragonfly {
 		private BrowserLaunchSync() {
 			Dragonfly.this.logger.add("  ==start==>BrowserLaunchSync " + new DateTimestamp().get());
 			long lngStartTime = System.currentTimeMillis();
-			Dragonfly.this.writeTheFile("c:\\temp\\DragonflyBrowser.log", Dragonfly.this.logger.getLog());
+			Dragonfly.this.writeFile("c:\\temp\\DragonflyBrowser.log", Dragonfly.this.logger.getLog());
 			try {
 				new BrowserLaunch();
 			} catch (ExceptionBrowserDriverNotSupported e) {
@@ -767,9 +767,9 @@ public class Dragonfly {
 				this.getApplications();
 			}
 			if (e.getSource() == rdbtnPublic) {
-				this.gstrTestArea = "private";
-				Dragonfly.this.objPaths.gstrTestArea = "private";
-				Dragonfly.this.objPaths.setDirectory("private");
+				this.gstrTestArea = "public";
+				Dragonfly.this.objPaths.gstrTestArea = "public";
+				Dragonfly.this.objPaths.setDirectory("public");
 				System.out.println("Dragonfly.this.objPaths.gstrTestArea = " + Dragonfly.this.objPaths.gstrTestArea);
 				System.out.println(Dragonfly.this.objPaths.gstrPathSystemUserDir);
 				System.out.println(Dragonfly.this.objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
@@ -1163,12 +1163,12 @@ public class Dragonfly {
 			}
 			String strWindowHandle = "";
 			Object[] arrHandles = Dragonfly.this.objVariablesSelenium.gobjWebDriver.getWindowHandles().toArray();
-			for (int intWindowHandlesEach = arrHandles.length - 1; intWindowHandlesEach >= 0; intWindowHandlesEach--) {
-				Dragonfly.this.logger.add("ElementFind: arrHandles[" + intWindowHandlesEach + "] = " + arrHandles[intWindowHandlesEach].toString());
+			for (Object objWindowHandlesEach : arrHandles) {
+				Dragonfly.this.logger.add("ElementFind: objWindowHandlesEach.toString() = " + objWindowHandlesEach.toString());
 			}
-			for (int intHandlesEach = arrHandles.length - 1; intHandlesEach >= 0; intHandlesEach--) {
+			for (Object objWindowHandlesEach : arrHandles) {
 				try {
-					strWindowHandle = arrHandles[intHandlesEach].toString();
+					strWindowHandle = objWindowHandlesEach.toString();
 					Dragonfly.this.objVariablesSelenium.gobjWebDriver.switchTo().window(strWindowHandle);
 					Dragonfly.this.objVariablesSelenium.gobjWebDriverCoordinates = Dragonfly.this.objVariablesSelenium.gobjWebDriver;
 					new CoordinatesBrowserInner();
@@ -2837,14 +2837,13 @@ public class Dragonfly {
 		}
 	}
 
-	private class ExceptionTestInstanceMoreThanOne extends Exception {
-		private static final long serialVersionUID = 1L;
-
-		private ExceptionTestInstanceMoreThanOne(String message) {
-			super(message);
-		}
-	}
-
+	//	private class ExceptionTestInstanceMoreThanOne extends Exception {
+	//		private static final long serialVersionUID = 1L;
+	//
+	//		private ExceptionTestInstanceMoreThanOne(String message) {
+	//			super(message);
+	//		}
+	//	}
 	private class ExceptionValueMatched extends Exception {
 		private static final long serialVersionUID = 1L;
 
@@ -3040,17 +3039,6 @@ public class Dragonfly {
 			}
 		}
 
-		private String returnKeyword(String strKeyName1) {
-			String strValueToFindKeyword = this.getLowerCase(strKeyName1);
-			int intRightArrowPosition = strValueToFindKeyword.indexOf(">");
-			String strKeyword = "";
-			if (intRightArrowPosition > -1) {
-				strKeyword = strValueToFindKeyword.substring(0, intRightArrowPosition + 1);
-			}
-			Dragonfly.this.logger.add("KeywordReturn: strKeyword " + strKeyword);
-			return strKeyword;
-		}
-
 		private String getValue(String strInputValue, String strKeywordName) throws ExceptionJSONKeyNotPresent {
 			Dragonfly.this.logger.add("  ==start==>JSONObjectExtended:getValue " + new DateTimestamp().get());
 			String strJSONObjectKey = strInputValue.replace(strKeywordName, "");
@@ -3096,6 +3084,17 @@ public class Dragonfly {
 			this.put(strKeyName, strKeyValue);
 		}
 
+		private String returnKeyword(String strKeyName1) {
+			String strValueToFindKeyword = this.getLowerCase(strKeyName1);
+			int intRightArrowPosition = strValueToFindKeyword.indexOf(">");
+			String strKeyword = "";
+			if (intRightArrowPosition > -1) {
+				strKeyword = strValueToFindKeyword.substring(0, intRightArrowPosition + 1);
+			}
+			Dragonfly.this.logger.add("KeywordReturn: strKeyword " + strKeyword);
+			return strKeyword;
+		}
+
 		private void validateKey(String strKeyName) throws ExceptionJSONKeyNotPresent {
 			Dragonfly.this.logger.add("  ==start==>JSONObjectExtended: validateKey " + new DateTimestamp().get());
 			if (!this.containsKey(strKeyName)) {
@@ -3119,14 +3118,6 @@ public class Dragonfly {
 				Dragonfly.this.logger.add("WriteJsonKeys: " + key + " = " + this.get(key));
 			}
 		}
-		//		private void putAll(String string) {
-		//			// TODO Auto-generated method stub
-		//		}
-		//
-		//		private void putAll(Object object) {
-		//			// TODO Auto-generated method stub
-		//
-		//		}
 	}
 
 	private class JvmBitVersion {
@@ -3150,12 +3141,13 @@ public class Dragonfly {
 
 		private KeywordsValid() {
 			Dragonfly.this.logger.add("  ==start==>KeywordsValid " + new DateTimestamp().get());
-			String strKey = "";
+			//String strKey = "";
 			String[] arrKeys = new StepNames().getOriginal();
 			boolean blnValid = false;
 			String[] arrKeywordsValid;
-			for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
-				strKey = arrKeys[intKeysEach].toString();
+			//for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
+			//strKey = arrKeys[intKeysEach].toString();
+			for (String strKey : arrKeys) {
 				//Dragonfly.this.logger.add("KeywordsValid: ----------------->strKey = " + strKey);
 				switch (strKey) {
 				case "strAction":
@@ -3980,9 +3972,10 @@ public class Dragonfly {
 			Dragonfly.this.logger.add("  ==start==>StepSetupDefaults " + new DateTimestamp().get());
 			String[] arrDefaultKeys = new StepNames().getDefault();
 			String[] arrKeys = new StepNames().getRuntime();
-			String strKey = "";
-			for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
-				strKey = arrKeys[intKeysEach].toString();
+			//String strKey = "";
+			for (String strKey : arrKeys) {
+				//for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
+				//strKey = arrKeys[intKeysEach].toString();
 				if (!strKey.equals("strTestModuleStep")) {
 					Dragonfly.this.variablesJSON.objectStep.putValue(strKey, "");
 					Dragonfly.this.logger.add("StepSetupDefaults: .putValue(strKey = " + strKey);
@@ -3998,8 +3991,9 @@ public class Dragonfly {
 			} catch (Exception e) {
 				Dragonfly.this.logger.add("StepSetupDefaults: Class.forName Exception = " + e.toString());
 			}
-			for (int intKeysEach = 0; intKeysEach < arrDefaultKeys.length; intKeysEach++) {
-				strKey = arrDefaultKeys[intKeysEach].toString();
+			for (String strKey : arrDefaultKeys) {
+				//for (int intKeysEach = 0; intKeysEach < arrDefaultKeys.length; intKeysEach++) {
+				//strKey = arrDefaultKeys[intKeysEach].toString();
 				Field objField = null;
 				try {
 					objField = objClass.getDeclaredField("strDefault_" + strKey);
@@ -4371,12 +4365,10 @@ public class Dragonfly {
 		private String strImageType;
 		private String strPathFileName;
 
-		//private Dragonfly Dragonfly.this;
 		private ThreadSaveImage(BufferedImage objScreenShot, String strImageType, String strPathFileName) {
 			this.objScreenShot = objScreenShot;
 			this.strImageType = strImageType;
 			this.strPathFileName = strPathFileName;
-			//this.Dragonfly.this = Dragonfly.this;
 		}
 
 		@Override
@@ -4718,213 +4710,6 @@ public class Dragonfly {
 		}
 	}
 
-	//	private class WriteFile {
-	//		private WriteFile(String strFilePathFile, String strTextToWrite) {
-	//			Dragonfly.this.logger.add("  ==start==>WriteFile " + new DateTimestamp().get());
-	//			Dragonfly.this.logger.add("WriteFile: strFilePathFile = " + strFilePathFile);
-	//			try {
-	//				BufferedWriter objBufferedWriter = new BufferedWriter(new FileWriter(strFilePathFile));
-	//				objBufferedWriter.write(strTextToWrite);
-	//				objBufferedWriter.close();
-	//			} catch (Exception e) {
-	//				Dragonfly.this.logger.add("WriteFile: Exception" + e.toString());
-	//			}
-	//		}
-	//	}
-	private class WriteJsonStepsToHtml {
-		private WriteJsonStepsToHtml(String strStepHeader, JSONArray objTestSteps, String strPath, String strFileName) {
-			Dragonfly.this.logger.add("  ==start==>WriteJsonStepsToHtml " + new DateTimestamp().get());
-			Dragonfly.this.logger.add("WriteJsonStepsToHtml objTestSteps = " + objTestSteps);
-			String strKey = "";
-			String[] arrKeys = null;
-			StepNames objStepNames = new StepNames();
-			StringBuilder objStringBuilder = new StringBuilder();
-			String strValue = "";
-			switch (strStepHeader) {
-			case "original":
-				arrKeys = objStepNames.getOriginal();
-				break;
-			case "complete":
-				arrKeys = objStepNames.getComplete();
-				break;
-			}
-			try {
-				objStringBuilder.append("<!DOCTYPE html>");
-				objStringBuilder.append("<html lang=\"en\">");
-				objStringBuilder.append("<head><title> " + strFileName.replace(".html", "") + "</title></head>");
-				objStringBuilder.append("<body><h1>");
-				objStringBuilder.append("<table border=\"1\" cellspacing=\"1\" cellpadding=\"5\">");
-				objStringBuilder.append("<tr>");
-				objStringBuilder.append("<td>Step</td>");
-				for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
-					strKey = arrKeys[intKeysEach].toString();
-					objStringBuilder.append("<th>" + strKey + "</th>");
-				}
-				objStringBuilder.append(" </tr>  ");
-				for (int intTestStepRow = 0; intTestStepRow < objTestSteps.size(); intTestStepRow++) {
-					objStringBuilder.append("</tr>");
-					objStringBuilder.append("<td> " + (intTestStepRow) + "</td>");
-					JSONObjectExtended objStepReport = Dragonfly.this.new JSONObjectExtended((JSONObject) objTestSteps.get(intTestStepRow));
-					for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
-						strKey = arrKeys[intKeysEach].toString();
-						if (objStepReport.containsKey(strKey) == true) {
-							strValue = objStepReport.get(strKey).toString().replaceAll("<", "&lt;");
-							strValue.replaceAll(">", "&gt;");
-							objStringBuilder.append("<td> " + strValue + "</td>");
-						} else {
-							objStringBuilder.append("<td>  &nbsp; </td>");
-						}
-					}
-					objStringBuilder.append(" </tr>  ");
-				}
-				objStringBuilder.append("</table>");
-				objStringBuilder.append("</h1></body>");
-				objStringBuilder.append("</html>");
-				String html = objStringBuilder.toString();
-				Dragonfly.this.writeTheFile(strPath + strFileName, html);
-			} catch (Exception e) {
-				Dragonfly.this.logger.add("WriteJsonStepsToHtml: Exception = " + e.toString());
-				Dragonfly.this.logger.add("WriteJsonStepsToHtml: objStringBuilder.toString() = " + objStringBuilder.toString());
-				logger.add("WriteJsonStepsToHtml: Exception = " + e.toString());
-				logger.add("WriteJsonStepsToHtml: objStringBuilder.toString() = " + objStringBuilder.toString());
-			}
-		}
-	}
-
-	private class WriteReportToHtml {
-		private WriteReportToHtml(JSONArray objJsonArrayReportSteps, String strFile, String strTestStepsFile, String strTestName) {
-			long lngStartTime = System.currentTimeMillis();
-			Dragonfly.this.logger.add("  ==start==>WriteReportToHtml " + new DateTimestamp().get());
-			Dragonfly.this.logger.add("WriteReportToHtml: strFile = " + strFile);
-			JSONObjectExtended objJsonObjectReportStep = null;
-			String strScreenshotFilePath = "";
-			String strStatus = "";
-			String strStatusIcon = "";
-			StringBuilder objStringBuilder = new StringBuilder();
-			int intTestStepRow = 0;
-			Dragonfly.this.logger.add("WriteReportToHtml: objJsonArrayReportSteps = " + objJsonArrayReportSteps);
-			try {
-				//				function popUp() {
-				//					var newWindow = window.open("", "Test", "width=300,height=300,scrollbars=1,resizable=1")
-				//					var text = "cat"
-				//					var html = "<html><head></head><body>Hello, <b>" + text + "</b>."
-				//					html += "How are you today?</body></html>"
-				//					newWindow.document.open()
-				//					newWindow.document.write(html)
-				//					newWindow.document.close()
-				//				}
-				objStringBuilder.append("<!DOCTYPE html>");
-				objStringBuilder.append("<html lang=\"en\">");
-				objStringBuilder.append("<script language=\"javascript\" type=\"text/javascript\">");
-				objStringBuilder.append("var varImageCount = -1;");
-				objStringBuilder.append("var varStep = -1;");
-				objStringBuilder.append("var intTimeoutInterval;");
-				objStringBuilder.append("function slideShow() {");
-				objStringBuilder.append("if (!document.images) {");
-				objStringBuilder.append("return;");
-				objStringBuilder.append("}");
-				objStringBuilder.append("varStep++;");
-				objStringBuilder.append("if (varStep <= varImageCount) {");
-				objStringBuilder.append("if (document.getElementById(\"img_\" + varStep)) {");
-				objStringBuilder.append("document.getElementById('imgSlideshow').src = document.getElementById(\"img_\" + varStep).src;");
-				objStringBuilder.append("intTimeoutInterval = 1500;");
-				objStringBuilder.append("} else {");
-				objStringBuilder.append("intTimeoutInterval = 0;");
-				objStringBuilder.append("}");
-				objStringBuilder.append("} else {");
-				objStringBuilder.append("varStep = -1;");
-				objStringBuilder.append("}");
-				objStringBuilder.append("setTimeout(\"slideShow()\", intTimeoutInterval);");
-				objStringBuilder.append("}");
-				objStringBuilder.append("function onLoadSlideshow() {");
-				objStringBuilder.append("document.getElementById(\"imgSlideshow\").src = document.getElementById('img_0').src;");
-				objStringBuilder.append("scrollToTop();");
-				objStringBuilder.append("slideShow();");
-				objStringBuilder.append("}");
-				objStringBuilder.append("function scrollToStep() {");
-				objStringBuilder.append("document.getElementById(\"step_\" + varStep).scrollIntoView(true);");
-				objStringBuilder.append("}");
-				objStringBuilder.append("function scrollToTop() {");
-				objStringBuilder.append("document.getElementById('body').scrollIntoView();");
-				objStringBuilder.append("}");
-				objStringBuilder.append("</script>");
-				objStringBuilder.append("<head><title>" + strTestName + "</title></head>");
-				objStringBuilder.append("<body id=\"body\" onload=\"onLoadSlideshow()\">");
-				objStringBuilder.append("<img id=\"imgSlideshow\" onclick=\"scrollToStep()\" src=\"\" alt=\"\"></img>");
-				objStringBuilder.append("<br>");
-				objStringBuilder.append("<br>");
-				for (intTestStepRow = 0; intTestStepRow < objJsonArrayReportSteps.size(); intTestStepRow++) {
-					objJsonObjectReportStep = Dragonfly.this.new JSONObjectExtended((JSONObject) objJsonArrayReportSteps.get(intTestStepRow));
-					Dragonfly.this.logger.add("WriteReportToHtml: objJsonObjectReportStep = " + objJsonObjectReportStep);
-					objStringBuilder.append("<div id=step_" + intTestStepRow + ">");
-					objStringBuilder.append("<TABLE border=1 width=100% height=10%>");
-					objStringBuilder.append("<TR>");
-					switch (objJsonObjectReportStep.getLowerCase("strStatus")) {
-					case "pass":
-						strStatus = "Pass";
-						if (objJsonObjectReportStep.verifyEquals("strAction", "set") && objJsonObjectReportStep.verifyEquals("strAssert", "off")) {
-							strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:blue\">&#10043</span>";
-						} else {
-							strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:green\">&#10003</span>";
-						}
-						break;
-					case "fail":
-						strStatus = "Fail";
-						strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:red\">&#10007</span>";
-						break;
-					case "warning":
-						strStatus = "Warning";
-						strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:gold\">!</span>";
-						break;
-					case "info":
-						strStatus = "Info";
-						strStatusIcon = "<span style=\"font-weight:bold;font-size:40px;color:magenta\">?</span>";
-						break;
-					}
-					String strStartTimestamp = objJsonObjectReportStep.getString("strStartTimestamp");
-					String strStepDuration = objJsonObjectReportStep.getString("strStepDuration");
-					String strEndTimestamp = objJsonObjectReportStep.getString("strEndTimestamp");
-					objStringBuilder.append("<TD onclick=\"scrollToTop()\" rowspan=\"2\" width=60px align=center valign=middle>Step " + intTestStepRow + "</TD>");
-					objStringBuilder.append("<TD rowspan=\"2\" width=35px align=center valign=middle>" + strStatusIcon + "<br>" + strStatus + "</TD>");
-					objStringBuilder.append("<TD width= 75px align=center valign=middle>Expected</TD>");
-					objStringBuilder.append("<TD align=left valign=middle>" + objJsonObjectReportStep.getString("strStepExpected") + "</TD>");
-					objStringBuilder.append("<TD rowspan=\"2\" width=150px align=left valign=middle>Start:" + strStartTimestamp + "<br>End: " + strEndTimestamp + "<br>Duration: " + strStepDuration + " ms</TD>");
-					objStringBuilder.append("</TR>");
-					objStringBuilder.append("<TR>");
-					objStringBuilder.append("<TD align=center valign=middle>Actual</TD>");
-					objStringBuilder.append("<TD align=left valign=middle>" + objJsonObjectReportStep.getString("strStepActual") + "</TD>");
-					objStringBuilder.append("</TR>");
-					objStringBuilder.append("</TABLE> ");
-					if (objJsonObjectReportStep.get("strScreenshotFilePath").toString().trim().length() != 0) {
-						strScreenshotFilePath = objJsonObjectReportStep.get("strScreenshotFilePath").toString().replaceAll("\\\\\\\\", "\\");
-						try {
-							BufferedImage objBufferedImage = ImageIO.read(new File(strScreenshotFilePath));
-							objStringBuilder.append("<img id=img_" + intTestStepRow + " src=\"data:image/jpg;base64," + new ImageEncodeToString().run(objBufferedImage, "jpg") + "\" alt=\"Step " + intTestStepRow + "\" > ");
-						} catch (Exception e) {
-							Dragonfly.this.logger.add("writeReportToHtml: Exception = " + e.toString());
-						}
-					}
-					objStringBuilder.append("</div>");
-					objStringBuilder.append("<br>");
-					objStringBuilder.append("<br>");
-					//TODO this should be removed.  check what happens and add step details for the break.
-					//					if (objJsonObjectReportStep.get("strAction").toString().toLowerCase().equals("break")) {
-					//						break;
-					//					}
-				}
-			} catch (Exception e) {
-				Dragonfly.this.logger.add("WriteReportToHtml: " + e.toString());
-			} finally {
-				objStringBuilder.append("</body>");
-				objStringBuilder.append("</html>");
-				String strHTML = objStringBuilder.toString().replace("varImageCount = -1", "varImageCount = " + (intTestStepRow - 1));
-				Dragonfly.this.writeTheFile(strFile, strHTML);
-				Dragonfly.this.writeTheFile(strTestStepsFile, strHTML);
-				Dragonfly.this.logger.add("WriteReportToHtml: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-			}
-		}
-	}
-
 	public static void main(String[] args) {
 		JSONArray objJsonArrayTestSteps = null;
 		JSONArray objJsonArrayTestStepsRun = new JSONArray();
@@ -4982,18 +4767,16 @@ public class Dragonfly {
 				objJsonArrayTestSteps = (JSONArray) objJsonParser.parse(strTestStepsCombinedOriginal);
 				if (intTestInstanceSize > 0) {
 					objDragonfly.logger.add("main: intTestInstanceSize = " + intTestInstanceSize);
-					//objDragonfly.variablesJSON.objectTestInstancesEach = objDragonfly.new JSONObjectExtended((JSONObject) objDragonfly.variablesJSON.gobjJsonArrayTestInstances.get(intTestInstanceEach));
 					objDragonfly.logger.add("main: intTestInstanceSize = " + objDragonfly.variablesJSON.gobjJsonArrayTestInstances.size());
 					objDragonfly.variablesJSON.objectTestInstancesEach.putAllReplace((Map<String, String>) objDragonfly.variablesJSON.gobjJsonArrayTestInstances.get(intTestInstanceEach));
 					objDragonfly.logger.add(">main:objectTestInstancesEach " + objDragonfly.variablesJSON.objectTestInstancesEach);
 				}
 				strFileTestSteps = objDragonfly.objPaths.gstrPathTestSteps + strNameTestConfiguration.replace(".json", ".html");
-				objDragonfly.new WriteJsonStepsToHtml("original", objJsonArrayTestSteps, objDragonfly.objPaths.gstrPathResults, "StepsOriginal.html");
+				objDragonfly.writeJsonStepsToHtml("original", objJsonArrayTestSteps, objDragonfly.objPaths.gstrPathResults, "StepsOriginal.html");
 				for (intStep = 0; intStep < objJsonArrayTestSteps.size(); intStep++) {
 					objDragonfly.logger.add("main: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
 					objDragonfly.objVariablesSelenium.gobjWebElement = null;
 					objDragonfly.logger.add(">>>>>>main: objDragonfly.variablesJSON.objectStep " + objDragonfly.variablesJSON.objectStep);
-					//objDragonfly.variablesJSON.objectStep.clear();
 					objDragonfly.variablesJSON.objectStep = objDragonfly.new JSONObjectExtended((JSONObject) objJsonArrayTestSteps.get(intStep));
 					objDragonfly.logger.add("StepSetupDefaults before");
 					objDragonfly.new StepSetupDefaults(strCurrentWindowHandle);
@@ -5030,20 +4813,16 @@ public class Dragonfly {
 					}
 					objDragonfly.logger.add("main: before blnIf = " + blnIf);
 					objDragonfly.logger.add("strFunction after");
-					//switch (objDragonfly.new KeywordReturn().run(objDragonfly.variablesJSON.objectStep.getLowerCase("strLoopOrIf"))) {
 					switch (objDragonfly.variablesJSON.objectStep.returnKeyword("strLoopOrIf")) {
 					case "<else if>":
-						//if (objDragonfly.variablesJSON.objectStep.get("strLoopOrIf").toString().toLowerCase().startsWith("<else if") == true) {
 						objDragonfly.logger.add("main: blnIf = " + blnIf);
 						if (blnIfSet.equals(true)) {
 							blnIf = false;
 						} else {
 							blnIf = true;
 						}
-						//}
 						break;
 					case "<else>":
-						//if (objDragonfly.variablesJSON.objectStep.get("strLoopOrIf").toString().toLowerCase().startsWith("<else>") == true) {
 						objDragonfly.logger.add("main: <else> blnIf = " + blnIf);
 						if (blnIfSet.equals(true)) {
 							blnIf = false;
@@ -5136,12 +4915,10 @@ public class Dragonfly {
 							}
 						}
 					}
-					//switch (objDragonfly.new KeywordReturn().run(objDragonfly.variablesJSON.objectStep.getLowerCase("strLoopOrIf"))) {
 					switch (objDragonfly.variablesJSON.objectStep.returnKeyword("strLoopOrIf")) {
 					case "<loopexit>":
 						strLoopExitValue = objDragonfly.variablesJSON.objectStep.get("strLoopOrIf").toString().substring(10);
 						if (objDragonfly.variablesJSON.objectStep.verifyEquals("strOutputValue", strLoopExitValue)) {
-							//if (objDragonfly.variablesJSON.objectStep.get("strOutputValue").toString().equals(strLoopExitValue)) {
 							intLoopCount = 0;
 							intLoopEach = 0;
 						}
@@ -5173,14 +4950,6 @@ public class Dragonfly {
 							}
 						}
 						break;
-					//					case "<else>":
-					//						objDragonfly.logger.add("main: <else> blnIf = " + blnIf);
-					//						if (blnIf.equals(true)) {
-					//							blnIf = false;
-					//						} else {
-					//							blnIf = true;
-					//						}
-					//						break;
 					case "<end if>":
 						objDragonfly.logger.add("main: blnIf = false");
 						blnIf = true;
@@ -5194,14 +4963,13 @@ public class Dragonfly {
 			} catch (Exception e) {
 				objDragonfly.logger.add("main: Exception " + e.toString());
 			} finally {
-				objDragonfly.writeTheFile(objDragonfly.objPaths.gstrPathResults + "StepsAfterRun.json", objJsonArrayTestStepsRun.toString());
-				//objDragonfly.new WriteFile(objDragonfly.objPaths.gstrPathResults + "StepsAfterRun.json", objJsonArrayTestStepsRun.toString());
-				objDragonfly.writeTheFile(objDragonfly.objPaths.gstrPathResults + "StepsWithDefaults.json", objDragonfly.variablesJSON.gobjJsonArrayTestSteps.toString());
-				objDragonfly.new WriteJsonStepsToHtml("original", objJsonArrayTestStepsRun, objDragonfly.objPaths.gstrPathResults, "StepsWithDefaults.html");
-				objDragonfly.new WriteJsonStepsToHtml("complete", objJsonArrayTestStepsRun, objDragonfly.objPaths.gstrPathResults, "StepsAfterRun.html");
-				objDragonfly.new WriteReportToHtml(objJsonArrayTestStepsRun, objDragonfly.objPaths.gstrPathResults + "Report.html", strFileTestSteps, strNameTestConfiguration.replace(".json", ""));
-				objDragonfly.writeTheFile(objDragonfly.objPaths.gstrPathResults + "Dragonfly.log", objDragonfly.logger.getLog());
-				objDragonfly.writeTheFile(objDragonfly.objPaths.gstrPathResults + "StepsManual.txt", objDragonfly.objStepsManual.get());
+				objDragonfly.writeFile(objDragonfly.objPaths.gstrPathResults + "StepsAfterRun.json", objJsonArrayTestStepsRun.toString());
+				objDragonfly.writeFile(objDragonfly.objPaths.gstrPathResults + "StepsWithDefaults.json", objDragonfly.variablesJSON.gobjJsonArrayTestSteps.toString());
+				objDragonfly.writeJsonStepsToHtml("original", objJsonArrayTestStepsRun, objDragonfly.objPaths.gstrPathResults, "StepsWithDefaults.html");
+				objDragonfly.writeJsonStepsToHtml("complete", objJsonArrayTestStepsRun, objDragonfly.objPaths.gstrPathResults, "StepsAfterRun.html");
+				objDragonfly.writeReportToHtml(objJsonArrayTestStepsRun, objDragonfly.objPaths.gstrPathResults + "Report.html", strFileTestSteps, strNameTestConfiguration.replace(".json", ""));
+				objDragonfly.writeFile(objDragonfly.objPaths.gstrPathResults + "Dragonfly.log", objDragonfly.logger.getLog());
+				objDragonfly.writeFile(objDragonfly.objPaths.gstrPathResults + "StepsManual.txt", objDragonfly.objStepsManual.get());
 				objDragonfly.objPaths.changeDirectoryNameStatus(strTestStatus);
 				if (objDragonfly.objVariablesSelenium.gobjWebDriver.toString().contains("InternetExplorerDriver")) {
 					objDragonfly.new WindowsProcessKill("taskkill /F /IM IEDriverServer.exe");
@@ -5268,74 +5036,15 @@ public class Dragonfly {
 		return Integer.toString(new RandomNumberRange().run(1, 99999));
 	}
 
-	//	private class LogStepDetails {
-	//		private LogStepDetails(int intStep) {
-	//			Long lngTimeStart = System.currentTimeMillis();
-	//			Dragonfly.this.logger.add("  ==start==>LogStepDetails " + new DateTimestamp().get());
-	//			String[] arrKeys;
-	//			String strKey = "";
-	//			try {
-	//				arrKeys = new StepNames().getOriginal();
-	//				for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
-	//					strKey = arrKeys[intKeysEach].toString();
-	//					if (Dragonfly.this.variablesJSON.objectStep.containsKey(strKey) == true) {
-	//						Dragonfly.this.logger.add("LogStepDetails: " + strKey + " = " + Dragonfly.this.variablesJSON.objectStep.getString(strKey));
-	//					}
-	//				}
-	//			} catch (Exception e) {
-	//				Dragonfly.this.logger.add("LogStepDetails: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-	//			} finally {
-	//				Dragonfly.this.logger.add("LogStepDetails: finally Milliseconds Waited = " + (System.currentTimeMillis()));
-	//			}
-	//		}
-	//	}
 	private void logStepDetails() {
-		Long lngTimeStart = System.currentTimeMillis();
 		Dragonfly.this.logger.add("  ==start==>logStepDetails " + new DateTimestamp().get());
 		String[] arrKeys;
-		//String strKey = "";
-		try {
-			arrKeys = new StepNames().getOriginal();
-			//			for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
-			//				strKey = arrKeys[intKeysEach].toString();
-			//				if (Dragonfly.this.variablesJSON.objectStep.containsKey(strKey) == true) {
-			//					Dragonfly.this.logger.add("LogStepDetails: " + strKey + " = " + Dragonfly.this.variablesJSON.objectStep.getString(strKey));
-			//				}
-			//			}
-			for (String strKey : arrKeys) {
-				if (Dragonfly.this.variablesJSON.objectStep.containsKey(strKey) == true) {
-					Dragonfly.this.logger.add("LogStepDetails: " + strKey + " = " + Dragonfly.this.variablesJSON.objectStep.getString(strKey));
-				}
-			}
-		} catch (Exception e) {
-			Dragonfly.this.logger.add("LogStepDetails: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-		} finally {
-			Dragonfly.this.logger.add("LogStepDetails: finally Milliseconds Waited = " + (System.currentTimeMillis()));
+		arrKeys = new StepNames().getOriginal();
+		for (String strKey : arrKeys) {
+			Dragonfly.this.logger.add("LogStepDetails: " + strKey + " = " + Dragonfly.this.variablesJSON.objectStep.getString(strKey));
 		}
 	}
 
-	//	private class WindowsMinimizeAll {
-	//		private WindowsMinimizeAll() {
-	//			Dragonfly.this.logger.add("  ==start==>WindowsMinimizeAll " + new DateTimestamp().get());
-	//			Robot objRobot = null;
-	//			switch (Dragonfly.this.objOperatingSystem.strOS) {
-	//			case "Windows":
-	//				try {
-	//					objRobot = new Robot();
-	//					objRobot.keyPress(KeyEvent.VK_WINDOWS);
-	//					objRobot.keyPress(KeyEvent.VK_D);
-	//					objRobot.keyRelease(KeyEvent.VK_D);
-	//					objRobot.keyRelease(KeyEvent.VK_WINDOWS);
-	//					Dragonfly.this.logger.add("windowsMinimizeAll: Windows operating system minimize all windows.");
-	//				} catch (Exception e) {
-	//					Dragonfly.this.logger.add("windowsMinimizeAll: Exception = " + e.toString());
-	//				}
-	//				break;
-	//			default:
-	//				Dragonfly.this.logger.add("WindowsMinimizeAll: the operating system not supported at this time " + Dragonfly.this.objOperatingSystem.strOS);
-	//			}
-	//		}
-	//	}
 	private void windowsMinimizeAll() {
 		Dragonfly.this.logger.add("  ==start==>WindowsMinimizeAll " + new DateTimestamp().get());
 		Robot objRobot = null;
@@ -5354,6 +5063,76 @@ public class Dragonfly {
 			break;
 		default:
 			Dragonfly.this.logger.add("WindowsMinimizeAll: the operating system not supported at this time " + Dragonfly.this.objOperatingSystem.strOS);
+		}
+	}
+
+	private void writeFile(String strFilePathFile, String strTextToWrite) {
+		Dragonfly.this.logger.add("  ==start==>writeFile " + new DateTimestamp().get());
+		Dragonfly.this.logger.add("writeFile: strFilePathFile = " + strFilePathFile);
+		try {
+			BufferedWriter objBufferedWriter = new BufferedWriter(new FileWriter(strFilePathFile));
+			objBufferedWriter.write(strTextToWrite);
+			objBufferedWriter.close();
+		} catch (Exception e) {
+			Dragonfly.this.logger.add("writeFile: Exception" + e.toString());
+		}
+	}
+
+	private void writeJsonStepsToHtml(String strStepHeader, JSONArray objTestSteps, String strPath, String strFileName) {
+		Dragonfly.this.logger.add("  ==start==>WriteJsonStepsToHtml " + new DateTimestamp().get());
+		Dragonfly.this.logger.add("WriteJsonStepsToHtml objTestSteps = " + objTestSteps);
+		String strKey = "";
+		String[] arrKeys = null;
+		StepNames objStepNames = new StepNames();
+		StringBuilder objStringBuilder = new StringBuilder();
+		String strValue = "";
+		switch (strStepHeader) {
+		case "original":
+			arrKeys = objStepNames.getOriginal();
+			break;
+		case "complete":
+			arrKeys = objStepNames.getComplete();
+			break;
+		}
+		try {
+			objStringBuilder.append("<!DOCTYPE html>");
+			objStringBuilder.append("<html lang=\"en\">");
+			objStringBuilder.append("<head><title> " + strFileName.replace(".html", "") + "</title></head>");
+			objStringBuilder.append("<body><h1>");
+			objStringBuilder.append("<table border=\"1\" cellspacing=\"1\" cellpadding=\"5\">");
+			objStringBuilder.append("<tr>");
+			objStringBuilder.append("<td>Step</td>");
+			for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
+				strKey = arrKeys[intKeysEach].toString();
+				objStringBuilder.append("<th>" + strKey + "</th>");
+			}
+			objStringBuilder.append(" </tr>  ");
+			for (int intTestStepRow = 0; intTestStepRow < objTestSteps.size(); intTestStepRow++) {
+				objStringBuilder.append("</tr>");
+				objStringBuilder.append("<td> " + (intTestStepRow) + "</td>");
+				JSONObjectExtended objStepReport = Dragonfly.this.new JSONObjectExtended((JSONObject) objTestSteps.get(intTestStepRow));
+				for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
+					strKey = arrKeys[intKeysEach].toString();
+					if (objStepReport.containsKey(strKey) == true) {
+						strValue = objStepReport.get(strKey).toString().replaceAll("<", "&lt;");
+						strValue.replaceAll(">", "&gt;");
+						objStringBuilder.append("<td> " + strValue + "</td>");
+					} else {
+						objStringBuilder.append("<td>  &nbsp; </td>");
+					}
+				}
+				objStringBuilder.append(" </tr>  ");
+			}
+			objStringBuilder.append("</table>");
+			objStringBuilder.append("</h1></body>");
+			objStringBuilder.append("</html>");
+			String html = objStringBuilder.toString();
+			Dragonfly.this.writeFile(strPath + strFileName, html);
+		} catch (Exception e) {
+			Dragonfly.this.logger.add("WriteJsonStepsToHtml: Exception = " + e.toString());
+			Dragonfly.this.logger.add("WriteJsonStepsToHtml: objStringBuilder.toString() = " + objStringBuilder.toString());
+			logger.add("WriteJsonStepsToHtml: Exception = " + e.toString());
+			logger.add("WriteJsonStepsToHtml: objStringBuilder.toString() = " + objStringBuilder.toString());
 		}
 	}
 
@@ -5483,21 +5262,9 @@ public class Dragonfly {
 			objStringBuilder.append("</body>");
 			objStringBuilder.append("</html>");
 			String strHTML = objStringBuilder.toString().replace("varImageCount = -1", "varImageCount = " + (intTestStepRow - 1));
-			Dragonfly.this.writeTheFile(strFile, strHTML);
-			Dragonfly.this.writeTheFile(strTestStepsFile, strHTML);
+			Dragonfly.this.writeFile(strFile, strHTML);
+			Dragonfly.this.writeFile(strTestStepsFile, strHTML);
 			Dragonfly.this.logger.add("WriteReportToHtml: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-		}
-	}
-
-	private void writeTheFile(String strFilePathFile, String strTextToWrite) {
-		Dragonfly.this.logger.add("  ==start==>WriteTheFile " + new DateTimestamp().get());
-		Dragonfly.this.logger.add("WriteTheFile: strFilePathFile = " + strFilePathFile);
-		try {
-			BufferedWriter objBufferedWriter = new BufferedWriter(new FileWriter(strFilePathFile));
-			objBufferedWriter.write(strTextToWrite);
-			objBufferedWriter.close();
-		} catch (Exception e) {
-			Dragonfly.this.logger.add("WriteTheFile: Exception" + e.toString());
 		}
 	}
 }
