@@ -17,33 +17,6 @@
 //strNameTestSteps
 //strValueTestSteps
 //
-//		long startTime = System.nanoTime();
-//		try {
-//			TimeUnit.MILLISECONDS.sleep(2192);
-//		} catch (InterruptedException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-//		long elapsedTime = System.nanoTime() - startTime;
-//		double seconds = (double)elapsedTime / 1000000000.0;
-//		System.out.println("nano " + elapsedTime);
-//		System.out.println("seconds " + seconds);
-//		 startTime = System.currentTimeMillis();
-//		try {
-//			TimeUnit.MILLISECONDS.sleep(2192);
-//		} catch (InterruptedException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-//		 elapsedTime = System.currentTimeMillis() - startTime;
-//		 seconds = (double)elapsedTime / 1000.0;
-//		System.out.println("millis " + elapsedTime);
-//		System.out.println("seconds " + seconds);
-//
-//
-//		System.out.println(System.currentTimeMillis());
-//		System.out.println(System.nanoTime());
-//		System.exit(0);
 package org.DragonflyAutomation;
 
 import java.awt.Color;
@@ -124,8 +97,6 @@ import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
-//import sun.misc.BASE64Decoder;
-//import sun.misc.BASE64Encoder;
 import autoitx4java.AutoItX;
 import com.jacob.com.LibraryLoader;
 import com.opera.core.systems.OperaDriver;
@@ -184,7 +155,6 @@ public class Dragonfly {
 		private BrowserClose() {
 			Dragonfly.this.objVariablesSelenium.gobjWebDriver.close();
 			Dragonfly.this.objVariablesSelenium.gobjWebDriver.quit();
-			//Dragonfly.this.objJsonObjectStepPut.run( "strStatus", "pass");
 			Dragonfly.this.variablesJSON.objectStep.putValue("strStatus", "pass");
 			new CoordinateHighlightScreenshot(Dragonfly.this.variablesJSON.objectStep);
 		}
@@ -205,12 +175,10 @@ public class Dragonfly {
 			Long lngTimeStart = System.currentTimeMillis();
 			Dragonfly.this.logger.add(" Dragonfly.this.objVariablesCommon.gstrBrowserSelection = " + Dragonfly.this.objVariablesCommon.gstrBrowserSelection);
 			if (Dragonfly.this.objVariablesCommon.gstrBrowserSelection != "TestValue") {
-				//Dragonfly.this.new JsonObjectStepPut().run( "strTagName", Dragonfly.this.objVariablesCommon.gstrBrowserSelection);
 				Dragonfly.this.variablesJSON.objectStep.putValue("strTagName", Dragonfly.this.objVariablesCommon.gstrBrowserSelection);
 			}
 			DesiredCapabilities objDesiredCapabilities = null;
 			try {
-				//Dragonfly.this.objJsonObjectStepPut.run( "strStatus", "pass");
 				Dragonfly.this.variablesJSON.objectStep.putValue("strStatus", "pass");
 				switch (Dragonfly.this.variablesJSON.objectStep.getString("strTagName")) {
 				case "firefox":
@@ -221,8 +189,6 @@ public class Dragonfly {
 					myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL).build().perform();
 					break;
 				case "ie":
-					// internetExplorerProcessKill();
-					//windowsProcessKill( "taskkill /F /IM iexplore.exe");
 					new SleepMilliseconds(1000);
 					Dragonfly.this.logger.add("BrowserLaunch: DesiredCapabilities");
 					objDesiredCapabilities = DesiredCapabilities.internetExplorer();
@@ -603,9 +569,6 @@ public class Dragonfly {
 					Dragonfly.this.variablesJSON.objectStep.putInt("intElementWidth", objElementDimension.width);
 					Dragonfly.this.variablesJSON.objectStep.putInt("intElementHeight", objElementDimension.height);
 				}
-				//Dragonfly.this.logger.add("CoordinatesElement: Dragonfly.this.variablesJSON.objectStep.containsKey = " + Dragonfly.this.variablesJSON.objectStep.containsKey("intElementX"));
-				//if (Dragonfly.this.variablesJSON.objectStep.containsKey("intElementX")) {
-				//TODO this is the error
 				int intBrowserInnerWidth = Dragonfly.this.variablesJSON.objectStep.getInt("intBrowserInnerWidth");
 				int intBrowserInnerHeight = Dragonfly.this.variablesJSON.objectStep.getInt("intBrowserInnerHeight");
 				int intElementX = Dragonfly.this.variablesJSON.objectStep.getInt("intElementX");
@@ -615,7 +578,6 @@ public class Dragonfly {
 				int intElementScreenY = (intBrowserOuterY + intElementY) + (intBrowserOuterHeight - intBrowserInnerHeight) - intWindowBorder;
 				Dragonfly.this.variablesJSON.objectStep.putInt("intElementScreenX", intElementScreenX);
 				Dragonfly.this.variablesJSON.objectStep.putInt("intElementScreenY", intElementScreenY);
-				//}
 			} catch (Exception e) {
 				Dragonfly.this.logger.add("CoordinatesElement: Exception = " + e.toString());
 			} finally {
@@ -886,13 +848,6 @@ public class Dragonfly {
 			Dragonfly.this.logger.add("  ==start==>ElementDisabled " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			try {
-				//			if (Dragonfly.this.variablesJSON.objectStep.get("strTagName").toString().toLowerCase().equals("alert")) {
-				//				if (alertFind() == true) {
-				//					return true;
-				//				} else {
-				//					throw new ExceptionElementNotDisabled("Alert popup was not found.");
-				//				}
-				//			}
 				if (Dragonfly.this.objVariablesSelenium.gobjWebElement.isEnabled()) {
 					throw new ExceptionElementNotDisabled("ElementDisabled - Element is not disabled");
 				} else {
@@ -990,9 +945,6 @@ public class Dragonfly {
 				} catch (ExceptionElementNotEnabled e) {
 					blnEnabled = false;
 					Dragonfly.this.logger.add("ElementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-					//} catch (ExceptionElementTagNameNotSupported e) {
-					//Dragonfly.this.logger.add("elementSetSync - " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-					//	blnExit = true;
 				} finally {
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementDragSync", "drag", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(Dragonfly.this.variablesJSON.objectStep);
@@ -1667,7 +1619,6 @@ public class Dragonfly {
 					for (intPleaseWaitEach = 1; intPleaseWaitEach < Dragonfly.this.variablesJSON.objectProcessing.size(); intPleaseWaitEach++) {
 						JSONObjectExtended objJsonObjectPleaseWaitNode = (JSONObjectExtended) Dragonfly.this.variablesJSON.objectProcessing.get("PleaseWait_" + intPleaseWaitEach);
 						try {
-							//strAttributeNames = Dragonfly.this.new JsonObjectGetValue().run( objJsonObjectPleaseWaitNode, "strAttributeNames", "");
 							strAttributeNames = objJsonObjectPleaseWaitNode.getValue("strAttributeNames", "");
 							strAttributeValues = objJsonObjectPleaseWaitNode.getValue("strAttributeValues", "");
 							strTagName = objJsonObjectPleaseWaitNode.getValue("strTagName", "");
@@ -2229,7 +2180,6 @@ public class Dragonfly {
 			Boolean blnStatus = false;
 			Boolean blnVisible = false;
 			String strOuterHTML = "";
-			//Dragonfly.this.variablesJSON.objectStep.putValue("strOutputValue", Dragonfly.this.variablesJSON.objectStep.getString("strInputValue"));
 			while (true) {
 				try {
 					if (blnFound == false) {
@@ -2529,16 +2479,12 @@ public class Dragonfly {
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					blnVisible = false;
-					//blnVerifiedNot = false;
 					Dragonfly.this.logger.add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
-					//blnVisible = false;
 					Dragonfly.this.logger.add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionValueMatched e) {
-					//blnVerifiedNot = false;
 					Dragonfly.this.logger.add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (Exception e) {
-					//blnVerifiedNot = false;
 					Dragonfly.this.logger.add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementVerifyNotValueSync", "verify_not", lngTimeStart) == true) {
@@ -3014,7 +2960,6 @@ public class Dragonfly {
 		@SuppressWarnings("unchecked")
 		private void addJsonObject(JSONObjectExtended objJsonObjectToAdd) {
 			if (this.isEmpty() == true) {
-				//this. = objJsonObjectToAdd;
 			} else {
 				this.putAll(objJsonObjectToAdd);
 			}
@@ -3048,22 +2993,11 @@ public class Dragonfly {
 		}
 
 		private String getValue(String strInputValue, String strKeywordName) throws ExceptionJSONKeyNotPresent {
-			//Dragonfly.this.logger.add("  ==start==>JSONObjectExtended:getValue " + getDateTimestamp());
 			String strJSONObjectKey = strInputValue.replace(strKeywordName, "");
 			String strJSONObjectValue = "";
-			//Dragonfly.this.logger.add("JSONObjectExtended:getValue strJSONObjectKey = " + strJSONObjectKey);
 			this.validateKey(strJSONObjectKey);
 			strJSONObjectValue = this.getString(strJSONObjectKey);
-			//Dragonfly.this.logger.add("JSONObjectExtended:getValue strJSONObjectValue = " + strJSONObjectValue);
 			return strJSONObjectValue;
-			//			if (objJSONObject.containsKey(strJSONObjectKey)) {
-			//				strJSONObjectValue = objJSONObject.get(strJSONObjectKey).toString();
-			//				Dragonfly.this.logger.add("JsonObjectGetValue: strJSONObjectValue = " + strJSONObjectValue);
-			//				return strJSONObjectValue;
-			//			} else {
-			//				Dragonfly.this.logger.add("JsonObjectGetValue: JSON Key " + strJSONObjectKey + " for keyword link name " + strKeywordName + " not present");
-			//				throw new ExceptionJSONKeyNotPresent("JSON Key " + strJSONObjectKey + " for keyword link name " + strKeywordName + " not present");
-			//			}
 		}
 
 		@SuppressWarnings({ "unused", "unchecked" })
@@ -3099,12 +3033,10 @@ public class Dragonfly {
 			if (intRightArrowPosition > -1) {
 				strKeyword = strValueToFindKeyword.substring(0, intRightArrowPosition + 1);
 			}
-			//Dragonfly.this.logger.add("KeywordReturn: strKeyword " + strKeyword);
 			return strKeyword;
 		}
 
 		private void validateKey(String strKeyName) throws ExceptionJSONKeyNotPresent {
-			//Dragonfly.this.logger.add("  ==start==>JSONObjectExtended: validateKey " + getDateTimestamp());
 			if (!this.containsKey(strKeyName)) {
 				throw new ExceptionJSONKeyNotPresent("JSON Key " + strKeyName + " not present");
 			}
@@ -3115,12 +3047,10 @@ public class Dragonfly {
 		}
 
 		private Boolean verifyKeyValue(String file) {
-			//Dragonfly.this.logger.add("  ==start==>WriteJsonKeys " + getDateTimestamp());
 			return null;
 		}
 
 		private void writeKeys(String file) throws IOException {
-			//Dragonfly.this.logger.add("  ==start==>WriteJsonKeys " + getDateTimestamp());
 			for (Iterator<?> iterator = this.keySet().iterator(); iterator.hasNext();) {
 				String key = (String) iterator.next();
 				Dragonfly.this.logger.add("WriteJsonKeys: " + key + " = " + this.get(key));
@@ -3148,15 +3078,10 @@ public class Dragonfly {
 		private String strKeywordValue = "";
 
 		private KeywordsValid() {
-			//Dragonfly.this.logger.add("  ==start==>KeywordsValid " + getDateTimestamp());
-			//String strKey = "";
 			String[] arrKeys = new StepNames().getOriginal();
 			boolean blnValid = false;
 			String[] arrKeywordsValid;
-			//for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
-			//strKey = arrKeys[intKeysEach].toString();
 			for (String strKey : arrKeys) {
-				//Dragonfly.this.logger.add("KeywordsValid: ----------------->strKey = " + strKey);
 				switch (strKey) {
 				case "strAction":
 				case "strTagName":
@@ -3202,7 +3127,6 @@ public class Dragonfly {
 					String strKeywordValueCombined = "";
 					String arrAttributeValues[] = Dragonfly.this.variablesJSON.objectStep.getString(strKey).split("\\|", -1);
 					for (String strAttributeValuesEach : arrAttributeValues) {
-						//Dragonfly.this.logger.add("strAttributeValuesEach = " + strAttributeValuesEach);
 						this.getKeywordsAndValue(strAttributeValuesEach);
 						for (String strResultsEach : arrResults) {
 							//Dragonfly.this.logger.add("strResultsEach = " + strResultsEach);
@@ -3223,7 +3147,6 @@ public class Dragonfly {
 						}
 					}
 					Dragonfly.this.variablesJSON.objectStep.putValue("strAttributeValues", strKeywordValueCombined);
-					//Dragonfly.this.logger.add("strKeywordValueCombined = " + strKeywordValueCombined);
 					break;
 				case "strInputValue":
 					this.getKeywordsAndValue(Dragonfly.this.variablesJSON.objectStep.getString(strKey));
@@ -3243,31 +3166,12 @@ public class Dragonfly {
 					//Dragonfly.this.logger.add("strInputValueFromJson = " + strInputValueFromJson);
 					break;
 				case "strLoopOrIf":
-					//					arrKeywordsValid = strValidKeyword_strLoopOrIf.split("\\|");
-					//					strValueToFindKeyword = Dragonfly.this.variablesJSON.objectStep.get(strKey).toString();
-					//					//arrKeywords = Dragonfly.this.new KeywordReturnArray().run( strValueToFindKeyword);
-					//					arrKeywords = this.getKeywordsAndValue( strValueToFindKeyword);
-					//					for (int intKeywordsEach = 0; intKeysEach < arrKeywords.length; intKeysEach++) {
-					//						Dragonfly.this.logger.add("KeywordsValid: arrKeywords[intKeywordsEach].toString() = " + arrKeywords[intKeywordsEach].toString());
-					//						for (int intKeywordsValidEach = 0; intKeywordsValidEach < arrKeywordsValid.length; intKeywordsValidEach++) {
-					//							if (arrKeywords[intKeywordsEach].toString().equals(arrKeywordsValid[intKeywordsValidEach].toString())) {
-					//								blnValid = true;
-					//								break;
-					//							}
-					//						}
-					//					}
-					//						if (blnValid = false) {
-					//							Dragonfly.this.variablesJSON.objectStep.putValue("strStatus", "fail");
-					//							Dragonfly.this.variablesJSON.objectStep.putValue("blnExitOnFail", "true");
-					//							break;
-					//						}
 					break;
 				}
 			}
 		}
 
 		private void getJsonValue(String strKeyword, String strInputValue) {
-			//Dragonfly.this.logger.add("  ==start==>getJsonValue " + getDateTimestamp());
 			Dragonfly.this.logger.add("getJsonValue strKeyword = " + strKeyword);
 			Dragonfly.this.logger.add("getJsonValue strInputValue = " + strInputValue);
 			try {
@@ -3276,21 +3180,16 @@ public class Dragonfly {
 					strInputValueFromJson = Dragonfly.this.variablesJSON.objectTestData.getValue(strInputValue, "<td>");
 					break;
 				case "<ti>":
-					//Dragonfly.this.logger.add(">getJsonValue:<ti> " + Dragonfly.this.variablesJSON.objectTestInstancesEach);
 					strInputValueFromJson = Dragonfly.this.variablesJSON.objectTestInstancesEach.getValue(strInputValue, "<ti>");
 					break;
 				case "<tl>":
 					strInputValueFromJson = Dragonfly.this.variablesJSON.objectLinks.getValue(strInputValue, "<tl>");
 					break;
 				case "<re>":
-					Dragonfly.this.logger.add("getJsonValue strInputValue = " + strInputValue);
 					strInputValueFromJson = strInputValue;
-					Dragonfly.this.logger.add("getJsonValue strInputValueFromJson = " + strInputValueFromJson);
 					break;
 				case "<skip>":
-					Dragonfly.this.logger.add("getJsonValue strInputValue = " + strInputValue);
 					strInputValueFromJson = "<skip>";
-					Dragonfly.this.logger.add("getJsonValue strInputValueFromJson = " + strInputValueFromJson);
 					break;
 				default:
 					strInputValueFromJson = strKeyword + strInputValue;
@@ -3303,8 +3202,6 @@ public class Dragonfly {
 		}
 
 		private void getKeywordsAndValue(String strValueToFindKeyword) {
-			//Dragonfly.this.logger.add("  ==start==>getKeywordsAndValue " + getDateTimestamp());
-			//Dragonfly.this.logger.add("getKeywordsAndValue strValueToFindKeyword = " + strValueToFindKeyword);
 			String strKeyword = "";
 			String strKeywordCombined = "";
 			int intLeftArrowPositionEach = 0;
@@ -3323,7 +3220,6 @@ public class Dragonfly {
 						strKeywordValue = strKeyword + strKeywordValue;
 					}
 					Dragonfly.this.logger.add("getKeywordsAndValue strKeyword = " + strKeyword);
-					//Dragonfly.this.logger.add("getKeywordsAndValue strKeywordValue = " + strKeywordValue);
 					if (strKeywordCombined.length() == 0) {
 						strKeywordCombined = strKeyword;
 					} else {
@@ -3331,9 +3227,6 @@ public class Dragonfly {
 					}
 				}
 			}
-			//Dragonfly.this.logger.add("getKeywordsAndValue after for strKeyword = " + strKeywordCombined);
-			//strKeywordValue = strValueToFindKeyword.substring(intRightArrowPosition + 1, strValueToFindKeyword.length());
-			//Dragonfly.this.logger.add("getKeywordsAndValue strKeywordValue = " + strKeywordValue);
 			arrResults = strKeywordCombined.split("\\|");
 			Collections.reverse(Arrays.asList(arrResults));
 		}
@@ -3588,129 +3481,6 @@ public class Dragonfly {
 		}
 	}
 
-	private class StepCreateExpected {
-		private StepCreateExpected() {
-			Dragonfly.this.logger.add("  ==start==>StepCreateExpected " + getDateTimestamp());
-			String strStepExpected = "";
-			String strAction = "";
-			String strInputValue = Dragonfly.this.variablesJSON.objectStep.getString("strInputValue");
-			String strMillisecondsToWait = Dragonfly.this.variablesJSON.objectStep.getString("intMillisecondsToWait");
-			String strObjectName = this.createObjectName();
-			String strTagName = Dragonfly.this.variablesJSON.objectStep.getString("strTagName");
-			String strAssert = Dragonfly.this.variablesJSON.objectStep.getString("strAssert");
-			if (Dragonfly.this.variablesJSON.objectStep.get("strStepExpected").toString().length() != 0) {
-				strAction = Dragonfly.this.variablesJSON.objectStep.getString("strStepExpected");
-			} else {
-				strAction = Dragonfly.this.variablesJSON.objectStep.getString("strAction");
-			}
-			switch (strAction.toLowerCase()) {
-			case "launch":
-				strStepExpected = "Launch {" + strTagName + "} browser to url {" + strInputValue + "} then expect navigation within {" + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "close":
-				strStepExpected = "Close {" + strTagName + "} browser within {" + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "get":
-				strStepExpected = "Get {" + strTagName + "} tag with attributes {" + strObjectName + "} value" + " within {" + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "set":
-				strStepExpected = "Set  {" + strTagName + "} tag with attributes {" + strObjectName + "} to value {" + strInputValue + "} and assert {" + strAssert + "} within " + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "select":
-				strStepExpected = "select  {" + strTagName + "} tag with attributes {" + strObjectName + "} to value {" + strInputValue + "} and assert {" + strAssert + "} within " + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "click":
-				strStepExpected = "click  {" + strTagName + "} tag with attributes {" + strObjectName + "} to value {" + strInputValue + "} and assert {" + strAssert + "} within " + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "double_click":
-				strStepExpected = "click  {" + strTagName + "} tag with attributes {" + strObjectName + "} to value {" + strInputValue + "} and assert {" + strAssert + "} within " + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "right_click":
-				strStepExpected = "click  {" + strTagName + "} tag with attributes {" + strObjectName + "} to value {" + strInputValue + "} and assert {" + strAssert + "} within " + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "verify":
-				strStepExpected = "Verify  {" + strTagName + "} tag with attributes {" + strObjectName + "} value is equal to {" + strInputValue + "} within " + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "verify_not":
-				strStepExpected = "Verify Not {" + strTagName + "} tag with attributes {" + strObjectName + "} value is equal to {" + strInputValue + "} within " + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "mouse_over":
-				strStepExpected = "Mouse over  {" + strTagName + "} tag with attributes {" + strObjectName + "} within " + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "mouse_out":
-				strStepExpected = "Mouse out  {" + strTagName + "} tag with attributes {" + strObjectName + "} within " + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "sync_visible":
-				strStepExpected = "Sync until  {" + strTagName + "} tag with attributes {" + strObjectName + "} is visible within {" + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "sync_hidden":
-				strStepExpected = "Sync until  {" + strTagName + "} tag with attributes {" + strObjectName + "} is hidden within {" + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "sync_enabled":
-				strStepExpected = "Sync until  {" + strTagName + "} tag with attributes {" + strObjectName + "} is enabled within {" + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "sync_disabled":
-				strStepExpected = "Sync until  {" + strTagName + "} tag with attributes {" + strObjectName + "} is disabled within {" + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "scroll":
-				strStepExpected = "The expected " + strTagName + " exists.";
-				break;
-			case "break":
-				strStepExpected = "The action break stopped the execution.";
-				break;
-			case "drag":
-				strStepExpected = "Drag {" + strTagName + "} tag with attributes {" + strObjectName + "} to value {" + strInputValue + "} and assert {" + strAssert + "} within " + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "drop":
-				strStepExpected = "Drop {" + strTagName + "} tag with attributes {" + strObjectName + "} to value {" + strInputValue + "} and assert {" + strAssert + "} within " + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "kill_ie":
-				strStepExpected = "The action kill_ie killed all IE processes.";
-				break;
-			case "refresh":
-				strStepExpected = "The browser was refreshed.";
-				break;
-			case "set_js":
-				strStepExpected = "Set {" + strTagName + "} tag with attributes {" + strObjectName + "} to value {" + strInputValue + "} and assert {" + strAssert + "} within " + strMillisecondsToWait + "} milliseconds";
-				break;
-			case "sleep":
-				strStepExpected = "The action sleep paused execution for {" + strInputValue + " milliseconds}";
-				break;
-			default:
-				strStepExpected = strAction;
-				break;
-			}
-			Dragonfly.this.objStepsManual.set(strStepExpected);
-			Dragonfly.this.variablesJSON.objectStep.putValue("strStepExpected", strStepExpected);
-		}
-
-		private String createObjectName() {
-			String strAttributeValue = "";
-			String strAttributeValues = Dragonfly.this.variablesJSON.objectStep.getString("strAttributeValues");
-			String strObjectsAttributes = "";
-			String strObjectName = "";
-			String strObjectNames = Dragonfly.this.variablesJSON.objectStep.getString("strAttributeNames");
-			String[] arrAttributeValues = strAttributeValues.split("\\|");
-			String[] arrObjectNames = strObjectNames.split("\\|");
-			for (int intEach = 0; intEach < arrObjectNames.length; intEach++) {
-				strObjectName = arrObjectNames[intEach].toString();
-				strAttributeValue = arrAttributeValues[intEach].toString();
-				if (intEach == 0) {
-					strObjectsAttributes = strObjectName + "=" + strAttributeValue;
-					Dragonfly.this.logger.add("createObjectName strObjectAttribute =" + strObjectsAttributes);
-				} else {
-					strObjectsAttributes = strObjectsAttributes + "|" + strObjectName + "=" + strAttributeValue;
-					Dragonfly.this.logger.add("createObjectName strObjectAttribute =" + strObjectsAttributes);
-				}
-			}
-			return strObjectsAttributes;
-		}
-
-		private String switchAction() {
-			return null;
-		}
-	}
-
 	private class StepNames {
 		private String strKeys1 = "strAction|strLogicalName|strTagName|strAttributeNames|strAttributeValues|strInputValue|strAssert|blnOptional|blnExitOnFail";
 		private String strKeys2 = "|intMillisecondsToWait|strFunction|strOutputLinkName|strLoopOrIf|blnPleaseWait|blnHighlight|blnScreenshot|strAssistiveProperties|strOutputValue";
@@ -3761,19 +3531,16 @@ public class Dragonfly {
 		String strDefault_strStatus = "info";
 
 		private StepSetupDefaults(String strCurrentWindowHandle) {
-			//Dragonfly.this.logger.add("  ==start==>StepSetupDefaults " + getDateTimestamp());
 			String[] arrDefaultKeys = new StepNames().getDefault();
 			String[] arrKeys = new StepNames().getRuntime();
 			for (String strKey : arrKeys) {
 				if (!strKey.equals("strTestModuleStep")) {
 					Dragonfly.this.variablesJSON.objectStep.putValue(strKey, "");
-					//Dragonfly.this.logger.add("StepSetupDefaults: .putValue(strKey = " + strKey);
 				}
 			}
 			Dragonfly.this.new KeywordsValid();
 			Class<?> objClass = null;
 			try {
-				//Dragonfly.this.logger.add("StepSetupDefaults: Class.forName start");
 				objClass = Class.forName("org.DragonflyAutomation.Dragonfly$StepSetupDefaults");
 			} catch (ClassNotFoundException e) {
 				Dragonfly.this.logger.add("StepSetupDefaults: ClassNotFoundException = " + e.toString());
@@ -3815,10 +3582,6 @@ public class Dragonfly {
 			return objStringBuilder.toString();
 		}
 
-		//		private void add(String strTextToAdd) {
-		//			this.objStringBuilder.append(strTextToAdd);
-		//			this.objStringBuilder.append(System.getProperty("line.separator"));
-		//		}
 		private void set(String strTextToAdd) {
 			System.out.println(strTextToAdd);
 			objStringBuilder.append(strTextToAdd);
@@ -3972,7 +3735,6 @@ public class Dragonfly {
 
 	private class TestConfigurationSetup {
 		private int intTestInstanceSize;
-		//private String gstrTestStepsCombinedOriginal;
 		private JSONObjectExtended objJsonObjectTestConfigurationFile = null;
 		private JSONParser objJsonParser = new JSONParser();
 
@@ -4464,6 +4226,7 @@ public class Dragonfly {
 		JSONArray objJsonArrayTestStepsRun = new JSONArray();
 		JSONParser objJsonParser = new JSONParser();
 		Dragonfly objDragonfly = new Dragonfly();
+		Boolean blnExit = false;
 		objDragonfly.logger.add("  ==start==>main " + objDragonfly.getDateTimestamp());
 		objDragonfly.objAutoItSetObject.createObject();
 		objDragonfly.windowsMinimizeAll();
@@ -4630,10 +4393,14 @@ public class Dragonfly {
 								break;
 							case "break":
 								objDragonfly.logger.add("main: switch strAction = break was entered to at this step to stop execution");
-								return;
+								objDragonfly.stepDuration("break", System.currentTimeMillis(), "break");
+								blnExit = true;
+								//return;
 							default:
 								objDragonfly.logger.add("main: switch strAction = " + objDragonfly.variablesJSON.objectStep.getLowerCase("strAction") + "  not supported");
-								return;
+								objDragonfly.stepDuration("action", System.currentTimeMillis(), "action");
+								blnExit = true;
+								//return;
 							}
 							strCurrentWindowHandle = objDragonfly.variablesJSON.objectStep.getString("strCurrentWindowHandle");
 						}
@@ -4642,10 +4409,12 @@ public class Dragonfly {
 						}
 						objJsonArrayTestStepsRun.add(objDragonfly.variablesJSON.objectStep);
 						objDragonfly.logger.add("main: objJsonArrayTestStepsRun - " + objJsonArrayTestStepsRun);
+						if (blnExit == true) {
+							break;
+						}
 						if (objDragonfly.variablesJSON.objectStep.verifyEquals("strStatus", "fail")) {
 							strTestStatus = "fail";
 							if (objDragonfly.variablesJSON.objectStep.getBoolean("blnExitOnFail") == true) {
-								//objJsonArrayTestStepsRun.add(objDragonfly.variablesJSON.objectStep);
 								objDragonfly.new WebElementCollectionTable(objDragonfly.variablesJSON.objectStep.getString("strTagName"));
 								break;
 							}
@@ -4691,8 +4460,6 @@ public class Dragonfly {
 						blnIfSet = false;
 						break;
 					}
-					//					objJsonArrayTestStepsRun.add(objDragonfly.variablesJSON.objectStep);
-					//					objDragonfly.logger.add("main: objJsonArrayTestStepsRun - " + objJsonArrayTestStepsRun);
 				}
 			} catch (Exception e) {
 				objDragonfly.logger.add("main: Exception " + e.toString());
@@ -4770,6 +4537,28 @@ public class Dragonfly {
 		return Integer.toString(randomNumberRange(1, 99999));
 	}
 
+	private String createObjectName() {
+		String strAttributeValue = "";
+		String strAttributeValues = Dragonfly.this.variablesJSON.objectStep.getString("strAttributeValues");
+		String strObjectsAttributes = "";
+		String strObjectName = "";
+		String strObjectNames = Dragonfly.this.variablesJSON.objectStep.getString("strAttributeNames");
+		String[] arrAttributeValues = strAttributeValues.split("\\|");
+		String[] arrObjectNames = strObjectNames.split("\\|");
+		for (int intEach = 0; intEach < arrObjectNames.length; intEach++) {
+			strObjectName = arrObjectNames[intEach].toString();
+			strAttributeValue = arrAttributeValues[intEach].toString();
+			if (intEach == 0) {
+				strObjectsAttributes = strObjectName + "=" + strAttributeValue;
+				Dragonfly.this.logger.add("createObjectName strObjectAttribute =" + strObjectsAttributes);
+			} else {
+				strObjectsAttributes = strObjectsAttributes + "|" + strObjectName + "=" + strAttributeValue;
+				Dragonfly.this.logger.add("createObjectName strObjectAttribute =" + strObjectsAttributes);
+			}
+		}
+		return strObjectsAttributes;
+	}
+
 	private String formatDateTime(Long lngStartTimeMillis) {
 		Dragonfly.this.logger.add("  ==start==>DateTimeFormat " + getDateTimestamp());
 		return new SimpleDateFormat("MMM dd, yyyy HH:mm:ss:SSS").format(new Date(lngStartTimeMillis));
@@ -4805,7 +4594,6 @@ public class Dragonfly {
 	}
 
 	private String getKeywordValue(String strValue) {
-		//String strValueToFindKeyword = strValue.toLowerCase();
 		int intRightArrowPosition = strValue.indexOf(">");
 		String strKeywordValue = "";
 		if (intRightArrowPosition > -1) {
@@ -4831,172 +4619,175 @@ public class Dragonfly {
 		Dragonfly.this.logger.add("  ==start==>stepCreateActual " + getDateTimestamp());
 		String intWaited = Dragonfly.this.variablesJSON.objectStep.getString("strStepDuration");
 		String strActualHtml = "";
-		String strActualReturn = "";
-		String strActualReturnHTML = "";
+		String strSelectList = "";
 		String strActualText = "";
-		String strInputParameterValueHTML = "";
 		String strInputValue = Dragonfly.this.variablesJSON.objectStep.getString("strInputValue");
 		String strOutputValue = Dragonfly.this.variablesJSON.objectStep.getString("strOutputValue");
-		String strOutputValueHtml = Dragonfly.this.variablesJSON.objectStep.getString("strOutputValue");
-		String strParameterName = "";
-		String strStepParameterName = "";
 		String strTagName = Dragonfly.this.variablesJSON.objectStep.getString("strTagName");
+		String strMsWaitedDetailHtml = "{<b>" + intWaited + "</b>} milliseconds.";
+		String strMsWaitedDetail = "{" + intWaited + "} milliseconds.";
+		String strTagDetailHtml = "The {<b>" + strTagName + "</b>} tag ";
+		String strTagDetail = "The {" + strTagName + "} tag ";
+		String strInputValueHtmlPass = " value {<b><FONT COLOR='008000'>" + strInputValue + "</FONT></b>}";
+		String strOutputValueHtmlPass = " value {<b><FONT COLOR='008000'>" + strOutputValue + "</FONT></b>}";
+		String strFail = "<b><FONT COLOR='FF0000'></FONT></b>";
+		//String strFail2 =variablesJSON.objectStep.getString("strTagName");
 		switch (strStepType.toLowerCase()) {
 		case "launch":
-			strActualHtml = "Launch {<b>" + strTagName + "</b>} browser to url {<b><FONT COLOR='008000'>" + strInputValue + "</FONT></b>} then expect navigation within {<b>" + intWaited + "</b>} milliseconds.";
+			strActualHtml = "Launch {<b>" + strTagName + "</b>} browser to url " + strInputValueHtmlPass + " then expect navigation within " + strMsWaitedDetailHtml;
 			strActualText = "Launch {" + strTagName + "} browser to url {" + strInputValue + "} then expect navigation within {" + intWaited + "} milliseconds.";
 			break;
 		case "close":
-			strActualHtml = "Close {<b>" + strTagName + "</b>} browser within {<b>" + intWaited + "</b>} milliseconds";
+			strActualHtml = "Close {<b>" + strTagName + "</b>} browser within " + strMsWaitedDetailHtml;
 			strActualText = "Close {" + strTagName + "} browser within {" + intWaited + "} milliseconds";
 			break;
 		case "default":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag default value is {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>}. within {" + intWaited + "} milliseconds.";
-			strActualText = "The expected " + strTagName + " default value is " + strOutputValue + ".";
+			strActualHtml = strTagDetailHtml + " default" + strOutputValueHtmlPass + " within " + strMsWaitedDetailHtml;
+			strActualText = strTagDetail + " default" + strOutputValue + ".";
 			break;
 		case "clicked":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was clicked.";
-			strActualText = "The " + strTagName + "  value {" + strInputValue + "} was clicked.";
+			strActualHtml = strTagDetailHtml + strInputValueHtmlPass + " was clicked within " + strMsWaitedDetailHtml;
+			strActualText = strTagDetail + "{" + strInputValue + "} was clicked within " + strMsWaitedDetail;
 			break;
 		case "expected":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was not verified.<BR>The actual value was {<b><FONT COLOR='FF0000'>" + strActualReturnHTML + "</FONT></b>}.";
-			strActualText = "The " + strTagName + " value {" + strInputValue + "} was not verified.  The actual value was {" + strActualReturn + "}.";
+			strActualHtml = strTagDetailHtml + strInputValueHtmlPass + " was not verified within " + strMsWaitedDetailHtml + "<BR>The actual value was {<b><FONT COLOR='FF0000'>" + strOutputValue + "</FONT></b>}.";
+			strActualText = strTagDetail + "{" + strInputValue + "} was not verified.  The actual value was {" + strOutputValue + "}.";
 			break;
 		case "expectedtooltip":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag tooltip value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was not verified.<BR>The actual value was {<b><FONT COLOR='FF0000'>" + strActualReturnHTML + "</FONT></b>}.";
-			strActualText = "The " + strTagName + " tooltip value {" + strInputValue + "} was not verified.  The actual value was {" + strActualReturn + "}.";
+			strActualHtml = strTagDetailHtml + " tooltip" + strInputValueHtmlPass + " was not verified.<BR>The actual value was {<b><FONT COLOR='FF0000'>" + strOutputValue + "</FONT></b>}.";
+			strActualText = strTagDetail + " tooltip {" + strInputValue + "} was not verified.  The actual value was {" + strOutputValue + "}.";
 			break;
 		case "find":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag value {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was found.";
-			strActualText = "The " + strTagName + "  value {" + strOutputValue + "} was found.";
+			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + "<b><FONT COLOR='FF0000'></FONT></b>} was found.";
+			strActualText = strTagDetail + "  value {" + strOutputValue + "} was found.";
 			break;
 		case "notfound":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag value {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was not found.";
-			strActualText = "The " + strTagName + " value {" + strOutputValue + "} was not found.";
+			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + "<b><FONT COLOR='FF0000'></FONT></b>} was not found.";
+			strActualText = strTagDetail + " value {" + strOutputValue + "} was not found.";
 			break;
 		case "verify":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag value {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was verified.";
-			strActualText = "The " + strTagName + " value {" + strOutputValue + "} was verified.";
+			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + "<b><FONT COLOR='FF0000'></FONT></b>} was verified.";
+			strActualText = strTagDetail + " value {" + strOutputValue + "} was verified.";
 			break;
 		case "verify_not":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag value {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was not verified.";
-			strActualText = "The " + strTagName + " value {" + strOutputValue + "} was not verified.";
+			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + "<b><FONT COLOR='FF0000'></FONT></b>} was not verified.";
+			strActualText = strTagDetail + " value {" + strOutputValue + "} was not verified.";
 			break;
 		case "verifytooltip":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag tooltip value {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b><b><FONT COLOR='FF0000'></FONT></b>} was verified.";
-			strActualText = "The " + strTagName + " tooltip value {" + strOutputValue + "} was verified.";
+			strActualHtml = strTagDetailHtml + " tooltip" + strOutputValueHtmlPass + "<b><FONT COLOR='FF0000'></FONT></b>} was verified.";
+			strActualText = strTagDetail + " tooltip value {" + strOutputValue + "} was verified.";
 			break;
 		case "get":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag actual value is {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>}.";
-			strActualText = "The " + strTagName + " actual value is {" + strOutputValue + "}";
+			strActualHtml = strTagDetailHtml + " actual value is " + strOutputValueHtmlPass + ".";
+			strActualText = strTagDetail + " actual value is {" + strOutputValue + "}";
 			break;
 		case "gettooltip":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag tooltip actual value is {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>}.";
-			strActualText = "The " + strTagName + " tooltip actual value is {" + strOutputValue + "}";
+			strActualHtml = strTagDetailHtml + " tooltip actual value is " + strOutputValueHtmlPass + ".";
+			strActualText = strTagDetail + " tooltip actual value is {" + strOutputValue + "}";
 			break;
 		case "set":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag value {<b><FONT COLOR='008000'>" + strInputValue + "</FONT></b>} was set.";
-			strActualText = "The " + strTagName + " value {" + strInputValue + "} was set.";
+			strActualHtml = strTagDetailHtml + strInputValueHtmlPass + " was set within " + strMsWaitedDetailHtml;
+			strActualText = strTagDetail + " value {" + strInputValue + "} was set.";
 			break;
 		case "persisted":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag value {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} persisted.";
-			strActualText = "The " + strTagName + " value {" + strOutputValue + "} persisted.";
+			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " persisted within " + strMsWaitedDetailHtml;
+			strActualText = strTagDetail + " value {" + strOutputValue + "} persisted.";
 			break;
 		case "password":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag password value {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} was set.";
-			strActualText = "The " + strTagName + " password value {" + strOutputValue + "} was set.";
+			strActualHtml = strTagDetailHtml + " password value " + strOutputValueHtmlPass + " was set within " + strMsWaitedDetailHtml;
+			strActualText = strTagDetail + " password value {" + strOutputValue + "} was set.";
 			break;
 		case "notpersisted":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag value  {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} did not persist.<BR>The actual value {<b><FONT COLOR='FF0000'>" + strActualReturnHTML + "</FONT></b>} was displayed.";
-			strActualText = "The " + strTagName + " value {" + strInputValue + "} did not persist.  The actual value {" + strActualReturn + "} was displayed.";
+			strActualHtml = strTagDetailHtml + strInputValueHtmlPass + " did not persist.<BR>The actual value {<b><FONT COLOR='FF0000'>" + strOutputValue + "</FONT></b>} was displayed within " + strMsWaitedDetailHtml;
+			strActualText = strTagDetail + " value {" + strInputValue + "} did not persist.  The actual value {" + strOutputValue + "} was displayed.";
 			break;
 		case "exist":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag exists.";
-			strActualText = "The " + strTagName + " exists.";
+			strActualHtml = strTagDetailHtml + " exists within " + strMsWaitedDetailHtml;
+			strActualText = strTagDetail + " exists.";
 			break;
 		case "notexist":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag does not exist after " + intWaited + " milliseconds.";
-			strActualText = "The " + strTagName + " does not exist after " + intWaited + " milliseconds.";
+			strActualHtml = strTagDetailHtml + " does not exist after " + strMsWaitedDetailHtml;
+			strActualText = strTagDetail + " does not exist after " + intWaited + " milliseconds.";
 			break;
 		case "notexisttooltip":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag tooltip does not exist after " + intWaited + " milliseconds.";
-			strActualText = "The " + strTagName + " tooltip does not exist after " + intWaited + " milliseconds.";
+			strActualHtml = strTagDetailHtml + " tooltip does not exist after " + strMsWaitedDetailHtml;
+			strActualText = strTagDetail + " tooltip does not exist after " + intWaited + " milliseconds.";
 			break;
 		case "invisible":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag <b><FONT COLOR='008000'></FONT></b> is invisible.";
-			strActualText = "The " + strTagName + " is invisible.";
+			strActualHtml = strTagDetailHtml + " <b><FONT COLOR='008000'></FONT></b> is invisible within " + strMsWaitedDetailHtml;
+			strActualText = strTagDetail + " is invisible.";
 			break;
 		case "enabled":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag <b><FONT COLOR='008000'></FONT></b> is enabled.";
-			strActualText = "The " + strTagName + " is enabled.";
+			strActualHtml = strTagDetailHtml + " <b><FONT COLOR='008000'></FONT></b> is enabled within " + strMsWaitedDetailHtml;
+			strActualText = strTagDetail + " is enabled.";
 			break;
 		case "disabled":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag <b><FONT COLOR='008000'></FONT></b> is disabled.";
-			strActualText = "The " + strTagName + " is disabled.";
+			strActualHtml = strTagDetailHtml + " <b><FONT COLOR='008000'></FONT></b> is disabled within " + strMsWaitedDetailHtml;
+			strActualText = strTagDetail + " is disabled.";
 			break;
 		case "visible":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag <b><FONT COLOR='008000'></FONT></b> is visible.";
-			strActualText = "The " + strTagName + " is visible.";
+			strActualHtml = strTagDetailHtml + " <b><FONT COLOR='008000'></FONT></b> is visible within " + strMsWaitedDetailHtml;
+			strActualText = strTagDetail + " is visible.";
 			break;
 		case "hidden":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag <b><FONT COLOR='008000'></FONT></b> is hidden.";
-			strActualText = "The " + strTagName + " is hidden.";
+			strActualHtml = strTagDetailHtml + " <b><FONT COLOR='008000'></FONT></b> is hidden within " + strMsWaitedDetailHtml;
+			strActualText = strTagDetail + " is hidden.";
 			break;
 		case "syncnotexists":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag </b> {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} does not exist after " + intWaited + " milliseconds.";
-			strActualText = "The " + strTagName + " {" + strOutputValue + "} does not exist after " + intWaited + " milliseconds.";
+			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " does not exist after " + intWaited + " milliseconds.";
+			strActualText = strTagDetail + " {" + strOutputValue + "} does not exist after " + intWaited + " milliseconds.";
 			break;
 		case "syncexists":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} exists after " + intWaited + " milliseconds.";
-			strActualText = "The " + strTagName + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
+			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " exists after " + intWaited + " milliseconds.";
+			strActualText = strTagDetail + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
 			break;
 		case "syncclosed":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} closed after " + intWaited + " milliseconds.";
-			strActualText = "The " + strTagName + " {" + strOutputValue + "} closed after " + intWaited + " milliseconds.";
+			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " closed after " + intWaited + " milliseconds.";
+			strActualText = strTagDetail + " {" + strOutputValue + "} closed after " + intWaited + " milliseconds.";
 			break;
 		case "syncnotclosed":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} did not close after " + intWaited + " milliseconds.";
-			strActualText = "The " + strTagName + " {" + strOutputValue + "} did not close after " + intWaited + " milliseconds.";
+			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " did not close after " + intWaited + " milliseconds.";
+			strActualText = strTagDetail + " {" + strOutputValue + "} did not close after " + intWaited + " milliseconds.";
 			break;
 		case "synchidden":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag </b> {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} does not exist after " + intWaited + " milliseconds.";
-			strActualText = "The " + strTagName + " {" + strOutputValue + "} does not exist after " + intWaited + " milliseconds.";
+			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " does not exist after " + intWaited + " milliseconds.";
+			strActualText = strTagDetail + " {" + strOutputValue + "} does not exist after " + intWaited + " milliseconds.";
 			break;
 		case "syncvisible":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} exists after " + intWaited + " milliseconds.";
-			strActualText = "The " + strTagName + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
+			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " exists after " + intWaited + " milliseconds.";
+			strActualText = strTagDetail + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
 			break;
 		case "syncoptional":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} sync is optional after " + intWaited + " milliseconds.";
-			strActualText = "The " + strTagName + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
+			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " sync is optional after " + intWaited + " milliseconds.";
+			strActualText = strTagDetail + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
 			break;
 		case "syncdisabled":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag </b> {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} does not exist after " + intWaited + " milliseconds.";
-			strActualText = "The " + strTagName + " {" + strOutputValue + "} does not exist after " + intWaited + " milliseconds.";
+			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " does not exist after " + intWaited + " milliseconds.";
+			strActualText = strTagDetail + " {" + strOutputValue + "} does not exist after " + intWaited + " milliseconds.";
 			break;
 		case "syncenabled":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} exists after " + intWaited + " milliseconds.";
-			strActualText = "The " + strTagName + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
+			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " exists after " + intWaited + " milliseconds.";
+			strActualText = strTagDetail + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
 			break;
 		case "navigate":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag value {<b><FONT COLOR='008000'>" + strOutputValueHtml + "</FONT></b>} was set.<BR>No validation performed due to navigation.";
-			strActualText = "The " + strTagName + " value {" + strOutputValue + "} was set. No validation performed due to navigation.";
+			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " was set.<BR>No validation performed due to navigation.";
+			strActualText = strTagDetail + " value {" + strOutputValue + "} was set. No validation performed due to navigation.";
 			break;
 		case "keystroke":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag value {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} was pressed.";
-			strActualText = "The " + strTagName + "  value {" + strInputValue + "} was pressed.";
+			strActualHtml = strTagDetailHtml + strInputValueHtmlPass + " was pressed.";
+			strActualText = strTagDetail + "  value {" + strInputValue + "} was pressed.";
 			break;
 		case "notinlist":
-			strActualHtml = "The list item {<b><FONT COLOR='008000'>" + strInputParameterValueHTML + "</FONT></b>} does not exist in the <b>" + strStepParameterName + "</b> list field.<BR>Please confirm the input value against the actual list values {<b><FONT COLOR='FF0000'>" + strActualReturnHTML + "</FONT></b>} is available for this field.";
-			strActualText = "The list item {" + strInputValue + "} does not exist in the " + strParameterName + " list field.  Please confirm the input value against the actual list values {" + strActualReturn + "} is available for this field.";
+			strActualHtml = "The list item " + strInputValueHtmlPass + " does not exist in the list field.<BR>Please confirm the input value against the actual list values {<b><FONT COLOR='FF0000'>" + strOutputValue + "</FONT></b>} is available for this field.";
+			strActualText = "The list item {" + strInputValue + "} does not exist in the list field.  Please confirm the input value against the actual list values {" + strSelectList + "} is available for this field.";
 			break;
 		case "drag":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag was dragged after " + intWaited + " milliseconds.";
-			strActualText = "The {<b>" + strTagName + "</b>} tag was dragged after " + intWaited + " milliseconds.";
+			strActualHtml = strTagDetailHtml + " was dragged after " + intWaited + " milliseconds.";
+			strActualText = strTagDetailHtml + " was dragged after " + intWaited + " milliseconds.";
 			break;
 		case "drop":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag was dropped after " + intWaited + " milliseconds.";
-			strActualText = "The {<b>" + strTagName + "</b>} tag was dropped after " + intWaited + " milliseconds.";
+			strActualHtml = strTagDetailHtml + " was dropped after " + intWaited + " milliseconds.";
+			strActualText = strTagDetailHtml + " was dropped after " + intWaited + " milliseconds.";
 			break;
 		case "break":
 			strActualHtml = "Take a break.";
@@ -5007,33 +4798,133 @@ public class Dragonfly {
 			strActualText = "Skip it.";
 			break;
 		case "scroll":
-			strActualHtml = "The {<b>" + strTagName + "</b>} tag exists.";
-			strActualText = "The " + strTagName + " exists.";
+			strActualHtml = strTagDetailHtml + " exists.";
+			strActualText = strTagDetail + " exists.";
 			break;
 		case "sleep":
-			strActualHtml = "The action sleep paused execution for {<b>" + intWaited + "</b>} milliseconds.";
+			strActualHtml = "The action sleep paused execution for " + strMsWaitedDetailHtml;
 			strActualText = "The action sleep paused execution for {" + intWaited + "} milliseconds.";
 			break;
 		case "mouse_over":
+			strActualHtml = "Mouse over complete";
 			strActualText = "Mouse over {<b>" + strTagName + "</b>} tag complete";
 			break;
 		case "mouse_out":
+			strActualHtml = "Mouse out " + strInputValueHtmlPass + " complete";
 			strActualText = "Mouse out {<b>" + strTagName + "</b>} tag complete";
 			break;
 		default:
 		}
 		strActualHtml = "<DIV align='left'>" + strActualHtml + "</DIV>";
-		Dragonfly.this.logger.add("StepCreateActual: strActualHtml = " + strActualHtml);
+		Dragonfly.this.logger.add("StepCreateActual: strActualText = " + strActualText);
 		Dragonfly.this.variablesJSON.objectStep.putValue("strStepActual", strActualHtml);
 		Dragonfly.this.logger.add("StepCreateActual: objectStep.getString(strStepActual) = " + Dragonfly.this.variablesJSON.objectStep.getString("strStepActual"));
+	}
+
+	private void stepCreateExpected() {
+		Dragonfly.this.logger.add("  ==start==>StepCreateExpected " + getDateTimestamp());
+		String strStepExpected = "";
+		String strAction = "";
+		String strInputValue = Dragonfly.this.variablesJSON.objectStep.getString("strInputValue");
+		String strMillisecondsToWait = Dragonfly.this.variablesJSON.objectStep.getString("intMillisecondsToWait");
+		String strObjectName = this.createObjectName();
+		String strTagName = Dragonfly.this.variablesJSON.objectStep.getString("strTagName");
+		String strAssert = Dragonfly.this.variablesJSON.objectStep.getString("strAssert");
+		String strMillisecondsToWaitHtml = "within {<b>" + strMillisecondsToWait + "</b>} milliseconds";
+		String strTagAttributesHtml = "{<b>" + strTagName + "</b>} tag with attributes {<b>" + strObjectName + "</b>}";
+		String strInputValueHtml = "{<b>" + strInputValue + "</b>}";
+		String strAssertHtml = "assert {<b>" + strAssert + "</b>} ";
+		if (Dragonfly.this.variablesJSON.objectStep.get("strStepExpected").toString().length() != 0) {
+			strAction = Dragonfly.this.variablesJSON.objectStep.getString("strStepExpected");
+		} else {
+			strAction = Dragonfly.this.variablesJSON.objectStep.getString("strAction");
+		}
+		switch (strAction.toLowerCase()) {
+		case "launch":
+			strStepExpected = "Launch {<b>" + strTagName + "</b>} browser to url " + strInputValueHtml + " then expect navigation " + strMillisecondsToWaitHtml;
+			break;
+		case "close":
+			strStepExpected = "Close {<b>" + strTagName + "</b>} browser " + strMillisecondsToWaitHtml;
+			break;
+		case "get":
+			strStepExpected = "Get " + strTagAttributesHtml + " value" + " " + strMillisecondsToWaitHtml;
+			break;
+		case "set":
+			strStepExpected = "Set " + strTagAttributesHtml + " to value " + strInputValueHtml + " and " + strAssertHtml + strMillisecondsToWaitHtml;
+			break;
+		case "select":
+			strStepExpected = "Select " + strTagAttributesHtml + " to value " + strInputValueHtml + " and " + strAssertHtml + strMillisecondsToWaitHtml;
+			break;
+		case "click":
+			strStepExpected = "Click " + strTagAttributesHtml + " and " + strAssertHtml + strMillisecondsToWaitHtml;
+			break;
+		case "double_click":
+			strStepExpected = "Double click " + strTagAttributesHtml + " and " + strAssertHtml + strMillisecondsToWaitHtml;
+			break;
+		case "right_click":
+			strStepExpected = "Right click " + strTagAttributesHtml + " and " + strAssertHtml + strMillisecondsToWaitHtml;
+			break;
+		case "verify":
+			strStepExpected = "Verify " + strTagAttributesHtml + " value is equal to " + strInputValueHtml + " " + strMillisecondsToWaitHtml;
+			break;
+		case "verify_not":
+			strStepExpected = "Verify not " + strTagAttributesHtml + " value is equal to " + strInputValueHtml + " " + strMillisecondsToWaitHtml;
+			break;
+		case "mouse_over":
+			strStepExpected = "Mouse over " + strTagAttributesHtml + " " + strMillisecondsToWaitHtml;
+			break;
+		case "mouse_out":
+			strStepExpected = "Mouse out " + strTagAttributesHtml + " " + strMillisecondsToWaitHtml;
+			break;
+		case "sync_visible":
+			strStepExpected = "Sync until " + strTagAttributesHtml + " is visible " + strMillisecondsToWaitHtml;
+			break;
+		case "sync_hidden":
+			strStepExpected = "Sync until " + strTagAttributesHtml + " is hidden " + strMillisecondsToWaitHtml;
+			break;
+		case "sync_enabled":
+			strStepExpected = "Sync until " + strTagAttributesHtml + " is enabled " + strMillisecondsToWaitHtml;
+			break;
+		case "sync_disabled":
+			strStepExpected = "Sync until " + strTagAttributesHtml + " is disabled " + strMillisecondsToWaitHtml;
+			break;
+		case "scroll":
+			strStepExpected = "Scroll the " + strTagAttributesHtml + " into view " + strMillisecondsToWaitHtml;
+			break;
+		case "break":
+			strStepExpected = "Break the execution.";
+			break;
+		case "drag":
+			strStepExpected = "Drag " + strTagAttributesHtml + " to value " + strInputValueHtml + " and " + strAssertHtml + strMillisecondsToWaitHtml;
+			break;
+		case "drop":
+			strStepExpected = "Drop " + strTagAttributesHtml + " to value " + strInputValueHtml + " and " + strAssertHtml + strMillisecondsToWaitHtml;
+			break;
+		case "kill_ie":
+			strStepExpected = "The action kill_ie killed all IE processes.";
+			break;
+		case "refresh":
+			strStepExpected = "Refresh the browser.";
+			break;
+		case "set_js":
+			strStepExpected = "Set " + strTagAttributesHtml + " to value " + strInputValueHtml + " and " + strAssertHtml + strMillisecondsToWaitHtml;
+			break;
+		case "sleep":
+			strStepExpected = "Sleep execution for " + strInputValueHtml + " milliseconds}";
+			break;
+		default:
+			strStepExpected = strAction;
+			break;
+		}
+		Dragonfly.this.objStepsManual.set(strStepExpected.replaceAll("<b>", "").replaceAll("</b>", ""));
+		Dragonfly.this.variablesJSON.objectStep.putValue("strStepExpected", strStepExpected);
 	}
 
 	private void stepDuration(String strMethodName, Long lngTimeStart, String strStepType) {
 		Dragonfly.this.logger.add("  ==start==>StepDuration " + getDateTimestamp());
 		Long lngTimeEnd = System.currentTimeMillis();
-		new StepCreateExpected();
+		stepCreateExpected();
 		stepCreateActual(strStepType);
-		//Dragonfly.this.variablesJSON.objectStep.putValue( "strStepActual", new StepCreateActual().run( strStepType));
 		Dragonfly.this.variablesJSON.objectStep.putValue("strStartTimestamp", formatDateTime(lngTimeStart));
 		Dragonfly.this.variablesJSON.objectStep.putValue("strStepDuration", Long.toString(lngTimeEnd - lngTimeStart));
 		Dragonfly.this.variablesJSON.objectStep.putValue("strEndTimestamp", formatDateTime(lngTimeEnd));

@@ -12,6 +12,11 @@
 			option.innerHTML = next_year;
 			select.appendChild(option);
 		}
+		document.getElementById("select1").selectedIndex = -1;
+		document.getElementById("select2").selectedIndex = -1;
+		document.getElementById("select3").selectedIndex = -1;
+		document.getElementById("select4").selectedIndex = -1;
+		document.getElementById("select5").selectedIndex = -1;
 	}
 
 	function show_alert() {
@@ -22,6 +27,7 @@
 		var select = document.getElementById(strSelected);
 		var selection = select.options[select.selectedIndex].innerHTML;
 		alert(selection);
+		select.selectedIndex = -1;
 	}
 
 	function alert_with_text(text) {
