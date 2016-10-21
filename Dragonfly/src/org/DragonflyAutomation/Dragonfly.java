@@ -189,7 +189,7 @@ public class Dragonfly {
 					myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL).build().perform();
 					break;
 				case "ie":
-					new SleepMilliseconds(1000);
+					//new SleepMilliseconds(1000);
 					Dragonfly.this.logger.add("BrowserLaunch: DesiredCapabilities");
 					objDesiredCapabilities = DesiredCapabilities.internetExplorer();
 					Dragonfly.this.logger.add("BrowserLaunch: objDesiredCapabilities.toString()" + objDesiredCapabilities);
@@ -1371,6 +1371,87 @@ public class Dragonfly {
 				} catch (ExceptionElementTagNameNotSupported e) {
 					blnExit = true;
 					Dragonfly.this.logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
+					blnFound = false;
+					Dragonfly.this.logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				} catch (ExceptionElementNotVisible e) {
+					blnVisible = false;
+					Dragonfly.this.logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				} finally {
+					if (syncFinally(blnExit, blnStatus, blnFound, "ElementGetSync", "get", lngTimeStart) == true) {
+						new CoordinateHighlightScreenshot(Dragonfly.this.variablesJSON.objectStep);
+						return;
+					} else {
+						blnVisible = false;
+						blnGet = false;
+					}
+				}
+			}
+		}
+	}
+
+	private class ElementGetTooltip {
+		private String run() {
+			//new SleepMilliseconds(2000);
+			//WebElement objWebElement = objWebDriver.findElement(By.id("tooltipID"));
+			Actions ToolTip1 = new Actions(Dragonfly.this.objVariablesSelenium.gobjWebDriver);
+			ToolTip1.moveToElement(Dragonfly.this.objVariablesSelenium.gobjWebElement).build().perform();
+			//ToolTip1.clickAndHold(Dragonfly.this.objVariablesSelenium.gobjWebElement).build().perform();
+			//Actions.moveToElement(Dragonfly.this.objVariablesSelenium.gobjWebElement).build().clickAndHold()
+			new SleepMilliseconds(1000);
+			//			System.out.println(objWebElement.getLocation().getX());
+			//			System.out.println(objWebElement.getLocation().getY());
+			//			System.out.println(objWebElement.getSize().width);
+			//			System.out.println(objWebElement.getSize().height);
+			Dimension objWebDriverDimension = Dragonfly.this.objVariablesSelenium.gobjWebElement.getSize();
+			int intBrowserOuterWidth = objWebDriverDimension.width;
+			int intBrowserOuterHeight = objWebDriverDimension.height;
+			//' Grab tooltip
+			//ToolTip = Window("nativeclass:=tooltips_class32").GetROProperty("text")
+			String strToolTip = objAutoItSetObject.objAutoIt.controlGetText("tooltips_class32", "", "");
+			System.out.println(-((intBrowserOuterWidth / 2) + 1));
+			System.out.println(-((intBrowserOuterHeight / 2) + 1));
+			/////ToolTip1.moveByOffset(-((intBrowserOuterWidth / 2) + 1), -((intBrowserOuterHeight / 2) + 1)).build().perform();
+			//ToolTip1.moveByOffset(-intBrowserOuterWidth + 1, -intBrowserOuterHeight + 1).build().perform();
+			String ToolTipText = Dragonfly.this.objVariablesSelenium.gobjWebElement.getAttribute("title");
+			//Assert.assertEquals(ToolTipText, "Google");
+			System.out.println("Tooltip value is: " + ToolTipText);
+			//ToolTip1.release(objWebElement).perform();
+			//ToolTip1.release().perform();
+			//ToolTip1.moveByOffset(0, 0);
+			return ToolTipText;
+		}
+	}
+
+	private class ElementGetTooltipSync {
+		private ElementGetTooltipSync() {
+			Dragonfly.this.logger.add("  ==start==>ElementGetSync " + getDateTimestamp());
+			Long lngTimeStart = System.currentTimeMillis();
+			Boolean blnExit = false;
+			Boolean blnFound = false;
+			Boolean blnGet = false;
+			Boolean blnStatus = false;
+			Boolean blnVisible = false;
+			String strGetValue = "";
+			while (true) {
+				try {
+					if (blnFound == false) {
+						new ElementFind();
+						blnFound = true;
+					}
+					if (blnVisible == false) {
+						new ElementVisible();
+						blnVisible = true;
+					}
+					if (blnGet == false) {
+						strGetValue = new ElementGetTooltip().run();
+						Dragonfly.this.variablesJSON.objectStep.putValue("strOutputValue", strGetValue);
+						blnGet = true;
+					}
+					blnStatus = true;
+					//				} catch (ExceptionElementTagNameNotSupported e) {
+					//					blnExit = true;
+					//					Dragonfly.this.logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					Dragonfly.this.logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
@@ -3996,21 +4077,66 @@ public class Dragonfly {
 
 	private class WebDriverTest {
 		private WebDriverTest() {
-			System.setProperty("webdriver.ie.driver", "");
-			WebDriver objWebDriver;
-			objWebDriver = new InternetExplorerDriver();
+			Dragonfly.this.new ProcessKillInternetExplorer().run();
+			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
+			DesiredCapabilities objDesiredCapabilities = null;
+			//Dragonfly.this.logger.add("BrowserLaunch: DesiredCapabilities");
+			objDesiredCapabilities = DesiredCapabilities.internetExplorer();
+			//Dragonfly.this.logger.add("BrowserLaunch: objDesiredCapabilities.toString()" + objDesiredCapabilities);
+			//Dragonfly.this.logger.add("BrowserLaunch: setJavascriptEnabled");
+			objDesiredCapabilities.setJavascriptEnabled(true);
+			//Dragonfly.this.logger.add("BrowserLaunch: UNEXPECTED_ALERT_BEHAVIOR");
+			objDesiredCapabilities.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, "ignore");
+			//Dragonfly.this.logger.add("BrowserLaunch: IE_ENSURE_CLEAN_SESSION");
+			objDesiredCapabilities.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
+			//Dragonfly.this.logger.add("BrowserLaunch: REQUIRE_WINDOW_FOCUS");
+			objDesiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
+			//Dragonfly.this.logger.add("BrowserLaunch: INITIAL_BROWSER_URL");
+			objDesiredCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
+			//Dragonfly.this.logger.add("BrowserLaunch: webdriver.ie.driver" + System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
+			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
+			//Dragonfly.this.logger.add("BrowserLaunch: new InternetExplorerDriver(desiredCapabilities)");
+			WebDriver objWebDriver = new InternetExplorerDriver(objDesiredCapabilities);
+			//objWebDriver = new InternetExplorerDriver();
 			//DesiredCapabilities desiredCapabilities = null;
 			//desiredCapabilities = DesiredCapabilities.internetExplorer();
 			//desiredCapabilities.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
 			//desiredCapabilities.setCapability(InternetExplorerDriver.IE_SWITCHES, "-noframemerging");
 			//objWebDriver = new InternetExplorerDriver(desiredCapabilities);
-			objWebDriver.get("http://liloui-latest.wdw.disney.com/PMS/");
+			//objWebDriver.get("https://www.google.com/");
+			String strLocalWebsiteFilePath = "file:///" + System.getProperty("user.dir").replaceAll("\\\\", "/") + "/Websites/tooltip.html";
+			objWebDriver.get(strLocalWebsiteFilePath);
 			//Capabilities getCapabilities();
 			//		driver = new FirefoxDriver();
 			//		driver = new HtmlUnitDriver(true);
 			//	assertTrue(true);
 			//driver.close();
 			//driver.quit();
+			new SleepMilliseconds(2000);
+			WebElement objWebElement = objWebDriver.findElement(By.id("tooltipID"));
+			Actions ToolTip1 = new Actions(objWebDriver);
+			ToolTip1.moveToElement(objWebElement).build().perform();
+			//ToolTip1.clickAndHold(objWebElement).build().perform();
+			new SleepMilliseconds(1000);
+			System.out.println(objWebElement.getLocation().getX());
+			System.out.println(objWebElement.getLocation().getY());
+			System.out.println(objWebElement.getSize().width);
+			System.out.println(objWebElement.getSize().height);
+			Dimension objWebDriverDimension = objWebElement.getSize();
+			int intBrowserOuterWidth = objWebDriverDimension.width;
+			int intBrowserOuterHeight = objWebDriverDimension.height;
+			//' Grab tooltip
+			//ToolTip = Window("nativeclass:=tooltips_class32").GetROProperty("text")
+			//String strToolTip = objAutoItSetObject.objAutoIt.controlGetText("tooltips_class32", "", "");
+			System.out.println(-((intBrowserOuterWidth / 2) + 1));
+			System.out.println(-((intBrowserOuterHeight / 2) + 1));
+			ToolTip1.moveByOffset(-((intBrowserOuterWidth / 2) + 1), -((intBrowserOuterHeight / 2) + 1)).build().perform();
+			String ToolTipText = objWebElement.getAttribute("title");
+			//Assert.assertEquals(ToolTipText, "Google");
+			System.out.println("Tooltip value is: " + ToolTipText);
+			//ToolTip1.release(objWebElement).perform();
+			//ToolTip1.release().perform();
+			//ToolTip1.moveByOffset(0, 0);
 		}
 	}
 
@@ -4222,6 +4348,8 @@ public class Dragonfly {
 	}
 
 	public static void main(String[] args) {
+		new Dragonfly().new WebDriverTest();
+		System.exit(0);
 		JSONArray objJsonArrayTestSteps = null;
 		JSONArray objJsonArrayTestStepsRun = new JSONArray();
 		JSONParser objJsonParser = new JSONParser();
@@ -4395,12 +4523,13 @@ public class Dragonfly {
 								objDragonfly.logger.add("main: switch strAction = break was entered to at this step to stop execution");
 								objDragonfly.stepDuration("break", System.currentTimeMillis(), "break");
 								blnExit = true;
-								//return;
+							case "get_tooltip":
+								objDragonfly.new ElementGetTooltipSync();
+								break;
 							default:
 								objDragonfly.logger.add("main: switch strAction = " + objDragonfly.variablesJSON.objectStep.getLowerCase("strAction") + "  not supported");
 								objDragonfly.stepDuration("action", System.currentTimeMillis(), "action");
 								blnExit = true;
-								//return;
 							}
 							strCurrentWindowHandle = objDragonfly.variablesJSON.objectStep.getString("strCurrentWindowHandle");
 						}
@@ -4615,6 +4744,27 @@ public class Dragonfly {
 		return new Random().nextInt((intNumberMaximum - intNumberMinimum) + 1) + intNumberMinimum;
 	}
 
+	private String removeTags(String strValue) {
+		String strValueToFindKeyword = strValue;
+		int intLeftArrowPosition = -1;
+		int intRightArrowPosition = -1;
+		String strTextToReplace = "";
+		int intKeywordCount = strValueToFindKeyword.length() - strValueToFindKeyword.replace("<", "").length();
+		Dragonfly.this.logger.add("removeTags: intKeywordCount = " + intKeywordCount);
+		for (int intKeywordEach = 0; intKeywordEach < intKeywordCount; intKeywordEach++) {
+			intLeftArrowPosition = strValueToFindKeyword.indexOf("<");
+			if (intLeftArrowPosition > -1) {
+				intRightArrowPosition = strValueToFindKeyword.indexOf(">");
+				strTextToReplace = strValueToFindKeyword.substring(intLeftArrowPosition, intRightArrowPosition + 1);
+				Dragonfly.this.logger.add("removeTags: strTextToReplace = " + strTextToReplace);
+				strValueToFindKeyword = strValueToFindKeyword.replaceAll(strTextToReplace, "");
+				Dragonfly.this.logger.add("removeTags: strValueToFindKeyword = " + intKeywordEach + "  " + strValueToFindKeyword);
+			}
+		}
+		Dragonfly.this.logger.add("removeTags: strValueToFindKeyword = " + strValueToFindKeyword);
+		return strValueToFindKeyword;
+	}
+
 	private void stepCreateActual(String strStepType) {
 		Dragonfly.this.logger.add("  ==start==>stepCreateActual " + getDateTimestamp());
 		String intWaited = Dragonfly.this.variablesJSON.objectStep.getString("strStepDuration");
@@ -4625,9 +4775,7 @@ public class Dragonfly {
 		String strOutputValue = Dragonfly.this.variablesJSON.objectStep.getString("strOutputValue");
 		String strTagName = Dragonfly.this.variablesJSON.objectStep.getString("strTagName");
 		String strMsWaitedDetailHtml = "{<b>" + intWaited + "</b>} milliseconds.";
-		String strMsWaitedDetail = "{" + intWaited + "} milliseconds.";
 		String strTagDetailHtml = "The {<b>" + strTagName + "</b>} tag ";
-		String strTagDetail = "The {" + strTagName + "} tag ";
 		String strInputValueHtmlPass = " value {<b><FONT COLOR='008000'>" + strInputValue + "</FONT></b>}";
 		String strOutputValueHtmlPass = " value {<b><FONT COLOR='008000'>" + strOutputValue + "</FONT></b>}";
 		String strFail = "<b><FONT COLOR='FF0000'></FONT></b>";
@@ -4635,190 +4783,145 @@ public class Dragonfly {
 		switch (strStepType.toLowerCase()) {
 		case "launch":
 			strActualHtml = "Launch {<b>" + strTagName + "</b>} browser to url " + strInputValueHtmlPass + " then expect navigation within " + strMsWaitedDetailHtml;
-			strActualText = "Launch {" + strTagName + "} browser to url {" + strInputValue + "} then expect navigation within {" + intWaited + "} milliseconds.";
 			break;
 		case "close":
 			strActualHtml = "Close {<b>" + strTagName + "</b>} browser within " + strMsWaitedDetailHtml;
-			strActualText = "Close {" + strTagName + "} browser within {" + intWaited + "} milliseconds";
 			break;
 		case "default":
 			strActualHtml = strTagDetailHtml + " default" + strOutputValueHtmlPass + " within " + strMsWaitedDetailHtml;
-			strActualText = strTagDetail + " default" + strOutputValue + ".";
 			break;
 		case "clicked":
 			strActualHtml = strTagDetailHtml + strInputValueHtmlPass + " was clicked within " + strMsWaitedDetailHtml;
-			strActualText = strTagDetail + "{" + strInputValue + "} was clicked within " + strMsWaitedDetail;
 			break;
 		case "expected":
 			strActualHtml = strTagDetailHtml + strInputValueHtmlPass + " was not verified within " + strMsWaitedDetailHtml + "<BR>The actual value was {<b><FONT COLOR='FF0000'>" + strOutputValue + "</FONT></b>}.";
-			strActualText = strTagDetail + "{" + strInputValue + "} was not verified.  The actual value was {" + strOutputValue + "}.";
 			break;
 		case "expectedtooltip":
 			strActualHtml = strTagDetailHtml + " tooltip" + strInputValueHtmlPass + " was not verified.<BR>The actual value was {<b><FONT COLOR='FF0000'>" + strOutputValue + "</FONT></b>}.";
-			strActualText = strTagDetail + " tooltip {" + strInputValue + "} was not verified.  The actual value was {" + strOutputValue + "}.";
 			break;
 		case "find":
 			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + "<b><FONT COLOR='FF0000'></FONT></b>} was found.";
-			strActualText = strTagDetail + "  value {" + strOutputValue + "} was found.";
 			break;
 		case "notfound":
 			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + "<b><FONT COLOR='FF0000'></FONT></b>} was not found.";
-			strActualText = strTagDetail + " value {" + strOutputValue + "} was not found.";
 			break;
 		case "verify":
 			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + "<b><FONT COLOR='FF0000'></FONT></b>} was verified.";
-			strActualText = strTagDetail + " value {" + strOutputValue + "} was verified.";
 			break;
 		case "verify_not":
 			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + "<b><FONT COLOR='FF0000'></FONT></b>} was not verified.";
-			strActualText = strTagDetail + " value {" + strOutputValue + "} was not verified.";
 			break;
 		case "verifytooltip":
 			strActualHtml = strTagDetailHtml + " tooltip" + strOutputValueHtmlPass + "<b><FONT COLOR='FF0000'></FONT></b>} was verified.";
-			strActualText = strTagDetail + " tooltip value {" + strOutputValue + "} was verified.";
 			break;
 		case "get":
 			strActualHtml = strTagDetailHtml + " actual value is " + strOutputValueHtmlPass + ".";
-			strActualText = strTagDetail + " actual value is {" + strOutputValue + "}";
 			break;
 		case "gettooltip":
 			strActualHtml = strTagDetailHtml + " tooltip actual value is " + strOutputValueHtmlPass + ".";
-			strActualText = strTagDetail + " tooltip actual value is {" + strOutputValue + "}";
 			break;
 		case "set":
 			strActualHtml = strTagDetailHtml + strInputValueHtmlPass + " was set within " + strMsWaitedDetailHtml;
-			strActualText = strTagDetail + " value {" + strInputValue + "} was set.";
 			break;
 		case "persisted":
 			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " persisted within " + strMsWaitedDetailHtml;
-			strActualText = strTagDetail + " value {" + strOutputValue + "} persisted.";
 			break;
 		case "password":
 			strActualHtml = strTagDetailHtml + " password value " + strOutputValueHtmlPass + " was set within " + strMsWaitedDetailHtml;
-			strActualText = strTagDetail + " password value {" + strOutputValue + "} was set.";
 			break;
 		case "notpersisted":
 			strActualHtml = strTagDetailHtml + strInputValueHtmlPass + " did not persist.<BR>The actual value {<b><FONT COLOR='FF0000'>" + strOutputValue + "</FONT></b>} was displayed within " + strMsWaitedDetailHtml;
-			strActualText = strTagDetail + " value {" + strInputValue + "} did not persist.  The actual value {" + strOutputValue + "} was displayed.";
 			break;
 		case "exist":
 			strActualHtml = strTagDetailHtml + " exists within " + strMsWaitedDetailHtml;
-			strActualText = strTagDetail + " exists.";
 			break;
 		case "notexist":
 			strActualHtml = strTagDetailHtml + " does not exist after " + strMsWaitedDetailHtml;
-			strActualText = strTagDetail + " does not exist after " + intWaited + " milliseconds.";
 			break;
 		case "notexisttooltip":
 			strActualHtml = strTagDetailHtml + " tooltip does not exist after " + strMsWaitedDetailHtml;
-			strActualText = strTagDetail + " tooltip does not exist after " + intWaited + " milliseconds.";
 			break;
 		case "invisible":
 			strActualHtml = strTagDetailHtml + " <b><FONT COLOR='008000'></FONT></b> is invisible within " + strMsWaitedDetailHtml;
-			strActualText = strTagDetail + " is invisible.";
 			break;
 		case "enabled":
 			strActualHtml = strTagDetailHtml + " <b><FONT COLOR='008000'></FONT></b> is enabled within " + strMsWaitedDetailHtml;
-			strActualText = strTagDetail + " is enabled.";
 			break;
 		case "disabled":
 			strActualHtml = strTagDetailHtml + " <b><FONT COLOR='008000'></FONT></b> is disabled within " + strMsWaitedDetailHtml;
-			strActualText = strTagDetail + " is disabled.";
 			break;
 		case "visible":
 			strActualHtml = strTagDetailHtml + " <b><FONT COLOR='008000'></FONT></b> is visible within " + strMsWaitedDetailHtml;
-			strActualText = strTagDetail + " is visible.";
 			break;
 		case "hidden":
 			strActualHtml = strTagDetailHtml + " <b><FONT COLOR='008000'></FONT></b> is hidden within " + strMsWaitedDetailHtml;
-			strActualText = strTagDetail + " is hidden.";
 			break;
 		case "syncnotexists":
 			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " does not exist after " + intWaited + " milliseconds.";
-			strActualText = strTagDetail + " {" + strOutputValue + "} does not exist after " + intWaited + " milliseconds.";
 			break;
 		case "syncexists":
 			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " exists after " + intWaited + " milliseconds.";
-			strActualText = strTagDetail + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
 			break;
 		case "syncclosed":
 			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " closed after " + intWaited + " milliseconds.";
-			strActualText = strTagDetail + " {" + strOutputValue + "} closed after " + intWaited + " milliseconds.";
 			break;
 		case "syncnotclosed":
 			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " did not close after " + intWaited + " milliseconds.";
-			strActualText = strTagDetail + " {" + strOutputValue + "} did not close after " + intWaited + " milliseconds.";
 			break;
 		case "synchidden":
 			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " does not exist after " + intWaited + " milliseconds.";
-			strActualText = strTagDetail + " {" + strOutputValue + "} does not exist after " + intWaited + " milliseconds.";
 			break;
 		case "syncvisible":
 			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " exists after " + intWaited + " milliseconds.";
-			strActualText = strTagDetail + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
 			break;
 		case "syncoptional":
 			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " sync is optional after " + intWaited + " milliseconds.";
-			strActualText = strTagDetail + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
 			break;
 		case "syncdisabled":
 			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " does not exist after " + intWaited + " milliseconds.";
-			strActualText = strTagDetail + " {" + strOutputValue + "} does not exist after " + intWaited + " milliseconds.";
 			break;
 		case "syncenabled":
 			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " exists after " + intWaited + " milliseconds.";
-			strActualText = strTagDetail + " {" + strOutputValue + "} exists after " + intWaited + " milliseconds.";
 			break;
 		case "navigate":
 			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " was set.<BR>No validation performed due to navigation.";
-			strActualText = strTagDetail + " value {" + strOutputValue + "} was set. No validation performed due to navigation.";
 			break;
 		case "keystroke":
 			strActualHtml = strTagDetailHtml + strInputValueHtmlPass + " was pressed.";
-			strActualText = strTagDetail + "  value {" + strInputValue + "} was pressed.";
 			break;
 		case "notinlist":
 			strActualHtml = "The list item " + strInputValueHtmlPass + " does not exist in the list field.<BR>Please confirm the input value against the actual list values {<b><FONT COLOR='FF0000'>" + strOutputValue + "</FONT></b>} is available for this field.";
-			strActualText = "The list item {" + strInputValue + "} does not exist in the list field.  Please confirm the input value against the actual list values {" + strSelectList + "} is available for this field.";
 			break;
 		case "drag":
 			strActualHtml = strTagDetailHtml + " was dragged after " + intWaited + " milliseconds.";
-			strActualText = strTagDetailHtml + " was dragged after " + intWaited + " milliseconds.";
 			break;
 		case "drop":
 			strActualHtml = strTagDetailHtml + " was dropped after " + intWaited + " milliseconds.";
-			strActualText = strTagDetailHtml + " was dropped after " + intWaited + " milliseconds.";
 			break;
 		case "break":
 			strActualHtml = "Take a break.";
-			strActualText = "Take a break.";
 			break;
 		case "skip":
 			strActualHtml = "Skip it.";
-			strActualText = "Skip it.";
 			break;
 		case "scroll":
 			strActualHtml = strTagDetailHtml + " exists.";
-			strActualText = strTagDetail + " exists.";
 			break;
 		case "sleep":
 			strActualHtml = "The action sleep paused execution for " + strMsWaitedDetailHtml;
-			strActualText = "The action sleep paused execution for {" + intWaited + "} milliseconds.";
 			break;
 		case "mouse_over":
 			strActualHtml = "Mouse over complete";
-			strActualText = "Mouse over {<b>" + strTagName + "</b>} tag complete";
 			break;
 		case "mouse_out":
 			strActualHtml = "Mouse out " + strInputValueHtmlPass + " complete";
-			strActualText = "Mouse out {<b>" + strTagName + "</b>} tag complete";
 			break;
 		default:
 		}
-		strActualHtml = "<DIV align='left'>" + strActualHtml + "</DIV>";
+		strActualHtml = "<DIV align='left'><font size='5'>" + strActualHtml + "</font></DIV>";
+		strActualText = removeTags(strActualHtml);
 		Dragonfly.this.logger.add("StepCreateActual: strActualText = " + strActualText);
 		Dragonfly.this.variablesJSON.objectStep.putValue("strStepActual", strActualHtml);
-		Dragonfly.this.logger.add("StepCreateActual: objectStep.getString(strStepActual) = " + Dragonfly.this.variablesJSON.objectStep.getString("strStepActual"));
 	}
 
 	private void stepCreateExpected() {
@@ -4830,7 +4933,7 @@ public class Dragonfly {
 		String strObjectName = this.createObjectName();
 		String strTagName = Dragonfly.this.variablesJSON.objectStep.getString("strTagName");
 		String strAssert = Dragonfly.this.variablesJSON.objectStep.getString("strAssert");
-		String strMillisecondsToWaitHtml = "within {<b>" + strMillisecondsToWait + "</b>} milliseconds";
+		String strMillisecondsToWaitHtml = "within {<b>" + strMillisecondsToWait + "</b>} milliseconds.";
 		String strTagAttributesHtml = "{<b>" + strTagName + "</b>} tag with attributes {<b>" + strObjectName + "</b>}";
 		String strInputValueHtml = "{<b>" + strInputValue + "</b>}";
 		String strAssertHtml = "assert {<b>" + strAssert + "</b>} ";
@@ -4916,7 +5019,8 @@ public class Dragonfly {
 			strStepExpected = strAction;
 			break;
 		}
-		Dragonfly.this.objStepsManual.set(strStepExpected.replaceAll("<b>", "").replaceAll("</b>", ""));
+		strStepExpected = "<DIV align='left'><font size='5'>" + strStepExpected + "</font></DIV>";
+		Dragonfly.this.objStepsManual.set(removeTags(strStepExpected));
 		Dragonfly.this.variablesJSON.objectStep.putValue("strStepExpected", strStepExpected);
 	}
 
@@ -4960,6 +5064,17 @@ public class Dragonfly {
 			stepDuration(strMethodeName, lngTimeStart, strAction);
 		}
 		return blnExit;
+	}
+
+	private void ToolTipText() {
+		Actions ToolTip1 = new Actions(Dragonfly.this.objVariablesSelenium.gobjWebDriver);
+		WebElement googleLogo = Dragonfly.this.objVariablesSelenium.gobjWebDriver.findElement(By.xpath("//div[@id='hplogo']"));
+		//Thread.sleep(2000);
+		ToolTip1.clickAndHold(googleLogo).perform();
+		String ToolTipText = googleLogo.getAttribute("title");
+		//Assert.assertEquals(ToolTipText, "Google");
+		//Thread.sleep(2000);
+		System.out.println("Tooltip value is: " + ToolTipText);
 	}
 
 	private void windowsMinimizeAll() {

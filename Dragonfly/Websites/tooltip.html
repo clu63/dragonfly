@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<style>
+.tooltip {
+     position: relative; display: inline-block; border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+     visibility: hidden; width: 120px; background-color: #555; color: #fff; text-align: center; border-radius: 6px; padding: 5px 0; position: absolute; z-index: 1; bottom: 125%; left: 50%; margin-left: -60px; opacity: 0; transition: opacity 1s;
+}
+
+.tooltip .tooltiptext::after {
+     content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+     visibility: visible; opacity: 1;
+}
+</style>
+<body style="text-align: center;">
+     <h2>Tooltip</h2>
+     <p>Move the mouse over the text below:</p>
+     <div class="tooltip" id="tooltipID">
+          Hover over me <span class="tooltiptext">Tooltip text</span>
+     </div>
+     <p>
+          <abbr id="tooltipID2" title="The Doctor">WHO</abbr> was founded in 1963.
+     </p>
+     <p id="tooltipID3" title="This is the tip">Full text tooltip</p>
+     <img id="tooltipID4" src="smiley.gif" alt="Smiley face" title="this will be displayed as a tooltip" width="42" height="42">
+     <img id="tooltipID5" title="OnMouse Title text" onmouseover="bigImg(this)" onmouseout="normalImg(this)" border="0" src="smiley.gif" alt="Smiley" width="32" height="32">
+     <p>The function bigImg() is triggered when the user moves the mouse pointer over the image.</p>
+     <p>The function normalImg() is triggered when the mouse pointer is moved out of the image.</p>
+     <script>
+						function bigImg(x) {
+							x.style.height = "64px";
+							x.style.width = "64px";
+						}
+
+						function normalImg(x) {
+							x.style.height = "32px";
+							x.style.width = "32px";
+						}
+					</script>
+</body>
+</html>
