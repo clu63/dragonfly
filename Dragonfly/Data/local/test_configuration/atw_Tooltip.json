@@ -1,0 +1,28 @@
+{
+	"test_details": 
+	{
+		"test_name": "atw.tooltip",
+		"test_description": "",
+		"test_type": "Positive"
+	},
+
+	"test_instances": 
+	[
+		
+	],
+
+	"test_elements": 
+	[
+		
+	],
+
+	"test_modules": 
+	[
+		"tm_atw_tooltip.json"
+	],
+
+	"test_data": 
+	[
+		
+	]
+}
