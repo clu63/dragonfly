@@ -10,14 +10,14 @@
 			next_year = parseInt(year, 10) + i;
 			option.value = next_year;
 			option.innerHTML = next_year;
-			option.setAttribute("onclick", "alert_Selected('select5')")
+			//option.setAttribute("onclick", "alert_Selected('select5')")
 			select.appendChild(option);
 		}
-		//document.getElementById("select1").selectedIndex = -1;
+		document.getElementById("select1").selectedIndex = -1;
 		document.getElementById("select2").selectedIndex = -1;
-		//document.getElementById("select3").selectedIndex = -1;
-		//document.getElementById("select4").selectedIndex = -1;
-		//document.getElementById("select5").selectedIndex = -1;
+		document.getElementById("select3").selectedIndex = -1;
+		document.getElementById("select4").selectedIndex = -1;
+		document.getElementById("select5").selectedIndex = -1;
 	}
 
 	function show_alert() {
@@ -28,9 +28,9 @@
 		var select = document.getElementById(strSelected);
 		var selection = select.options[select.selectedIndex].innerHTML;
 		alert(selection);
-		if (strSelected == "select2") {
-			select.selectedIndex = -1;
-		}
+		//if (strSelected == "select2") {
+		select.selectedIndex = -1;
+		//}
 	}
 
 	function alert_with_text(text) {
@@ -366,13 +366,13 @@
      <h2>
           html <span style="color: green">&lt;select&gt;</span> tag
      </h2>
-     <select id="select1" name="select1">
-          <option onclick="alert_Selected('select1')" value=""></>
-          <option onclick="alert_Selected('select1')" value="ford">Ford</>
-          <option onclick="alert_Selected('select1')" value="volvo">Volvo</>
-          <option onclick="alert_Selected('select1')" value="saab">Saab</>
-          <option onclick="alert_Selected('select1')" value="mercedes">Mercedes</>
-          <option onclick="alert_Selected('select1')" value="audi">Audi</>
+     <select id="select1" onchange="alert_Selected('select1')" name="select1">
+          <option value=""></option>
+          <option value="ford">Ford</option>
+          <option value="volvo">Volvo</option>
+          <option value="saab">Saab</option>
+          <option value="mercedes">Mercedes</option>
+          <option value="audi">Audi</option>
      </select>
      <select id="select2" name="select2" onchange="alert_Selected('select2')" multiple>
           <option value="mickey">Mickey</option>
@@ -382,19 +382,19 @@
           <option value="goofy">Goofy</option>
           <option value="pluto">Pluto</option>
      </select>
-     <select id="select3" name="select3">
-          <option onclick="alert_Selected('select3')" value="">
-          <option onclick="alert_Selected('select3')" value="Select one">Select one
-          <option onclick="alert_Selected('select3')" value="orange">orange
-          <option onclick="alert_Selected('select3')" value="grape">grape
-          <option onclick="alert_Selected('select3')" value="peach">peach
-          <option onclick="alert_Selected('select3')" value="apple">apple
+     <select id="select3" onchange="alert_Selected('select3')" name="select3">
+          <option value=""></option>
+          <option value="Select one">Select one</option>
+          <option value="orange">orange</option>
+          <option value="grape">grape</option>
+          <option value="peach">peach</option>
+          <option value="apple">apple</option>
      </select>
-     <select id="select4" name="select4">
-          <option onclick="alert_Selected('select4')" value="one">one</option>
-          <option onclick="alert_Selected('select4')" value="two">two</option>
+     <select id="select4" onchange="alert_Selected('select4')" name="select4">
+          <option value="one">one</option>
+          <option value="two">two</option>
      </select>
-     <select id="select5" name="select5">
+     <select id="select5" onchange="alert_Selected('select5')" name="select5">
      </select>
      <hr>
      <br>
