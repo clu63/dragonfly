@@ -1,0 +1,53 @@
+{
+	"steps": 
+	[
+		{
+			"strAction": "",
+			"strLogicalName": "",
+			"strTagName": "",
+			"strAttributeNames": "",
+			"strAttributeValues": "",
+			"strInputValue": "",
+			"strAssert": "",
+			"blnOptional": "",
+			"blnExitOnFail": "",
+			"intMillisecondsToWait": "",
+			"strFunction": "",
+			"strOutputLinkName": "",
+			"strLoopOrIf": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strAssistiveProperties": "",
+			"strOutputValue": ""
+		},
+
+		{
+			"strAction": "",
+			"strLogicalName": "",
+			"strTagName": "",
+			"strAttributeNames": "",
+			"strAttributeValues": "",
+			"strInputValue": "",
+			"strAssert": "",
+			"blnOptional": "",
+			"blnExitOnFail": "",
+			"intMillisecondsToWait": "",
+			"strFunction": "",
+			"strOutputLinkName": "",
+			"strLoopOrIf": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strAssistiveProperties": "",
+			"strOutputValue": ""
+		}
+	],
+
+	"link": 
+	[
+		{
+			
+		}
+	]
+}

@@ -1082,6 +1082,22 @@ public class Dragonfly {
 					blnEnabled = false;
 					logger.add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
+					if (blnFound == false) {
+						variablesJSON.objectStep.putValue("strStepActual", "visible");
+					} else {
+						variablesJSON.objectStep.putValue("strStepActual", "");
+					}
+					if (blnVisible == false) {
+						variablesJSON.objectStep.putValue("strStepActual", "visible");
+					} else {
+						variablesJSON.objectStep.putValue("strStepActual", "");
+					}
+					logger.add("ElementEnabledSync: blnEnabled = " + blnEnabled);
+					if (blnEnabled == false) {
+						variablesJSON.objectStep.putValue("strStepActual", "disabled");
+					} else {
+						variablesJSON.objectStep.putValue("strStepActual", "");
+					}
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementEnabledSync", "syncenabled", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(variablesJSON.objectStep);
 						return;
@@ -1466,6 +1482,11 @@ public class Dragonfly {
 					blnHidden = false;
 					logger.add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
+					if (blnHidden = false) {
+						variablesJSON.objectStep.putValue("strStepActual", "visible");
+					} else {
+						variablesJSON.objectStep.putValue("strStepActual", "");
+					}
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementHiddenSync", "synchidden", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(variablesJSON.objectStep);
 						return;
@@ -3265,6 +3286,7 @@ public class Dragonfly {
 			String[] arrKeys = new StepNames().getOriginal();
 			boolean blnValid = false;
 			String[] arrKeywordsValid;
+			objVariablesCommon.strOriginalAttributes = createObjectName();
 			for (String strKey : arrKeys) {
 				switch (strKey) {
 				case "strAction":
@@ -3333,6 +3355,7 @@ public class Dragonfly {
 					variablesJSON.objectStep.putValue("strAttributeValues", strKeywordValueCombined);
 					break;
 				case "strInputValue":
+					objVariablesCommon.strOriginalInputValue = variablesJSON.objectStep.getString(strKey);
 					this.getKeywordsAndValue(variablesJSON.objectStep.getString(strKey));
 					for (String strResultsEach : arrResults) {
 						for (String strKeywordsValidEach : arrKV_strInputValue) {
@@ -4070,6 +4093,8 @@ public class Dragonfly {
 		private String gstrBrowserSelection;
 		private String strExitTest;
 		private String strExitTestIterations;
+		private String strOriginalInputValue;
+		private String strOriginalAttributes;
 	}
 
 	private class VariablesJSON {
@@ -4453,6 +4478,15 @@ public class Dragonfly {
 
 	public static void main(String[] args) {
 		//		new Dragonfly().new WebDriverTest();
+		//		BufferedImage objBufferedImage = null;
+		//		try {
+		//			objBufferedImage = ImageIO.read(new File("C:/Users/perrj115/Documents/GitHub/dragonfly/Dragonfly/Websites/dragonfly.jpg"));
+		//		} catch (IOException e1) {
+		//			// TODO Auto-generated catch block
+		//			e1.printStackTrace();
+		//		}
+		//		Dragonfly objDragonfly = new Dragonfly();
+		//		objDragonfly.logger.add(objDragonfly.new ImageEncodeToString().run(objBufferedImage, "jpg"));
 		//		System.exit(0);
 		JSONArray objJsonArrayTestSteps = null;
 		JSONArray objJsonArrayTestStepsRun = new JSONArray();
@@ -4927,17 +4961,19 @@ public class Dragonfly {
 		logger.add("  ==start==>stepCreateActual " + getDateTimestamp());
 		String intWaited = variablesJSON.objectStep.getString("strStepDuration");
 		String strActualHtml = "";
-		String strSelectList = "";
 		String strActualText = "";
 		String strInputValue = variablesJSON.objectStep.getString("strInputValue");
 		String strOutputValue = variablesJSON.objectStep.getString("strOutputValue");
 		String strTagName = variablesJSON.objectStep.getString("strTagName");
+		String strObjectName = this.createObjectName();
+		String strTagAttributesHtml = "The {<b>" + strTagName + "</b>} tag with attributes {<b>" + strObjectName + "</b>}";
 		String strMsWaitedDetailHtml = " after {<b>" + intWaited + "</b>} milliseconds.";
-		String strTagDetailHtml = "The {<b>" + strTagName + "</b>} tag";
-		String strInputValueHtmlPass = " value {<b><FONT COLOR='008000'>" + strInputValue + "</FONT></b>}";
-		String strOutputValueHtmlPass = " value {<b><FONT COLOR='008000'>" + strOutputValue + "</FONT></b>}";
-		String strFail = " <b><FONT COLOR='FF0000'></FONT></b>";
-		String strOutputValueHtmlFail = " {<b><FONT COLOR='FF0000'>" + strOutputValue + "</FONT></b>}";
+		String strHtmlFailStart = "{<b><FONT COLOR='FF0000'>";
+		String strHtmlPassStart = "{<b><FONT COLOR='008000'>";
+		String strHtmlEnd = "</FONT></b>}";
+		String strInputValueHtmlPass = " value " + strHtmlPassStart + strInputValue + strHtmlEnd;
+		String strOutputValueHtmlPass = " value " + strHtmlPassStart + strOutputValue + strHtmlEnd;
+		String strOutputValueHtmlFail = " " + strOutputValue + strHtmlFailStart + strHtmlEnd;
 		logger.add("stepCreateActual strStepActual = " + variablesJSON.objectStep.getString("strStepActual"));
 		if (variablesJSON.objectStep.verifyEquals("strStepActual", "")) {
 			strStepType = variablesJSON.objectStep.getString("strAction");
@@ -4945,123 +4981,106 @@ public class Dragonfly {
 			strStepType = variablesJSON.objectStep.getString("strStepActual");
 		}
 		//String strFail2 =variablesJSON.objectStep.getString("strTagName");
+		logger.add("stepCreateActual strStepType.toLowerCase() = " + strStepType.toLowerCase());
 		switch (strStepType.toLowerCase()) {
 		case "launch":
-			strActualHtml = "Launch {<b>" + strTagName + "</b>} browser to url" + strInputValueHtmlPass + " then expect navigation" + strMsWaitedDetailHtml;
+			strActualHtml = "The {<b>" + strTagName + "</b>} browser navigated to url" + strInputValueHtmlPass + strMsWaitedDetailHtml;
 			break;
 		case "close":
-			strActualHtml = "Close {<b>" + strTagName + "</b>} browser" + strMsWaitedDetailHtml;
+			strActualHtml = "The {<b>" + strTagName + "</b>} browser was closed" + strMsWaitedDetailHtml;
 			break;
 		case "default":
-			strActualHtml = strTagDetailHtml + " default" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + " default" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
 			break;
 		case "clicked":
-			strActualHtml = strTagDetailHtml + strInputValueHtmlPass + " was clicked" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " was clicked" + strMsWaitedDetailHtml;
 			break;
 		case "expected":
-			strActualHtml = strTagDetailHtml + strInputValueHtmlPass + " was not verified" + strMsWaitedDetailHtml + "<BR>The actual value was" + strOutputValueHtmlFail + ".";
+			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " was not verified" + strMsWaitedDetailHtml + "<BR>The actual value was" + strOutputValueHtmlFail + ".";
 			break;
 		case "expectedtooltip":
-			strActualHtml = strTagDetailHtml + " tooltip" + strInputValueHtmlPass + " was not verified." + strMsWaitedDetailHtml + "<BR>The actual value was " + strOutputValueHtmlFail + ".";
+			strActualHtml = strTagAttributesHtml + " tooltip" + strInputValueHtmlPass + " was not verified." + strMsWaitedDetailHtml + "<BR>The actual value was " + strOutputValueHtmlFail + ".";
 			break;
-		case "find":
-			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " was found" + strMsWaitedDetailHtml;
-			break;
-		case "notfound":
-			strActualHtml = strTagDetailHtml + strOutputValueHtmlFail + " was not found" + strMsWaitedDetailHtml;
+		case "not_found":
+			strActualHtml = strTagAttributesHtml + strOutputValueHtmlFail + " was not found" + strMsWaitedDetailHtml;
 			break;
 		case "verify":
-			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " was verified" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was verified" + strMsWaitedDetailHtml;
 			break;
 		case "verify_not":
-			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " was not verified" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was not verified" + strMsWaitedDetailHtml;
 			break;
 		case "verifytooltip":
-			strActualHtml = strTagDetailHtml + " tooltip" + strOutputValueHtmlPass + " was verified" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + " tooltip" + strOutputValueHtmlPass + " was verified" + strMsWaitedDetailHtml;
 			break;
 		case "get":
-			strActualHtml = strTagDetailHtml + " actual value is" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + " actual value is" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
 			break;
 		case "gettooltip":
-			strActualHtml = strTagDetailHtml + " tooltip actual value is" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + " tooltip actual value is" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
 			break;
 		case "set":
-			strActualHtml = strTagDetailHtml + strInputValueHtmlPass + " was set" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " was set" + strMsWaitedDetailHtml;
 			break;
 		case "persisted":
-			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " persisted" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " persisted" + strMsWaitedDetailHtml;
 			break;
 		case "password":
-			strActualHtml = strTagDetailHtml + " password value" + strOutputValueHtmlPass + " was set" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + " password value" + strOutputValueHtmlPass + " was set" + strMsWaitedDetailHtml;
 			break;
-		case "notpersisted":
-			strActualHtml = strTagDetailHtml + strInputValueHtmlPass + " did not persist" + strMsWaitedDetailHtml + "<BR>The actual value" + strOutputValueHtmlFail + " was displayed.";
-			break;
-		case "exist":
-			strActualHtml = strTagDetailHtml + " exists" + strMsWaitedDetailHtml;
-			break;
-		case "notexist":
-			strActualHtml = strTagDetailHtml + " does not exist" + strMsWaitedDetailHtml;
+		case "not_persisted":
+			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " did not persist" + strMsWaitedDetailHtml + "<BR>The actual value" + strOutputValueHtmlFail + " was displayed.";
 			break;
 		case "notexisttooltip":
-			strActualHtml = strTagDetailHtml + " tooltip does not exist" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + " tooltip does not exist" + strMsWaitedDetailHtml;
 			break;
-		case "invisible":
-			strActualHtml = strTagDetailHtml + " is invisible" + strMsWaitedDetailHtml;
+		case "sync_disabled":
+			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "disabled" + strHtmlEnd + strMsWaitedDetailHtml;
+			break;
+		case "sync_enabled":
+			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "enabled" + strHtmlEnd + strMsWaitedDetailHtml;
+			break;
+		case "sync_hidden":
+			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "hidden" + strHtmlEnd + strMsWaitedDetailHtml;
+			break;
+		case "sync_visible":
+			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "visible" + strHtmlEnd + strMsWaitedDetailHtml;
+			break;
+		case "sync_closed":
+			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " closed" + strMsWaitedDetailHtml;
+			break;
+		case "not_closed":
+			strActualHtml = strTagAttributesHtml + strOutputValueHtmlFail + " did not close" + strMsWaitedDetailHtml;
 			break;
 		case "enabled":
-			strActualHtml = strTagDetailHtml + " is enabled" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "enabled" + "}" + strHtmlEnd + strMsWaitedDetailHtml;
 			break;
 		case "disabled":
-			strActualHtml = strTagDetailHtml + " is disabled" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "disabled" + strHtmlEnd + strMsWaitedDetailHtml;
 			break;
 		case "visible":
-			strActualHtml = strTagDetailHtml + " is visible" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "visible" + strHtmlEnd + strMsWaitedDetailHtml;
 			break;
 		case "hidden":
-			strActualHtml = strTagDetailHtml + " is hidden" + strMsWaitedDetailHtml;
-			break;
-		case "syncnotexists":
-			strActualHtml = strTagDetailHtml + strOutputValueHtmlFail + " does not exist" + strMsWaitedDetailHtml;
-			break;
-		case "syncexists":
-			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " exists" + strMsWaitedDetailHtml;
-			break;
-		case "syncclosed":
-			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " closed" + strMsWaitedDetailHtml;
-			break;
-		case "syncnotclosed":
-			strActualHtml = strTagDetailHtml + strOutputValueHtmlFail + " did not close" + strMsWaitedDetailHtml;
-			break;
-		case "synchidden":
-			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " does not exist" + strMsWaitedDetailHtml;
-			break;
-		case "syncvisible":
-			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " exists" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "hidden" + strHtmlEnd + strMsWaitedDetailHtml;
 			break;
 		case "syncoptional":
-			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " sync is optional" + strMsWaitedDetailHtml;
-			break;
-		case "syncdisabled":
-			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " does not exist" + strMsWaitedDetailHtml;
-			break;
-		case "syncenabled":
-			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " exists" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " sync is optional" + strMsWaitedDetailHtml;
 			break;
 		case "navigate":
-			strActualHtml = strTagDetailHtml + strOutputValueHtmlPass + " was set" + strMsWaitedDetailHtml + "<BR>No validation performed due to navigation.";
+			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was set" + strMsWaitedDetailHtml + "<BR>No validation performed due to navigation.";
 			break;
 		case "keystroke":
-			strActualHtml = strTagDetailHtml + strInputValueHtmlPass + " key was pressed" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " key was pressed" + strMsWaitedDetailHtml;
 			break;
 		case "notinlist":
-			strActualHtml = "The list item " + strInputValueHtmlPass + " does not exist in the list field" + strMsWaitedDetailHtml + "<BR>Please confirm the input value against the actual list values " + strOutputValueHtmlFail + " is available for this field.";
+			strActualHtml = strTagAttributesHtml + "The list item " + strInputValueHtmlPass + " does not exist in the list field" + strMsWaitedDetailHtml + "<BR>Please confirm the input value against the actual list values " + strOutputValueHtmlFail + " is available for this field.";
 			break;
 		case "drag":
-			strActualHtml = strTagDetailHtml + " was dragged" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + " was dragged" + strMsWaitedDetailHtml;
 			break;
 		case "drop":
-			strActualHtml = strTagDetailHtml + " was dropped" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + " was dropped" + strMsWaitedDetailHtml;
 			break;
 		case "break":
 			strActualHtml = "Take a break.";
@@ -5070,7 +5089,7 @@ public class Dragonfly {
 			strActualHtml = "Skip it.";
 			break;
 		case "scroll":
-			strActualHtml = strTagDetailHtml + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + strMsWaitedDetailHtml;
 			break;
 		case "sleep":
 			strActualHtml = "Sleep paused execution" + strMsWaitedDetailHtml;
@@ -5093,9 +5112,12 @@ public class Dragonfly {
 		logger.add("  ==start==>StepCreateExpected " + getDateTimestamp());
 		String strStepExpected = "";
 		String strAction = "";
-		String strInputValue = variablesJSON.objectStep.getString("strInputValue");
+		//String strInputValue = variablesJSON.objectStep.getString("strInputValue");
+		String strInputValue = objVariablesCommon.strOriginalInputValue;
 		String strMillisecondsToWait = variablesJSON.objectStep.getString("intMillisecondsToWait");
-		String strObjectName = this.createObjectName();
+		//String strObjectName = this.createObjectName();
+		String strObjectName = objVariablesCommon.strOriginalAttributes;
+		logger.add("StepCreateExpected strObjectName = " + strObjectName);
 		String strTagName = variablesJSON.objectStep.getString("strTagName");
 		String strAssert = variablesJSON.objectStep.getString("strAssert");
 		String strMillisecondsToWaitHtml = " within {<b>" + strMillisecondsToWait + "</b>} milliseconds.";

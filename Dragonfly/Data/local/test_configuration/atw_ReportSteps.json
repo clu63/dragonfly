@@ -1,0 +1,28 @@
+{
+	"test_details": 
+	{
+		"test_name": "atw.ReportSteps",
+		"test_description": "",
+		"test_type": "Positive"
+	},
+
+	"test_instances": 
+	[
+		
+	],
+
+	"test_elements": 
+	[
+		"te_atw.json"
+	],
+
+	"test_modules": 
+	[
+		"tm_atw_ReportSteps.json"
+	],
+
+	"test_data": 
+	[
+		
+	]
+}
