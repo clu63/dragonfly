@@ -875,6 +875,7 @@ public class Dragonfly {
 			Boolean blnFound = false;
 			Boolean blnStatus = false;
 			Boolean blnVisible = false;
+			String strActualResult = "";
 			while (true) {
 				try {
 					if (blnFound == false) {
@@ -890,15 +891,23 @@ public class Dragonfly {
 						blnDisabled = true;
 					}
 					blnStatus = true;
-				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound | ExceptionElementNotVisible e) {
+					strActualResult = "sync_disabled";
+				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					blnVisible = false;
 					blnDisabled = false;
+					strActualResult = "not_found";
+				} catch (ExceptionElementNotVisible e) {
+					blnVisible = false;
+					blnDisabled = false;
+					strActualResult = "not_visible";
 					logger.add("ElementDisabledSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotDisabled e) {
 					blnDisabled = false;
+					strActualResult = "not_disabled";
 					logger.add("ElementDisabledSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
+					variablesJSON.objectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementDisabledSync", "syncdisabled", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(variablesJSON.objectStep);
 						return;
@@ -1058,6 +1067,7 @@ public class Dragonfly {
 			Boolean blnFound = false;
 			Boolean blnStatus = false;
 			Boolean blnVisible = false;
+			String strActualResult = "";
 			while (true) {
 				try {
 					if (blnFound == false) {
@@ -1073,31 +1083,23 @@ public class Dragonfly {
 						blnEnabled = true;
 					}
 					blnStatus = true;
-				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound | ExceptionElementNotVisible e) {
+					strActualResult = "sync_enabled";
+				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					blnVisible = false;
 					blnEnabled = false;
+					strActualResult = "not_found";
+					logger.add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				} catch (ExceptionElementNotVisible e) {
+					blnVisible = false;
+					strActualResult = "not_visible";
 					logger.add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotEnabled e) {
 					blnEnabled = false;
+					strActualResult = "not_enabled";
 					logger.add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					if (blnFound == false) {
-						variablesJSON.objectStep.putValue("strStepActual", "visible");
-					} else {
-						variablesJSON.objectStep.putValue("strStepActual", "");
-					}
-					if (blnVisible == false) {
-						variablesJSON.objectStep.putValue("strStepActual", "visible");
-					} else {
-						variablesJSON.objectStep.putValue("strStepActual", "");
-					}
-					logger.add("ElementEnabledSync: blnEnabled = " + blnEnabled);
-					if (blnEnabled == false) {
-						variablesJSON.objectStep.putValue("strStepActual", "disabled");
-					} else {
-						variablesJSON.objectStep.putValue("strStepActual", "");
-					}
+					variablesJSON.objectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementEnabledSync", "syncenabled", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(variablesJSON.objectStep);
 						return;
@@ -1349,13 +1351,13 @@ public class Dragonfly {
 					return "<on>";
 				}
 			case "select":
-				//Select objSelect = new Select(objVariablesSelenium.gobjWebElement);
-				//objSelect.getOptions();
-				//WebElement option = ((Select) objVariablesSelenium.gobjWebElement).getFirstSelectedOption();
-				//return	option.getText();
-				return ((Select) objVariablesSelenium.gobjWebElement).getFirstSelectedOption().getText().replaceAll("\\s{2,}", " ");
-				//				JavascriptExecutor objExecutor = (JavascriptExecutor) objVariablesSelenium.gobjWebDriver;
-				//				return ((String) objExecutor.executeScript("var select = arguments[0];var selection=select.options[select.selectedIndex].text;return selection;", objVariablesSelenium.gobjWebElement)).trim();
+				Select objSelect = new Select(objVariablesSelenium.gobjWebElement);
+				objSelect.getOptions();
+				WebElement option = ((Select) objVariablesSelenium.gobjWebElement).getFirstSelectedOption();
+				logger.add("ElementGet: option.getText() = " + option.getText());
+				//return ((Select) objVariablesSelenium.gobjWebElement).getFirstSelectedOption().getText().replaceAll("\\s{2,}", " ");
+				JavascriptExecutor objExecutor = (JavascriptExecutor) objVariablesSelenium.gobjWebDriver;
+				return ((String) objExecutor.executeScript("var select = arguments[0];var selection=select.options[select.selectedIndex].text;return selection;", objVariablesSelenium.gobjWebElement)).trim();
 			case "table":
 				return objVariablesSelenium.gobjWebElement.getText();
 			case "alert":
@@ -1454,6 +1456,7 @@ public class Dragonfly {
 			Boolean blnFound = false;
 			Boolean blnHidden = false;
 			Boolean blnStatus = false;
+			String strActualResult = "";
 			while (true) {
 				try {
 					if (blnFound == false) {
@@ -1465,28 +1468,29 @@ public class Dragonfly {
 						blnHidden = true;
 					}
 					blnStatus = true;
+					strActualResult = "syn_hidden";
 				} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException | ExceptionElementNotFound e) {
 					blnFound = false;
 					blnHidden = true;
 					blnStatus = true;
+					strActualResult = "sync_hidden";
 					logger.add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					blnHidden = false;
+					strActualResult = "not_found";
 					logger.add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotHidden e) {
 					blnHidden = false;
+					strActualResult = "not_hidden";
 					logger.add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (Exception e) {
 					blnFound = false;
 					blnHidden = false;
+					strActualResult = "not_hidden";
 					logger.add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					if (blnHidden = false) {
-						variablesJSON.objectStep.putValue("strStepActual", "visible");
-					} else {
-						variablesJSON.objectStep.putValue("strStepActual", "");
-					}
+					variablesJSON.objectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementHiddenSync", "synchidden", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(variablesJSON.objectStep);
 						return;
@@ -2832,6 +2836,7 @@ public class Dragonfly {
 			Boolean blnFound = false;
 			Boolean blnStatus = false;
 			Boolean blnVisible = false;
+			String strActualResult = "";
 			while (true) {
 				try {
 					if (blnFound == false) {
@@ -2843,11 +2848,18 @@ public class Dragonfly {
 						blnVisible = true;
 					}
 					blnStatus = true;
-				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound | ExceptionElementNotVisible e) {
+					strActualResult = "sync_visible";
+				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					blnVisible = false;
+					strActualResult = "not_found";
+					logger.add("ElementVisibleSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				} catch (ExceptionElementNotVisible e) {
+					blnVisible = false;
+					strActualResult = "not_visible";
 					logger.add("ElementVisibleSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
+					variablesJSON.objectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementVisibleSync", "syncvisible", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(variablesJSON.objectStep);
 						return;
@@ -5002,7 +5014,7 @@ public class Dragonfly {
 			strActualHtml = strTagAttributesHtml + " tooltip" + strInputValueHtmlPass + " was not verified." + strMsWaitedDetailHtml + "<BR>The actual value was " + strOutputValueHtmlFail + ".";
 			break;
 		case "not_found":
-			strActualHtml = strTagAttributesHtml + strOutputValueHtmlFail + " was not found" + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + strOutputValueHtmlFail + " was" + strHtmlFailStart + "not found" + strHtmlEnd + strMsWaitedDetailHtml;
 			break;
 		case "verify":
 			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was verified" + strMsWaitedDetailHtml;
@@ -5025,7 +5037,7 @@ public class Dragonfly {
 		case "persisted":
 			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " persisted" + strMsWaitedDetailHtml;
 			break;
-		case "password":
+		case "secure":
 			strActualHtml = strTagAttributesHtml + " password value" + strOutputValueHtmlPass + " was set" + strMsWaitedDetailHtml;
 			break;
 		case "not_persisted":
@@ -5052,16 +5064,16 @@ public class Dragonfly {
 		case "not_closed":
 			strActualHtml = strTagAttributesHtml + strOutputValueHtmlFail + " did not close" + strMsWaitedDetailHtml;
 			break;
-		case "enabled":
-			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "enabled" + "}" + strHtmlEnd + strMsWaitedDetailHtml;
+		case "not_disabled":
+			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "enabled" + strHtmlEnd + strMsWaitedDetailHtml;
 			break;
-		case "disabled":
+		case "not_enabled":
 			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "disabled" + strHtmlEnd + strMsWaitedDetailHtml;
 			break;
-		case "visible":
+		case "not_hidden":
 			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "visible" + strHtmlEnd + strMsWaitedDetailHtml;
 			break;
-		case "hidden":
+		case "not_visible":
 			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "hidden" + strHtmlEnd + strMsWaitedDetailHtml;
 			break;
 		case "syncoptional":
