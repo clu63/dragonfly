@@ -271,9 +271,6 @@ public class Dragonfly {
 				logger.add("BrowserLaunch: Exception" + e.toString());
 			} finally {
 				variablesJSON.objectStep.putValue("strCurrentWindowHandle", objVariablesSelenium.gobjWebDriver.getWindowHandle());
-				new CoordinatesElement();
-				new CoordinateHighlightScreenshot(variablesJSON.objectStep);
-				stepDuration("BrowserLaunch", lngTimeStart, "launch");
 			}
 		}
 	}
@@ -282,17 +279,20 @@ public class Dragonfly {
 		private BrowserLaunchSync() {
 			logger.add("  ==start==>BrowserLaunchSync " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
-			writeFile("c:\\temp\\DragonflyBrowser.log", logger.getLog());
 			try {
 				new BrowserLaunch();
 			} catch (ExceptionBrowserDriverNotSupported e) {
 				// TODO confirm the exceptions to catch in main some may need to be removed
-				logger.add("main: " + e.toString());
+				logger.add("BrowserLaunchSync: " + e.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} finally {
 				// TODO create a BrowserLaunchSync to manage reporting and sync
+				new CoordinatesElement();
+				new CoordinateHighlightScreenshot(variablesJSON.objectStep);
+				variablesJSON.objectStep.putValue("strStepActual", "launch");
+				stepDuration("BrowserLaunchSync", System.currentTimeMillis(), "launch");
 				logger.add("BrowserLaunchSync: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
@@ -581,6 +581,7 @@ public class Dragonfly {
 				int intElementX = variablesJSON.objectStep.getInt("intElementX");
 				int intElementY = variablesJSON.objectStep.getInt("intElementY");
 				int intWindowBorder = (intBrowserOuterWidth - intBrowserInnerWidth - intScrollbar) / 2;
+				//	intWindowBorder = 104;
 				int intElementScreenX = ((intBrowserOuterX + intElementX) + intWindowBorder);
 				int intElementScreenY = (intBrowserOuterY + intElementY) + (intBrowserOuterHeight - intBrowserInnerHeight) - intWindowBorder;
 				variablesJSON.objectStep.putInt("intElementScreenX", intElementScreenX);
@@ -1382,6 +1383,7 @@ public class Dragonfly {
 			Boolean blnStatus = false;
 			Boolean blnVisible = false;
 			String strGetValue = "";
+			String strActualResult = "";
 			while (true) {
 				try {
 					if (blnFound == false) {
@@ -1398,16 +1400,21 @@ public class Dragonfly {
 						blnGet = true;
 					}
 					blnStatus = true;
+					strActualResult = "get";
 				} catch (ExceptionElementTagNameNotSupported e) {
 					blnExit = true;
+					strActualResult = "tag_not_supported";
 					logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
+					strActualResult = "not_found";
 					logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					blnVisible = false;
+					strActualResult = "not_visible";
 					logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
+					variablesJSON.objectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementGetSync", "get", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(variablesJSON.objectStep);
 						return;
@@ -1468,7 +1475,7 @@ public class Dragonfly {
 						blnHidden = true;
 					}
 					blnStatus = true;
-					strActualResult = "syn_hidden";
+					strActualResult = "sync_hidden";
 				} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException | ExceptionElementNotFound e) {
 					blnFound = false;
 					blnHidden = true;
@@ -1487,7 +1494,8 @@ public class Dragonfly {
 				} catch (Exception e) {
 					blnFound = false;
 					blnHidden = false;
-					strActualResult = "not_hidden";
+					strActualResult = "exception";
+					;
 					logger.add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					variablesJSON.objectStep.putValue("strStepActual", strActualResult);
@@ -1539,6 +1547,7 @@ public class Dragonfly {
 			Boolean blnOnMouseOver = false;
 			Boolean blnStatus = false;
 			Boolean blnVisible = false;
+			String strActualResult = "";
 			while (true) {
 				try {
 					if (blnFound == false) {
@@ -1558,16 +1567,21 @@ public class Dragonfly {
 						blnOnMouseOver = true;
 					}
 					blnStatus = true;
+					strActualResult = "mouse_out";
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
+					strActualResult = "not_found";
 					logger.add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					blnVisible = false;
+					strActualResult = "not_visible";
 					logger.add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotEnabled e) {
 					blnEnabled = false;
+					strActualResult = "not_enabled";
 					logger.add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
+					variablesJSON.objectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementOnMouseOutSync", "mouse_out", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(variablesJSON.objectStep);
 						return;
@@ -1600,6 +1614,7 @@ public class Dragonfly {
 			Boolean blnOnMouseOver = false;
 			Boolean blnStatus = false;
 			Boolean blnVisible = false;
+			String strActualResult = "";
 			while (true) {
 				try {
 					if (blnFound == false) {
@@ -1618,17 +1633,22 @@ public class Dragonfly {
 						new ElementOnMouseOver();
 						blnOnMouseOver = true;
 					}
+					strActualResult = "mouse_over";
 					blnStatus = true;
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
+					strActualResult = "not_found";
 					logger.add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					blnVisible = false;
+					strActualResult = "not_visible";
 					logger.add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotEnabled e) {
 					blnEnabled = false;
+					strActualResult = "not_enabled";
 					logger.add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
+					variablesJSON.objectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementOnMouseOverSync", "mouse_over", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(variablesJSON.objectStep);
 						return;
@@ -1704,6 +1724,14 @@ public class Dragonfly {
 		}
 	}
 
+	//TODO start here alpabetically to check new step Actual
+	private class ElementScroll {
+		private ElementScroll() {
+			JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) objVariablesSelenium.gobjWebDriver;
+			objJavascriptExecutor.executeScript("arguments[0].scrollIntoView(false);", objVariablesSelenium.gobjWebElement);
+		}
+	}
+
 	private class ElementScrollSync {
 		private ElementScrollSync() {
 			logger.add("  ==start==>ElementScrollSync " + getDateTimestamp());
@@ -1711,6 +1739,8 @@ public class Dragonfly {
 			Boolean blnExit = false;
 			Boolean blnFound = false;
 			Boolean blnStatus = false;
+			Boolean blnVisible = false;
+			String strActualResult = "";
 			while (true) {
 				try {
 					if (blnFound == false) {
@@ -1718,14 +1748,25 @@ public class Dragonfly {
 						blnFound = true;
 						logger.add("ElementScrollSync: blnFound = true");
 					}
-					JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) objVariablesSelenium.gobjWebDriver;
-					objJavascriptExecutor.executeScript("arguments[0].scrollIntoView(false);", objVariablesSelenium.gobjWebElement);
+					if (blnVisible == false) {
+						new ElementVisible();
+						blnVisible = true;
+					}
+					new ElementScroll();
+					//					JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) objVariablesSelenium.gobjWebDriver;
+					//					objJavascriptExecutor.executeScript("arguments[0].scrollIntoView(false);", objVariablesSelenium.gobjWebElement);
 					blnStatus = true;
 					logger.add("ElementScrollSync: blnStatus = true");
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
+					strActualResult = "not_found";
 					logger.add("ElementScrollSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				} catch (ExceptionElementNotVisible e) {
+					blnVisible = false;
+					strActualResult = "not_visible";
+					logger.add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
+					variablesJSON.objectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementScrollSync", "scroll", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(variablesJSON.objectStep);
 						return;
@@ -2225,6 +2266,7 @@ public class Dragonfly {
 			Boolean blnStatus = false;
 			Boolean blnVisible = false;
 			String strOuterHTML = "";
+			String strActualResult = "";
 			while (true) {
 				try {
 					if (blnFound == false) {
@@ -2371,18 +2413,25 @@ public class Dragonfly {
 						blnStatus = true;
 						break;
 					}
+					strActualResult = "set";
 					blnStatus = true;
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
+					strActualResult = "not_found";
 					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
-					blnFound = false;
 					blnVisible = false;
+					strActualResult = "not_visible";
 					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotEnabled e) {
 					blnEnabled = false;
+					strActualResult = "not_enabled";
 					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionElementTagNameNotSupported | ExceptionKeywordNotValid e) {
+				} catch (ExceptionElementTagNameNotSupported e) {
+					blnExit = true;
+					strActualResult = "tag_not_supported";
+					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+				} catch (ExceptionKeywordNotValid e) {
 					blnExit = true;
 					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionVisibleTextNotInSelectList e) {
@@ -2412,8 +2461,10 @@ public class Dragonfly {
 					blnSet = false;
 					blnSetSync = false;
 					blnVisible = false;
+					strActualResult = "exception";
 					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
+					variablesJSON.objectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementSetSync", "set", lngTimeStart) == true) {
 						if (blnStatus == false) {
 							new CoordinateHighlightScreenshot(variablesJSON.objectStep);
@@ -2484,6 +2535,16 @@ public class Dragonfly {
 			//			System.out.println("winGetState = " + objAutoItSetObject.objAutoIt.winGetState("[CLASS:tooltips_class32]"));
 			//			System.out.println("winWaitActive = " + objAutoItSetObject.objAutoIt.winWaitActive("[CLASS:tooltips_class32]", "", 10));
 			//			System.out.println("winGetState = " + objAutoItSetObject.objAutoIt.winGetState("This is the tip"));
+			String strHandle = objAutoItSetObject.objAutoIt.winGetHandle("[CLASS:IEFrame]");
+			System.out.println("strHandle = " + strHandle);
+			System.out.println("winGetTitle = " + objAutoItSetObject.objAutoIt.winGetTitle(strHandle));
+			System.out.println("winGetClientSizeHeight = " + objAutoItSetObject.objAutoIt.winGetClientSizeHeight(strHandle));
+			System.out.println("winGetClientSizeWidth = " + objAutoItSetObject.objAutoIt.winGetClientSizeWidth(strHandle));
+			System.out.println("winGetPosHeight = " + objAutoItSetObject.objAutoIt.winGetPosHeight(strHandle));
+			System.out.println("winGetPosWidth = " + objAutoItSetObject.objAutoIt.winGetPosWidth(strHandle));
+			System.out.println("winGetPosX = " + objAutoItSetObject.objAutoIt.winGetPosX(strHandle));
+			System.out.println("winGetPosY = " + objAutoItSetObject.objAutoIt.winGetPosY(strHandle));
+			System.exit(0);
 			Actions ToolTip1 = new Actions(objVariablesSelenium.gobjWebDriver);
 			ToolTip1.moveToElement(objVariablesSelenium.gobjWebElement).build().perform();
 			for (int intKeysEach = 0; intKeysEach < 10; intKeysEach++) {
@@ -2667,6 +2728,7 @@ public class Dragonfly {
 			Boolean blnVerifiedNot = false;
 			Boolean blnVisible = false;
 			String strActualValue = "";
+			String strActualResult = "";
 			while (true) {
 				try {
 					if (blnFound == false) {
@@ -2681,21 +2743,28 @@ public class Dragonfly {
 						strActualValue = new ElementVerifyNotValue().run();
 						blnVerifiedNot = true;
 					}
+					strActualResult = "verify_not";
 					blnStatus = true;
 				} catch (ExceptionElementTagNameNotSupported e) {
 					blnExit = true;
+					strActualResult = "tag_not_supported";
 					logger.add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					blnVisible = false;
+					strActualResult = "not_found";
 					logger.add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
+					strActualResult = "not_visible";
 					logger.add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionValueMatched e) {
+					strActualResult = "not_verify_not";
 					logger.add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (Exception e) {
+					strActualResult = "exception";
 					logger.add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
+					variablesJSON.objectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementVerifyNotValueSync", "verify_not", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(variablesJSON.objectStep);
 						return;
@@ -2735,6 +2804,7 @@ public class Dragonfly {
 			Boolean blnVerified = false;
 			Boolean blnVisible = false;
 			String strActualValue = "";
+			String strActualResult = "";
 			while (true) {
 				try {
 					if (blnFound == false) {
@@ -2750,24 +2820,31 @@ public class Dragonfly {
 						blnVerified = true;
 					}
 					blnStatus = true;
+					strActualResult = "verify_value";
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					blnVisible = false;
 					blnVerified = false;
+					strActualResult = "not_found";
 					logger.add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					blnVisible = false;
+					strActualResult = "not_visible";
 					logger.add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementTagNameNotSupported e) {
 					blnExit = true;
+					strActualResult = "tag_not_supported";
 					logger.add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionValueNotMatched e) {
 					blnVerified = false;
+					strActualResult = "not_verified";
 					logger.add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (Exception e) {
 					blnVerified = false;
+					strActualResult = "exception";
 					logger.add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
+					variablesJSON.objectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementVerifyValueSync", "verify", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(variablesJSON.objectStep);
 						return;
@@ -4609,6 +4686,7 @@ public class Dragonfly {
 					if (blnIf == true) {
 						objDragonfly.logger.add("main: strInputValue = " + strInputValue);
 						if (strInputValue.trim().equalsIgnoreCase("<skip>")) {
+							objDragonfly.variablesJSON.objectStep.putValue("strStepActual", "skip");
 							objDragonfly.variablesJSON.objectStep.put("strStepActual", "skip");
 							objDragonfly.stepDuration("<skip>", System.currentTimeMillis(), "skip");
 						} else {
@@ -4672,6 +4750,7 @@ public class Dragonfly {
 								break;
 							case "break":
 								objDragonfly.logger.add("main: switch strAction = break was entered to at this step to stop execution");
+								objDragonfly.variablesJSON.objectStep.putValue("strStepActual", "break");
 								objDragonfly.stepDuration("break", System.currentTimeMillis(), "break");
 								blnExit = true;
 								break;
@@ -4987,14 +5066,20 @@ public class Dragonfly {
 		String strOutputValueHtmlPass = " value " + strHtmlPassStart + strOutputValue + strHtmlEnd;
 		String strOutputValueHtmlFail = " " + strOutputValue + strHtmlFailStart + strHtmlEnd;
 		logger.add("stepCreateActual strStepActual = " + variablesJSON.objectStep.getString("strStepActual"));
-		if (variablesJSON.objectStep.verifyEquals("strStepActual", "")) {
-			strStepType = variablesJSON.objectStep.getString("strAction");
-		} else {
-			strStepType = variablesJSON.objectStep.getString("strStepActual");
-		}
+		//		if (variablesJSON.objectStep.verifyEquals("strStepActual", "")) {
+		//			strStepType = variablesJSON.objectStep.getString("strAction");
+		//		} else {
+		//			strStepType = variablesJSON.objectStep.getString("strStepActual");
+		//		}
+		strStepType = variablesJSON.objectStep.getString("strStepActual");
 		//String strFail2 =variablesJSON.objectStep.getString("strTagName");
 		logger.add("stepCreateActual strStepType.toLowerCase() = " + strStepType.toLowerCase());
 		switch (strStepType.toLowerCase()) {
+		case "browser_refresh":
+			strActualHtml = "The {<b>" + strTagName + "</b>} browser navigated to url" + strInputValueHtmlPass + strMsWaitedDetailHtml;
+			break;
+		
+		
 		case "launch":
 			strActualHtml = "The {<b>" + strTagName + "</b>} browser navigated to url" + strInputValueHtmlPass + strMsWaitedDetailHtml;
 			break;
@@ -5014,7 +5099,7 @@ public class Dragonfly {
 			strActualHtml = strTagAttributesHtml + " tooltip" + strInputValueHtmlPass + " was not verified." + strMsWaitedDetailHtml + "<BR>The actual value was " + strOutputValueHtmlFail + ".";
 			break;
 		case "not_found":
-			strActualHtml = strTagAttributesHtml + strOutputValueHtmlFail + " was" + strHtmlFailStart + "not found" + strHtmlEnd + strMsWaitedDetailHtml;
+			strActualHtml = strTagAttributesHtml + " was" + strHtmlFailStart + "not found" + strHtmlEnd + strMsWaitedDetailHtml;
 			break;
 		case "verify":
 			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was verified" + strMsWaitedDetailHtml;
@@ -5112,7 +5197,12 @@ public class Dragonfly {
 		case "mouse_out":
 			strActualHtml = "Mouse out" + strInputValueHtmlPass + " is complete" + strMsWaitedDetailHtml;
 			break;
+		case "tag_not_supported":
+			strActualHtml = strTagAttributesHtml + " is not supported";
+			break;
 		default:
+			strActualHtml = "StepType {" + strStepType + "} is not supported";
+			break;
 		}
 		strActualHtml = "<DIV align='left'><font size='5'>" + strActualHtml + "</font></DIV>";
 		strActualText = removeTags(strActualHtml);
