@@ -164,7 +164,10 @@ public class Dragonfly {
 	private class BrowserCloseSync {
 		private BrowserCloseSync() {
 			// TODO create a browserCloseSync to manage reporting and sync close
+			long lngStartTime = System.currentTimeMillis();
 			new BrowserClose();
+			variablesJSON.objectStep.putValue("strStepActual", "browser_close");
+			stepDuration("BrowserCloseSync", lngStartTime, "browser_close");
 		}
 	}
 
@@ -291,8 +294,8 @@ public class Dragonfly {
 				// TODO create a BrowserLaunchSync to manage reporting and sync
 				new CoordinatesElement();
 				new CoordinateHighlightScreenshot(variablesJSON.objectStep);
-				variablesJSON.objectStep.putValue("strStepActual", "launch");
-				stepDuration("BrowserLaunchSync", System.currentTimeMillis(), "launch");
+				variablesJSON.objectStep.putValue("strStepActual", "browser_launch");
+				stepDuration("BrowserLaunchSync", lngStartTime, "browser_launch");
 				logger.add("BrowserLaunchSync: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
@@ -307,7 +310,10 @@ public class Dragonfly {
 
 	private class BrowserRefreshSync {
 		private BrowserRefreshSync() {
+			long lngStartTime = System.currentTimeMillis();
 			new BrowserRefresh();
+			variablesJSON.objectStep.putValue("strStepActual", "browser_refresh");
+			stepDuration("BrowserRefreshSync", lngStartTime, "browser_refresh");
 		}
 	}
 
@@ -713,70 +719,73 @@ public class Dragonfly {
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == rdbtnLocal) {
+		public void actionPerformed(ActionEvent objActionEvent) {
+			if (objActionEvent.getSource() == rdbtnLocal) {
 				this.gstrTestArea = "local";
 				objPaths.gstrTestArea = "local";
 				objPaths.setDirectory("local");
-				System.out.println("objPaths.gstrTestArea = " + objPaths.gstrTestArea);
-				System.out.println(objPaths.gstrPathSystemUserDir);
-				System.out.println(objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
-				dirPath = objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
-				dirPath = dirPath + "/" + objPaths.gstrPathTestConfiguration;
-				System.out.println("dirPath = " + dirPath);
+				//System.out.println("objPaths.gstrTestArea = " + objPaths.gstrTestArea);
+				//System.out.println(objPaths.gstrPathSystemUserDir);
+				//System.out.println(objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
+				//				dirPath = objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
+				//				dirPath = dirPath + "/" + objPaths.gstrPathTestConfiguration;
+				dirPath = (objPaths.gstrPathSystemUserDir + "/" + objPaths.gstrPathTestConfiguration).replaceAll("\\\\", "/");
+				//System.out.println("dirPath = " + dirPath);
 				this.getApplications();
 			}
-			if (e.getSource() == rdbtnPublic) {
+			if (objActionEvent.getSource() == rdbtnPublic) {
 				this.gstrTestArea = "public";
 				objPaths.gstrTestArea = "public";
 				objPaths.setDirectory("public");
-				System.out.println("objPaths.gstrTestArea = " + objPaths.gstrTestArea);
-				System.out.println(objPaths.gstrPathSystemUserDir);
-				System.out.println(objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
-				dirPath = objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
-				dirPath = dirPath + "/" + objPaths.gstrPathTestConfiguration;
-				System.out.println("dirPath = " + dirPath);
+				//System.out.println("objPaths.gstrTestArea = " + objPaths.gstrTestArea);
+				//System.out.println(objPaths.gstrPathSystemUserDir);
+				//System.out.println(objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
+				//				dirPath = objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
+				//				dirPath = dirPath + "/" + objPaths.gstrPathTestConfiguration;
+				dirPath = (objPaths.gstrPathSystemUserDir + "/" + objPaths.gstrPathTestConfiguration).replaceAll("\\\\", "/");
+				//System.out.println("dirPath = " + dirPath);
 				this.getApplications();
 			}
-			if (e.getSource() == rdbtnInternal) {
+			if (objActionEvent.getSource() == rdbtnInternal) {
 				this.gstrTestArea = "internal";
 				objPaths.gstrTestArea = "internal";
 				objPaths.setDirectory("internal");
-				System.out.println("objPaths.gstrTestArea = " + objPaths.gstrTestArea);
-				System.out.println(objPaths.gstrPathSystemUserDir);
-				System.out.println(objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
-				dirPath = objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
-				dirPath = dirPath + "/" + objPaths.gstrPathTestConfiguration;
-				System.out.println("dirPath = " + dirPath);
+				//System.out.println("objPaths.gstrTestArea = " + objPaths.gstrTestArea);
+				//System.out.println(objPaths.gstrPathSystemUserDir);
+				//System.out.println(objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
+				//				dirPath = objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
+				//				dirPath = dirPath + "/" + objPaths.gstrPathTestConfiguration;
+				dirPath = (objPaths.gstrPathSystemUserDir + "/" + objPaths.gstrPathTestConfiguration).replaceAll("\\\\", "/");
+				//System.out.println("dirPath = " + dirPath);
 				this.getApplications();
 			}
-			if (e.getSource() == comboApplication) {
-				System.out.println(comboApplication.getSelectedItem());
+			if (objActionEvent.getSource() == comboApplication) {
+				//System.out.println(comboApplication.getSelectedItem());
 				this.getTests();
 			}
-			if (e.getSource() == comboTest) {
-				System.out.println("comboTest");
+			if (objActionEvent.getSource() == comboTest) {
+				//System.out.println("comboTest");
 				btnRun.setEnabled(true);
 			}
-			if (e.getSource() == rdbtnTestValue) {
+			if (objActionEvent.getSource() == rdbtnTestValue) {
 				objVariablesCommon.gstrBrowserSelection = "TestValue";
 			}
-			if (e.getSource() == rdbtnChrome) {
+			if (objActionEvent.getSource() == rdbtnChrome) {
 				objVariablesCommon.gstrBrowserSelection = "chrome";
 			}
-			if (e.getSource() == rdbtnFirefox) {
+			if (objActionEvent.getSource() == rdbtnFirefox) {
 				objVariablesCommon.gstrBrowserSelection = "firefox";
 			}
-			if (e.getSource() == rdbtnIE) {
+			if (objActionEvent.getSource() == rdbtnIE) {
 				objVariablesCommon.gstrBrowserSelection = "ie";
 			}
-			if (e.getSource() == btnRun) {
-				System.out.println(comboTest.getSelectedItem());
+			if (objActionEvent.getSource() == btnRun) {
+				//System.out.println(comboTest.getSelectedItem());
 				objPaths.gstrNameTest = (String) comboTest.getSelectedItem();
 				dispose();
 				return;
 			}
-			if (e.getSource() == btnCancel) {
+			if (objActionEvent.getSource() == btnCancel) {
 				dispose();
 				return;
 			}
@@ -803,7 +812,7 @@ public class Dragonfly {
 				comboApplication.setModel(new DefaultComboBoxModel<String>(arrDrop));
 			} else {
 				for (File aFile : files) {
-					System.out.println(aFile.getName());
+					//System.out.println(aFile.getName());
 					String strKeyword = "";
 					int intRightArrowPosition = aFile.getName().indexOf("_");
 					if (intRightArrowPosition > -1) {
@@ -815,9 +824,12 @@ public class Dragonfly {
 				}
 				arrDrop = hs.toArray(new String[0]);
 				Arrays.sort(arrDrop);
+				comboApplication.removeActionListener(this);
 				comboApplication.setModel(new DefaultComboBoxModel<String>(arrDrop));
+				comboApplication.setSelectedItem(null);
+				comboApplication.addActionListener(this);
 			}
-			System.out.println(hs);
+			//System.out.println(hs);
 			comboTest.setModel(new DefaultComboBoxModel<String>(arrDropEmpty));
 			comboTest.setEnabled(false);
 		}
@@ -847,6 +859,7 @@ public class Dragonfly {
 				Arrays.sort(arrDrop);
 			}
 			comboTest.setModel(new DefaultComboBoxModel<String>(arrDrop));
+			comboTest.setSelectedItem(null);
 			comboTest.setEnabled(true);
 		}
 	}
@@ -1785,7 +1798,7 @@ public class Dragonfly {
 			String strValueToSelect = strInputValue;
 			String strAttributeValues = variablesJSON.objectStep.getLowerCase("strAttributeValues");
 			String strTagType = variablesJSON.objectStep.getLowerCase("strTagType");
-			String strSetType = "";
+			String strStepExpected = "";
 			Actions objActions = null;
 			String strOptions = "";
 			String strOptionsList = "";
@@ -1817,12 +1830,12 @@ public class Dragonfly {
 					case "<click>":
 						variablesJSON.objectStep.putValue("strInputValue", "<click>");
 						objVariablesSelenium.gobjWebElement.click();
-						strSetType = "click";
+						strStepExpected = "click";
 						break;
 					case "<doubleclick>":
 						objActions = new Actions(objVariablesSelenium.gobjWebDriver);
 						objActions.moveToElement(objVariablesSelenium.gobjWebElement).doubleClick().build().perform();
-						strSetType = "double_click";
+						strStepExpected = "double_click";
 						break;
 					case "<rightclick>":
 						//ToDo add right click code
@@ -1830,7 +1843,7 @@ public class Dragonfly {
 						objActions.contextClick(objVariablesSelenium.gobjWebElement).build().perform();
 						//						Actions action= new Actions(objVariablesSelenium.gobjWebDriver);
 						//						action.contextClick(objVariablesSelenium.gobjWebElement).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.RETURN).build().perform();
-						strSetType = "right_click";
+						strStepExpected = "right_click";
 						break;
 					default:
 						throw new ExceptionKeywordNotValid("The keyword " + strInputValue + " for the click event is not valid! Please us one of the following <click>, <doubleclick>, <rightclick>");
@@ -1845,7 +1858,7 @@ public class Dragonfly {
 						objVariablesSelenium.gobjWebElement.clear();
 					}
 					objVariablesSelenium.gobjWebElement.sendKeys(strInputValue);
-					strSetType = "Set";
+					strStepExpected = "set";
 					break;
 				case "input_radio":
 					switch (strInputValue.toLowerCase()) {
@@ -1855,7 +1868,7 @@ public class Dragonfly {
 						if (objVariablesSelenium.gobjWebElement.isSelected() == false) {
 							objVariablesSelenium.gobjWebElement.click();
 						}
-						strSetType = "Click";
+						strStepExpected = "click";
 						break;
 					default:
 						throw new ExceptionKeywordNotValid("The keyword " + strInputValue + " for the click event is not valid! Please use <on>");
@@ -1878,7 +1891,7 @@ public class Dragonfly {
 					default:
 						throw new ExceptionKeywordNotValid("The keyword " + strInputValue + " for the click event is not valid! Please us one of the following <on> or <off>");
 					}
-					strSetType = "Click";
+					strStepExpected = "click";
 					break;
 				case "select":
 					//ToDo add throws UnexpectedTagNameException when element is not a SELECT   may be useless
@@ -1971,10 +1984,10 @@ public class Dragonfly {
 					logger.add("KeywordReturn: strValueToSelect " + strValueToSelect);
 					variablesJSON.objectStep.putString("strInputValue", strValueToSelect);
 					try {
-						strSetType = "Select";
+						strStepExpected = "select";
 						objSelect.selectByVisibleText(strValueToSelect);
 					} catch (NoSuchElementException e) {
-						//strSetType = "notinlist";
+						//strStepActual = "notinlist";
 						variablesJSON.objectStep.putValue("strStepActual", "notinlist");
 						strOptionsList = optionsList(strOptions);
 						variablesJSON.objectStep.putValue("strOutputValue", strOptionsList);
@@ -1988,15 +2001,15 @@ public class Dragonfly {
 					switch (strAttributeValues) {
 					case "edit":
 						objVariablesSelenium.gobjWebDriver.switchTo().alert().sendKeys(strInputValue);
-						strSetType = "Set";
+						strStepExpected = "set";
 						break;
 					case "accept":
 						objVariablesSelenium.gobjWebDriver.switchTo().alert().accept();
-						strSetType = "Click";
+						strStepExpected = "click";
 						break;
 					case "dismiss":
 						objVariablesSelenium.gobjWebDriver.switchTo().alert().dismiss();
-						strSetType = "Click";
+						strStepExpected = "click";
 						break;
 					default:
 						throw new ExceptionKeywordNotValid("The keyword " + strAttributeValues + " for the click event is not valid! Please us one of the following <edit>, <accept>, <dismiss>");
@@ -2006,8 +2019,8 @@ public class Dragonfly {
 					throw new ExceptionElementTagNameNotSupported("ElementSet: Element tag {" + strTagType + "} not supported");
 				}
 			} finally {
-				variablesJSON.objectStep.putValue("strStepExpected", strSetType);
-				logger.add("ElementSet: finally strSetType = " + strSetType);
+				variablesJSON.objectStep.putValue("strStepExpected", strStepExpected);
+				logger.add("ElementSet: finally strStepExpected = " + strStepExpected);
 				logger.add("ElementSet: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
@@ -4687,51 +4700,17 @@ public class Dragonfly {
 						objDragonfly.logger.add("main: strInputValue = " + strInputValue);
 						if (strInputValue.trim().equalsIgnoreCase("<skip>")) {
 							objDragonfly.variablesJSON.objectStep.putValue("strStepActual", "skip");
-							objDragonfly.variablesJSON.objectStep.put("strStepActual", "skip");
 							objDragonfly.stepDuration("<skip>", System.currentTimeMillis(), "skip");
 						} else {
 							switch (objDragonfly.variablesJSON.objectStep.getLowerCase("strAction")) {
-							case "kill_ie":
-								objDragonfly.new ProcessKillInternetExplorer().run();
-								break;
-							case "launch":
-								objDragonfly.new BrowserLaunchSync();
+							case "break":
+								objDragonfly.logger.add("main: switch strAction = break was entered to at this step to stop execution");
+								objDragonfly.variablesJSON.objectStep.putValue("strStepActual", "break");
+								objDragonfly.stepDuration("break", System.currentTimeMillis(), "break");
+								blnExit = true;
 								break;
 							case "close":
 								objDragonfly.new BrowserCloseSync();
-								break;
-							case "get":
-								objDragonfly.new ElementGetSync();
-								break;
-							case "set":
-								objDragonfly.new ElementSetSync(false);
-								break;
-							case "set_js":
-								objDragonfly.new ElementSetSync(true);
-								break;
-							case "verify":
-								objDragonfly.new ElementVerifyValueSync();
-								break;
-							case "verify_not":
-								objDragonfly.new ElementVerifyNotValueSync();
-								break;
-							case "sync_visible":
-								objDragonfly.new ElementVisibleSync();
-								break;
-							case "sync_hidden":
-								objDragonfly.new ElementHiddenSync();
-								break;
-							case "sync_enabled":
-								objDragonfly.new ElementEnabledSync();
-								break;
-							case "sync_disabled":
-								objDragonfly.new ElementDisabledSync();
-								break;
-							case "mouse_over":
-								objDragonfly.new ElementOnMouseOverSync();
-								break;
-							case "mouse_out":
-								objDragonfly.new ElementOnMouseOutSync();
 								break;
 							case "drag":
 								objDragonfly.new ElementDragSync();
@@ -4739,8 +4718,23 @@ public class Dragonfly {
 							case "drop":
 								objDragonfly.new ElementDropSync();
 								break;
-							case "sleep":
-								objDragonfly.new SleepSync();
+							case "get":
+								objDragonfly.new ElementGetSync();
+								break;
+							case "kill_ie":
+								long lngStartTime = System.currentTimeMillis();
+								objDragonfly.new ProcessKillInternetExplorer().run();
+								objDragonfly.variablesJSON.objectStep.putValue("strStepActual", "kill_ie");
+								objDragonfly.stepDuration("kill_ie", lngStartTime, "kill_ie");
+								break;
+							case "launch":
+								objDragonfly.new BrowserLaunchSync();
+								break;
+							case "mouse_over":
+								objDragonfly.new ElementOnMouseOverSync();
+								break;
+							case "mouse_out":
+								objDragonfly.new ElementOnMouseOutSync();
 								break;
 							case "refresh":
 								objDragonfly.new BrowserRefreshSync();
@@ -4748,14 +4742,35 @@ public class Dragonfly {
 							case "scroll":
 								objDragonfly.new ElementScrollSync();
 								break;
-							case "break":
-								objDragonfly.logger.add("main: switch strAction = break was entered to at this step to stop execution");
-								objDragonfly.variablesJSON.objectStep.putValue("strStepActual", "break");
-								objDragonfly.stepDuration("break", System.currentTimeMillis(), "break");
-								blnExit = true;
+							case "set":
+								objDragonfly.new ElementSetSync(false);
+								break;
+							case "set_js":
+								objDragonfly.new ElementSetSync(true);
+								break;
+							case "sleep":
+								objDragonfly.new SleepSync();
+								break;
+							case "sync_disabled":
+								objDragonfly.new ElementDisabledSync();
+								break;
+							case "sync_enabled":
+								objDragonfly.new ElementEnabledSync();
+								break;
+							case "sync_hidden":
+								objDragonfly.new ElementHiddenSync();
+								break;
+							case "sync_visible":
+								objDragonfly.new ElementVisibleSync();
 								break;
 							case "tooltip_get":
 								objDragonfly.new ElementTooltipGetSync();
+								break;
+							case "verify":
+								objDragonfly.new ElementVerifyValueSync();
+								break;
+							case "verify_not":
+								objDragonfly.new ElementVerifyNotValueSync();
 								break;
 							default:
 								objDragonfly.logger.add("main: switch strAction = " + objDragonfly.variablesJSON.objectStep.getLowerCase("strAction") + "  not supported");
@@ -5066,85 +5081,56 @@ public class Dragonfly {
 		String strOutputValueHtmlPass = " value " + strHtmlPassStart + strOutputValue + strHtmlEnd;
 		String strOutputValueHtmlFail = " " + strOutputValue + strHtmlFailStart + strHtmlEnd;
 		logger.add("stepCreateActual strStepActual = " + variablesJSON.objectStep.getString("strStepActual"));
-		//		if (variablesJSON.objectStep.verifyEquals("strStepActual", "")) {
-		//			strStepType = variablesJSON.objectStep.getString("strAction");
-		//		} else {
-		//			strStepType = variablesJSON.objectStep.getString("strStepActual");
-		//		}
 		strStepType = variablesJSON.objectStep.getString("strStepActual");
-		//String strFail2 =variablesJSON.objectStep.getString("strTagName");
 		logger.add("stepCreateActual strStepType.toLowerCase() = " + strStepType.toLowerCase());
 		switch (strStepType.toLowerCase()) {
-		case "browser_refresh":
-			strActualHtml = "The {<b>" + strTagName + "</b>} browser navigated to url" + strInputValueHtmlPass + strMsWaitedDetailHtml;
+		case "assert":
+			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " persisted" + strMsWaitedDetailHtml;
 			break;
-		
-		
-		case "launch":
-			strActualHtml = "The {<b>" + strTagName + "</b>} browser navigated to url" + strInputValueHtmlPass + strMsWaitedDetailHtml;
+		case "assert_failed":
+			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " did not persist" + strMsWaitedDetailHtml + "<BR>The actual value" + strOutputValueHtmlFail + " was displayed.";
 			break;
-		case "close":
+		case "break":
+			strActualHtml = "Take a break.";
+			break;
+		case "browser_close":
 			strActualHtml = "The {<b>" + strTagName + "</b>} browser was closed" + strMsWaitedDetailHtml;
 			break;
-		case "default":
-			strActualHtml = strTagAttributesHtml + " default" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
+		case "browser_launch":
+			strActualHtml = "The {<b>" + strTagName + "</b>} browser navigated to url" + strInputValueHtmlPass + strMsWaitedDetailHtml;
+			break;
+		case "browser_refresh":
+			strActualHtml = "The {<b>" + strTagName + "</b>} browser navigated to url" + strInputValueHtmlPass + strMsWaitedDetailHtml;
 			break;
 		case "clicked":
 			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " was clicked" + strMsWaitedDetailHtml;
 			break;
+		case "default":
+			strActualHtml = strTagAttributesHtml + " default" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
+			break;
+		case "drag":
+			strActualHtml = strTagAttributesHtml + " was dragged" + strMsWaitedDetailHtml;
+			break;
+		case "drop":
+			strActualHtml = strTagAttributesHtml + " was dropped" + strMsWaitedDetailHtml;
+			break;
 		case "expected":
 			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " was not verified" + strMsWaitedDetailHtml + "<BR>The actual value was" + strOutputValueHtmlFail + ".";
-			break;
-		case "expectedtooltip":
-			strActualHtml = strTagAttributesHtml + " tooltip" + strInputValueHtmlPass + " was not verified." + strMsWaitedDetailHtml + "<BR>The actual value was " + strOutputValueHtmlFail + ".";
-			break;
-		case "not_found":
-			strActualHtml = strTagAttributesHtml + " was" + strHtmlFailStart + "not found" + strHtmlEnd + strMsWaitedDetailHtml;
-			break;
-		case "verify":
-			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was verified" + strMsWaitedDetailHtml;
-			break;
-		case "verify_not":
-			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was not verified" + strMsWaitedDetailHtml;
-			break;
-		case "verifytooltip":
-			strActualHtml = strTagAttributesHtml + " tooltip" + strOutputValueHtmlPass + " was verified" + strMsWaitedDetailHtml;
 			break;
 		case "get":
 			strActualHtml = strTagAttributesHtml + " actual value is" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
 			break;
-		case "gettooltip":
-			strActualHtml = strTagAttributesHtml + " tooltip actual value is" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
+		case "keystroke":
+			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " key was pressed" + strMsWaitedDetailHtml;
 			break;
-		case "set":
-			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " was set" + strMsWaitedDetailHtml;
+		case "mouse_out":
+			strActualHtml = "Mouse out" + strInputValueHtmlPass + " is complete" + strMsWaitedDetailHtml;
 			break;
-		case "persisted":
-			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " persisted" + strMsWaitedDetailHtml;
+		case "mouse_over":
+			strActualHtml = "Mouse over" + strInputValueHtmlPass + " is complete" + strMsWaitedDetailHtml;
 			break;
-		case "secure":
-			strActualHtml = strTagAttributesHtml + " password value" + strOutputValueHtmlPass + " was set" + strMsWaitedDetailHtml;
-			break;
-		case "not_persisted":
-			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " did not persist" + strMsWaitedDetailHtml + "<BR>The actual value" + strOutputValueHtmlFail + " was displayed.";
-			break;
-		case "notexisttooltip":
-			strActualHtml = strTagAttributesHtml + " tooltip does not exist" + strMsWaitedDetailHtml;
-			break;
-		case "sync_disabled":
-			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "disabled" + strHtmlEnd + strMsWaitedDetailHtml;
-			break;
-		case "sync_enabled":
-			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "enabled" + strHtmlEnd + strMsWaitedDetailHtml;
-			break;
-		case "sync_hidden":
-			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "hidden" + strHtmlEnd + strMsWaitedDetailHtml;
-			break;
-		case "sync_visible":
-			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "visible" + strHtmlEnd + strMsWaitedDetailHtml;
-			break;
-		case "sync_closed":
-			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " closed" + strMsWaitedDetailHtml;
+		case "navigate":
+			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was set" + strMsWaitedDetailHtml + "<BR>No validation performed due to navigation.";
 			break;
 		case "not_closed":
 			strActualHtml = strTagAttributesHtml + strOutputValueHtmlFail + " did not close" + strMsWaitedDetailHtml;
@@ -5155,53 +5141,74 @@ public class Dragonfly {
 		case "not_enabled":
 			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "disabled" + strHtmlEnd + strMsWaitedDetailHtml;
 			break;
+		case "not_exist_tooltip":
+			strActualHtml = strTagAttributesHtml + " tooltip does not exist" + strMsWaitedDetailHtml;
+			break;
+		case "not_found":
+			strActualHtml = strTagAttributesHtml + " was" + strHtmlFailStart + "not found" + strHtmlEnd + strMsWaitedDetailHtml;
+			break;
 		case "not_hidden":
 			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "visible" + strHtmlEnd + strMsWaitedDetailHtml;
+			break;
+		case "not_in_list":
+			strActualHtml = strTagAttributesHtml + "The list item " + strInputValueHtmlPass + " does not exist in the list field" + strMsWaitedDetailHtml + "<BR>Please confirm the input value against the actual list values " + strOutputValueHtmlFail + " is available for this field.";
 			break;
 		case "not_visible":
 			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "hidden" + strHtmlEnd + strMsWaitedDetailHtml;
 			break;
-		case "syncoptional":
-			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " sync is optional" + strMsWaitedDetailHtml;
-			break;
-		case "navigate":
-			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was set" + strMsWaitedDetailHtml + "<BR>No validation performed due to navigation.";
-			break;
-		case "keystroke":
-			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " key was pressed" + strMsWaitedDetailHtml;
-			break;
-		case "notinlist":
-			strActualHtml = strTagAttributesHtml + "The list item " + strInputValueHtmlPass + " does not exist in the list field" + strMsWaitedDetailHtml + "<BR>Please confirm the input value against the actual list values " + strOutputValueHtmlFail + " is available for this field.";
-			break;
-		case "drag":
-			strActualHtml = strTagAttributesHtml + " was dragged" + strMsWaitedDetailHtml;
-			break;
-		case "drop":
-			strActualHtml = strTagAttributesHtml + " was dropped" + strMsWaitedDetailHtml;
-			break;
-		case "break":
-			strActualHtml = "Take a break.";
-			break;
-		case "skip":
-			strActualHtml = "Skip it.";
-			break;
 		case "scroll":
 			strActualHtml = strTagAttributesHtml + strMsWaitedDetailHtml;
+			break;
+		case "secure":
+			strActualHtml = strTagAttributesHtml + " password value" + strOutputValueHtmlPass + " was set" + strMsWaitedDetailHtml;
+			break;
+		case "set":
+			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " was set" + strMsWaitedDetailHtml;
+			break;
+		case "skip":
+			strActualHtml = "The skip keyword was entered in the strInputValue field causing this step to be skipped.";
 			break;
 		case "sleep":
 			strActualHtml = "Sleep paused execution" + strMsWaitedDetailHtml;
 			break;
-		case "mouse_over":
-			strActualHtml = "Mouse over" + strInputValueHtmlPass + " is complete" + strMsWaitedDetailHtml;
+		case "sync_closed":
+			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " closed" + strMsWaitedDetailHtml;
 			break;
-		case "mouse_out":
-			strActualHtml = "Mouse out" + strInputValueHtmlPass + " is complete" + strMsWaitedDetailHtml;
+		case "sync_disabled":
+			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "disabled" + strHtmlEnd + strMsWaitedDetailHtml;
+			break;
+		case "sync_enabled":
+			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "enabled" + strHtmlEnd + strMsWaitedDetailHtml;
+			break;
+		case "sync_hidden":
+			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "hidden" + strHtmlEnd + strMsWaitedDetailHtml;
+			break;
+		case "sync_optional":
+			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " sync is optional" + strMsWaitedDetailHtml;
+			break;
+		case "sync_visible":
+			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "visible" + strHtmlEnd + strMsWaitedDetailHtml;
 			break;
 		case "tag_not_supported":
 			strActualHtml = strTagAttributesHtml + " is not supported";
 			break;
+		case "tooltip_expected":
+			strActualHtml = strTagAttributesHtml + " tooltip" + strInputValueHtmlPass + " was not verified." + strMsWaitedDetailHtml + "<BR>The actual value was " + strOutputValueHtmlFail + ".";
+			break;
+		case "tooltip_get":
+			strActualHtml = strTagAttributesHtml + " tooltip actual value is" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
+			break;
+		case "tooltip_verify":
+			strActualHtml = strTagAttributesHtml + " tooltip" + strOutputValueHtmlPass + " was verified" + strMsWaitedDetailHtml;
+			break;
+		case "verify":
+			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was verified" + strMsWaitedDetailHtml;
+			break;
+		case "verify_not":
+			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was not verified" + strMsWaitedDetailHtml;
+			break;
 		default:
-			strActualHtml = "StepType {" + strStepType + "} is not supported";
+			strActualHtml = "<b><FONT COLOR='#FF69B4'>" + "StepType {" + strStepType + "} is not supported" + "</FONT></b>";
 			break;
 		}
 		strActualHtml = "<DIV align='left'><font size='5'>" + strActualHtml + "</font></DIV>";
@@ -5214,12 +5221,9 @@ public class Dragonfly {
 		logger.add("  ==start==>StepCreateExpected " + getDateTimestamp());
 		String strStepExpected = "";
 		String strAction = "";
-		//String strInputValue = variablesJSON.objectStep.getString("strInputValue");
 		String strInputValue = objVariablesCommon.strOriginalInputValue;
 		String strMillisecondsToWait = variablesJSON.objectStep.getString("intMillisecondsToWait");
-		//String strObjectName = this.createObjectName();
 		String strObjectName = objVariablesCommon.strOriginalAttributes;
-		logger.add("StepCreateExpected strObjectName = " + strObjectName);
 		String strTagName = variablesJSON.objectStep.getString("strTagName");
 		String strAssert = variablesJSON.objectStep.getString("strAssert");
 		String strMillisecondsToWaitHtml = " within {<b>" + strMillisecondsToWait + "</b>} milliseconds.";
@@ -5232,59 +5236,17 @@ public class Dragonfly {
 			strAction = variablesJSON.objectStep.getString("strAction");
 		}
 		switch (strAction.toLowerCase()) {
-		case "launch":
-			strStepExpected = "Launch {<b>" + strTagName + "</b>} browser to url" + strInputValueHtml + " then expect navigation" + strMillisecondsToWaitHtml;
-			break;
-		case "close":
-			strStepExpected = "Close {<b>" + strTagName + "</b>} browser" + strMillisecondsToWaitHtml;
-			break;
-		case "get":
-			strStepExpected = "Get" + strTagAttributesHtml + " value" + strMillisecondsToWaitHtml;
-			break;
-		case "set":
-			strStepExpected = "Set" + strTagAttributesHtml + " to value" + strInputValueHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
-			break;
-		case "select":
-			strStepExpected = "Select" + strTagAttributesHtml + " to value" + strInputValueHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
+		case "break":
+			strStepExpected = "Break the execution.";
 			break;
 		case "click":
 			strStepExpected = "Click" + strTagAttributesHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
 			break;
+		case "close":
+			strStepExpected = "Close {<b>" + strTagName + "</b>} browser" + strMillisecondsToWaitHtml;
+			break;
 		case "double_click":
 			strStepExpected = "Double click" + strTagAttributesHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
-			break;
-		case "right_click":
-			strStepExpected = "Right click" + strTagAttributesHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
-			break;
-		case "verify":
-			strStepExpected = "Verify" + strTagAttributesHtml + " value is equal to" + strInputValueHtml + strMillisecondsToWaitHtml;
-			break;
-		case "verify_not":
-			strStepExpected = "Verify" + strTagAttributesHtml + " value is not equal to" + strInputValueHtml + strMillisecondsToWaitHtml;
-			break;
-		case "mouse_over":
-			strStepExpected = "Mouse over" + strTagAttributesHtml + strMillisecondsToWaitHtml;
-			break;
-		case "mouse_out":
-			strStepExpected = "Mouse out" + strTagAttributesHtml + strMillisecondsToWaitHtml;
-			break;
-		case "sync_visible":
-			strStepExpected = "Sync until" + strTagAttributesHtml + " is visible" + strMillisecondsToWaitHtml;
-			break;
-		case "sync_hidden":
-			strStepExpected = "Sync until" + strTagAttributesHtml + " is hidden" + strMillisecondsToWaitHtml;
-			break;
-		case "sync_enabled":
-			strStepExpected = "Sync until" + strTagAttributesHtml + " is enabled" + strMillisecondsToWaitHtml;
-			break;
-		case "sync_disabled":
-			strStepExpected = "Sync until" + strTagAttributesHtml + " is disabled" + strMillisecondsToWaitHtml;
-			break;
-		case "scroll":
-			strStepExpected = "Scroll the" + strTagAttributesHtml + " into view" + strMillisecondsToWaitHtml;
-			break;
-		case "break":
-			strStepExpected = "Break the execution.";
 			break;
 		case "drag":
 			strStepExpected = "Drag" + strTagAttributesHtml + strMillisecondsToWaitHtml;
@@ -5292,17 +5254,59 @@ public class Dragonfly {
 		case "drop":
 			strStepExpected = "Drop" + strTagAttributesHtml + strMillisecondsToWaitHtml;
 			break;
+		case "get":
+			strStepExpected = "Get" + strTagAttributesHtml + " value" + strMillisecondsToWaitHtml;
+			break;
 		case "kill_ie":
 			strStepExpected = "The action kill_ie killed all IE processes.";
 			break;
+		case "launch":
+			strStepExpected = "Launch {<b>" + strTagName + "</b>} browser to url" + strInputValueHtml + strMillisecondsToWaitHtml;
+			break;
+		case "mouse_out":
+			strStepExpected = "Mouse out" + strTagAttributesHtml + strMillisecondsToWaitHtml;
+			break;
+		case "mouse_over":
+			strStepExpected = "Mouse over" + strTagAttributesHtml + strMillisecondsToWaitHtml;
+			break;
 		case "refresh":
-			strStepExpected = "Refresh the browser.";
+			strStepExpected = "Refresh the browser" + strMillisecondsToWaitHtml;
+			break;
+		case "right_click":
+			strStepExpected = "Right click" + strTagAttributesHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
+			break;
+		case "scroll":
+			strStepExpected = "Scroll the" + strTagAttributesHtml + " into view" + strMillisecondsToWaitHtml;
+			break;
+		case "select":
+			strStepExpected = "Select" + strTagAttributesHtml + " to value" + strInputValueHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
+			break;
+		case "set":
+			strStepExpected = "Set" + strTagAttributesHtml + " to value" + strInputValueHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
 			break;
 		case "set_js":
 			strStepExpected = "Set" + strTagAttributesHtml + " to value" + strInputValueHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
 			break;
 		case "sleep":
 			strStepExpected = "Sleep execution for" + strInputValueHtml + " milliseconds.";
+			break;
+		case "sync_disabled":
+			strStepExpected = "Sync until" + strTagAttributesHtml + " is disabled" + strMillisecondsToWaitHtml;
+			break;
+		case "sync_enabled":
+			strStepExpected = "Sync until" + strTagAttributesHtml + " is enabled" + strMillisecondsToWaitHtml;
+			break;
+		case "sync_hidden":
+			strStepExpected = "Sync until" + strTagAttributesHtml + " is hidden" + strMillisecondsToWaitHtml;
+			break;
+		case "sync_visible":
+			strStepExpected = "Sync until" + strTagAttributesHtml + " is visible" + strMillisecondsToWaitHtml;
+			break;
+		case "verify":
+			strStepExpected = "Verify" + strTagAttributesHtml + " value is equal to" + strInputValueHtml + strMillisecondsToWaitHtml;
+			break;
+		case "verify_not":
+			strStepExpected = "Verify" + strTagAttributesHtml + " value is not equal to" + strInputValueHtml + strMillisecondsToWaitHtml;
 			break;
 		default:
 			strStepExpected = strAction;
