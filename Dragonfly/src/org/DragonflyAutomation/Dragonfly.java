@@ -101,6 +101,10 @@ import org.openqa.selenium.support.ui.Select;
 import autoitx4java.AutoItX;
 import com.jacob.com.LibraryLoader;
 import com.opera.core.systems.OperaDriver;
+import com.sun.jna.Native;
+import com.sun.jna.Pointer;
+import com.sun.jna.platform.win32.User32;
+import com.sun.jna.platform.win32.WinDef;
 
 public class Dragonfly {
 	private class AlertFind {
@@ -536,6 +540,7 @@ public class Dragonfly {
 	private class CoordinatesBrowserInner {
 		private CoordinatesBrowserInner() throws WebDriverException {
 			logger.add("  ==start==>CoordinatesBrowserInner " + getDateTimestamp());
+			long lngStartTime = System.currentTimeMillis();
 			//objVariablesSelenium.gobjWebDriverCoordinates = objVariablesSelenium.gobjWebDriver;
 			//objVariablesSelenium.gobjWebDriverCoordinates.switchTo().defaultContent();
 			long lngBrowserInnerWidth = 0;
@@ -553,11 +558,60 @@ public class Dragonfly {
 			}
 			variablesJSON.objectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
 			variablesJSON.objectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
+			logger.add("CoordinatesBrowserInner: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 		}
 	}
 
 	private class CoordinatesElement {
 		private CoordinatesElement() {
+			logger.add("  ==start==>CoordinatesElement " + getDateTimestamp());
+			long lngStartTime = System.currentTimeMillis();
+			try {
+				//new CoordinatesBrowserInner(   );
+				WinDef.RECT rect = returnIECLientScreenXY();
+				//int intScrollbar = 0;
+				//Point objWebDriverPoint = objVariablesSelenium.gobjWebDriver.manage().window().getPosition();
+				//	int intBrowserOuterX = objWebDriverPoint.x;
+				//int intBrowserOuterY = objWebDriverPoint.y;
+				//Dimension objWebDriverDimension = objVariablesSelenium.gobjWebDriver.manage().window().getSize();
+				//int intBrowserOuterWidth = objWebDriverDimension.width;
+				//int intBrowserOuterHeight = objWebDriverDimension.height;
+				//variablesJSON.objectStep.putInt("intBrowserOuterX", intBrowserOuterX);
+				//variablesJSON.objectStep.putInt("intBrowserOuterY", intBrowserOuterY);
+				//variablesJSON.objectStep.putInt("intBrowserOuterWidth", intBrowserOuterWidth);
+				//variablesJSON.objectStep.putInt("intBrowserOuterHeight", intBrowserOuterHeight);
+				if (objVariablesSelenium.gobjWebElement != null) {
+					Coordinates objElementCoordinates = ((Locatable) objVariablesSelenium.gobjWebElement).getCoordinates();
+					Point objElementPoint = objElementCoordinates.inViewPort();
+					Dimension objElementDimension = objVariablesSelenium.gobjWebElement.getSize();
+					variablesJSON.objectStep.putInt("intElementX", objElementPoint.x);
+					variablesJSON.objectStep.putInt("intElementY", objElementPoint.y);
+					variablesJSON.objectStep.putInt("intElementWidth", objElementDimension.width);
+					variablesJSON.objectStep.putInt("intElementHeight", objElementDimension.height);
+				}
+				//int intBrowserInnerWidth = variablesJSON.objectStep.getInt("intBrowserInnerWidth");
+				//int intBrowserInnerHeight = variablesJSON.objectStep.getInt("intBrowserInnerHeight");
+				int intElementX = variablesJSON.objectStep.getInt("intElementX");
+				int intElementY = variablesJSON.objectStep.getInt("intElementY");
+				//int intWindowBorder = (intBrowserOuterWidth - intBrowserInnerWidth - intScrollbar) / 2;
+				//	intWindowBorder = 104;
+				//				int intElementScreenX = ((intBrowserOuterX + intElementX) + intWindowBorder);
+				//				int intElementScreenY = (intBrowserOuterY + intElementY) + (intBrowserOuterHeight - intBrowserInnerHeight) - intWindowBorder;
+				int intElementScreenX = rect.left + intElementX;
+				int intElementScreenY = rect.top + intElementY;
+				variablesJSON.objectStep.putInt("intElementScreenX", intElementScreenX);
+				variablesJSON.objectStep.putInt("intElementScreenY", intElementScreenY);
+			} catch (Exception e) {
+				logger.add("CoordinatesElement: Exception = " + e.toString());
+			} finally {
+				logger.add("  ==end==>CoordinatesElement " + getDateTimestamp());
+				logger.add("CoordinatesElement: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+			}
+		}
+	}
+
+	private class CoordinatesElementOld {
+		private CoordinatesElementOld() {
 			logger.add("  ==start==>CoordinatesElement " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			try {
@@ -1152,7 +1206,7 @@ public class Dragonfly {
 					strWindowHandle = objWindowHandlesEach.toString();
 					objVariablesSelenium.gobjWebDriver.switchTo().window(strWindowHandle);
 					objVariablesSelenium.gobjWebDriverCoordinates = objVariablesSelenium.gobjWebDriver;
-					new CoordinatesBrowserInner();
+					//new CoordinatesBrowserInner();
 					List<Integer> arrRouteOriginal = new ArrayList<Integer>();
 					new ElementFindFramesSearch().run(arrRouteOriginal);
 					if (objVariablesSelenium.gobjWebElement != null) {
@@ -2542,17 +2596,56 @@ public class Dragonfly {
 
 	private class ElementTooltipGet {
 		private String run() {
+			String strHandle = "";
 			//new SleepMilliseconds(2000);
 			//WebElement objWebElement = objWebDriver.findElement(By.id("tooltipID"));
 			//			System.out.println("winExists = " + objAutoItSetObject.objAutoIt.winExists("[CLASS:tooltips_class32]"));
 			//			System.out.println("winGetState = " + objAutoItSetObject.objAutoIt.winGetState("[CLASS:tooltips_class32]"));
 			//			System.out.println("winWaitActive = " + objAutoItSetObject.objAutoIt.winWaitActive("[CLASS:tooltips_class32]", "", 10));
 			//			System.out.println("winGetState = " + objAutoItSetObject.objAutoIt.winGetState("This is the tip"));
-			String strHandle = objAutoItSetObject.objAutoIt.winGetHandle("[CLASS:IEFrame]");
+			//			$oIE = _IECreate("about:blank")
+			//					$hWnd = _IEPropertyGet($oIE, "hwnd")
+			//					$aPos = WinGetPos( ControlGetHandle($hWnd, "", "[CLASS:Internet Explorer_Server; INSTANCE:1]") )
+			//					MouseMove($aPos[0], $aPOs[1])
+			//
+			strHandle = objAutoItSetObject.objAutoIt.controlGetHandle("", "", "[CLASS:Internet Explorer_Server; INSTANCE:1]");
 			System.out.println("strHandle = " + strHandle);
+			System.out.println("winGetPosX: = " + objAutoItSetObject.objAutoIt.winGetPosX(strHandle));
+			System.out.println("winGetPosY: = " + objAutoItSetObject.objAutoIt.winGetPosY(strHandle));
+			//System.exit(0);
+			//
+			//String strHandle =objAutoItSetObject.objAutoIt.controlGetHandle("[CLASS:Internet Explorer_Server; INSTANCE:1]", "", null);
+			strHandle = objAutoItSetObject.objAutoIt.winGetHandle("changed");
+			System.out.println("winGetClientSizeHeight: = " + objAutoItSetObject.objAutoIt.winGetClientSizeHeight("changed"));
+			System.out.println("winGetClientSizeWidth: = " + objAutoItSetObject.objAutoIt.winGetClientSizeWidth("changed"));
+			System.out.println("winGetHandle: = " + objAutoItSetObject.objAutoIt.winGetHandle("changed"));
+			System.out.println("winGetPosHeight: = " + objAutoItSetObject.objAutoIt.winGetPosHeight("changed"));
+			System.out.println("winGetPosWidth: = " + objAutoItSetObject.objAutoIt.winGetPosWidth("changed"));
+			System.out.println("winGetPosX: = " + objAutoItSetObject.objAutoIt.winGetPosX("changed"));
+			System.out.println("winGetPosY: = " + objAutoItSetObject.objAutoIt.winGetPosY("changed"));
+			System.out.println("winGetTitle = " + objAutoItSetObject.objAutoIt.winGetTitle("[CLASS:IEFrame]"));
+			System.out.println("winGetTitle = " + objAutoItSetObject.objAutoIt.winGetTitle("[HANDLE:0x0001069A]"));
+			//String strHandle = objAutoItSetObject.objAutoIt.winGetHandle("[CLASS:IEFrame]");
+			System.out.println("strHandle = " + strHandle);
+			strHandle = "[CLASS:IEFrame]";
+			System.out.println("strHandle = " + strHandle);
+			System.out.println("winGetPosHeight: = " + objAutoItSetObject.objAutoIt.winGetPosHeight(strHandle));
+			System.out.println("winGetPosWidth: = " + objAutoItSetObject.objAutoIt.winGetPosWidth(strHandle));
+			System.out.println("winGetPosX: = " + objAutoItSetObject.objAutoIt.winGetPosX(strHandle));
+			System.out.println("winGetPosY: = " + objAutoItSetObject.objAutoIt.winGetPosY(strHandle));
 			System.out.println("winGetTitle = " + objAutoItSetObject.objAutoIt.winGetTitle(strHandle));
 			System.out.println("winGetClientSizeHeight = " + objAutoItSetObject.objAutoIt.winGetClientSizeHeight(strHandle));
 			System.out.println("winGetClientSizeWidth = " + objAutoItSetObject.objAutoIt.winGetClientSizeWidth(strHandle));
+			//System.out.println("winGetClientSizeWidth = " + objAutoItSetObject.objAutoIt.winGetCaretPosX(strHandle));
+			///This works for control place Class in the last position
+			strHandle = "[CLASS:Internet Explorer_Server; INSTANCE:1]";
+			//strHandle=	"[CLASS:Internet Explorer_Server]";
+			System.out.println("strHandle = " + strHandle);
+			System.out.println("controlGetPosHeight = " + objAutoItSetObject.objAutoIt.controlGetPosHeight("", "", strHandle));
+			System.out.println("controlGetPosWidth = " + objAutoItSetObject.objAutoIt.controlGetPosWidth("", "", strHandle));
+			System.out.println("controlGetPosX = " + objAutoItSetObject.objAutoIt.controlGetPosX("", "", strHandle));
+			System.out.println("controlGetPosY = " + objAutoItSetObject.objAutoIt.controlGetPosY("", "", strHandle));
+			System.out.println("controlGetHandle = " + objAutoItSetObject.objAutoIt.controlGetHandle("", "", strHandle));
 			System.out.println("winGetPosHeight = " + objAutoItSetObject.objAutoIt.winGetPosHeight(strHandle));
 			System.out.println("winGetPosWidth = " + objAutoItSetObject.objAutoIt.winGetPosWidth(strHandle));
 			System.out.println("winGetPosX = " + objAutoItSetObject.objAutoIt.winGetPosX(strHandle));
@@ -4911,6 +5004,38 @@ public class Dragonfly {
 	public String data_RandomRangeFiveNumbers(String strDataInput) {
 		logger.add("  ==start==>data_RandomRangeFiveNumbers " + getDateTimestamp());
 		return Integer.toString(randomNumberRange(1, 99999));
+	}
+
+	public WinDef.RECT returnIECLientScreenXY() {
+		WinDef.HWND hwnd = null;
+		WinDef.RECT rect = new WinDef.RECT();
+		hwnd = User32.INSTANCE.FindWindow("IEFrame", null); // class name
+		//System.out.println("hwnd = " + hwnd);
+		//HWND foregroundWindow = Tools.getForegroundWindow();
+		//WinDef.HWND hwnd3 = User32.INSTANCE.FindWindow("Internet Explorer_Server", null); // class name
+		//System.out.println("hwnd3 = " + hwnd3);
+		User32.INSTANCE.EnumChildWindows(hwnd, new User32.WNDENUMPROC() {
+			@Override
+			public boolean callback(WinDef.HWND hwnd2, Pointer pntr) {
+				char[] textBuffer = new char[512];
+				char[] textBuffer2 = new char[512];
+				User32.INSTANCE.GetClassName(hwnd2, textBuffer, 512);
+				User32.INSTANCE.GetWindowText(hwnd2, textBuffer2, 512);
+				String wText = Native.toString(textBuffer);
+				//String wText2 = Native.toString(textBuffer2);
+				//System.out.println("className: " + wText + " title: " + wText2);
+				if (wText.equals("Internet Explorer_Server")) {
+					User32.INSTANCE.GetWindowRect(hwnd2, rect);
+					//System.out.println("hwnd2 = " + hwnd2);
+					//System.out.println("Solution = " + rect.toRectangle().toString());
+					//System.out.println("Solution rect.left = " + rect.left);
+					//System.out.println("Solution rect.top = " + rect.top);
+					return false;
+				}
+				return true;
+			}
+		}, null);
+		return rect;
 	}
 
 	private String createObjectName() {
