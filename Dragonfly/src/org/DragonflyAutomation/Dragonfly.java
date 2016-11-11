@@ -561,6 +561,20 @@ public class Dragonfly {
 		private CoordinatesBrowserInner() throws WebDriverException {
 			logger.add("  ==start==>CoordinatesBrowserInner " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
+			long lngBrowserInnerWidth = 0;
+			long lngBrowserInnerHeight = 0;
+			lngBrowserInnerHeight = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
+			lngBrowserInnerWidth = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
+			variablesJSON.objectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
+			variablesJSON.objectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
+			logger.add("CoordinatesBrowserInner: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+		}
+	}
+
+	private class CoordinatesBrowserInnerOld {
+		private CoordinatesBrowserInnerOld() throws WebDriverException {
+			logger.add("  ==start==>CoordinatesBrowserInner " + getDateTimestamp());
+			long lngStartTime = System.currentTimeMillis();
 			//objVariablesSelenium.gobjWebDriverCoordinates = objVariablesSelenium.gobjWebDriver;
 			//objVariablesSelenium.gobjWebDriverCoordinates.switchTo().defaultContent();
 			long lngBrowserInnerWidth = 0;
@@ -1289,7 +1303,7 @@ public class Dragonfly {
 					strWindowHandle = objWindowHandlesEach.toString();
 					objVariablesSelenium.gobjWebDriver.switchTo().window(strWindowHandle);
 					objVariablesSelenium.gobjWebDriverCoordinates = objVariablesSelenium.gobjWebDriver;
-					//new CoordinatesBrowserInner();
+					new CoordinatesBrowserInner();
 					List<Integer> arrRouteOriginal = new ArrayList<Integer>();
 					new ElementFindFramesSearch().run(arrRouteOriginal);
 					if (objVariablesSelenium.gobjWebElement != null) {
@@ -5187,6 +5201,7 @@ public class Dragonfly {
 	//		return rect;
 	//	}
 	public WinDef.RECT returnIECLientScreenXY() {
+		logger.add("  ==start==>returnIECLientScreenXY " + getDateTimestamp());
 		WinDef.HWND hwnd = null;
 		WinDef.RECT rect = new WinDef.RECT();
 		String strBrowserParentClass = "";
@@ -5202,9 +5217,76 @@ public class Dragonfly {
 			strBrowserClientClass = "Chrome_RenderWidgetHostHWND";
 			break;
 		case "firefox":
-			strBrowserParentClass = "MozillaWindowClass";
-			strBrowserClientClass = "MozillaContentWindowClass";
-			break;
+			//			Long lngmozInnerScreenX = null;
+			//			Long lngmozInnerScreenY = null;
+			//			System.out.println("rect.left ");
+			//			objVariablesSelenium.gobjWebDriverCoordinates.switchTo().defaultContent();
+			//			lngmozInnerScreenY = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
+			//			lngmozInnerScreenX = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
+			rect.top = variablesJSON.objectStep.getInt("intBrowserInnerHeight");
+			rect.left = variablesJSON.objectStep.getInt("intBrowserInnerWidth");
+			rect.right = 0;
+			rect.bottom = 0;
+			System.out.println("rect.left = " + rect.left);
+			System.out.println("rect.top = " + rect.top);
+			return rect;
+			//			//strBrowserParentClass = "MozillaWindowClass";
+			//			//strBrowserClientClass = "MozillaContentWindowClass";
+			//			System.out.println("lngmozInnerScreenX start ");
+			//			Long lngmozInnerScreenX = null;
+			//			Long lngmozInnerScreenY = null;
+			//			Double screenPixelsPerCSSPixel;
+			//			try {
+			//				//objVariablesSelenium.gobjWebDriverCoordinates.switchTo().defaultContent();
+			//				//lngmozInnerScreenX = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.mozInnerScreenX;");
+			//			//	lngmozInnerScreenY = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.mozInnerScreenY;");
+			//				//rect.left = (int) lngmozInnerScreenX.intValue();
+			//				//rect.top = (int) lngmozInnerScreenY.intValue();
+			//				//rect.left = (int) lngmozInnerScreenX.intValue();
+			//				//rect.top = (int) lngmozInnerScreenY.intValue();
+			//				//				rect.left = (int) (lngmozInnerScreenX*1.257062092708347);
+			//				//				rect.top = (int) (lngmozInnerScreenY*1.257062092708347);
+			//				rect.right = 0;
+			//				rect.bottom = 0;
+			//
+			//			//	System.out.println("lngmozInnerScreenX = " + rect.left);
+			//				//System.out.println("lngmozInnerScreenY = " + rect.top);
+			//
+			//				System.out.println("lngmozInnerScreenX = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.mozInnerScreenX;"));
+			//				System.out.println("lngmozInnerScreenY = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.mozInnerScreenY;"));
+			//
+			//				System.out.println("lngWindowInnerHeight = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.innerHeight;"));
+			//				System.out.println("lngWindowInnerWidth = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.innerWidth;"));
+			//				System.out.println("lngWindowOuterHeight = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.outerHeight;"));
+			//				System.out.println("lngWindowOuterWidth = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.outerWidth;"));
+			//				System.out.println("innerWidth = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("Math.max(document.documentElement.clientWidth, window.innerWidth || 0);"));
+			//				System.out.println("innerHeight = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("Math.max(document.documentElement.clientHeight, window.innerHeight || 0);"));
+			//				//
+			//				//
+			//				//
+			//				//				long lngWindowInnerHeight = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return Window.innerHeight;");
+			//				//				long lngWindowInnerWidth = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return Window.innerWidth;");
+			//				//				long lngWindowOuterHeight = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return Window.outerHeight;");
+			//				//				long lngWindowOuterWidth = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return Window.outerWidth;");
+			//				//				System.out.println("lngWindowInnerHeight = " + lngWindowInnerHeight);
+			//				//				System.out.println("lngWindowInnerWidth = " + lngWindowInnerWidth);
+			//				//				System.out.println("lngWindowOuterHeight = " + lngWindowOuterHeight);
+			//				//				System.out.println("lngWindowOuterWidth = " + lngWindowOuterWidth);
+			//				//
+			//				//
+			//				//	screenPixelsPerCSSPixel = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.content.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIDOMWindowUtils).screenPixelsPerCSSPixel;");
+			//				//screenPixelsPerCSSPixel = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return nsIDOMWindowUtils.screenPixelsPerCSSPixel;");
+			//				//screenPixelsPerCSSPixel = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIDOMWindowUtils).screenPixelsPerCSSPixel;");
+			//				// System.out.println("screenPixelsPerCSSPixel = " + screenPixelsPerCSSPixel);
+			//				//				 var util = contentWindow.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIDOMWindowUtils);
+			//				//		            x *= util.screenPixelsPerCSSPixel;
+			//				//		            y *= util.screenPixelsPerCSSPixel;
+			//			} catch (Exception e) {
+			//				// TODO Auto-generated catch block
+			//				e.printStackTrace();
+			//				return rect;
+			//			}
+			//break;
 		}
 		hwnd = EnumParentWindow(strBrowserParentClass, strExpectedTitle);
 		System.out.println("hwnd = " + hwnd);
@@ -5254,6 +5336,7 @@ public class Dragonfly {
 	private WinDef.RECT EnumChildWindow(WinDef.HWND hwndChild, String strChildParentClassName) {
 		WinDef.RECT rect = new WinDef.RECT();
 		User32.INSTANCE.EnumChildWindows(hwndChild, new User32.WNDENUMPROC() {
+			@Override
 			public boolean callback(WinDef.HWND hwndChild, Pointer pntr) {
 				char[] textBufferClassName = new char[512];
 				User32.INSTANCE.GetClassName(hwndChild, textBufferClassName, 512);
@@ -5275,6 +5358,7 @@ public class Dragonfly {
 	private WinDef.HWND EnumParentWindow(String strExpectedParentClassName, String strExpectedParentTitle) {
 		//HWND hwndParent2 = null;
 		User32.INSTANCE.EnumChildWindows(null, new User32.WNDENUMPROC() {
+			@Override
 			public boolean callback(WinDef.HWND hwndParent, Pointer pntr) {
 				WinDef.RECT rectParentWindow = new WinDef.RECT();
 				char[] textBufferClassName = new char[512];

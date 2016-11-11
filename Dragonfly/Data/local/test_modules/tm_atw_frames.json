@@ -23,6 +23,27 @@
 		},
 
 		{
+			"strAction": "sleep",
+			"strLogicalName": "",
+			"strTagName": "",
+			"strAttributeNames": "",
+			"strAttributeValues": "",
+			"strInputValue": "5000",
+			"strAssert": "",
+			"blnOptional": "",
+			"blnExitOnFail": "",
+			"intMillisecondsToWait": "",
+			"strFunction": "",
+			"strOutputLinkName": "",
+			"strLoopOrIf": "",
+			"blnPleaseWait": "",
+			"blnHighlight": "",
+			"blnScreenshot": "",
+			"strAssistiveProperties": "",
+			"strOutputValue": ""
+		},
+
+		{
 			"strAction": "sync_visible",
 			"strLogicalName": "",
 			"strTagName": "body",

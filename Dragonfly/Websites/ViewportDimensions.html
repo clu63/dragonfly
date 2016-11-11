@@ -1,0 +1,69 @@
+<html>
+<head>
+<script type="text/javascript">
+	function onAfterLoad() {
+		document.write('<p>ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg</p>');
+		document.write('<p>Your viewport window.innerWidth is ' + window.innerWidth + '</p>');
+		document.write('<p>Your viewport window.innerHeight is ' + window.innerHeight + '</p>');
+		document.write('<p>Your viewport window.outerWidth is ' + window.outerWidth + '</p>');
+		document.write('<p>Your viewport window.outerHeight is ' + window.outerHeight + '</p>');
+		document.write('<p>Your viewport window.mozInnerScreenX is ' + window.mozInnerScreenX + '</p>');
+		document.write('<p>Your viewport window.mozInnerScreenY is ' + window.mozInnerScreenY + '</p>');
+		document.write('<p>Your viewport window.screenX is ' + window.screenX + '</p>');
+		document.write('<p>Your viewport window.screenY is ' + window.screenY + '</p>');
+		document.write('<p>-------------------------------------------------------</p>');
+		document.write('<p>Your viewport Top is ' + Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio) + '</p>');
+
+		document.write('<p>Your viewport Left is ' + Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio) + '</p>');
+
+		document.write('<p>Your viewport width frame ' + (Math.round((window.outerWidth - window.innerWidth) / 2)) + '</p>');
+		//document.write('<p>Your viewport jsPixelRatio is ' + jsPixelRatio + '</p>');
+		document.write('<p>Your viewport window.devicePixelRatio is ' + window.devicePixelRatio + '</p>');
+
+		document.write('<p>Your viewport window.screen.systemXDPI / window.screen.logicalXDPI is ' + window.screen.systemXDPI / window.screen.logicalXDPI + '</p>');
+
+		//var util = window.content.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIDOMWindowUtils);
+		//document.write(util.screenPixelsPerCSSPixel);
+
+		//var domWindowUtils = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIDOMWindowUtils);
+		//document.write('<p>Your viewport domWindowUtils.screenPixelsPerCSSPixel is ' + domWindowUtils.screenPixelsPerCSSPixel + '</p>');
+		//var util = contentWindow.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIDOMWindowUtils);
+		//		            x *= util.screenPixelsPerCSSPixel;
+		//document.write('<p>Your viewport document.getBoundingClientRect() is ' + Window.document.getBoundingClientRect() + '</p>');
+		//alert('test');
+		//var baseWindow = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIWebNavigation).QueryInterface(Components.interfaces.nsIDocShellTreeItem).treeOwner.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIBaseWindow);
+
+		//document.write('<p>Your viewport baseWindow is ' + baseWindow + '</p>');
+
+	}
+
+	window.getDevicePixelRatio = function() {
+		var ratio = 1;
+		// To account for zoom, change to use deviceXDPI instead of systemXDPI
+		if (window.screen.systemXDPI !== undefined && window.screen.logicalXDPI !== undefined && window.screen.systemXDPI > window.screen.logicalXDPI) {
+			// Only allow for values > 1
+			ratio = window.screen.systemXDPI / window.screen.logicalXDPI;
+		} else if (window.devicePixelRatio !== undefined) {
+			ratio = window.devicePixelRatio;
+		}
+		return ratio;
+	};
+
+	// 	/** sample media query for pixel-ratio=2" **/
+	// 	@media  
+	// 	(-webkit-min-device-pixel-ratio: 2), 
+	// 	(min-resolution: 192dpi) { 
+	// 	  .pixel-ratio-holder:before {
+	// 	   content: "2";
+	// 	  }
+	// 	}
+
+	function jsPixelRatio() {
+		return window.getComputedStyle(document.querySelector('.pixel-ratio-holder'), 'before').getPropertyValue('content').replace(/[^a-z]/g, '') * 1;
+	}
+</script>
+</head>
+<body onload="onAfterLoad();">
+     <a id="generateCoordinates">generateCoordinates</a>
+</body>
+</html>
