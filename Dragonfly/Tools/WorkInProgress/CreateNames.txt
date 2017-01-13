@@ -1,0 +1,24 @@
+Function data_CensusNames(strNameType)
+    On Error Resume Next
+    data_CensusNames = ""
+    strCensusFullPath = gstrDataPathFolderSource & "census_names.txt"
+    Set objFileSystemObject = CreateObject("Scripting.FileSystemObject")
+    Set objTextFile = objFileSystemObject.OpenTextFile(strCensusFullPath, 1, False)
+    arrAll = Split(objTextFile.ReadAll, vbCrLf)
+    intLineCount = objTextFile.Line
+    intRandomLine = GenerateRandomNumberMax(intLineCount) - 1
+    arrNames = Split(arrAll(intRandomLine), vbTab)
+    Select Case LCase(strNameType)
+    Case "<malename>"
+        data_CensusNames = arrNames(0)
+    Case "<femalename>"
+        data_CensusNames = arrNames(1)
+    Case "<lastname>"
+        data_CensusNames = arrNames(2)
+    End Select
+    objTextFile.Close
+    Set objTextFile = Nothing
+    Set objFileSystemObject = Nothing
+    Err.Clear
+    On Error GoTo 0
+End Function

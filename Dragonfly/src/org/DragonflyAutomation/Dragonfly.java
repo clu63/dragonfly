@@ -122,6 +122,20 @@ public class Dragonfly {
 		WinDef.HWND WindowFromPoint(long point);
 	}
 
+	//	private class WebDriverExtended extends JSONObject {
+	//		private static final long serialVersionUID = 1L;
+	//		private WebDriverExtended objWebDriverExtended;
+	//
+	//		private WebDriverExtended(FirefoxDriver objWebDriver) {
+	//		//	this(objWebDriver);
+	//			super();
+	//			//this (WebDriverExtended) objWebDriver;
+	//		}
+	//
+	//		public WebDriverExtended WebDriverExtended(WebDriverExtended objWebDriverExtended) {
+	//			return objWebDriverExtended;
+	//		}
+	//	}
 	private class AlertFind {
 		private boolean run() {
 			logger.add("  ==start==>AlertFind " + getDateTimestamp());
@@ -244,6 +258,23 @@ public class Dragonfly {
 					objVariablesSelenium.gobjWebDriver.manage().window().maximize();
 					//Capabilities getCapabilities();
 					break;
+				//var myOptions = new InternetExplorerOptions()
+				//                        {
+				//                            BrowserAttachTimeout = TimeSpan.FromSeconds(60),
+				//                            RequireWindowFocus = false,
+				//                            IntroduceInstabilityByIgnoringProtectedModeSettings = true,
+				//                            IgnoreZoomLevel = true,
+				//                            EnsureCleanSession = true,
+				//                            PageLoadStrategy = InternetExplorerPageLoadStrategy.Eager,
+				//                            ValidateCookieDocumentType = true,
+				//                            InitialBrowserUrl = "about:Tabs",
+				//                            BrowserCommandLineArguments = "-noframemerging"
+				//
+				//                        };
+				//                        myOptions.AddAdditionalCapability("INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS", true);
+				//                        myOptions.BrowserCommandLineArguments = "-private";
+				//
+				//                        originalWebdriver = new InternetExplorerDriver(@"C:\Download" + BrowserCtr + @"\IEDriverServer", myOptions);
 				case "chrome":
 					ChromeOptions options = new ChromeOptions();
 					options.addArguments("test-type");
@@ -566,7 +597,7 @@ public class Dragonfly {
 				long lngBrowserInnerHeight = 0;
 				lngBrowserInnerHeight = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
 				lngBrowserInnerWidth = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
-				 objVariablesCommon.gdblDevicePixelRatio = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.devicePixelRatio;");
+				objVariablesCommon.gdblDevicePixelRatio = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.devicePixelRatio;");
 				logger.add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + objVariablesCommon.gdblDevicePixelRatio.toString());
 				variablesJSON.objectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
 				variablesJSON.objectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
@@ -575,31 +606,30 @@ public class Dragonfly {
 		}
 	}
 
-//	private class CoordinatesBrowserInnerOld {
-//		private CoordinatesBrowserInnerOld() throws WebDriverException {
-//			logger.add("  ==start==>CoordinatesBrowserInner " + getDateTimestamp());
-//			long lngStartTime = System.currentTimeMillis();
-//			//objVariablesSelenium.gobjWebDriverCoordinates = objVariablesSelenium.gobjWebDriver;
-//			//objVariablesSelenium.gobjWebDriverCoordinates.switchTo().defaultContent();
-//			long lngBrowserInnerWidth = 0;
-//			long lngBrowserInnerHeight = 0;
-//			try {
-//				lngBrowserInnerWidth = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
-//				lngBrowserInnerHeight = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
-//			} catch (WebDriverException e) {
-//				logger.add("CoordinatesBrowserInner: WebDriverException = " + e.toString());
-//				throw new WebDriverException("WebDriverException returned");
-//			} catch (Exception e) {
-//				logger.add("CoordinatesBrowserInner: Exception = " + e.toString());
-//				lngBrowserInnerWidth = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return document.body.offsetWidth;");
-//				lngBrowserInnerHeight = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return document.body.offsetHeight;");
-//			}
-//			variablesJSON.objectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
-//			variablesJSON.objectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
-//			logger.add("CoordinatesBrowserInner: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-//		}
-//	}
-
+	//	private class CoordinatesBrowserInnerOld {
+	//		private CoordinatesBrowserInnerOld() throws WebDriverException {
+	//			logger.add("  ==start==>CoordinatesBrowserInner " + getDateTimestamp());
+	//			long lngStartTime = System.currentTimeMillis();
+	//			//objVariablesSelenium.gobjWebDriverCoordinates = objVariablesSelenium.gobjWebDriver;
+	//			//objVariablesSelenium.gobjWebDriverCoordinates.switchTo().defaultContent();
+	//			long lngBrowserInnerWidth = 0;
+	//			long lngBrowserInnerHeight = 0;
+	//			try {
+	//				lngBrowserInnerWidth = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
+	//				lngBrowserInnerHeight = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
+	//			} catch (WebDriverException e) {
+	//				logger.add("CoordinatesBrowserInner: WebDriverException = " + e.toString());
+	//				throw new WebDriverException("WebDriverException returned");
+	//			} catch (Exception e) {
+	//				logger.add("CoordinatesBrowserInner: Exception = " + e.toString());
+	//				lngBrowserInnerWidth = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return document.body.offsetWidth;");
+	//				lngBrowserInnerHeight = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return document.body.offsetHeight;");
+	//			}
+	//			variablesJSON.objectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
+	//			variablesJSON.objectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
+	//			logger.add("CoordinatesBrowserInner: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//		}
+	//	}
 	private class CoordinatesElement {
 		private CoordinatesElement() {
 			logger.add("  ==start==>CoordinatesElement " + getDateTimestamp());
@@ -635,51 +665,50 @@ public class Dragonfly {
 		}
 	}
 
-//	private class CoordinatesElementOld {
-//		private CoordinatesElementOld() {
-//			logger.add("  ==start==>CoordinatesElement " + getDateTimestamp());
-//			long lngStartTime = System.currentTimeMillis();
-//			try {
-//				//new CoordinatesBrowserInner(   );
-//				int intScrollbar = 0;
-//				Point objWebDriverPoint = objVariablesSelenium.gobjWebDriver.manage().window().getPosition();
-//				int intBrowserOuterX = objWebDriverPoint.x;
-//				int intBrowserOuterY = objWebDriverPoint.y;
-//				Dimension objWebDriverDimension = objVariablesSelenium.gobjWebDriver.manage().window().getSize();
-//				int intBrowserOuterWidth = objWebDriverDimension.width;
-//				int intBrowserOuterHeight = objWebDriverDimension.height;
-//				variablesJSON.objectStep.putInt("intBrowserOuterX", intBrowserOuterX);
-//				variablesJSON.objectStep.putInt("intBrowserOuterY", intBrowserOuterY);
-//				variablesJSON.objectStep.putInt("intBrowserOuterWidth", intBrowserOuterWidth);
-//				variablesJSON.objectStep.putInt("intBrowserOuterHeight", intBrowserOuterHeight);
-//				if (objVariablesSelenium.gobjWebElement != null) {
-//					Coordinates objElementCoordinates = ((Locatable) objVariablesSelenium.gobjWebElement).getCoordinates();
-//					Point objElementPoint = objElementCoordinates.inViewPort();
-//					Dimension objElementDimension = objVariablesSelenium.gobjWebElement.getSize();
-//					variablesJSON.objectStep.putInt("intElementX", objElementPoint.x);
-//					variablesJSON.objectStep.putInt("intElementY", objElementPoint.y);
-//					variablesJSON.objectStep.putInt("intElementWidth", objElementDimension.width);
-//					variablesJSON.objectStep.putInt("intElementHeight", objElementDimension.height);
-//				}
-//				int intBrowserInnerWidth = variablesJSON.objectStep.getInt("intBrowserInnerWidth");
-//				int intBrowserInnerHeight = variablesJSON.objectStep.getInt("intBrowserInnerHeight");
-//				int intElementX = variablesJSON.objectStep.getInt("intElementX");
-//				int intElementY = variablesJSON.objectStep.getInt("intElementY");
-//				int intWindowBorder = (intBrowserOuterWidth - intBrowserInnerWidth - intScrollbar) / 2;
-//				//	intWindowBorder = 104;
-//				int intElementScreenX = ((intBrowserOuterX + intElementX) + intWindowBorder);
-//				int intElementScreenY = (intBrowserOuterY + intElementY) + (intBrowserOuterHeight - intBrowserInnerHeight) - intWindowBorder;
-//				variablesJSON.objectStep.putInt("intElementScreenX", intElementScreenX);
-//				variablesJSON.objectStep.putInt("intElementScreenY", intElementScreenY);
-//			} catch (Exception e) {
-//				logger.add("CoordinatesElement: Exception = " + e.toString());
-//			} finally {
-//				logger.add("  ==end==>CoordinatesElement " + getDateTimestamp());
-//				logger.add("CoordinatesElement: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-//			}
-//		}
-//	}
-
+	//	private class CoordinatesElementOld {
+	//		private CoordinatesElementOld() {
+	//			logger.add("  ==start==>CoordinatesElement " + getDateTimestamp());
+	//			long lngStartTime = System.currentTimeMillis();
+	//			try {
+	//				//new CoordinatesBrowserInner(   );
+	//				int intScrollbar = 0;
+	//				Point objWebDriverPoint = objVariablesSelenium.gobjWebDriver.manage().window().getPosition();
+	//				int intBrowserOuterX = objWebDriverPoint.x;
+	//				int intBrowserOuterY = objWebDriverPoint.y;
+	//				Dimension objWebDriverDimension = objVariablesSelenium.gobjWebDriver.manage().window().getSize();
+	//				int intBrowserOuterWidth = objWebDriverDimension.width;
+	//				int intBrowserOuterHeight = objWebDriverDimension.height;
+	//				variablesJSON.objectStep.putInt("intBrowserOuterX", intBrowserOuterX);
+	//				variablesJSON.objectStep.putInt("intBrowserOuterY", intBrowserOuterY);
+	//				variablesJSON.objectStep.putInt("intBrowserOuterWidth", intBrowserOuterWidth);
+	//				variablesJSON.objectStep.putInt("intBrowserOuterHeight", intBrowserOuterHeight);
+	//				if (objVariablesSelenium.gobjWebElement != null) {
+	//					Coordinates objElementCoordinates = ((Locatable) objVariablesSelenium.gobjWebElement).getCoordinates();
+	//					Point objElementPoint = objElementCoordinates.inViewPort();
+	//					Dimension objElementDimension = objVariablesSelenium.gobjWebElement.getSize();
+	//					variablesJSON.objectStep.putInt("intElementX", objElementPoint.x);
+	//					variablesJSON.objectStep.putInt("intElementY", objElementPoint.y);
+	//					variablesJSON.objectStep.putInt("intElementWidth", objElementDimension.width);
+	//					variablesJSON.objectStep.putInt("intElementHeight", objElementDimension.height);
+	//				}
+	//				int intBrowserInnerWidth = variablesJSON.objectStep.getInt("intBrowserInnerWidth");
+	//				int intBrowserInnerHeight = variablesJSON.objectStep.getInt("intBrowserInnerHeight");
+	//				int intElementX = variablesJSON.objectStep.getInt("intElementX");
+	//				int intElementY = variablesJSON.objectStep.getInt("intElementY");
+	//				int intWindowBorder = (intBrowserOuterWidth - intBrowserInnerWidth - intScrollbar) / 2;
+	//				//	intWindowBorder = 104;
+	//				int intElementScreenX = ((intBrowserOuterX + intElementX) + intWindowBorder);
+	//				int intElementScreenY = (intBrowserOuterY + intElementY) + (intBrowserOuterHeight - intBrowserInnerHeight) - intWindowBorder;
+	//				variablesJSON.objectStep.putInt("intElementScreenX", intElementScreenX);
+	//				variablesJSON.objectStep.putInt("intElementScreenY", intElementScreenY);
+	//			} catch (Exception e) {
+	//				logger.add("CoordinatesElement: Exception = " + e.toString());
+	//			} finally {
+	//				logger.add("  ==end==>CoordinatesElement " + getDateTimestamp());
+	//				logger.add("CoordinatesElement: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//		}
+	//	}
 	//C#
 	//	public static Rectangle GetAbsCoordinates(IWebDriver driver, IWebElement element)
 	//    {
@@ -1289,7 +1318,8 @@ public class Dragonfly {
 				try {
 					strWindowHandle = objWindowHandlesEach.toString();
 					objVariablesSelenium.gobjWebDriver.switchTo().window(strWindowHandle);
-					objVariablesSelenium.gobjWebDriverCoordinates = objVariablesSelenium.gobjWebDriver;
+					//objVariablesSelenium.gobjWebDriverCoordinates = objVariablesSelenium.gobjWebDriver;
+					//objVariablesSelenium.gobjWebDriverCoordinates = MyFirefoxDriver((FirefoxDriver) objVariablesSelenium.gobjWebDriver);
 					new CoordinatesBrowserInner();
 					List<Integer> arrRouteOriginal = new ArrayList<Integer>();
 					new ElementFindFramesSearch().run(arrRouteOriginal);
@@ -1322,13 +1352,22 @@ public class Dragonfly {
 			String strXpath = "";
 			String strXpathAttributes = "";
 			String strXpathAttributesTemp = "";
-			if (strAttributeNames.toLowerCase().equals("xpath")) {
+			Boolean blnRegularExpression = false;
+			//TODO fix the <re>Input error. check attribute value for keyword and handle byt creating xpath
+			if (strAttributeValues.toLowerCase().contains("<re>")) {
+				blnRegularExpression = true;
+			}
+			if (strAttributeNames.toLowerCase().equals("xpath") && blnRegularExpression.equals(false)) {
+				logger.add("ElementFindBy: xpath  " + strAttributeNames + " = " + strAttributeValues);
 				objWebElementCollection = objVariablesSelenium.gobjWebDriver.findElements(By.xpath(strAttributeValues));
-			} else if (strAttributeNames.toLowerCase().equals("id")) {
+			} else if (strAttributeNames.toLowerCase().equals("id") && blnRegularExpression.equals(false)) {
+				logger.add("ElementFindBy: id  " + strAttributeNames + " = " + strAttributeValues);
 				objWebElementCollection = objVariablesSelenium.gobjWebDriver.findElements(By.id(strAttributeValues));
-			} else if (strAttributeNames.toLowerCase().equals("name")) {
+			} else if (strAttributeNames.toLowerCase().equals("name") && blnRegularExpression.equals(false)) {
+				logger.add("ElementFindBy: name  " + strAttributeNames + " = " + strAttributeValues);
 				objWebElementCollection = objVariablesSelenium.gobjWebDriver.findElements(By.name(strAttributeValues));
-			} else if (strAttributeNames.toLowerCase().equals("class")) {
+			} else if (strAttributeNames.toLowerCase().equals("class") && blnRegularExpression.equals(false)) {
+				logger.add("ElementFindBy: class  " + strAttributeNames + " = " + strAttributeValues);
 				objWebElementCollection = objVariablesSelenium.gobjWebDriver.findElements(By.className(strAttributeValues));
 			} else {
 				for (intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
@@ -1399,7 +1438,7 @@ public class Dragonfly {
 					Iterator<WebElement> objWebElementEach = ((Collection<WebElement>) objWebElementCollection).iterator();
 					while (objWebElementEach.hasNext()) {
 						WebElement row = objWebElementEach.next();
-						logger.add("outerHTML:=  " + row.getAttribute("outerHTML"));
+						logger.add("ElementFindBy: outerHTML:=  " + row.getAttribute("outerHTML"));
 					}
 					throw new ExceptionMultipleElementsFound(objWebElementCollection.size() + " elements found. Element properties did not return an element, try refining attributes");
 				}
@@ -1503,10 +1542,10 @@ public class Dragonfly {
 					return "<on>";
 				}
 			case "select":
-				Select objSelect = new Select(objVariablesSelenium.gobjWebElement);
-				objSelect.getOptions();
-				WebElement option = ((Select) objVariablesSelenium.gobjWebElement).getFirstSelectedOption();
-				logger.add("ElementGet: option.getText() = " + option.getText());
+				//				Select objSelect = new Select(objVariablesSelenium.gobjWebElement);
+				//				objSelect.getOptions();
+				//				WebElement option = ((Select) objVariablesSelenium.gobjWebElement).getFirstSelectedOption();
+				//				logger.add("ElementGet: option.getText() = " + option.getText());
 				//return ((Select) objVariablesSelenium.gobjWebElement).getFirstSelectedOption().getText().replaceAll("\\s{2,}", " ");
 				JavascriptExecutor objExecutor = (JavascriptExecutor) objVariablesSelenium.gobjWebDriver;
 				return ((String) objExecutor.executeScript("var select = arguments[0];var selection=select.options[select.selectedIndex].text;return selection;", objVariablesSelenium.gobjWebElement)).trim();
@@ -3437,6 +3476,8 @@ public class Dragonfly {
 	}
 
 	private class JSONArrayExtended extends JSONArray {
+		private static final long serialVersionUID = 1L;
+
 		private JSONArrayExtended(JSONObject parent) {
 			super();
 		}
@@ -4392,8 +4433,7 @@ public class Dragonfly {
 		private String strOriginalInputValue;
 		private String strOriginalAttributes;
 		private WinDef.HWND hwndParentWindow;
-		Double gdblDevicePixelRatio =(double) 1;
-		
+		Double gdblDevicePixelRatio = (double) 1;
 	}
 
 	private class VariablesJSON {
@@ -4416,6 +4456,7 @@ public class Dragonfly {
 		private WebElement gobjWebElementDrop = null;
 		private WebElement gobjWebElementPleaseWait = null;
 	}
+	private static final WebDriver foo = null;
 
 	private class VariablesSetSync {
 		private Boolean gblnSyncAlert = false;
@@ -5206,10 +5247,11 @@ public class Dragonfly {
 			strBrowserClientClass = "Chrome_RenderWidgetHostHWND";
 			break;
 		case "firefox":
+			//new CoordinatesBrowserInner();
 			//			Long lngmozInnerScreenX = null;
 			//			Long lngmozInnerScreenY = null;
 			//			System.out.println("rect.left ");
-			//			objVariablesSelenium.gobjWebDriverCoordinates.switchTo().defaultContent();
+			//objVariablesSelenium.gobjWebDriverCoordinates.switchTo().defaultContent();
 			//			lngmozInnerScreenY = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
 			//			lngmozInnerScreenX = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
 			rect.top = variablesJSON.objectStep.getInt("intBrowserInnerHeight");
@@ -5219,63 +5261,6 @@ public class Dragonfly {
 			System.out.println("rect.left = " + rect.left);
 			System.out.println("rect.top = " + rect.top);
 			return rect;
-			//			//strBrowserParentClass = "MozillaWindowClass";
-			//			//strBrowserClientClass = "MozillaContentWindowClass";
-			//			System.out.println("lngmozInnerScreenX start ");
-			//			Long lngmozInnerScreenX = null;
-			//			Long lngmozInnerScreenY = null;
-			//			Double screenPixelsPerCSSPixel;
-			//			try {
-			//				//objVariablesSelenium.gobjWebDriverCoordinates.switchTo().defaultContent();
-			//				//lngmozInnerScreenX = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.mozInnerScreenX;");
-			//			//	lngmozInnerScreenY = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.mozInnerScreenY;");
-			//				//rect.left = (int) lngmozInnerScreenX.intValue();
-			//				//rect.top = (int) lngmozInnerScreenY.intValue();
-			//				//rect.left = (int) lngmozInnerScreenX.intValue();
-			//				//rect.top = (int) lngmozInnerScreenY.intValue();
-			//				//				rect.left = (int) (lngmozInnerScreenX*1.257062092708347);
-			//				//				rect.top = (int) (lngmozInnerScreenY*1.257062092708347);
-			//				rect.right = 0;
-			//				rect.bottom = 0;
-			//
-			//			//	System.out.println("lngmozInnerScreenX = " + rect.left);
-			//				//System.out.println("lngmozInnerScreenY = " + rect.top);
-			//
-			//				System.out.println("lngmozInnerScreenX = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.mozInnerScreenX;"));
-			//				System.out.println("lngmozInnerScreenY = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.mozInnerScreenY;"));
-			//
-			//				System.out.println("lngWindowInnerHeight = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.innerHeight;"));
-			//				System.out.println("lngWindowInnerWidth = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.innerWidth;"));
-			//				System.out.println("lngWindowOuterHeight = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.outerHeight;"));
-			//				System.out.println("lngWindowOuterWidth = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.outerWidth;"));
-			//				System.out.println("innerWidth = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("Math.max(document.documentElement.clientWidth, window.innerWidth || 0);"));
-			//				System.out.println("innerHeight = " + ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("Math.max(document.documentElement.clientHeight, window.innerHeight || 0);"));
-			//				//
-			//				//
-			//				//
-			//				//				long lngWindowInnerHeight = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return Window.innerHeight;");
-			//				//				long lngWindowInnerWidth = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return Window.innerWidth;");
-			//				//				long lngWindowOuterHeight = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return Window.outerHeight;");
-			//				//				long lngWindowOuterWidth = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return Window.outerWidth;");
-			//				//				System.out.println("lngWindowInnerHeight = " + lngWindowInnerHeight);
-			//				//				System.out.println("lngWindowInnerWidth = " + lngWindowInnerWidth);
-			//				//				System.out.println("lngWindowOuterHeight = " + lngWindowOuterHeight);
-			//				//				System.out.println("lngWindowOuterWidth = " + lngWindowOuterWidth);
-			//				//
-			//				//
-			//				//	screenPixelsPerCSSPixel = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.content.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIDOMWindowUtils).screenPixelsPerCSSPixel;");
-			//				//screenPixelsPerCSSPixel = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return nsIDOMWindowUtils.screenPixelsPerCSSPixel;");
-			//				//screenPixelsPerCSSPixel = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIDOMWindowUtils).screenPixelsPerCSSPixel;");
-			//				// System.out.println("screenPixelsPerCSSPixel = " + screenPixelsPerCSSPixel);
-			//				//				 var util = contentWindow.QueryInterface(Components.interfaces.nsIInterfaceRequestor).getInterface(Components.interfaces.nsIDOMWindowUtils);
-			//				//		            x *= util.screenPixelsPerCSSPixel;
-			//				//		            y *= util.screenPixelsPerCSSPixel;
-			//			} catch (Exception e) {
-			//				// TODO Auto-generated catch block
-			//				e.printStackTrace();
-			//				return rect;
-			//			}
-			//break;
 		}
 		hwnd = EnumParentWindow(strBrowserParentClass, strExpectedTitle);
 		System.out.println("hwnd = " + hwnd);
@@ -5286,20 +5271,25 @@ public class Dragonfly {
 		return rect;
 	}
 
-	//	WinDef.RECT rectChrome = new WinDef.RECT();
-	//	WinDef.HWND hwndChromeChild = null;
-	//	String strTitle = "how to get the x and y of a program window in java - Google Search - Google Chrome";
-	//	WinDef.HWND hwndChromeParent = User32.INSTANCE.FindWindow("Chrome_WidgetWin_1", strTitle); // class name
-	//	System.out.println("hwndChromeParent = " + hwndChromeParent);
-	//	User32.INSTANCE.GetWindowRect(hwndChromeParent, rectChrome);
-	//	System.out.println("ChromeParent rect = " + rectChrome.toRectangle().toString());
-	//	//hwndChromeChild = User32.INSTANCE.GetWindow(hwndChromeParent, 5);
-	//	System.out.println("hwndChromeChild = " + hwndChromeChild);
-	//	hwndChromeChild = User32Ex.instance.FindWindowEx(hwndChromeParent, null, "Chrome_RenderWidgetHostHWND", null);
-	//	System.out.println("hwndChromeChild = " + hwndChromeChild);
-	//	WinDef.RECT rectChromeChild = new WinDef.RECT();
-	//	User32.INSTANCE.GetWindowRect(hwndChromeChild, rectChromeChild);
-	//	System.out.println("ChromeChild rectChromeChild = " + rectChromeChild.toRectangle().toString());
+	//	public class MyFirefoxDriver extends FirefoxDriver {
+	//		private WebDriver driver;
+	//
+	//		//		public MyFirefoxDriver() {
+	//		//			super();
+	//		//			this.manage().window().maximize();
+	//		//		}
+	//		public MyFirefoxDriver(FirefoxDriver objFirefoxDriver) {
+	//			//super();
+	//			System.out.println("Solution rect.top = " + objFirefoxDriver.toString());
+	//			this.driver = objFirefoxDriver;
+	//		}
+	//	}
+	public WebDriver MyFirefoxDriver(FirefoxDriver objFirefoxDriver) {
+		WebDriver driver = new FirefoxDriver();
+		System.out.println("Solution rect.top = " + objFirefoxDriver.toString());
+		return (WebDriver) objFirefoxDriver;
+	}
+
 	private String createObjectName() {
 		String strAttributeValue = "";
 		String strAttributeValues = variablesJSON.objectStep.getString("strAttributeValues");
@@ -5330,10 +5320,10 @@ public class Dragonfly {
 				char[] textBufferClassName = new char[512];
 				User32.INSTANCE.GetClassName(hwndChild, textBufferClassName, 512);
 				String strActualClassName = Native.toString(textBufferClassName);
-				System.out.println("hwndChild = " + hwndChild + "               className: " + strActualClassName);
+				//System.out.println("hwndChild = " + hwndChild + "               className: " + strActualClassName);
 				if (strActualClassName.equals(strChildParentClassName)) {
 					User32.INSTANCE.GetWindowRect(hwndChild, rect);
-					System.out.println("Solution = " + rect.toRectangle().toString());
+					//System.out.println("Solution = " + rect.toRectangle().toString());
 					//	System.out.println("Solution rect.left = " + rect.left);
 					//	System.out.println("Solution rect.top = " + rect.top);
 					return false;
@@ -5345,7 +5335,6 @@ public class Dragonfly {
 	}
 
 	private WinDef.HWND EnumParentWindow(String strExpectedParentClassName, String strExpectedParentTitle) {
-		//HWND hwndParent2 = null;
 		User32.INSTANCE.EnumChildWindows(null, new User32.WNDENUMPROC() {
 			@Override
 			public boolean callback(WinDef.HWND hwndParent, Pointer pntr) {
@@ -5356,14 +5345,15 @@ public class Dragonfly {
 				User32.INSTANCE.GetWindowText(hwndParent, textBufferWindowText, 512);
 				String strActualClassName = Native.toString(textBufferClassName);
 				String strActualWindowText = Native.toString(textBufferWindowText);
+				System.out.println("strExpectedParentTitle = " + strExpectedParentTitle);
 				System.out.println("hwndParent = " + hwndParent + "               className: " + strActualClassName + "               title: " + strActualWindowText);
 				if (strActualClassName.equals(strExpectedParentClassName)) {
 					if (strActualWindowText.contains(strExpectedParentTitle)) {
 						User32.INSTANCE.GetWindowRect(hwndParent, rectParentWindow);
 						objVariablesCommon.hwndParentWindow = hwndParent;
-						System.out.println("hwndParent3 = " + objVariablesCommon.hwndParentWindow);
-						System.out.println("hwndParent = " + hwndParent);
-						System.out.println("Solution = " + rectParentWindow.toRectangle().toString());
+						//System.out.println("hwndParent3 = " + objVariablesCommon.hwndParentWindow);
+						//System.out.println("hwndParent = " + hwndParent);
+						//System.out.println("Solution = " + rectParentWindow.toRectangle().toString());
 						//	System.out.println("Solution rect.left = " + rectParentWindow.left);
 						//	System.out.println("Solution rect.top = " + rectParentWindow.top);
 						return false;
@@ -5509,6 +5499,7 @@ public class Dragonfly {
 		String strActualHtml = "";
 		String strActualText = "";
 		String strInputValue = variablesJSON.objectStep.getString("strInputValue");
+		logger.add("stepCreateActual strStepType.toLowerCase() = " + strStepType.toLowerCase());
 		String strOutputValue = variablesJSON.objectStep.getString("strOutputValue");
 		String strTagName = variablesJSON.objectStep.getString("strTagName");
 		String strObjectName = this.createObjectName();
@@ -5523,138 +5514,143 @@ public class Dragonfly {
 		logger.add("stepCreateActual strStepActual = " + variablesJSON.objectStep.getString("strStepActual"));
 		strStepType = variablesJSON.objectStep.getString("strStepActual");
 		logger.add("stepCreateActual strStepType.toLowerCase() = " + strStepType.toLowerCase());
-		switch (strStepType.toLowerCase()) {
-		case "assert":
-			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " persisted" + strMsWaitedDetailHtml;
-			break;
-		case "assert_failed":
-			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " did not persist" + strMsWaitedDetailHtml + "<BR>The actual value" + strOutputValueHtmlFail + " was displayed.";
-			break;
-		case "break":
-			strActualHtml = "Take a break.";
-			break;
-		case "browser_close":
-			strActualHtml = "The {<b>" + strTagName + "</b>} browser was closed" + strMsWaitedDetailHtml;
-			break;
-		case "browser_launch":
-			strActualHtml = "The {<b>" + strTagName + "</b>} browser navigated to url" + strInputValueHtmlPass + strMsWaitedDetailHtml;
-			break;
-		case "browser_refresh":
-			strActualHtml = "The {<b>" + strTagName + "</b>} browser navigated to url" + strInputValueHtmlPass + strMsWaitedDetailHtml;
-			break;
-		case "clicked":
-			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " was clicked" + strMsWaitedDetailHtml;
-			break;
-		case "default":
-			strActualHtml = strTagAttributesHtml + " default" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
-			break;
-		case "drag":
-			strActualHtml = strTagAttributesHtml + " was dragged" + strMsWaitedDetailHtml;
-			break;
-		case "drop":
-			strActualHtml = strTagAttributesHtml + " was dropped" + strMsWaitedDetailHtml;
-			break;
-		case "expected":
-			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " was not verified" + strMsWaitedDetailHtml + "<BR>The actual value was" + strOutputValueHtmlFail + ".";
-			break;
-		case "get":
-			strActualHtml = strTagAttributesHtml + " actual value is" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
-			break;
-		case "keystroke":
-			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " key was pressed" + strMsWaitedDetailHtml;
-			break;
-		case "mouse_out":
-			strActualHtml = strTagAttributesHtml + " mouse out is complete" + strMsWaitedDetailHtml;
-			break;
-		case "mouse_over":
-			strActualHtml = strTagAttributesHtml + " mouse over is complete" + strMsWaitedDetailHtml;
-			break;
-		case "navigate":
-			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was set" + strMsWaitedDetailHtml + "<BR>No validation performed due to navigation.";
-			break;
-		case "not_closed":
-			strActualHtml = strTagAttributesHtml + strOutputValueHtmlFail + " did not close" + strMsWaitedDetailHtml;
-			break;
-		case "not_disabled":
-			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "enabled" + strHtmlEnd + strMsWaitedDetailHtml;
-			break;
-		case "not_enabled":
-			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "disabled" + strHtmlEnd + strMsWaitedDetailHtml;
-			break;
-		case "not_exist_tooltip":
-			strActualHtml = strTagAttributesHtml + " tooltip does not exist" + strMsWaitedDetailHtml;
-			break;
-		case "not_found":
-			strActualHtml = strTagAttributesHtml + " was" + strHtmlFailStart + "not found" + strHtmlEnd + strMsWaitedDetailHtml;
-			break;
-		case "not_hidden":
-			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "visible" + strHtmlEnd + strMsWaitedDetailHtml;
-			break;
-		case "not_in_list":
-			strActualHtml = strTagAttributesHtml + "The list item " + strInputValueHtmlPass + " does not exist in the list field" + strMsWaitedDetailHtml + "<BR>Please confirm the input value against the actual list values " + strOutputValueHtmlFail + " is available for this field.";
-			break;
-		case "not_visible":
-			strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "hidden" + strHtmlEnd + strMsWaitedDetailHtml;
-			break;
-		case "scroll":
-			strActualHtml = strTagAttributesHtml + strMsWaitedDetailHtml;
-			break;
-		case "secure":
-			strActualHtml = strTagAttributesHtml + " password value" + strOutputValueHtmlPass + " was set" + strMsWaitedDetailHtml;
-			break;
-		case "set":
-			strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " was set" + strMsWaitedDetailHtml;
-			break;
-		case "skip":
-			strActualHtml = "The skip keyword was entered in the strInputValue field causing this step to be skipped.";
-			break;
-		case "sleep":
-			strActualHtml = "The execution sleep is complete " + strMsWaitedDetailHtml;
-			break;
-		case "sync_closed":
-			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " closed" + strMsWaitedDetailHtml;
-			break;
-		case "sync_disabled":
-			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "disabled" + strHtmlEnd + strMsWaitedDetailHtml;
-			break;
-		case "sync_enabled":
-			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "enabled" + strHtmlEnd + strMsWaitedDetailHtml;
-			break;
-		case "sync_hidden":
-			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "hidden" + strHtmlEnd + strMsWaitedDetailHtml;
-			break;
-		case "sync_optional":
-			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " sync is optional" + strMsWaitedDetailHtml;
-			break;
-		case "sync_visible":
-			strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "visible" + strHtmlEnd + strMsWaitedDetailHtml;
-			break;
-		case "tag_not_supported":
-			strActualHtml = strTagAttributesHtml + " is not supported";
-			break;
-		case "tooltip_expected":
-			strActualHtml = strTagAttributesHtml + " tooltip" + strInputValueHtmlPass + " was not verified." + strMsWaitedDetailHtml + "<BR>The actual value was " + strOutputValueHtmlFail + ".";
-			break;
-		case "tooltip_get":
-			strActualHtml = strTagAttributesHtml + " tooltip actual value is" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
-			break;
-		case "tooltip_verify":
-			strActualHtml = strTagAttributesHtml + " tooltip" + strOutputValueHtmlPass + " was verified" + strMsWaitedDetailHtml;
-			break;
-		case "verify_not":
-			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was not verified" + strMsWaitedDetailHtml;
-			break;
-		case "verify_value":
-			strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was verified" + strMsWaitedDetailHtml;
-			break;
-		default:
-			strActualHtml = "<b><FONT COLOR='#FF69B4'>" + "StepType {" + strStepType + "} is not supported" + "</FONT></b>";
-			break;
+		try {
+			switch (strStepType.toLowerCase()) {
+			case "assert":
+				strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " persisted" + strMsWaitedDetailHtml;
+				break;
+			case "assert_failed":
+				strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " did not persist" + strMsWaitedDetailHtml + "<BR>The actual value" + strOutputValueHtmlFail + " was displayed.";
+				break;
+			case "break":
+				strActualHtml = "Take a break.";
+				break;
+			case "browser_close":
+				strActualHtml = "The {<b>" + strTagName + "</b>} browser was closed" + strMsWaitedDetailHtml;
+				break;
+			case "browser_launch":
+				strActualHtml = "The {<b>" + strTagName + "</b>} browser navigated to url" + strInputValueHtmlPass + strMsWaitedDetailHtml;
+				break;
+			case "browser_refresh":
+				strActualHtml = "The {<b>" + strTagName + "</b>} browser navigated to url" + strInputValueHtmlPass + strMsWaitedDetailHtml;
+				break;
+			case "clicked":
+				strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " was clicked" + strMsWaitedDetailHtml;
+				break;
+			case "default":
+				strActualHtml = strTagAttributesHtml + " default" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
+				break;
+			case "drag":
+				strActualHtml = strTagAttributesHtml + " was dragged" + strMsWaitedDetailHtml;
+				break;
+			case "drop":
+				strActualHtml = strTagAttributesHtml + " was dropped" + strMsWaitedDetailHtml;
+				break;
+			case "expected":
+				strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " was not verified" + strMsWaitedDetailHtml + "<BR>The actual value was" + strOutputValueHtmlFail + ".";
+				break;
+			case "get":
+				strActualHtml = strTagAttributesHtml + " actual value is" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
+				break;
+			case "keystroke":
+				strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " key was pressed" + strMsWaitedDetailHtml;
+				break;
+			case "mouse_out":
+				strActualHtml = strTagAttributesHtml + " mouse out is complete" + strMsWaitedDetailHtml;
+				break;
+			case "mouse_over":
+				strActualHtml = strTagAttributesHtml + " mouse over is complete" + strMsWaitedDetailHtml;
+				break;
+			case "navigate":
+				strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was set" + strMsWaitedDetailHtml + "<BR>No validation performed due to navigation.";
+				break;
+			case "not_closed":
+				strActualHtml = strTagAttributesHtml + strOutputValueHtmlFail + " did not close" + strMsWaitedDetailHtml;
+				break;
+			case "not_disabled":
+				strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "enabled" + strHtmlEnd + strMsWaitedDetailHtml;
+				break;
+			case "not_enabled":
+				strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "disabled" + strHtmlEnd + strMsWaitedDetailHtml;
+				break;
+			case "not_exist_tooltip":
+				strActualHtml = strTagAttributesHtml + " tooltip does not exist" + strMsWaitedDetailHtml;
+				break;
+			case "not_found":
+				strActualHtml = strTagAttributesHtml + " was" + strHtmlFailStart + "not found" + strHtmlEnd + strMsWaitedDetailHtml;
+				break;
+			case "not_hidden":
+				strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "visible" + strHtmlEnd + strMsWaitedDetailHtml;
+				break;
+			case "not_in_list":
+				strActualHtml = strTagAttributesHtml + "The list item " + strInputValueHtmlPass + " does not exist in the list field" + strMsWaitedDetailHtml + "<BR>Please confirm the input value against the actual list values " + strOutputValueHtmlFail + " is available for this field.";
+				break;
+			case "not_visible":
+				strActualHtml = strTagAttributesHtml + " is " + strHtmlFailStart + "hidden" + strHtmlEnd + strMsWaitedDetailHtml;
+				break;
+			case "scroll":
+				strActualHtml = strTagAttributesHtml + strMsWaitedDetailHtml;
+				break;
+			case "secure":
+				strActualHtml = strTagAttributesHtml + " password value" + strOutputValueHtmlPass + " was set" + strMsWaitedDetailHtml;
+				break;
+			case "set":
+				strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " was set" + strMsWaitedDetailHtml;
+				break;
+			case "skip":
+				strActualHtml = "The skip keyword was entered in the strInputValue field causing this step to be skipped.";
+				break;
+			case "sleep":
+				strActualHtml = "The execution sleep is complete " + strMsWaitedDetailHtml;
+				break;
+			case "sync_closed":
+				strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " closed" + strMsWaitedDetailHtml;
+				break;
+			case "sync_disabled":
+				strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "disabled" + strHtmlEnd + strMsWaitedDetailHtml;
+				break;
+			case "sync_enabled":
+				strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "enabled" + strHtmlEnd + strMsWaitedDetailHtml;
+				break;
+			case "sync_hidden":
+				strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "hidden" + strHtmlEnd + strMsWaitedDetailHtml;
+				break;
+			case "sync_optional":
+				strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " sync is optional" + strMsWaitedDetailHtml;
+				break;
+			case "sync_visible":
+				strActualHtml = strTagAttributesHtml + " is " + strHtmlPassStart + "visible" + strHtmlEnd + strMsWaitedDetailHtml;
+				break;
+			case "tag_not_supported":
+				strActualHtml = strTagAttributesHtml + " is not supported";
+				break;
+			case "tooltip_expected":
+				strActualHtml = strTagAttributesHtml + " tooltip" + strInputValueHtmlPass + " was not verified." + strMsWaitedDetailHtml + "<BR>The actual value was " + strOutputValueHtmlFail + ".";
+				break;
+			case "tooltip_get":
+				strActualHtml = strTagAttributesHtml + " tooltip actual value is" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
+				break;
+			case "tooltip_verify":
+				strActualHtml = strTagAttributesHtml + " tooltip" + strOutputValueHtmlPass + " was verified" + strMsWaitedDetailHtml;
+				break;
+			case "verify_not":
+				strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was not verified" + strMsWaitedDetailHtml;
+				break;
+			case "verify_value":
+				strActualHtml = strTagAttributesHtml + strOutputValueHtmlPass + " was verified" + strMsWaitedDetailHtml;
+				break;
+			default:
+				strActualHtml = "<b><FONT COLOR='#FF69B4'>" + "StepType {" + strStepType + "} is not supported" + "</FONT></b>";
+				break;
+			}
+			strActualHtml = "<DIV align='left'><font size='5'>" + strActualHtml + "</font></DIV>";
+			strActualText = removeTags(strActualHtml);
+			logger.add("StepCreateActual: strActualText = " + strActualText);
+			variablesJSON.objectStep.putValue("strStepActual", strActualHtml);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.add("stepCreateActual:Exception " + e.toString());
 		}
-		strActualHtml = "<DIV align='left'><font size='5'>" + strActualHtml + "</font></DIV>";
-		strActualText = removeTags(strActualHtml);
-		logger.add("StepCreateActual: strActualText = " + strActualText);
-		variablesJSON.objectStep.putValue("strStepActual", strActualHtml);
 	}
 
 	private void stepCreateExpected() {
@@ -5670,91 +5666,99 @@ public class Dragonfly {
 		String strTagAttributesHtml = " {<b>" + strTagName + "</b>} tag with attributes {<b>" + strObjectName + "</b>}";
 		String strInputValueHtml = " {<b>" + strInputValue + "</b>}";
 		String strAssertHtml = " assert {<b>" + strAssert + "</b>}";
-		if (variablesJSON.objectStep.get("strStepExpected").toString().length() != 0) {
-			strAction = variablesJSON.objectStep.getString("strStepExpected");
-		} else {
-			strAction = variablesJSON.objectStep.getString("strAction");
+		logger.add("stepCreateExpected: strStepExpected length = " + variablesJSON.objectStep.get("strStepExpected").toString().length());
+		try {
+			if (variablesJSON.objectStep.get("strStepExpected").toString().length() != 0) {
+				strAction = variablesJSON.objectStep.getString("strStepExpected");
+			} else {
+				strAction = variablesJSON.objectStep.getString("strAction");
+			}
+			logger.add("stepCreateExpected: strAction = " + strAction);
+			switch (strAction.toLowerCase()) {
+			case "break":
+				strStepExpected = "Break the execution.";
+				break;
+			case "click":
+				strStepExpected = "Click" + strTagAttributesHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
+				break;
+			case "close":
+				strStepExpected = "Close {<b>" + strTagName + "</b>} browser" + strMillisecondsToWaitHtml;
+				break;
+			case "double_click":
+				strStepExpected = "Double click" + strTagAttributesHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
+				break;
+			case "drag":
+				strStepExpected = "Drag" + strTagAttributesHtml + strMillisecondsToWaitHtml;
+				break;
+			case "drop":
+				strStepExpected = "Drop" + strTagAttributesHtml + strMillisecondsToWaitHtml;
+				break;
+			case "get":
+				strStepExpected = "Get" + strTagAttributesHtml + " value" + strMillisecondsToWaitHtml;
+				//strStepExpected = "Get" + strMillisecondsToWaitHtml + " value" + strMillisecondsToWaitHtml;
+				break;
+			case "kill_ie":
+				strStepExpected = "The action kill_ie killed all IE processes.";
+				break;
+			case "launch":
+				strStepExpected = "Launch {<b>" + strTagName + "</b>} browser to url" + strInputValueHtml + strMillisecondsToWaitHtml;
+				break;
+			case "mouse_out":
+				strStepExpected = "Mouse out" + strTagAttributesHtml + strMillisecondsToWaitHtml;
+				break;
+			case "mouse_over":
+				strStepExpected = "Mouse over" + strTagAttributesHtml + strMillisecondsToWaitHtml;
+				break;
+			case "refresh":
+				strStepExpected = "Refresh the browser" + strMillisecondsToWaitHtml;
+				break;
+			case "right_click":
+				strStepExpected = "Right click" + strTagAttributesHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
+				break;
+			case "scroll":
+				strStepExpected = "Scroll the" + strTagAttributesHtml + " into view" + strMillisecondsToWaitHtml;
+				break;
+			case "select":
+				strStepExpected = "Select" + strTagAttributesHtml + " to value" + strInputValueHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
+				break;
+			case "set":
+				strStepExpected = "Set" + strTagAttributesHtml + " to value" + strInputValueHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
+				break;
+			case "set_js":
+				strStepExpected = "Set" + strTagAttributesHtml + " to value" + strInputValueHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
+				break;
+			case "sleep":
+				strStepExpected = "Sleep execution for" + strInputValueHtml + " milliseconds.";
+				break;
+			case "sync_disabled":
+				strStepExpected = "Sync until" + strTagAttributesHtml + " is disabled" + strMillisecondsToWaitHtml;
+				break;
+			case "sync_enabled":
+				strStepExpected = "Sync until" + strTagAttributesHtml + " is enabled" + strMillisecondsToWaitHtml;
+				break;
+			case "sync_hidden":
+				strStepExpected = "Sync until" + strTagAttributesHtml + " is hidden" + strMillisecondsToWaitHtml;
+				break;
+			case "sync_visible":
+				strStepExpected = "Sync until" + strTagAttributesHtml + " is visible" + strMillisecondsToWaitHtml;
+				break;
+			case "verify":
+				strStepExpected = "Verify" + strTagAttributesHtml + " value is equal to" + strInputValueHtml + strMillisecondsToWaitHtml;
+				break;
+			case "verify_not":
+				strStepExpected = "Verify" + strTagAttributesHtml + " value is not equal to" + strInputValueHtml + strMillisecondsToWaitHtml;
+				break;
+			default:
+				strStepExpected = strAction;
+				break;
+			}
+			strStepExpected = "<DIV align='left'><font size='5'>" + strStepExpected + "</font></DIV>";
+			objStepsManual.set(removeTags(strStepExpected));
+			variablesJSON.objectStep.putValue("strStepExpected", strStepExpected);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.add("stepCreateExpected:Exception " + e.toString());
 		}
-		switch (strAction.toLowerCase()) {
-		case "break":
-			strStepExpected = "Break the execution.";
-			break;
-		case "click":
-			strStepExpected = "Click" + strTagAttributesHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
-			break;
-		case "close":
-			strStepExpected = "Close {<b>" + strTagName + "</b>} browser" + strMillisecondsToWaitHtml;
-			break;
-		case "double_click":
-			strStepExpected = "Double click" + strTagAttributesHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
-			break;
-		case "drag":
-			strStepExpected = "Drag" + strTagAttributesHtml + strMillisecondsToWaitHtml;
-			break;
-		case "drop":
-			strStepExpected = "Drop" + strTagAttributesHtml + strMillisecondsToWaitHtml;
-			break;
-		case "get":
-			strStepExpected = "Get" + strTagAttributesHtml + " value" + strMillisecondsToWaitHtml;
-			break;
-		case "kill_ie":
-			strStepExpected = "The action kill_ie killed all IE processes.";
-			break;
-		case "launch":
-			strStepExpected = "Launch {<b>" + strTagName + "</b>} browser to url" + strInputValueHtml + strMillisecondsToWaitHtml;
-			break;
-		case "mouse_out":
-			strStepExpected = "Mouse out" + strTagAttributesHtml + strMillisecondsToWaitHtml;
-			break;
-		case "mouse_over":
-			strStepExpected = "Mouse over" + strTagAttributesHtml + strMillisecondsToWaitHtml;
-			break;
-		case "refresh":
-			strStepExpected = "Refresh the browser" + strMillisecondsToWaitHtml;
-			break;
-		case "right_click":
-			strStepExpected = "Right click" + strTagAttributesHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
-			break;
-		case "scroll":
-			strStepExpected = "Scroll the" + strTagAttributesHtml + " into view" + strMillisecondsToWaitHtml;
-			break;
-		case "select":
-			strStepExpected = "Select" + strTagAttributesHtml + " to value" + strInputValueHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
-			break;
-		case "set":
-			strStepExpected = "Set" + strTagAttributesHtml + " to value" + strInputValueHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
-			break;
-		case "set_js":
-			strStepExpected = "Set" + strTagAttributesHtml + " to value" + strInputValueHtml + " and" + strAssertHtml + strMillisecondsToWaitHtml;
-			break;
-		case "sleep":
-			strStepExpected = "Sleep execution for" + strInputValueHtml + " milliseconds.";
-			break;
-		case "sync_disabled":
-			strStepExpected = "Sync until" + strTagAttributesHtml + " is disabled" + strMillisecondsToWaitHtml;
-			break;
-		case "sync_enabled":
-			strStepExpected = "Sync until" + strTagAttributesHtml + " is enabled" + strMillisecondsToWaitHtml;
-			break;
-		case "sync_hidden":
-			strStepExpected = "Sync until" + strTagAttributesHtml + " is hidden" + strMillisecondsToWaitHtml;
-			break;
-		case "sync_visible":
-			strStepExpected = "Sync until" + strTagAttributesHtml + " is visible" + strMillisecondsToWaitHtml;
-			break;
-		case "verify":
-			strStepExpected = "Verify" + strTagAttributesHtml + " value is equal to" + strInputValueHtml + strMillisecondsToWaitHtml;
-			break;
-		case "verify_not":
-			strStepExpected = "Verify" + strTagAttributesHtml + " value is not equal to" + strInputValueHtml + strMillisecondsToWaitHtml;
-			break;
-		default:
-			strStepExpected = strAction;
-			break;
-		}
-		strStepExpected = "<DIV align='left'><font size='5'>" + strStepExpected + "</font></DIV>";
-		objStepsManual.set(removeTags(strStepExpected));
-		variablesJSON.objectStep.putValue("strStepExpected", strStepExpected);
 	}
 
 	private void stepDuration(String strMethodName, Long lngTimeStart, String strStepType) {
