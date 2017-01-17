@@ -2,6 +2,8 @@
 <head>
 <script type="text/javascript">
 	function onAfterLoad() {
+		
+		document.write('<button onclick="onAfterLoad();" id="generateCoordinates">generateCoordinates</button>');
 		document.write('<p>ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg</p>');
 		document.write('<p>Your viewport window.innerWidth is ' + window.innerWidth + '</p>');
 		document.write('<p>Your viewport window.innerHeight is ' + window.innerHeight + '</p>');
@@ -11,6 +13,12 @@
 		document.write('<p>Your viewport window.mozInnerScreenY is ' + window.mozInnerScreenY + '</p>');
 		document.write('<p>Your viewport window.screenX is ' + window.screenX + '</p>');
 		document.write('<p>Your viewport window.screenY is ' + window.screenY + '</p>');
+		document.write('<p>Your viewport window.screenLeft is ' + window.screenLeft + '</p>');
+		document.write('<p>Your viewport window.screenTop is ' + window.screenTop + '</p>');
+		document.write('<p>Your viewport screen.availHeight is ' + screen.availHeight + '</p>');
+		document.write('<p>Your viewport screen.availWidth is ' + screen.availWidth + '</p>');
+		document.write('<p>Your viewport screen.availHeight is ' + screen.availHeight + '</p>');
+		document.write('<p>Your viewport screen.availWidth is ' + screen.availWidth + '</p>');
 		document.write('<p>-------------------------------------------------------</p>');
 		document.write('<p>Your viewport Top is ' + Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio) + '</p>');
 
