@@ -596,28 +596,29 @@ public class Dragonfly {
 			long lngStartTime = System.currentTimeMillis();
 			long lngBrowserInnerWidth = 0;
 			long lngBrowserInnerHeight = 0;
-			long lngBrowserViewportTop = 0;
-			long lngBrowserViewportLeft = 0;
 			try {
-				//				lngBrowserViewportTop = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
-				//				lngBrowserViewportLeft = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
-				//				logger.add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-				//				logger.add("Your viewport Top is " + lngBrowserViewportTop);
-				//				logger.add("Your viewport Left is	" + lngBrowserViewportLeft);
-				//				logger.add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 				switch (objVariablesCommon.gstrBrowserSelection.toLowerCase()) {
 				case "ie":
 					logger.add("CoordinatesBrowserInner: ie");
-					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.screenTop;");
 					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.screenLeft;");
+					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.screenTop;");
 					variablesJSON.objectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
 					variablesJSON.objectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
 					break;
 				case "firefox":
+					logger.add("CoordinatesBrowserInner: firefox");
+					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return Math.round(window.mozInnerScreenX * window.devicePixelRatio);");
+					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return Math.round(window.mozInnerScreenY * window.devicePixelRatio);");
+					variablesJSON.objectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
+					variablesJSON.objectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
+					objVariablesCommon.gdblDevicePixelRatio = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.devicePixelRatio;");
+					logger.add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + objVariablesCommon.gdblDevicePixelRatio.toString());
+					logger.add("CoordinatesBrowserInner: lngBrowserInnerWidth = " + lngBrowserInnerWidth);
+					logger.add("CoordinatesBrowserInner: intBrowserInnerHeight = " + lngBrowserInnerHeight);
+					break;
 				case "chrome":
-					//if (objVariablesCommon.gstrBrowserSelection.toLowerCase().equalsIgnoreCase("firefox")) {
-					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
 					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
+					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
 					objVariablesCommon.gdblDevicePixelRatio = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.devicePixelRatio;");
 					logger.add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + objVariablesCommon.gdblDevicePixelRatio.toString());
 					variablesJSON.objectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
@@ -632,34 +633,33 @@ public class Dragonfly {
 		}
 	}
 
-	private class CoordinatesBrowserInner_before {
-		private CoordinatesBrowserInner_before() throws WebDriverException {
-			//http://www.w3schools.com/jsref/prop_win_screenleft.asp
-			//http://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_win_screenleft
-			logger.add("  ==start==>CoordinatesBrowserInner " + getDateTimestamp());
-			long lngBrowserViewportTop = 0;
-			long lngBrowserViewportLeft = 0;
-			lngBrowserViewportTop = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
-			lngBrowserViewportLeft = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
-			logger.add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			logger.add("Your viewport Top is " + lngBrowserViewportTop);
-			logger.add("Your viewport Left is	" + lngBrowserViewportLeft);
-			logger.add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			if (objVariablesCommon.gstrBrowserSelection.toLowerCase().equalsIgnoreCase("firefox")) {
-				long lngStartTime = System.currentTimeMillis();
-				long lngBrowserInnerWidth = 0;
-				long lngBrowserInnerHeight = 0;
-				lngBrowserInnerHeight = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
-				lngBrowserInnerWidth = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
-				objVariablesCommon.gdblDevicePixelRatio = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.devicePixelRatio;");
-				logger.add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + objVariablesCommon.gdblDevicePixelRatio.toString());
-				variablesJSON.objectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
-				variablesJSON.objectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
-				logger.add("CoordinatesBrowserInner: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-			}
-		}
-	}
-
+	//	private class CoordinatesBrowserInner_before {
+	//		private CoordinatesBrowserInner_before() throws WebDriverException {
+	//			//http://www.w3schools.com/jsref/prop_win_screenleft.asp
+	//			//http://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_win_screenleft
+	//			logger.add("  ==start==>CoordinatesBrowserInner " + getDateTimestamp());
+	//			long lngBrowserViewportTop = 0;
+	//			long lngBrowserViewportLeft = 0;
+	//			lngBrowserViewportTop = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
+	//			lngBrowserViewportLeft = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
+	//			logger.add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	//			logger.add("Your viewport Top is " + lngBrowserViewportTop);
+	//			logger.add("Your viewport Left is	" + lngBrowserViewportLeft);
+	//			logger.add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	//			if (objVariablesCommon.gstrBrowserSelection.toLowerCase().equalsIgnoreCase("firefox")) {
+	//				long lngStartTime = System.currentTimeMillis();
+	//				long lngBrowserInnerWidth = 0;
+	//				long lngBrowserInnerHeight = 0;
+	//				lngBrowserInnerHeight = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
+	//				lngBrowserInnerWidth = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
+	//				objVariablesCommon.gdblDevicePixelRatio = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.devicePixelRatio;");
+	//				logger.add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + objVariablesCommon.gdblDevicePixelRatio.toString());
+	//				variablesJSON.objectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
+	//				variablesJSON.objectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
+	//				logger.add("CoordinatesBrowserInner: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//		}
+	//	}
 	//	private class CoordinatesBrowserInnerOld {
 	//		private CoordinatesBrowserInnerOld() throws WebDriverException {
 	//			logger.add("  ==start==>CoordinatesBrowserInner " + getDateTimestamp());
@@ -4511,8 +4511,8 @@ public class Dragonfly {
 		private WebElement gobjWebElementDrop = null;
 		private WebElement gobjWebElementPleaseWait = null;
 	}
-	private static final WebDriver foo = null;
 
+	//private static final WebDriver foo = null;
 	private class VariablesSetSync {
 		private Boolean gblnSyncAlert = false;
 		private Boolean gblnSyncAngularJs = false;

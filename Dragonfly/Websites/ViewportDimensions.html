@@ -5,6 +5,10 @@
 		
 		document.write('<button onclick="onAfterLoad();" id="generateCoordinates">generateCoordinates</button>');
 		document.write('<p>ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg</p>');
+		
+		document.write('<p>Your viewport window.mozInnerScreenX is ' + Math.round(window.mozInnerScreenX * window.devicePixelRatio) + '</p>');
+		document.write('<p>Your viewport window.mozInnerScreenY is ' + Math.round(window.mozInnerScreenY * window.devicePixelRatio) + '</p>');
+		
 		document.write('<p>Your viewport window.innerWidth is ' + window.innerWidth + '</p>');
 		document.write('<p>Your viewport window.innerHeight is ' + window.innerHeight + '</p>');
 		document.write('<p>Your viewport window.outerWidth is ' + window.outerWidth + '</p>');
