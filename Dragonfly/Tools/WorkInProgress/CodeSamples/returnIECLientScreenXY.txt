@@ -1,0 +1,44 @@
+	public WinDef.RECT returnIECLientScreenXY() {
+		logger.add("  ==start==>returnIECLientScreenXY " + getDateTimestamp());
+		//		WinDef.HWND hwnd = null;
+		WinDef.RECT rect = new WinDef.RECT();
+		//		String strBrowserParentClass = "";
+		//		String strBrowserClientClass = "";
+		//		String strExpectedTitle = objVariablesSelenium.gobjWebDriver.getTitle();
+		//		switch (objVariablesCommon.gstrBrowserSelection.toLowerCase()) {
+		//		case "ie":
+		//			strBrowserParentClass = "IEFrame";
+		//			strBrowserClientClass = "Internet Explorer_Server";
+		//			break;
+		//		case "chrome":
+		//			strBrowserParentClass = "Chrome_WidgetWin_1";
+		//			strBrowserClientClass = "Chrome_RenderWidgetHostHWND";
+		//			break;
+		//		case "firefox":
+		//			//new CoordinatesBrowserInner();
+		//			//			Long lngmozInnerScreenX = null;
+		//			//			Long lngmozInnerScreenY = null;
+		//			//			System.out.println("rect.left ");
+		//			//objVariablesSelenium.gobjWebDriverCoordinates.switchTo().defaultContent();
+		//			//			lngmozInnerScreenY = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
+		//			//			lngmozInnerScreenX = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
+		//			rect.top = variablesJSON.objectStep.getInt("intBrowserInnerHeight");
+		//			rect.left = variablesJSON.objectStep.getInt("intBrowserInnerWidth");
+		//			rect.right = 0;
+		//			rect.bottom = 0;
+		//			System.out.println("rect.left = " + rect.left);
+		//			System.out.println("rect.top = " + rect.top);
+		//			return rect;
+		//		}
+		rect.top = variablesJSON.objectStep.getInt("intBrowserInnerHeight");
+		rect.left = variablesJSON.objectStep.getInt("intBrowserInnerWidth");
+		rect.right = 0;
+		rect.bottom = 0;
+		//////hwnd = EnumParentWindow(strBrowserParentClass, strExpectedTitle);
+		//////System.out.println("hwnd = " + hwnd);
+		//////rect = EnumChildWindow(hwnd, strBrowserClientClass);
+		System.out.println("Solution = " + rect.toRectangle().toString());
+		System.out.println("Solution rect.left = " + rect.left);
+		System.out.println("Solution rect.top = " + rect.top);
+		return rect;
+	}

@@ -108,34 +108,6 @@ import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.win32.W32APIOptions;
 
 public class Dragonfly {
-	public interface User32Ex extends W32APIOptions {
-		User32Ex instance = (User32Ex) Native.loadLibrary("user32", User32Ex.class, DEFAULT_OPTIONS);
-
-		boolean ClientToScreen(WinDef.HWND hWnd, WinDef.POINT ptClientUL);
-
-		WinDef.HWND FindWindowEx(WinDef.HWND parent, WinDef.HWND child, String className, String window);
-
-		boolean GetClientRect(WinDef.HWND hWnd, WinDef.RECT rect);
-
-		boolean GetCursorPos(long[] lpPoint);
-
-		WinDef.HWND WindowFromPoint(long point);
-	}
-
-	//	private class WebDriverExtended extends JSONObject {
-	//		private static final long serialVersionUID = 1L;
-	//		private WebDriverExtended objWebDriverExtended;
-	//
-	//		private WebDriverExtended(FirefoxDriver objWebDriver) {
-	//		//	this(objWebDriver);
-	//			super();
-	//			//this (WebDriverExtended) objWebDriver;
-	//		}
-	//
-	//		public WebDriverExtended WebDriverExtended(WebDriverExtended objWebDriverExtended) {
-	//			return objWebDriverExtended;
-	//		}
-	//	}
 	private class AlertFind {
 		private boolean run() {
 			logger.add("  ==start==>AlertFind " + getDateTimestamp());
@@ -304,9 +276,9 @@ public class Dragonfly {
 					break;
 				case "opera":
 					// TODO OperaDriver setup latest driver and test desiredCapabilities = DesiredCapabilities.internetExplorer();
-					//					System.setProperty("webdriver.opera.driver", "D:/Ripon/operadriver_win64/operadriver.exe");
-					//					WebDriver driver = new OperaDriver();
-					//					driver.get("https://duckduckgo.com/");
+					// 		System.setProperty("webdriver.opera.driver", "D:/Ripon/operadriver_win64/operadriver.exe");
+					// 		WebDriver driver = new OperaDriver();
+					// 		driver.get("https://duckduckgo.com/");
 					// desiredCapabilities.setJavascriptEnabled(true);
 					//objVariablesSelenium.gobjWebDriver = new OperaDriver();
 					//objVariablesSelenium.setGobjWebDriver(new OperaDriver());
@@ -425,19 +397,19 @@ public class Dragonfly {
 	private class ConvertPathByOperatingSystem {
 		private void run(String strPath) {
 			// logger.add("main: gstrOperatingSystem = " + objOperatingSystem.strOS);
-			//				switch (gstrOperatingSystem) {
-			//				case "Windows":
-			//					strPathResults = objPaths.getPathSystemUserDir() + "\\Results\\" + strTestConfigurationFileName.replace(".json", "") + "\\" + gstrPathResults + "\\";
-			//					strPathImages = "images\\";
-			//					break;
-			//				case "Mac":
-			//					strPathResults = objPaths.getPathSystemUserDir() + "/Results/" + strTestConfigurationFileName.replace(".json", "") + "/" + gstrPathResults + "/";
-			//					strPathImages = "images/";
-			//					break;
-			//				default:
-			//					 logger.add("main: switch gstrOperatingSystem = " + gstrOperatingSystem + "  not supported");
-			//					return;
-			//				}
+			// 	switch (gstrOperatingSystem) {
+			// 	case "Windows":
+			// 		strPathResults = objPaths.getPathSystemUserDir() + "\\Results\\" + strTestConfigurationFileName.replace(".json", "") + "\\" + gstrPathResults + "\\";
+			// 		strPathImages = "images\\";
+			// 		break;
+			// 	case "Mac":
+			// 		strPathResults = objPaths.getPathSystemUserDir() + "/Results/" + strTestConfigurationFileName.replace(".json", "") + "/" + gstrPathResults + "/";
+			// 		strPathImages = "images/";
+			// 		break;
+			// 	default:
+			// 		 logger.add("main: switch gstrOperatingSystem = " + gstrOperatingSystem + "  not supported");
+			// 		return;
+			// 	}
 		}
 	}
 
@@ -590,8 +562,6 @@ public class Dragonfly {
 
 	private class CoordinatesBrowserInner {
 		private CoordinatesBrowserInner() throws WebDriverException {
-			//http://www.w3schools.com/jsref/prop_win_screenleft.asp
-			//http://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_win_screenleft
 			logger.add("  ==start==>CoordinatesBrowserInner " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			long lngBrowserInnerWidth = 0;
@@ -633,63 +603,20 @@ public class Dragonfly {
 		}
 	}
 
-	//	private class CoordinatesBrowserInner_before {
-	//		private CoordinatesBrowserInner_before() throws WebDriverException {
-	//			//http://www.w3schools.com/jsref/prop_win_screenleft.asp
-	//			//http://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_win_screenleft
-	//			logger.add("  ==start==>CoordinatesBrowserInner " + getDateTimestamp());
-	//			long lngBrowserViewportTop = 0;
-	//			long lngBrowserViewportLeft = 0;
-	//			lngBrowserViewportTop = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
-	//			lngBrowserViewportLeft = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
-	//			logger.add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-	//			logger.add("Your viewport Top is " + lngBrowserViewportTop);
-	//			logger.add("Your viewport Left is	" + lngBrowserViewportLeft);
-	//			logger.add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-	//			if (objVariablesCommon.gstrBrowserSelection.toLowerCase().equalsIgnoreCase("firefox")) {
-	//				long lngStartTime = System.currentTimeMillis();
-	//				long lngBrowserInnerWidth = 0;
-	//				long lngBrowserInnerHeight = 0;
-	//				lngBrowserInnerHeight = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
-	//				lngBrowserInnerWidth = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
-	//				objVariablesCommon.gdblDevicePixelRatio = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.devicePixelRatio;");
-	//				logger.add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + objVariablesCommon.gdblDevicePixelRatio.toString());
-	//				variablesJSON.objectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
-	//				variablesJSON.objectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
-	//				logger.add("CoordinatesBrowserInner: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-	//			}
-	//		}
-	//	}
-	//	private class CoordinatesBrowserInnerOld {
-	//		private CoordinatesBrowserInnerOld() throws WebDriverException {
-	//			logger.add("  ==start==>CoordinatesBrowserInner " + getDateTimestamp());
-	//			long lngStartTime = System.currentTimeMillis();
-	//			//objVariablesSelenium.gobjWebDriverCoordinates = objVariablesSelenium.gobjWebDriver;
-	//			//objVariablesSelenium.gobjWebDriverCoordinates.switchTo().defaultContent();
-	//			long lngBrowserInnerWidth = 0;
-	//			long lngBrowserInnerHeight = 0;
-	//			try {
-	//				lngBrowserInnerWidth = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.innerWidth||document.documentElement.clientWidth||document.body.clientWidth;");
-	//				lngBrowserInnerHeight = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return window.innerHeight||document.documentElement.clientHeight||document.body.clientHeight;");
-	//			} catch (WebDriverException e) {
-	//				logger.add("CoordinatesBrowserInner: WebDriverException = " + e.toString());
-	//				throw new WebDriverException("WebDriverException returned");
-	//			} catch (Exception e) {
-	//				logger.add("CoordinatesBrowserInner: Exception = " + e.toString());
-	//				lngBrowserInnerWidth = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return document.body.offsetWidth;");
-	//				lngBrowserInnerHeight = (long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return document.body.offsetHeight;");
-	//			}
-	//			variablesJSON.objectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
-	//			variablesJSON.objectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
-	//			logger.add("CoordinatesBrowserInner: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-	//		}
-	//	}
 	private class CoordinatesElement {
 		private CoordinatesElement() {
 			logger.add("  ==start==>CoordinatesElement " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			try {
-				WinDef.RECT rect = returnIECLientScreenXY();
+				//	WinDef.RECT rect = returnIECLientScreenXY();
+				WinDef.RECT rect = new WinDef.RECT();
+				rect.top = variablesJSON.objectStep.getInt("intBrowserInnerHeight");
+				rect.left = variablesJSON.objectStep.getInt("intBrowserInnerWidth");
+				rect.right = 0;
+				rect.bottom = 0;
+				System.out.println("Solution = " + rect.toRectangle().toString());
+				System.out.println("Solution rect.left = " + rect.left);
+				System.out.println("Solution rect.top = " + rect.top);
 				if (objVariablesSelenium.gobjWebElement != null) {
 					Double dblDevicePixelRatio = objVariablesCommon.gdblDevicePixelRatio;
 					Coordinates objElementCoordinates = ((Locatable) objVariablesSelenium.gobjWebElement).getCoordinates();
@@ -719,109 +646,6 @@ public class Dragonfly {
 		}
 	}
 
-	//	private class CoordinatesElementOld {
-	//		private CoordinatesElementOld() {
-	//			logger.add("  ==start==>CoordinatesElement " + getDateTimestamp());
-	//			long lngStartTime = System.currentTimeMillis();
-	//			try {
-	//				//new CoordinatesBrowserInner(   );
-	//				int intScrollbar = 0;
-	//				Point objWebDriverPoint = objVariablesSelenium.gobjWebDriver.manage().window().getPosition();
-	//				int intBrowserOuterX = objWebDriverPoint.x;
-	//				int intBrowserOuterY = objWebDriverPoint.y;
-	//				Dimension objWebDriverDimension = objVariablesSelenium.gobjWebDriver.manage().window().getSize();
-	//				int intBrowserOuterWidth = objWebDriverDimension.width;
-	//				int intBrowserOuterHeight = objWebDriverDimension.height;
-	//				variablesJSON.objectStep.putInt("intBrowserOuterX", intBrowserOuterX);
-	//				variablesJSON.objectStep.putInt("intBrowserOuterY", intBrowserOuterY);
-	//				variablesJSON.objectStep.putInt("intBrowserOuterWidth", intBrowserOuterWidth);
-	//				variablesJSON.objectStep.putInt("intBrowserOuterHeight", intBrowserOuterHeight);
-	//				if (objVariablesSelenium.gobjWebElement != null) {
-	//					Coordinates objElementCoordinates = ((Locatable) objVariablesSelenium.gobjWebElement).getCoordinates();
-	//					Point objElementPoint = objElementCoordinates.inViewPort();
-	//					Dimension objElementDimension = objVariablesSelenium.gobjWebElement.getSize();
-	//					variablesJSON.objectStep.putInt("intElementX", objElementPoint.x);
-	//					variablesJSON.objectStep.putInt("intElementY", objElementPoint.y);
-	//					variablesJSON.objectStep.putInt("intElementWidth", objElementDimension.width);
-	//					variablesJSON.objectStep.putInt("intElementHeight", objElementDimension.height);
-	//				}
-	//				int intBrowserInnerWidth = variablesJSON.objectStep.getInt("intBrowserInnerWidth");
-	//				int intBrowserInnerHeight = variablesJSON.objectStep.getInt("intBrowserInnerHeight");
-	//				int intElementX = variablesJSON.objectStep.getInt("intElementX");
-	//				int intElementY = variablesJSON.objectStep.getInt("intElementY");
-	//				int intWindowBorder = (intBrowserOuterWidth - intBrowserInnerWidth - intScrollbar) / 2;
-	//				//	intWindowBorder = 104;
-	//				int intElementScreenX = ((intBrowserOuterX + intElementX) + intWindowBorder);
-	//				int intElementScreenY = (intBrowserOuterY + intElementY) + (intBrowserOuterHeight - intBrowserInnerHeight) - intWindowBorder;
-	//				variablesJSON.objectStep.putInt("intElementScreenX", intElementScreenX);
-	//				variablesJSON.objectStep.putInt("intElementScreenY", intElementScreenY);
-	//			} catch (Exception e) {
-	//				logger.add("CoordinatesElement: Exception = " + e.toString());
-	//			} finally {
-	//				logger.add("  ==end==>CoordinatesElement " + getDateTimestamp());
-	//				logger.add("CoordinatesElement: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-	//			}
-	//		}
-	//	}
-	//C#
-	//	public static Rectangle GetAbsCoordinates(IWebDriver driver, IWebElement element)
-	//    {
-	//        var handle = GetIntPtrHandle(driver);
-	//        var ae = AutomationElement.FromHandle(handle);
-	//        AutomationElement doc = null;
-	//        var caps = ((RemoteWebDriver)driver).Capabilities;
-	//        var browserName = caps.BrowserName;
-	//        switch (browserName)
-	//        {
-	//            case "safari":
-	//                var conditions = (new AndCondition(new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Pane),
-	//                    new PropertyCondition(AutomationElement.ClassNameProperty, "SearchableWebView")));
-	//                doc = ae.FindFirst(TreeScope.Descendants, conditions);
-	//                break;
-	//            case "firefox":
-	//                doc = ae.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Document));
-	//                break;
-	//            case "chrome":
-	//                doc = ae.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.NameProperty, "Chrome Legacy Window"));
-	//                if (doc == null)
-	//                {
-	//                    doc = ae.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.NameProperty, "Google Chrome"));
-	//                    if (doc == null)
-	//                        throw new Exception("unable to find element containing browser window");
-	//                    doc = doc.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Document));
-	//                }
-	//                break;
-	//            case "internet explorer":
-	//                doc = ae.FindFirst(TreeScope.Descendants, new AndCondition(new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Pane),
-	//                    new PropertyCondition(AutomationElement.ClassNameProperty, "TabWindowClass")));
-	//                break;
-	//        }
-	//
-	//        if (doc == null)
-	//            throw new Exception("unable to find element containing browser window");
-	//
-	//        var iWinLeft = (int)doc.Current.BoundingRectangle.Left;
-	//        var iWinTop = (int)doc.Current.BoundingRectangle.Top;
-	//
-	//        var coords = ((ILocatable)element).Coordinates;
-	//        var rect = new Rectangle(iWinLeft + coords.LocationInDom.X, iWinTop + coords.LocationInDom.Y, element.Size.Width, element.Size.Height);
-	//        return rect;
-	//    }
-	//    public static IntPtr GetIntPtrHandle(this IWebDriver driver, int timeoutSeconds = 20)
-	//    {
-	//        var end = DateTime.Now.AddSeconds(timeoutSeconds);
-	//        while (DateTime.Now < end)
-	//        {
-	//            // Searching by AutomationElement is a bit faster (can filter by children only)
-	//            var ele = AutomationElement.RootElement;
-	//            foreach (AutomationElement child in ele.FindAll(TreeScope.Children, Condition.TrueCondition))
-	//            {
-	//                if (!child.Current.Name.Contains(driver.Title)) continue;
-	//                return new IntPtr(child.Current.NativeWindowHandle); ;
-	//            }
-	//        }
-	//        return IntPtr.Zero;
-	//    }
 	private class DialogLaunch extends JDialog implements ActionListener {
 		private static final long serialVersionUID = 1L;
 		private FilenameFilter objFilter;
@@ -948,8 +772,8 @@ public class Dragonfly {
 				//System.out.println("objPaths.gstrTestArea = " + objPaths.gstrTestArea);
 				//System.out.println(objPaths.gstrPathSystemUserDir);
 				//System.out.println(objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
-				//				dirPath = objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
-				//				dirPath = dirPath + "/" + objPaths.gstrPathTestConfiguration;
+				// 	dirPath = objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
+				// 	dirPath = dirPath + "/" + objPaths.gstrPathTestConfiguration;
 				dirPath = (objPaths.gstrPathSystemUserDir + "/" + objPaths.gstrPathTestConfiguration).replaceAll("\\\\", "/");
 				//System.out.println("dirPath = " + dirPath);
 				this.getApplications();
@@ -961,8 +785,8 @@ public class Dragonfly {
 				//System.out.println("objPaths.gstrTestArea = " + objPaths.gstrTestArea);
 				//System.out.println(objPaths.gstrPathSystemUserDir);
 				//System.out.println(objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
-				//				dirPath = objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
-				//				dirPath = dirPath + "/" + objPaths.gstrPathTestConfiguration;
+				// 	dirPath = objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
+				// 	dirPath = dirPath + "/" + objPaths.gstrPathTestConfiguration;
 				dirPath = (objPaths.gstrPathSystemUserDir + "/" + objPaths.gstrPathTestConfiguration).replaceAll("\\\\", "/");
 				//System.out.println("dirPath = " + dirPath);
 				this.getApplications();
@@ -974,8 +798,8 @@ public class Dragonfly {
 				//System.out.println("objPaths.gstrTestArea = " + objPaths.gstrTestArea);
 				//System.out.println(objPaths.gstrPathSystemUserDir);
 				//System.out.println(objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
-				//				dirPath = objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
-				//				dirPath = dirPath + "/" + objPaths.gstrPathTestConfiguration;
+				// 	dirPath = objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
+				// 	dirPath = dirPath + "/" + objPaths.gstrPathTestConfiguration;
 				dirPath = (objPaths.gstrPathSystemUserDir + "/" + objPaths.gstrPathTestConfiguration).replaceAll("\\\\", "/");
 				//System.out.println("dirPath = " + dirPath);
 				this.getApplications();
@@ -1241,14 +1065,14 @@ public class Dragonfly {
 					objVariablesSelenium.gobjWebElementDrop = objVariablesSelenium.gobjWebElement;
 					//Actions actions = new Actions(objVariablesSelenium.gobjWebDriver);
 					//actions.dragAndDrop(objVariablesSelenium.gobjWebElementDrag, objVariablesSelenium.gobjWebElementDrop).perform();
-					//				Actions action = new Actions(objVariablesSelenium.gobjWebDriver);
-					//				Action dragDrop = action.dragAndDrop(gobjWebElementDrag, objVariablesSelenium.gobjWebElementDrop).build();
-					//				dragDrop.perform();
+					// 	Actions action = new Actions(objVariablesSelenium.gobjWebDriver);
+					// 	Action dragDrop = action.dragAndDrop(gobjWebElementDrag, objVariablesSelenium.gobjWebElementDrop).build();
+					// 	dragDrop.perform();
 					Actions objActions = new Actions(objVariablesSelenium.gobjWebDriver);
 					Action objDragAndDrop = objActions.clickAndHold(objVariablesSelenium.gobjWebElementDrag).moveToElement(objVariablesSelenium.gobjWebElementDrop).release(objVariablesSelenium.gobjWebElementDrop).build();
 					objDragAndDrop.perform();
-					//				Actions action = new Actions(objVariablesSelenium.gobjWebDriver);
-					//				action.dragAndDrop(objVariablesSelenium.gobjWebElementDrag, objVariablesSelenium.gobjWebElementDrop).build().perform();
+					// 	Actions action = new Actions(objVariablesSelenium.gobjWebDriver);
+					// 	action.dragAndDrop(objVariablesSelenium.gobjWebElementDrag, objVariablesSelenium.gobjWebElementDrop).build().perform();
 					new SleepMilliseconds(10000);
 					blnStatus = true;
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
@@ -1365,16 +1189,14 @@ public class Dragonfly {
 			}
 			String strWindowHandle = "";
 			Object[] arrHandles = objVariablesSelenium.gobjWebDriver.getWindowHandles().toArray();
+			Collections.reverse(Arrays.asList(arrHandles));
 			for (Object objWindowHandlesEach : arrHandles) {
 				logger.add("ElementFind: objWindowHandlesEach.toString() = " + objWindowHandlesEach.toString());
 			}
-			//TODO change to search windows in reverse order
 			for (Object objWindowHandlesEach : arrHandles) {
 				try {
 					strWindowHandle = objWindowHandlesEach.toString();
 					objVariablesSelenium.gobjWebDriver.switchTo().window(strWindowHandle);
-					//objVariablesSelenium.gobjWebDriverCoordinates = objVariablesSelenium.gobjWebDriver;
-					//objVariablesSelenium.gobjWebDriverCoordinates = MyFirefoxDriver((FirefoxDriver) objVariablesSelenium.gobjWebDriver);
 					new CoordinatesBrowserInner();
 					List<Integer> arrRouteOriginal = new ArrayList<Integer>();
 					new ElementFindFramesSearch().run(arrRouteOriginal);
@@ -1408,7 +1230,30 @@ public class Dragonfly {
 			String strXpathAttributes = "";
 			String strXpathAttributesTemp = "";
 			Boolean blnRegularExpression = false;
-			//TODO fix the <re>Input error. check attribute value for keyword and handle byt creating xpath
+			//TODO fix the <re>Input error. check attribute value for keyword and handle by creating xpath
+			// Contains()
+			// Contains method is used when we know about the partial attribute value or partial text associated with the web element.
+			//
+			// Syntax:	To find the “Create an account” hyperlink, consider the following variations of contains() method.
+			//
+			// By Text
+			// –          //a[contains(text(),’Create’)]
+			// –          //a[contains(text(),’an’)]
+			// –          //a[contains(text(),’an account’)]
+			//
+			// By Attribute
+			// –          //a[contains(@id,’signup’)]
+			// –          //a[contains(@id,’link-signup’)]
+			// –          //a[contains(@id,’link)] // Take a note that two link would be highlighted, thus user would have to supply some additional attribute value in order to locate the link uniquely.
+			// 
+			// Starts-with()
+			// starts-with() method is used when we know about the initial partial attribute value or initial partial text associated with the web element. User can also use this method to locate web elements those are consist of both the static(initial) and dynamic(trailing) values.
+			//
+			// Syntax:	To find the “Create an account” hyperlink, consider the following variations of starts-with() method.
+			//
+			// By Attribute
+			// –          //a[starts-with(@id,’link-si’)]
+			// –          //a[starts-with(@id,’link-sign’)]
 			if (strAttributeValues.toLowerCase().contains("<re>")) {
 				blnRegularExpression = true;
 			}
@@ -1597,10 +1442,10 @@ public class Dragonfly {
 					return "<on>";
 				}
 			case "select":
-				//				Select objSelect = new Select(objVariablesSelenium.gobjWebElement);
-				//				objSelect.getOptions();
-				//				WebElement option = ((Select) objVariablesSelenium.gobjWebElement).getFirstSelectedOption();
-				//				logger.add("ElementGet: option.getText() = " + option.getText());
+				// 	Select objSelect = new Select(objVariablesSelenium.gobjWebElement);
+				// 	objSelect.getOptions();
+				// 	WebElement option = ((Select) objVariablesSelenium.gobjWebElement).getFirstSelectedOption();
+				// 	logger.add("ElementGet: option.getText() = " + option.getText());
 				//return ((Select) objVariablesSelenium.gobjWebElement).getFirstSelectedOption().getText().replaceAll("\\s{2,}", " ");
 				JavascriptExecutor objExecutor = (JavascriptExecutor) objVariablesSelenium.gobjWebDriver;
 				return ((String) objExecutor.executeScript("var select = arguments[0];var selection=select.options[select.selectedIndex].text;return selection;", objVariablesSelenium.gobjWebElement)).trim();
@@ -1778,9 +1623,9 @@ public class Dragonfly {
 		private ElementOnMouseOut() {
 			logger.add("  ==start==>ElementOnMouseOut " + getDateTimestamp());
 			Actions objActions = new Actions(objVariablesSelenium.gobjWebDriver);
-			//			Dimension objWebDriverDimension = objVariablesSelenium.gobjWebElement.getSize();
-			//			int intElementWidth = objWebDriverDimension.width;
-			//			int intElementHeight = objWebDriverDimension.height;
+			// Dimension objWebDriverDimension = objVariablesSelenium.gobjWebElement.getSize();
+			// int intElementWidth = objWebDriverDimension.width;
+			// int intElementHeight = objWebDriverDimension.height;
 			int intElementWidth = variablesJSON.objectStep.getInt("intElementWidth");
 			int intElementHeight = variablesJSON.objectStep.getInt("intElementHeight");
 			objActions.moveByOffset(-((intElementWidth / 2) + 1), -((intElementHeight / 2) + 1)).build().perform();
@@ -2005,8 +1850,8 @@ public class Dragonfly {
 						blnVisible = true;
 					}
 					new ElementScroll();
-					//					JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) objVariablesSelenium.gobjWebDriver;
-					//					objJavascriptExecutor.executeScript("arguments[0].scrollIntoView(false);", objVariablesSelenium.gobjWebElement);
+					// 		JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) objVariablesSelenium.gobjWebDriver;
+					// 		objJavascriptExecutor.executeScript("arguments[0].scrollIntoView(false);", objVariablesSelenium.gobjWebElement);
 					blnStatus = true;
 					logger.add("ElementScrollSync: blnStatus = true");
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
@@ -2080,8 +1925,8 @@ public class Dragonfly {
 						//ToDo add right click code
 						objActions = new Actions(objVariablesSelenium.gobjWebDriver);
 						objActions.contextClick(objVariablesSelenium.gobjWebElement).build().perform();
-						//						Actions action= new Actions(objVariablesSelenium.gobjWebDriver);
-						//						action.contextClick(objVariablesSelenium.gobjWebElement).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.RETURN).build().perform();
+						// 			Actions action= new Actions(objVariablesSelenium.gobjWebDriver);
+						// 			action.contextClick(objVariablesSelenium.gobjWebElement).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.RETURN).build().perform();
 						strStepExpected = "right_click";
 						break;
 					default:
@@ -2312,8 +2157,8 @@ public class Dragonfly {
 						//ToDo add right click code javascript
 						Actions action = new Actions(objVariablesSelenium.gobjWebDriver);
 						action.contextClick(objVariablesSelenium.gobjWebElement).build().perform();
-						//						Actions action= new Actions(objVariablesSelenium.gobjWebDriver);
-						//						action.contextClick(objVariablesSelenium.gobjWebElement).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.RETURN).build().perform();
+						// 			Actions action= new Actions(objVariablesSelenium.gobjWebDriver);
+						// 			action.contextClick(objVariablesSelenium.gobjWebElement).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.RETURN).build().perform();
 						break;
 					default:
 						throw new ExceptionKeywordNotValid("The keyword " + strInputValue + " for the click event is not valid! Please us one of the following <click>, <doubleclick>, <rightclick>");
@@ -2403,96 +2248,96 @@ public class Dragonfly {
 					objSelect.getOptions();
 					objSelect.selectByVisibleText(strInputValue);
 					// set_js
-					//					int intOptionsEach;
-					//					String strOptions = "";
-					//					String[] arrOptions;
-					//					strOptions = (String) objJavascriptExecutor.executeScript("var txt = '';var x = arguments[0];var i;for (i = 0; i < x.length; i++)" + "{txt = txt + '|' + x.options[i].text;}" + "return txt;", objVariablesSelenium.gobjWebElement);
-					//					strOptions = strOptions.substring(1);
-					//					arrOptions = strOptions.split("\\|");
-					//					for (intOptionsEach = 0; intOptionsEach < arrOptions.length; intOptionsEach++) {
-					//						 logger.add("ElementSetJavascriptExecutor: arrOptions[intOptionsEach].toString() = " + arrOptions[intOptionsEach].toString());
-					//						if (arrOptions[intOptionsEach].toString().equals(variablesJSON.objectStep.get("strInputValue").toString())) {
-					//							blnSet = true;
-					//							Select objSelect = new Select(objVariablesSelenium.gobjWebElement);
-					//							objJavascriptExecutor.executeScript("arguments[0].focus();", objVariablesSelenium.gobjWebElement);
-					//							objSelect.selectByIndex(intOptionsEach);
-					//							objJavascriptExecutor.executeScript("arguments[0].blur();", objVariablesSelenium.gobjWebElement);
-					//							// objJavascriptExecutor.executeScript("arguments[0].selectedIndex=" + intOptionsEach + ";", objVariablesSelenium.gobjWebElement);
-					//							// if (strOuterHTML.toLowerCase().contains("onchange")) {
-					//							// try {
-					//							// objJavascriptExecutor.executeScript("arguments[0].onchange();", objVariablesSelenium.gobjWebElement);
-					//							// } catch (WebDriverException e) {
-					//							//  logger.add("ElementSetJavascriptExecutor = " + e.toString());
-					//							// }
-					//							// }
-					//							break;
-					//						}
-					//					}
-					//					intOptionsLength = objObject.Object.Options.All.Length
-					//					        ' switch based on keyword input
-					//					        Select Case LCase(strValueToSelect)
-					//					        Case "<blank>"
-					//					            strValueToSelect = ""
-					//					        Case "<first>"
-					//					            strValueToSelect = objObject.Object.Options.All.Item(0).Innertext
-					//					        Case "<second>"
-					//					            strValueToSelect = objObject.Object.Options.All.Item(1).Innertext
-					//					        Case "<third>"
-					//					            strValueToSelect = objObject.Object.Options.All.Item(2).Innertext
-					//					        Case "<last>"
-					//					            strValueToSelect = objObject.Object.Options.All.Item(intOptionsLength - 1).Innertext
-					//					        Case "<random>"
-					//					            intRandom = GenerateRandomNumberBetween(0, intOptionsLength - 1)
-					//					            strValueToSelect = objObject.Object.Options.All.Item(intRandom).Innertext
-					//					        End Select
-					//					        '  check if item is in the list
-					//					        '  loop until object value exists in the list or the intMillisecondsWaited value is exceeded
-					//					        Do Until CDbl(intMillisecondsWaited) > CDbl(intDefaultTimeOutMilliseconds)
-					//					            '            strAllItems = ""
-					//					            strAllItems = objObject.GetROProperty("all items")
-					//					            ' refresh object each loop if can be refreshed
-					//					            If blnShouldRefreshObject = True Then
-					//					                objObject.RefreshObject
-					//					            End If
-					//					            For intOptionsEach = 0 To intOptionsLength - 1
-					//					                If CStr(objObject.Object.Options.All.Item(intOptionsEach).Innertext) = CStr(strValueToSelect) Then
-					//					                    blnItemFound = True
-					//					                    gdtmStartTimeStep = Now
-					//					                    objObject.Select strValueToSelect
-					//					                    Exit For
-					//					                    '                    If strAllItems = "" Then
-					//					                    '                        strAllItems = objObject.Object.Options.All.Item(intOptionsEach).Innertext
-					//					                    '                    Else
-					//					                    '                        strAllItems = strAllItems & ";" & objObject.Object.Options.All.Item(intOptionsEach).Innertext
-					//					                    '                    End If
-					//					                End If
-					//					            Next
-					//					            If blnItemFound = True Then
-					//					                Exit Do
-					//					            End If
-					//					            ' wait within the loop 100 milliseconds to allow loop to check 10 times per second if object does not exist
-					//					            Wait 0, 100
-					//					            '  sets the intMillisecondsWaited variable to the number of milliseconds waited from the point when the intTimerStart was set
-					//					            intMilliseconds Waited = CDbl((Timer - intStartTime) * 1000)
-					//					        Loop
-					//					    End If    '===>   '   If blnEnabled = True Then
-					//					    '  report pass or fail based on the boolean variables set above
-					//					    If blnItemFound = True Then
-					//					        WebListSelect = True
-					//					        ReporterEventScreenShot micPass, strStep, "The selection of the  {" & strObjectToString & "} object with path {" & strObjectPath & "} item value {" & strValueToSelect & "} after {" & intMillisecondsWaited & "} milliseconds."
-					//					    ElseIf blnVisible = False Then
-					//					        WebListSelect = False
-					//					        ReporterEventScreenShot micFail, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is hidden."
-					//					        ReporterEventScreenShot micInfo, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is hidden after {" & intMillisecondsWaited & "} milliseconds."
-					//					    ElseIf blnEnabled = False Then
-					//					        WebListSelect = False
-					//					        ReporterEventScreenShot micFail, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is disabled."
-					//					        ReporterEventScreenShot micInfo, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is disabled after {" & intMillisecondsWaited & "} milliseconds."
-					//					    ElseIf blnItemFound = False Then
-					//					        WebListSelect = False
-					//					        ReporterEventScreenShot micFail, strStep, "The selection of the {" & strValueToSelect & "} object with path {" & strObjectPath & "} failed due to item not found in list.  The following is a list of all items: {" & strAllItems & "}"
-					//					        ReporterEventScreenShot micInfo, strStep, "The selection of the {" & strValueToSelect & "} object with path {" & strObjectPath & "} failed due to item not found in list.  The following is a list of all items: {" & strAllItems & "} after {" & intMillisecondsWaited & "} milliseconds."
-					//					    End If
+					// 		int intOptionsEach;
+					// 		String strOptions = "";
+					// 		String[] arrOptions;
+					// 		strOptions = (String) objJavascriptExecutor.executeScript("var txt = '';var x = arguments[0];var i;for (i = 0; i < x.length; i++)" + "{txt = txt + '|' + x.options[i].text;}" + "return txt;", objVariablesSelenium.gobjWebElement);
+					// 		strOptions = strOptions.substring(1);
+					// 		arrOptions = strOptions.split("\\|");
+					// 		for (intOptionsEach = 0; intOptionsEach < arrOptions.length; intOptionsEach++) {
+					// 			 logger.add("ElementSetJavascriptExecutor: arrOptions[intOptionsEach].toString() = " + arrOptions[intOptionsEach].toString());
+					// 			if (arrOptions[intOptionsEach].toString().equals(variablesJSON.objectStep.get("strInputValue").toString())) {
+					// 				blnSet = true;
+					// 				Select objSelect = new Select(objVariablesSelenium.gobjWebElement);
+					// 				objJavascriptExecutor.executeScript("arguments[0].focus();", objVariablesSelenium.gobjWebElement);
+					// 				objSelect.selectByIndex(intOptionsEach);
+					// 				objJavascriptExecutor.executeScript("arguments[0].blur();", objVariablesSelenium.gobjWebElement);
+					// 				// objJavascriptExecutor.executeScript("arguments[0].selectedIndex=" + intOptionsEach + ";", objVariablesSelenium.gobjWebElement);
+					// 				// if (strOuterHTML.toLowerCase().contains("onchange")) {
+					// 				// try {
+					// 				// objJavascriptExecutor.executeScript("arguments[0].onchange();", objVariablesSelenium.gobjWebElement);
+					// 				// } catch (WebDriverException e) {
+					// 				//  logger.add("ElementSetJavascriptExecutor = " + e.toString());
+					// 				// }
+					// 				// }
+					// 				break;
+					// 			}
+					// 		}
+					// 		intOptionsLength = objObject.Object.Options.All.Length
+					// 		        ' switch based on keyword input
+					// 		        Select Case LCase(strValueToSelect)
+					// 		        Case "<blank>"
+					// 		            strValueToSelect = ""
+					// 		        Case "<first>"
+					// 		            strValueToSelect = objObject.Object.Options.All.Item(0).Innertext
+					// 		        Case "<second>"
+					// 		            strValueToSelect = objObject.Object.Options.All.Item(1).Innertext
+					// 		        Case "<third>"
+					// 		            strValueToSelect = objObject.Object.Options.All.Item(2).Innertext
+					// 		        Case "<last>"
+					// 		            strValueToSelect = objObject.Object.Options.All.Item(intOptionsLength - 1).Innertext
+					// 		        Case "<random>"
+					// 		            intRandom = GenerateRandomNumberBetween(0, intOptionsLength - 1)
+					// 		            strValueToSelect = objObject.Object.Options.All.Item(intRandom).Innertext
+					// 		        End Select
+					// 		        '  check if item is in the list
+					// 		        '  loop until object value exists in the list or the intMillisecondsWaited value is exceeded
+					// 		        Do Until CDbl(intMillisecondsWaited) > CDbl(intDefaultTimeOutMilliseconds)
+					// 		            '            strAllItems = ""
+					// 		            strAllItems = objObject.GetROProperty("all items")
+					// 		            ' refresh object each loop if can be refreshed
+					// 		            If blnShouldRefreshObject = True Then
+					// 		                objObject.RefreshObject
+					// 		            End If
+					// 		            For intOptionsEach = 0 To intOptionsLength - 1
+					// 		                If CStr(objObject.Object.Options.All.Item(intOptionsEach).Innertext) = CStr(strValueToSelect) Then
+					// 		                    blnItemFound = True
+					// 		                    gdtmStartTimeStep = Now
+					// 		                    objObject.Select strValueToSelect
+					// 		                    Exit For
+					// 		                    '                    If strAllItems = "" Then
+					// 		                    '                        strAllItems = objObject.Object.Options.All.Item(intOptionsEach).Innertext
+					// 		                    '                    Else
+					// 		                    '                        strAllItems = strAllItems & ";" & objObject.Object.Options.All.Item(intOptionsEach).Innertext
+					// 		                    '                    End If
+					// 		                End If
+					// 		            Next
+					// 		            If blnItemFound = True Then
+					// 		                Exit Do
+					// 		            End If
+					// 		            ' wait within the loop 100 milliseconds to allow loop to check 10 times per second if object does not exist
+					// 		            Wait 0, 100
+					// 		            '  sets the intMillisecondsWaited variable to the number of milliseconds waited from the point when the intTimerStart was set
+					// 		            intMilliseconds Waited = CDbl((Timer - intStartTime) * 1000)
+					// 		        Loop
+					// 		    End If    '===>   '   If blnEnabled = True Then
+					// 		    '  report pass or fail based on the boolean variables set above
+					// 		    If blnItemFound = True Then
+					// 		        WebListSelect = True
+					// 		        ReporterEventScreenShot micPass, strStep, "The selection of the  {" & strObjectToString & "} object with path {" & strObjectPath & "} item value {" & strValueToSelect & "} after {" & intMillisecondsWaited & "} milliseconds."
+					// 		    ElseIf blnVisible = False Then
+					// 		        WebListSelect = False
+					// 		        ReporterEventScreenShot micFail, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is hidden."
+					// 		        ReporterEventScreenShot micInfo, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is hidden after {" & intMillisecondsWaited & "} milliseconds."
+					// 		    ElseIf blnEnabled = False Then
+					// 		        WebListSelect = False
+					// 		        ReporterEventScreenShot micFail, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is disabled."
+					// 		        ReporterEventScreenShot micInfo, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is disabled after {" & intMillisecondsWaited & "} milliseconds."
+					// 		    ElseIf blnItemFound = False Then
+					// 		        WebListSelect = False
+					// 		        ReporterEventScreenShot micFail, strStep, "The selection of the {" & strValueToSelect & "} object with path {" & strObjectPath & "} failed due to item not found in list.  The following is a list of all items: {" & strAllItems & "}"
+					// 		        ReporterEventScreenShot micInfo, strStep, "The selection of the {" & strValueToSelect & "} object with path {" & strObjectPath & "} failed due to item not found in list.  The following is a list of all items: {" & strAllItems & "} after {" & intMillisecondsWaited & "} milliseconds."
+					// 		    End If
 					break;
 				case "table":
 					break;
@@ -2743,11 +2588,11 @@ public class Dragonfly {
 					new SyncPleaseWait();
 					objVariablesSetSync.gblnSyncPleaseWait = true;
 				}
-				//				if (objVariablesSetSync.gblnSyncAlert == false) {
-				//					///SyncAlert
-				//					new SyncAlert();
-				//					objVariablesSetSync.gblnSyncAlert = true;
-				//				}
+				// 	if (objVariablesSetSync.gblnSyncAlert == false) {
+				// 		///SyncAlert
+				// 		new SyncAlert();
+				// 		objVariablesSetSync.gblnSyncAlert = true;
+				// 	}
 				if (objVariablesSetSync.gblnSyncWaitForReadyState == false) {
 					///SyncWaitForReadyState
 					new SyncWaitForReadyState();
@@ -2784,24 +2629,24 @@ public class Dragonfly {
 			String strHandle = "";
 			//new SleepMilliseconds(2000);
 			//WebElement objWebElement = objWebDriver.findElement(By.id("tooltipID"));
-			//			System.out.println("winExists = " + objAutoItSetObject.objAutoIt.winExists("[CLASS:tooltips_class32]"));
-			//			System.out.println("winGetState = " + objAutoItSetObject.objAutoIt.winGetState("[CLASS:tooltips_class32]"));
-			//			System.out.println("winWaitActive = " + objAutoItSetObject.objAutoIt.winWaitActive("[CLASS:tooltips_class32]", "", 10));
-			//			System.out.println("winGetState = " + objAutoItSetObject.objAutoIt.winGetState("This is the tip"));
-			//			$oIE = _IECreate("about:blank")
-			//					$hWnd = _IEPropertyGet($oIE, "hwnd")
-			//					$aPos = WinGetPos( ControlGetHandle($hWnd, "", "[CLASS:Internet Explorer_Server; INSTANCE:1]") )
-			//					MouseMove($aPos[0], $aPOs[1])
+			// System.out.println("winExists = " + objAutoItSetObject.objAutoIt.winExists("[CLASS:tooltips_class32]"));
+			// System.out.println("winGetState = " + objAutoItSetObject.objAutoIt.winGetState("[CLASS:tooltips_class32]"));
+			// System.out.println("winWaitActive = " + objAutoItSetObject.objAutoIt.winWaitActive("[CLASS:tooltips_class32]", "", 10));
+			// System.out.println("winGetState = " + objAutoItSetObject.objAutoIt.winGetState("This is the tip"));
+			// $oIE = _IECreate("about:blank")
+			// 		$hWnd = _IEPropertyGet($oIE, "hwnd")
+			// 		$aPos = WinGetPos( ControlGetHandle($hWnd, "", "[CLASS:Internet Explorer_Server; INSTANCE:1]") )
+			// 		MouseMove($aPos[0], $aPOs[1])
 			//
 			System.out.println("winGetHandle: = " + objAutoItSetObject.objAutoIt.winGetHandle("[CLASS:Chrome_WidgetWin_1]"));
 			strHandle = objAutoItSetObject.objAutoIt.controlGetHandle("", "", "[CLASS:Chrome_RenderWidgetHostHWND; INSTANCE:1]");
 			System.out.println("strHandle = " + strHandle);
-			//			WinDef.HWND strHandleChrome = (HWND(objAutoItSetObject.objAutoIt.controlGetHandle("", "", "[CLASS:Chrome_RenderWidgetHostHWND; INSTANCE:1]"));
-			//			System.out.println("strHandleChrome = " + strHandleChrome);
+			// WinDef.HWND strHandleChrome = (HWND(objAutoItSetObject.objAutoIt.controlGetHandle("", "", "[CLASS:Chrome_RenderWidgetHostHWND; INSTANCE:1]"));
+			// System.out.println("strHandleChrome = " + strHandleChrome);
 			//WinDef.RECT rectChrome = new WinDef.RECT();
-			//			User32.INSTANCE.GetWindowRect(strHandleChrome, rectChrome);
-			//			System.out.println("winGetPosX: = " + rectChrome.left);
-			//			System.out.println("winGetPosY: = " + rectChrome.top);
+			// User32.INSTANCE.GetWindowRect(strHandleChrome, rectChrome);
+			// System.out.println("winGetPosX: = " + rectChrome.left);
+			// System.out.println("winGetPosY: = " + rectChrome.top);
 			System.out.println("controlGetPosX: = " + objAutoItSetObject.objAutoIt.controlGetPosX("", "", "[CLASS:Chrome_RenderWidgetHostHWND; INSTANCE:1]"));
 			System.out.println("controlGetPosY: = " + objAutoItSetObject.objAutoIt.controlGetPosX("", "", "[CLASS:Chrome_RenderWidgetHostHWND; INSTANCE:1]"));
 			System.out.println("winGetPosX: = " + objAutoItSetObject.objAutoIt.winGetPosX(strHandle));
@@ -2853,21 +2698,21 @@ public class Dragonfly {
 			}
 			//ToolTip1.clickAndHold(objVariablesSelenium.gobjWebElement).build().perform();
 			//Actions.moveToElement(objVariablesSelenium.gobjWebElement).build().clickAndHold()
-			//			System.out.println(objWebElement.getLocation().getX());
-			//			System.out.println(objWebElement.getLocation().getY());
-			//			System.out.println(objWebElement.getSize().width);
-			//			System.out.println(objWebElement.getSize().height);
+			// System.out.println(objWebElement.getLocation().getX());
+			// System.out.println(objWebElement.getLocation().getY());
+			// System.out.println(objWebElement.getSize().width);
+			// System.out.println(objWebElement.getSize().height);
 			//System.out.println("winWaitActive = " + objAutoItSetObject.objAutoIt.winWaitActive("[CLASS:tooltips_class32]", "", 10));
 			new SleepMilliseconds(3000);
-			//			String strToolTipAutoItText = objAutoItSetObject.objAutoIt.controlGetText("This is a tooltip", "", "");
-			//			System.out.println(">>>>>>>>>>>>>>>>>");
-			//			System.out.println(">>>>>>>>>>>>>>>>>strToolTipAutoItText controlGetText value is: " + strToolTipAutoItText);
-			//			System.out.println(">>>>>>>>>>>>>>>>>");
-			//			System.out.println("winExists = " + objAutoItSetObject.objAutoIt.winExists("[CLASS:tooltips_class32]"));
-			//			System.out.println("winGetState = " + objAutoItSetObject.objAutoIt.winGetState("[CLASS:tooltips_class32]"));
-			//			if (objAutoItSetObject.objAutoIt.winExists("[CLASS:tooltips_class32]")) {
-			//				System.out.println("winExists yes");
-			//			}
+			// String strToolTipAutoItText = objAutoItSetObject.objAutoIt.controlGetText("This is a tooltip", "", "");
+			// System.out.println(">>>>>>>>>>>>>>>>>");
+			// System.out.println(">>>>>>>>>>>>>>>>>strToolTipAutoItText controlGetText value is: " + strToolTipAutoItText);
+			// System.out.println(">>>>>>>>>>>>>>>>>");
+			// System.out.println("winExists = " + objAutoItSetObject.objAutoIt.winExists("[CLASS:tooltips_class32]"));
+			// System.out.println("winGetState = " + objAutoItSetObject.objAutoIt.winGetState("[CLASS:tooltips_class32]"));
+			// if (objAutoItSetObject.objAutoIt.winExists("[CLASS:tooltips_class32]")) {
+			// 	System.out.println("winExists yes");
+			// }
 			boolean blnToolTipAutoItText = objAutoItSetObject.objAutoIt.winWaitActive("[TITLE:this is bold text]", "", 10);
 			String strToolTipAutoItText = objAutoItSetObject.objAutoIt.winGetTitle("[TITLE:this is bold text]");
 			System.out.println(">>>>>>>>>>>>>>>>>");
@@ -2975,9 +2820,9 @@ public class Dragonfly {
 						blnGet = true;
 					}
 					blnStatus = true;
-					//				} catch (ExceptionElementTagNameNotSupported e) {
-					//					blnExit = true;
-					//					 logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					// 	} catch (ExceptionElementTagNameNotSupported e) {
+					// 		blnExit = true;
+					// 		 logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
@@ -3695,10 +3540,10 @@ public class Dragonfly {
 				case "strAssistiveProperties":
 				case "strOutputValue":
 					this.getKeywordsAndValue(variablesJSON.objectStep.getString(strKey));
-					//					if (arrResults.length > 0) {
-					//						variablesJSON.objectStep.putValue("strStatus", "fail");
-					//						variablesJSON.objectStep.putValue("blnExitOnFail", "true");
-					//					}
+					// 		if (arrResults.length > 0) {
+					// 			variablesJSON.objectStep.putValue("strStatus", "fail");
+					// 			variablesJSON.objectStep.putValue("blnExitOnFail", "true");
+					// 		}
 					break;
 				case "strLogicalName":
 					this.getKeywordsAndValue(variablesJSON.objectStep.getString(strKey));
@@ -4512,7 +4357,6 @@ public class Dragonfly {
 		private WebElement gobjWebElementPleaseWait = null;
 	}
 
-	//private static final WebDriver foo = null;
 	private class VariablesSetSync {
 		private Boolean gblnSyncAlert = false;
 		private Boolean gblnSyncAngularJs = false;
@@ -4875,10 +4719,10 @@ public class Dragonfly {
 		//		new Dragonfly().new WebDriverTest();
 		//		BufferedImage objBufferedImage = null;
 		//		try {
-		//			objBufferedImage = ImageIO.read(new File("C:/Users/perrj115/Documents/GitHub/dragonfly/Dragonfly/Websites/dragonfly.jpg"));
+		// objBufferedImage = ImageIO.read(new File("C:/Users/perrj115/Documents/GitHub/dragonfly/Dragonfly/Websites/dragonfly.jpg"));
 		//		} catch (IOException e1) {
-		//			// TODO Auto-generated catch block
-		//			e1.printStackTrace();
+		// // TODO Auto-generated catch block
+		// e1.printStackTrace();
 		//		}
 		//		Dragonfly objDragonfly = new Dragonfly();
 		//		objDragonfly.logger.add(objDragonfly.new ImageEncodeToString().run(objBufferedImage, "jpg"));
@@ -5206,149 +5050,6 @@ public class Dragonfly {
 		return Integer.toString(randomNumberRange(1, 99999));
 	}
 
-	//	public WinDef.RECT returnIECLientScreenXYold() {
-	//		WinDef.HWND hwnd = null;
-	//		WinDef.RECT rect = new WinDef.RECT();
-	//		String strBrowserWindowClass = "";
-	//		switch (objVariablesCommon.gstrBrowserSelection.toLowerCase()) {
-	//		case "ie":
-	//			strBrowserWindowClass = "IEFrame";
-	//			break;
-	//		case "chrome":
-	//			WinDef.RECT rectChrome = new WinDef.RECT();
-	//			WinDef.HWND hwndChromeChild = null;
-	//			String strTitle = objVariablesSelenium.gobjWebDriver.getTitle();
-	//			System.out.println("strTitle = " + strTitle);
-	//			System.out.println("objVariablesSelenium.gobjWebDriver.getCurrentUrl() = " + objVariablesSelenium.gobjWebDriver.getCurrentUrl());
-	//			System.out.println("objVariablesSelenium.gobjWebDriver.getWindowHandle() = " + objVariablesSelenium.gobjWebDriver.getWindowHandle());
-	//			System.out.println("objVariablesSelenium.gobjWebDriver.getClass() = " + objVariablesSelenium.gobjWebDriver.getClass());
-	//			System.out.println("objVariablesSelenium.gobjWebDriver.toString() = " + objVariablesSelenium.gobjWebDriver.toString());
-	//			System.out.println("objVariablesSelenium.gobjWebDriver.manage().getClass() = " + objVariablesSelenium.gobjWebDriver.manage().getClass());
-	//			System.out.println("objVariablesSelenium.gobjWebDriver.manage().toString() = " + objVariablesSelenium.gobjWebDriver.manage().toString());
-	//			System.out.println("objVariablesSelenium.gobjWebDriver.manage().window().getClass() = " + objVariablesSelenium.gobjWebDriver.manage().window().getClass());
-	//			System.out.println("objVariablesSelenium.gobjWebDriver.manage().window().getPosition() = " + objVariablesSelenium.gobjWebDriver.manage().window().getPosition());
-	//			System.out.println("objVariablesSelenium.gobjWebDriver.manage().window().toString() = " + objVariablesSelenium.gobjWebDriver.manage().window().toString());
-	//			WinDef.HWND hwndChromeParent = User32.INSTANCE.FindWindow("Chrome_WidgetWin_1", strTitle);
-	//			System.out.println("hwndChromeParent = " + hwndChromeParent);
-	//			User32.INSTANCE.GetWindowRect(hwndChromeParent, rectChrome);
-	//			System.out.println("ChromeParent rect = " + rectChrome.toRectangle().toString());
-	//			System.out.println("hwndChromeChild = " + hwndChromeChild);
-	//			hwndChromeChild = User32Ex.instance.FindWindowEx(hwndChromeParent, null, "Chrome_RenderWidgetHostHWND", null);
-	//			System.out.println("hwndChromeChild = " + hwndChromeChild);
-	//			WinDef.RECT rectChromeChild = new WinDef.RECT();
-	//			User32.INSTANCE.GetWindowRect(hwndChromeChild, rectChromeChild);
-	//			System.out.println("ChromeChild rectChromeChild = " + rectChromeChild.toRectangle().toString());
-	//			System.out.println("////////");
-	//			return rectChromeChild;
-	//			//strBrowserWindowClass = "Chrome_WidgetWin_1";
-	//		case "firefox":
-	//			strBrowserWindowClass = "MozillaWindowClass";
-	//			break;
-	//		}
-	//		hwnd = User32.INSTANCE.FindWindow(strBrowserWindowClass, null); // class name
-	//		System.out.println("hwnd = " + hwnd);
-	//		//HWND foregroundWindow = Tools.getForegroundWindow();
-	//		//WinDef.HWND hwnd3 = User32.INSTANCE.FindWindow("Internet Explorer_Server", null); // class name
-	//		//System.out.println("hwnd3 = " + hwnd3);
-	//		User32.INSTANCE.EnumChildWindows(hwnd, new User32.WNDENUMPROC() {
-	//			@Override
-	//			public boolean callback(WinDef.HWND hwnd2, Pointer pntr) {
-	//				char[] textBuffer = new char[512];
-	//				char[] textBuffer2 = new char[512];
-	//				User32.INSTANCE.GetClassName(hwnd2, textBuffer, 512);
-	//				User32.INSTANCE.GetWindowText(hwnd2, textBuffer2, 512);
-	//				String wText = Native.toString(textBuffer);
-	//				String strBrowserClientClass = "";
-	//				switch (objVariablesCommon.gstrBrowserSelection.toLowerCase()) {
-	//				case "ie":
-	//					strBrowserClientClass = "Internet Explorer_Server";
-	//					break;
-	//				case "chrome":
-	//					//strBrowserClientClass = "Chrome_RenderWidgetHostHWND";
-	//					break;
-	//				case "firefox":
-	//					strBrowserClientClass = "MozillaContentWindowClass";
-	//					break;
-	//				}
-	//				String wText2 = Native.toString(textBuffer2);
-	//				System.out.println("className: " + wText + " title: " + wText2);
-	//				if (wText.equals(strBrowserClientClass)) {
-	//					User32.INSTANCE.GetWindowRect(hwnd2, rect);
-	//					System.out.println("hwnd2 = " + hwnd2);
-	//					System.out.println("Solution = " + rect.toRectangle().toString());
-	//					System.out.println("Solution rect.left = " + rect.left);
-	//					System.out.println("Solution rect.top = " + rect.top);
-	//					return false;
-	//				}
-	//				return true;
-	//			}
-	//		}, null);
-	//		return rect;
-	//	}
-	public WinDef.RECT returnIECLientScreenXY() {
-		logger.add("  ==start==>returnIECLientScreenXY " + getDateTimestamp());
-		//		WinDef.HWND hwnd = null;
-		WinDef.RECT rect = new WinDef.RECT();
-		//		String strBrowserParentClass = "";
-		//		String strBrowserClientClass = "";
-		//		String strExpectedTitle = objVariablesSelenium.gobjWebDriver.getTitle();
-		//		switch (objVariablesCommon.gstrBrowserSelection.toLowerCase()) {
-		//		case "ie":
-		//			strBrowserParentClass = "IEFrame";
-		//			strBrowserClientClass = "Internet Explorer_Server";
-		//			break;
-		//		case "chrome":
-		//			strBrowserParentClass = "Chrome_WidgetWin_1";
-		//			strBrowserClientClass = "Chrome_RenderWidgetHostHWND";
-		//			break;
-		//		case "firefox":
-		//			//new CoordinatesBrowserInner();
-		//			//			Long lngmozInnerScreenX = null;
-		//			//			Long lngmozInnerScreenY = null;
-		//			//			System.out.println("rect.left ");
-		//			//objVariablesSelenium.gobjWebDriverCoordinates.switchTo().defaultContent();
-		//			//			lngmozInnerScreenY = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
-		//			//			lngmozInnerScreenX = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriverCoordinates).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
-		//			rect.top = variablesJSON.objectStep.getInt("intBrowserInnerHeight");
-		//			rect.left = variablesJSON.objectStep.getInt("intBrowserInnerWidth");
-		//			rect.right = 0;
-		//			rect.bottom = 0;
-		//			System.out.println("rect.left = " + rect.left);
-		//			System.out.println("rect.top = " + rect.top);
-		//			return rect;
-		//		}
-		rect.top = variablesJSON.objectStep.getInt("intBrowserInnerHeight");
-		rect.left = variablesJSON.objectStep.getInt("intBrowserInnerWidth");
-		rect.right = 0;
-		rect.bottom = 0;
-		//////hwnd = EnumParentWindow(strBrowserParentClass, strExpectedTitle);
-		//////System.out.println("hwnd = " + hwnd);
-		//////rect = EnumChildWindow(hwnd, strBrowserClientClass);
-		System.out.println("Solution = " + rect.toRectangle().toString());
-		System.out.println("Solution rect.left = " + rect.left);
-		System.out.println("Solution rect.top = " + rect.top);
-		return rect;
-	}
-
-	//	public class MyFirefoxDriver extends FirefoxDriver {
-	//		private WebDriver driver;
-	//
-	//		//		public MyFirefoxDriver() {
-	//		//			super();
-	//		//			this.manage().window().maximize();
-	//		//		}
-	//		public MyFirefoxDriver(FirefoxDriver objFirefoxDriver) {
-	//			//super();
-	//			System.out.println("Solution rect.top = " + objFirefoxDriver.toString());
-	//			this.driver = objFirefoxDriver;
-	//		}
-	//	}
-	public WebDriver MyFirefoxDriver(FirefoxDriver objFirefoxDriver) {
-		WebDriver driver = new FirefoxDriver();
-		System.out.println("Solution rect.top = " + objFirefoxDriver.toString());
-		return (WebDriver) objFirefoxDriver;
-	}
-
 	private String createObjectName() {
 		String strAttributeValue = "";
 		String strAttributeValues = variablesJSON.objectStep.getString("strAttributeValues");
@@ -5369,59 +5070,6 @@ public class Dragonfly {
 			}
 		}
 		return strObjectsAttributes;
-	}
-
-	private WinDef.RECT EnumChildWindow(WinDef.HWND hwndChild, String strChildParentClassName) {
-		WinDef.RECT rect = new WinDef.RECT();
-		User32.INSTANCE.EnumChildWindows(hwndChild, new User32.WNDENUMPROC() {
-			@Override
-			public boolean callback(WinDef.HWND hwndChild, Pointer pntr) {
-				char[] textBufferClassName = new char[512];
-				User32.INSTANCE.GetClassName(hwndChild, textBufferClassName, 512);
-				String strActualClassName = Native.toString(textBufferClassName);
-				//System.out.println("hwndChild = " + hwndChild + "               className: " + strActualClassName);
-				if (strActualClassName.equals(strChildParentClassName)) {
-					User32.INSTANCE.GetWindowRect(hwndChild, rect);
-					//System.out.println("Solution = " + rect.toRectangle().toString());
-					//	System.out.println("Solution rect.left = " + rect.left);
-					//	System.out.println("Solution rect.top = " + rect.top);
-					return false;
-				}
-				return true;
-			}
-		}, null);
-		return rect;
-	}
-
-	private WinDef.HWND EnumParentWindow(String strExpectedParentClassName, String strExpectedParentTitle) {
-		User32.INSTANCE.EnumChildWindows(null, new User32.WNDENUMPROC() {
-			@Override
-			public boolean callback(WinDef.HWND hwndParent, Pointer pntr) {
-				WinDef.RECT rectParentWindow = new WinDef.RECT();
-				char[] textBufferClassName = new char[512];
-				char[] textBufferWindowText = new char[512];
-				User32.INSTANCE.GetClassName(hwndParent, textBufferClassName, 512);
-				User32.INSTANCE.GetWindowText(hwndParent, textBufferWindowText, 512);
-				String strActualClassName = Native.toString(textBufferClassName);
-				String strActualWindowText = Native.toString(textBufferWindowText);
-				System.out.println("strExpectedParentTitle = " + strExpectedParentTitle);
-				System.out.println("hwndParent = " + hwndParent + "               className: " + strActualClassName + "               title: " + strActualWindowText);
-				if (strActualClassName.equals(strExpectedParentClassName)) {
-					if (strActualWindowText.contains(strExpectedParentTitle)) {
-						User32.INSTANCE.GetWindowRect(hwndParent, rectParentWindow);
-						objVariablesCommon.hwndParentWindow = hwndParent;
-						//System.out.println("hwndParent3 = " + objVariablesCommon.hwndParentWindow);
-						//System.out.println("hwndParent = " + hwndParent);
-						//System.out.println("Solution = " + rectParentWindow.toRectangle().toString());
-						//	System.out.println("Solution rect.left = " + rectParentWindow.left);
-						//	System.out.println("Solution rect.top = " + rectParentWindow.top);
-						return false;
-					}
-				}
-				return true;
-			}
-		}, null);
-		return objVariablesCommon.hwndParentWindow;
 	}
 
 	private String formatDateTime(Long lngStartTimeMillis) {
@@ -5965,15 +5613,15 @@ public class Dragonfly {
 		int intTestStepRow = 0;
 		logger.add("WriteReportToHtml: objJsonArrayReportSteps = " + objJsonArrayReportSteps);
 		try {
-			//				function popUp() {
-			//					var newWindow = window.open("", "Test", "width=300,height=300,scrollbars=1,resizable=1")
-			//					var text = "cat"
-			//					var html = "<html><head></head><body>Hello, <b>" + text + "</b>."
-			//					html += "How are you today?</body></html>"
-			//					newWindow.document.open()
-			//					newWindow.document.write(html)
-			//					newWindow.document.close()
-			//				}
+			// 	function popUp() {
+			// 		var newWindow = window.open("", "Test", "width=300,height=300,scrollbars=1,resizable=1")
+			// 		var text = "cat"
+			// 		var html = "<html><head></head><body>Hello, <b>" + text + "</b>."
+			// 		html += "How are you today?</body></html>"
+			// 		newWindow.document.open()
+			// 		newWindow.document.write(html)
+			// 		newWindow.document.close()
+			// 	}
 			objStringBuilder.append("<!DOCTYPE html>");
 			objStringBuilder.append("<html lang=\"en\">");
 			objStringBuilder.append("<script language=\"javascript\" type=\"text/javascript\">");
@@ -6069,9 +5717,9 @@ public class Dragonfly {
 				objStringBuilder.append("<br>");
 				objStringBuilder.append("<br>");
 				//TODO this should be removed.  check what happens and add step details for the break.
-				//					if (objJsonObjectReportStep.get("strAction").toString().toLowerCase().equals("break")) {
-				//						break;
-				//					}
+				// 		if (objJsonObjectReportStep.get("strAction").toString().toLowerCase().equals("break")) {
+				// 			break;
+				// 		}
 			}
 		} catch (Exception e) {
 			logger.add("WriteReportToHtml: " + e.toString());
@@ -6088,10 +5736,10 @@ public class Dragonfly {
 //	private static ExpectedCondition<Boolean> waitForAngularFinishProcessing() {
 //		 logger.add("  ==start==>waitForAngularFinishProcessing " + getDateTimestamp());
 //		return new ExpectedCondition<Boolean>() {
-//			@Override
-//			private Boolean apply(WebDriver driver) {
-//				return Boolean.valueOf(((JavascriptExecutor) driver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)").toString());
-//			}
+// @Override
+// private Boolean apply(WebDriver driver) {
+// 	return Boolean.valueOf(((JavascriptExecutor) driver).executeScript("return (window.angular != null) && (angular.element(document).injector() != null) && (angular.element(document).injector().get(‘$http’).pendingRequests.length === 0)").toString());
+// }
 //		};
 //	}
 //Options for private class ClearMyTracksByProcessCookies

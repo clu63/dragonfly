@@ -1,0 +1,30 @@
+	private WinDef.HWND EnumParentWindow(String strExpectedParentClassName, String strExpectedParentTitle) {
+		User32.INSTANCE.EnumChildWindows(null, new User32.WNDENUMPROC() {
+			@Override
+			public boolean callback(WinDef.HWND hwndParent, Pointer pntr) {
+				WinDef.RECT rectParentWindow = new WinDef.RECT();
+				char[] textBufferClassName = new char[512];
+				char[] textBufferWindowText = new char[512];
+				User32.INSTANCE.GetClassName(hwndParent, textBufferClassName, 512);
+				User32.INSTANCE.GetWindowText(hwndParent, textBufferWindowText, 512);
+				String strActualClassName = Native.toString(textBufferClassName);
+				String strActualWindowText = Native.toString(textBufferWindowText);
+				System.out.println("strExpectedParentTitle = " + strExpectedParentTitle);
+				System.out.println("hwndParent = " + hwndParent + "               className: " + strActualClassName + "               title: " + strActualWindowText);
+				if (strActualClassName.equals(strExpectedParentClassName)) {
+					if (strActualWindowText.contains(strExpectedParentTitle)) {
+						User32.INSTANCE.GetWindowRect(hwndParent, rectParentWindow);
+						objVariablesCommon.hwndParentWindow = hwndParent;
+						//System.out.println("hwndParent3 = " + objVariablesCommon.hwndParentWindow);
+						//System.out.println("hwndParent = " + hwndParent);
+						//System.out.println("Solution = " + rectParentWindow.toRectangle().toString());
+						//	System.out.println("Solution rect.left = " + rectParentWindow.left);
+						//	System.out.println("Solution rect.top = " + rectParentWindow.top);
+						return false;
+					}
+				}
+				return true;
+			}
+		}, null);
+		return objVariablesCommon.hwndParentWindow;
+	}

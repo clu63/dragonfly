@@ -1,0 +1,13 @@
+	public interface User32Ex extends W32APIOptions {
+		User32Ex instance = (User32Ex) Native.loadLibrary("user32", User32Ex.class, DEFAULT_OPTIONS);
+
+		boolean ClientToScreen(WinDef.HWND hWnd, WinDef.POINT ptClientUL);
+
+		WinDef.HWND FindWindowEx(WinDef.HWND parent, WinDef.HWND child, String className, String window);
+
+		boolean GetClientRect(WinDef.HWND hWnd, WinDef.RECT rect);
+
+		boolean GetCursorPos(long[] lpPoint);
+
+		WinDef.HWND WindowFromPoint(long point);
+	}

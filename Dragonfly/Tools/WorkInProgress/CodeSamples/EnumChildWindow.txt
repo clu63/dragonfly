@@ -1,0 +1,21 @@
+private WinDef.RECT EnumChildWindow(WinDef.HWND hwndChild, String strChildParentClassName) {
+		WinDef.RECT rect = new WinDef.RECT();
+		User32.INSTANCE.EnumChildWindows(hwndChild, new User32.WNDENUMPROC() {
+			@Override
+			public boolean callback(WinDef.HWND hwndChild, Pointer pntr) {
+				char[] textBufferClassName = new char[512];
+				User32.INSTANCE.GetClassName(hwndChild, textBufferClassName, 512);
+				String strActualClassName = Native.toString(textBufferClassName);
+				//System.out.println("hwndChild = " + hwndChild + "               className: " + strActualClassName);
+				if (strActualClassName.equals(strChildParentClassName)) {
+					User32.INSTANCE.GetWindowRect(hwndChild, rect);
+					//System.out.println("Solution = " + rect.toRectangle().toString());
+					//	System.out.println("Solution rect.left = " + rect.left);
+					//	System.out.println("Solution rect.top = " + rect.top);
+					return false;
+				}
+				return true;
+			}
+		}, null);
+		return rect;
+	}

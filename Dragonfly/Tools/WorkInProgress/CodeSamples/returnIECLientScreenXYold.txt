@@ -1,0 +1,79 @@
+	//	public WinDef.RECT returnIECLientScreenXYold() {
+	//		WinDef.HWND hwnd = null;
+	//		WinDef.RECT rect = new WinDef.RECT();
+	//		String strBrowserWindowClass = "";
+	//		switch (objVariablesCommon.gstrBrowserSelection.toLowerCase()) {
+	//		case "ie":
+	//			strBrowserWindowClass = "IEFrame";
+	//			break;
+	//		case "chrome":
+	//			WinDef.RECT rectChrome = new WinDef.RECT();
+	//			WinDef.HWND hwndChromeChild = null;
+	//			String strTitle = objVariablesSelenium.gobjWebDriver.getTitle();
+	//			System.out.println("strTitle = " + strTitle);
+	//			System.out.println("objVariablesSelenium.gobjWebDriver.getCurrentUrl() = " + objVariablesSelenium.gobjWebDriver.getCurrentUrl());
+	//			System.out.println("objVariablesSelenium.gobjWebDriver.getWindowHandle() = " + objVariablesSelenium.gobjWebDriver.getWindowHandle());
+	//			System.out.println("objVariablesSelenium.gobjWebDriver.getClass() = " + objVariablesSelenium.gobjWebDriver.getClass());
+	//			System.out.println("objVariablesSelenium.gobjWebDriver.toString() = " + objVariablesSelenium.gobjWebDriver.toString());
+	//			System.out.println("objVariablesSelenium.gobjWebDriver.manage().getClass() = " + objVariablesSelenium.gobjWebDriver.manage().getClass());
+	//			System.out.println("objVariablesSelenium.gobjWebDriver.manage().toString() = " + objVariablesSelenium.gobjWebDriver.manage().toString());
+	//			System.out.println("objVariablesSelenium.gobjWebDriver.manage().window().getClass() = " + objVariablesSelenium.gobjWebDriver.manage().window().getClass());
+	//			System.out.println("objVariablesSelenium.gobjWebDriver.manage().window().getPosition() = " + objVariablesSelenium.gobjWebDriver.manage().window().getPosition());
+	//			System.out.println("objVariablesSelenium.gobjWebDriver.manage().window().toString() = " + objVariablesSelenium.gobjWebDriver.manage().window().toString());
+	//			WinDef.HWND hwndChromeParent = User32.INSTANCE.FindWindow("Chrome_WidgetWin_1", strTitle);
+	//			System.out.println("hwndChromeParent = " + hwndChromeParent);
+	//			User32.INSTANCE.GetWindowRect(hwndChromeParent, rectChrome);
+	//			System.out.println("ChromeParent rect = " + rectChrome.toRectangle().toString());
+	//			System.out.println("hwndChromeChild = " + hwndChromeChild);
+	//			hwndChromeChild = User32Ex.instance.FindWindowEx(hwndChromeParent, null, "Chrome_RenderWidgetHostHWND", null);
+	//			System.out.println("hwndChromeChild = " + hwndChromeChild);
+	//			WinDef.RECT rectChromeChild = new WinDef.RECT();
+	//			User32.INSTANCE.GetWindowRect(hwndChromeChild, rectChromeChild);
+	//			System.out.println("ChromeChild rectChromeChild = " + rectChromeChild.toRectangle().toString());
+	//			System.out.println("////////");
+	//			return rectChromeChild;
+	//			//strBrowserWindowClass = "Chrome_WidgetWin_1";
+	//		case "firefox":
+	//			strBrowserWindowClass = "MozillaWindowClass";
+	//			break;
+	//		}
+	//		hwnd = User32.INSTANCE.FindWindow(strBrowserWindowClass, null); // class name
+	//		System.out.println("hwnd = " + hwnd);
+	//		//HWND foregroundWindow = Tools.getForegroundWindow();
+	//		//WinDef.HWND hwnd3 = User32.INSTANCE.FindWindow("Internet Explorer_Server", null); // class name
+	//		//System.out.println("hwnd3 = " + hwnd3);
+	//		User32.INSTANCE.EnumChildWindows(hwnd, new User32.WNDENUMPROC() {
+	//			@Override
+	//			public boolean callback(WinDef.HWND hwnd2, Pointer pntr) {
+	//				char[] textBuffer = new char[512];
+	//				char[] textBuffer2 = new char[512];
+	//				User32.INSTANCE.GetClassName(hwnd2, textBuffer, 512);
+	//				User32.INSTANCE.GetWindowText(hwnd2, textBuffer2, 512);
+	//				String wText = Native.toString(textBuffer);
+	//				String strBrowserClientClass = "";
+	//				switch (objVariablesCommon.gstrBrowserSelection.toLowerCase()) {
+	//				case "ie":
+	//					strBrowserClientClass = "Internet Explorer_Server";
+	//					break;
+	//				case "chrome":
+	//					//strBrowserClientClass = "Chrome_RenderWidgetHostHWND";
+	//					break;
+	//				case "firefox":
+	//					strBrowserClientClass = "MozillaContentWindowClass";
+	//					break;
+	//				}
+	//				String wText2 = Native.toString(textBuffer2);
+	//				System.out.println("className: " + wText + " title: " + wText2);
+	//				if (wText.equals(strBrowserClientClass)) {
+	//					User32.INSTANCE.GetWindowRect(hwnd2, rect);
+	//					System.out.println("hwnd2 = " + hwnd2);
+	//					System.out.println("Solution = " + rect.toRectangle().toString());
+	//					System.out.println("Solution rect.left = " + rect.left);
+	//					System.out.println("Solution rect.top = " + rect.top);
+	//					return false;
+	//				}
+	//				return true;
+	//			}
+	//		}, null);
+	//		return rect;
+	//	}

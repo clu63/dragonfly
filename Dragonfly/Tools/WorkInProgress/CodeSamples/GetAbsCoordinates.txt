@@ -1,0 +1,45 @@
+//C#
+	//	public static Rectangle GetAbsCoordinates(IWebDriver driver, IWebElement element)
+	//    {
+	//        var handle = GetIntPtrHandle(driver);
+	//        var ae = AutomationElement.FromHandle(handle);
+	//        AutomationElement doc = null;
+	//        var caps = ((RemoteWebDriver)driver).Capabilities;
+	//        var browserName = caps.BrowserName;
+	//        switch (browserName)
+	//        {
+	//            case "safari":
+	//                var conditions = (new AndCondition(new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Pane),
+	//                    new PropertyCondition(AutomationElement.ClassNameProperty, "SearchableWebView")));
+	//                doc = ae.FindFirst(TreeScope.Descendants, conditions);
+	//                break;
+	//            case "firefox":
+	//                doc = ae.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Document));
+	//                break;
+	//            case "chrome":
+	//                doc = ae.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.NameProperty, "Chrome Legacy Window"));
+	//                if (doc == null)
+	//                {
+	//                    doc = ae.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.NameProperty, "Google Chrome"));
+	//                    if (doc == null)
+	//                        throw new Exception("unable to find element containing browser window");
+	//                    doc = doc.FindFirst(TreeScope.Descendants, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Document));
+	//                }
+	//                break;
+	//            case "internet explorer":
+	//                doc = ae.FindFirst(TreeScope.Descendants, new AndCondition(new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.Pane),
+	//                    new PropertyCondition(AutomationElement.ClassNameProperty, "TabWindowClass")));
+	//                break;
+	//        }
+	//
+	//        if (doc == null)
+	//            throw new Exception("unable to find element containing browser window");
+	//
+	//        var iWinLeft = (int)doc.Current.BoundingRectangle.Left;
+	//        var iWinTop = (int)doc.Current.BoundingRectangle.Top;
+	//
+	//        var coords = ((ILocatable)element).Coordinates;
+	//        var rect = new Rectangle(iWinLeft + coords.LocationInDom.X, iWinTop + coords.LocationInDom.Y, element.Size.Width, element.Size.Height);
+	//        return rect;
+	//    }
+	
