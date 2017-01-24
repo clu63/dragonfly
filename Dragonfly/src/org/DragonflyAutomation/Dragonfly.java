@@ -1231,30 +1231,7 @@ public class Dragonfly {
 			String strXpathAttributesTemp = "";
 			Boolean blnRegularExpression = false;
 			//TODO fix the <re>Input error. check attribute value for keyword and handle by creating xpath
-			// Contains()
-			// Contains method is used when we know about the partial attribute value or partial text associated with the web element.
-			//
-			// Syntax:	To find the “Create an account” hyperlink, consider the following variations of contains() method.
-			//
-			// By Text
-			// –          //a[contains(text(),’Create’)]
-			// –          //a[contains(text(),’an’)]
-			// –          //a[contains(text(),’an account’)]
-			//
-			// By Attribute
-			// –          //a[contains(@id,’signup’)]
-			// –          //a[contains(@id,’link-signup’)]
-			// –          //a[contains(@id,’link)] // Take a note that two link would be highlighted, thus user would have to supply some additional attribute value in order to locate the link uniquely.
-			// 
-			// Starts-with()
-			// starts-with() method is used when we know about the initial partial attribute value or initial partial text associated with the web element. User can also use this method to locate web elements those are consist of both the static(initial) and dynamic(trailing) values.
-			//
-			// Syntax:	To find the “Create an account” hyperlink, consider the following variations of starts-with() method.
-			//
-			// By Attribute
-			// –          //a[starts-with(@id,’link-si’)]
-			// –          //a[starts-with(@id,’link-sign’)]
-			if (strAttributeValues.toLowerCase().contains("<re>")) {
+			if (strAttributeValues.toLowerCase().contains("<contains>") || strAttributeValues.toLowerCase().contains("<starts>")) {
 				blnRegularExpression = true;
 			}
 			if (strAttributeNames.toLowerCase().equals("xpath") && blnRegularExpression.equals(false)) {
@@ -1285,20 +1262,32 @@ public class Dragonfly {
 						}
 						break;
 					case "text":
-						if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("<re>")) {
-							strXpathAttributesTemp = "contains(text()" + ", '" + arrAttributeValues[intAttributeEach].substring(4) + "')";
-						} else {
+						switch (getKeyword(arrAttributeValues[intAttributeEach].toLowerCase())) {
+						case "<contains>":
+							strXpathAttributesTemp = "contains(text()" + ", '" + getKeywordValue(arrAttributeValues[intAttributeEach]) + "')";
+							break;
+						case "<starts>":
+							strXpathAttributesTemp = "starts-with(text()" + ", '" + getKeywordValue(arrAttributeValues[intAttributeEach]) + "')";
+							break;
+						default:
 							strXpathAttributesTemp = "text()='" + arrAttributeValues[intAttributeEach] + "' ";
+							break;
 						}
 						break;
 					default:
 						if (arrAttributeNames[intAttributeEach].toLowerCase().equals("type")) {
 							variablesJSON.objectStep.putValue("strType", arrAttributeValues[intAttributeEach]);
 						}
-						if (arrAttributeValues[intAttributeEach].toLowerCase().startsWith("<re>")) {
-							strXpathAttributesTemp = "contains(translate(@" + arrAttributeNames[intAttributeEach] + ",'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), '" + arrAttributeValues[intAttributeEach].substring(4).toLowerCase() + "')";
-						} else {
+						switch (getKeyword(arrAttributeValues[intAttributeEach].toLowerCase())) {
+						case "<contains>":
+							strXpathAttributesTemp = "contains(translate(@" + arrAttributeNames[intAttributeEach] + ",'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), '" + getKeywordValue(arrAttributeValues[intAttributeEach]).toLowerCase() + "')";
+							break;
+						case "<starts>":
+							strXpathAttributesTemp = "starts-with(translate(@" + arrAttributeNames[intAttributeEach] + ",'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'), '" + getKeywordValue(arrAttributeValues[intAttributeEach]).toLowerCase() + "')";
+							break;
+						default:
 							strXpathAttributesTemp = "@" + arrAttributeNames[intAttributeEach] + "='" + arrAttributeValues[intAttributeEach] + "'";
+							break;
 						}
 						break;
 					}
@@ -2016,7 +2005,7 @@ public class Dragonfly {
 							int intLeftArrowPosition = strOptions.indexOf("<", intRightArrowPosition);
 							strValueToSelect = strOptions.substring(intRightArrowPosition + 1, intLeftArrowPosition);
 						}
-						logger.add("KeywordReturn: strKeywordValue2 " + strValueToSelect);
+						logger.add("ElementSet: strKeywordValue2 " + strValueToSelect);
 						logger.add("ElementSet: KeywordReturn Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 						break;
 					case "<ends>":
@@ -2029,7 +2018,7 @@ public class Dragonfly {
 							int intLeftArrowPosition = strOptions.indexOf("<", intRightArrowPosition);
 							strValueToSelect = strOptions.substring(intRightArrowPosition + 1, intLeftArrowPosition);
 						}
-						logger.add("KeywordReturn: strValueToSelect " + strValueToSelect);
+						logger.add("ElementSet: strValueToSelect " + strValueToSelect);
 						logger.add("ElementSet: KeywordReturn Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 						break;
 					case "<contains>":
@@ -2038,26 +2027,26 @@ public class Dragonfly {
 						logger.add("ElementSet strKeywordValue = " + strKeywordValue);
 						lngStartTime = System.currentTimeMillis();
 						int intKeywordCount = strOptions.length() - strOptions.replace(strKeywordValue, "").length();
-						logger.add("KeywordReturn: intKeywordCount = " + intKeywordCount);
+						logger.add("ElementSet: intKeywordCount = " + intKeywordCount);
 						for (int intTestInstanceEach = 0; intTestInstanceEach < intKeywordCount; intTestInstanceEach++) {
-							logger.add("KeywordReturn: intStart = " + intStart);
+							logger.add("ElementSet: intStart = " + intStart);
 							intMatchPosition = strOptions.indexOf(strKeywordValue, intStart);
-							logger.add("KeywordReturn: intMatchPosition = " + intMatchPosition);
+							logger.add("ElementSet: intMatchPosition = " + intMatchPosition);
 							intRightArrowPosition = strOptions.lastIndexOf(">", intMatchPosition);
-							logger.add("KeywordReturn: intRightArrowPosition = " + intRightArrowPosition);
+							logger.add("ElementSet: intRightArrowPosition = " + intRightArrowPosition);
 							if (intRightArrowPosition > -1) {
 								int intLeftArrowPosition = strOptions.indexOf("<", intMatchPosition);
-								logger.add("KeywordReturn: intLeftArrowPosition = " + intLeftArrowPosition);
+								logger.add("ElementSet: intLeftArrowPosition = " + intLeftArrowPosition);
 								strValueToSelect = strOptions.substring(intRightArrowPosition + 1, intLeftArrowPosition);
 							}
-							logger.add("KeywordReturn: strValueToSelect = " + strValueToSelect);
+							logger.add("ElementSet: strValueToSelect = " + strValueToSelect);
 							if (strValueToSelect.startsWith("<option")) {
 								intStart = intMatchPosition + 1;
 							} else {
 								break;
 							}
 						}
-						logger.add("KeywordReturn: strValueToSelect " + strValueToSelect);
+						logger.add("ElementSet: strValueToSelect " + strValueToSelect);
 						logger.add("ElementSet: KeywordReturn Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 						break;
 					case "<re>":
@@ -2065,7 +2054,7 @@ public class Dragonfly {
 					default:
 						break;
 					}
-					logger.add("KeywordReturn: strValueToSelect " + strValueToSelect);
+					logger.add("ElementSet: strValueToSelect " + strValueToSelect);
 					variablesJSON.objectStep.putString("strInputValue", strValueToSelect);
 					try {
 						strStepExpected = "select";
@@ -3510,9 +3499,9 @@ public class Dragonfly {
 	private class KeywordsValid {
 		//TODO KeywordsValid to check all
 		private String[] arrKV_strLogicalName = { "<te>" };
-		private String[] arrKV_strAttributeValues = { "<re>", "<td>", "<ti>", "<tl>" };
+		private String[] arrKV_strAttributeValues = { "<contains>", "<starts>", "<td>", "<ti>", "<tl>" };
 		private String[] arrKV_strInputValue = { "<re>", "<td>", "<ti>", "<tl>", "<click>", "<doubleclick>", "<rightclick>", "<on>", "<off>", "<blank>", "<first>", "<second>", "<third>", "<last>", "<random>", "<contains>", "<ends>", "<starts>", "<skip>" };
-		private String[] arrKV_strLoopOrIf = { "<if>", "<else if>", "<else>", "<end if>", "<loopstart>", "<loopexit>", "<loopend>" };
+		private String[] arrKV_strLoopOrIf = { "<if>", "<elseif>", "<else>", "<endif>", "<loopstart>", "<loopexit>", "<loopend>" };
 		private String[] arrResults;
 		private String strInputValueFromJson = "";
 		private String strKeywordEach = "";
@@ -3659,7 +3648,7 @@ public class Dragonfly {
 				if (intLeftArrowPosition > -1) {
 					strKeyword = strValueToFindKeyword.substring(intLeftArrowPosition, intRightArrowPosition + 1).toLowerCase();
 					strKeywordValue = strValueToFindKeyword.substring(intRightArrowPosition + 1, strValueToFindKeyword.length());
-					if (strKeyword.equals("<re>")) {
+					if (strKeyword.equals("<re>") || strKeyword.equals("<contains>") || strKeyword.equals("<starts>")) {
 						strKeywordValue = strKeyword + strKeywordValue;
 					}
 					logger.add("getKeywordsAndValue strKeyword = " + strKeyword);
@@ -4818,7 +4807,7 @@ public class Dragonfly {
 						objDragonfly.variablesJSON.objectStep.putValue("strInputValue", strInputValue);
 					}
 					switch (objDragonfly.variablesJSON.objectStep.returnKeyword("strLoopOrIf")) {
-					case "<else if>":
+					case "<elseif>":
 						if (blnIfSet.equals(true)) {
 							blnIf = false;
 						} else {
@@ -4958,7 +4947,7 @@ public class Dragonfly {
 							blnIf = false;
 						}
 						break;
-					case "<else if>":
+					case "<elseif>":
 						if (blnIfSet.equals(false)) {
 							if (objDragonfly.variablesJSON.objectStep.verifyEquals("strStatus", "pass")) {
 								blnIf = true;
@@ -4968,7 +4957,7 @@ public class Dragonfly {
 							}
 						}
 						break;
-					case "<end if>":
+					case "<endif>":
 						blnIf = true;
 						blnIfSet = false;
 						break;
@@ -5088,7 +5077,7 @@ public class Dragonfly {
 		if (intRightArrowPosition > -1) {
 			strKeyword = strValueToFindKeyword.substring(0, intRightArrowPosition + 1);
 		}
-		logger.add("KeywordReturn: strKeyword = " + strKeyword);
+		logger.add("getKeyword: strKeyword = " + strKeyword);
 		return strKeyword;
 	}
 
@@ -5102,7 +5091,7 @@ public class Dragonfly {
 				intKeywordValue = Integer.parseInt(strValueToFindInt);
 			}
 		}
-		logger.add("KeywordReturn: intKeywordValue " + intKeywordValue);
+		logger.add("getKeywordIntValue: intKeywordValue " + intKeywordValue);
 		return intKeywordValue;
 	}
 
@@ -5114,7 +5103,7 @@ public class Dragonfly {
 		} else {
 			strKeywordValue = strValue;
 		}
-		logger.add("KeywordReturn: strKeywordValue " + strKeywordValue);
+		logger.add("getKeywordValue: strKeywordValue " + strKeywordValue);
 		return strKeywordValue;
 	}
 
