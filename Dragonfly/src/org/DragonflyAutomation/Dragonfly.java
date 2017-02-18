@@ -648,22 +648,36 @@ public class Dragonfly {
 
 	private class DialogLaunch extends JDialog implements ActionListener {
 		private static final long serialVersionUID = 1L;
+		private Font fontDialog = new Font("Tahoma", Font.PLAIN, 20);
 		private FilenameFilter objFilter;
 		private JButton btnCancel = new JButton("Cancel");
 		private JButton btnRun = new JButton("Run");
 		private JComboBox<String> comboApplication = new JComboBox<String>();
 		private JComboBox<String> comboTest = new JComboBox<String>();
-		private JRadioButton rdbtnTestValue = new JRadioButton("Value in test", true);
-		private JRadioButton rdbtnChrome = new JRadioButton("Chrome");
-		private JRadioButton rdbtnFirefox = new JRadioButton("Firefox");
-		private JRadioButton rdbtnIE = new JRadioButton("IE");
+		private JRadioButton rdbtnTestValue = new JRadioButton("value in test", true);
+		private JRadioButton rdbtnChrome = new JRadioButton("chrome");
+		private JRadioButton rdbtnFirefox = new JRadioButton("firefox");
+		private JRadioButton rdbtnIE = new JRadioButton("internet explorer");
 		private JRadioButton rdbtnInternal = new JRadioButton("internal");
 		private JRadioButton rdbtnLocal = new JRadioButton("local");
 		private JRadioButton rdbtnPublic = new JRadioButton("public");
+		private JRadioButton rdbtnEnvTestValue = new JRadioButton("value in test", true);
+		private JRadioButton rdbtnEnv1 = new JRadioButton("environment 1");
+		private JRadioButton rdbtnEnv2 = new JRadioButton("environment 2");
+		private JRadioButton rdbtnEnv3 = new JRadioButton("environment 3");
+		private JRadioButton rdbtnEnv4 = new JRadioButton("environment 4");
+		private JRadioButton rdbtnEnv5 = new JRadioButton("environment 5");
+		private JRadioButton rdbtnEnv6 = new JRadioButton("environment 6");
 		private String dirPath = "";
 		private String[] arrDropEmpty = new String[0];
 		private String gstrNameTest;
 		private String gstrTestArea;
+		private int intColumn1 = 12;
+		private int intColumn2 = 245;
+		private int intColumn3 = 465;
+		private int intColumnWidth1 = 200;
+		private int intColumnWidth2 = 200;
+		private int intColumnWidth3 = 220;
 
 		private DialogLaunch() {
 			this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -680,19 +694,19 @@ public class Dragonfly {
 			//SelectTheTestArea Group radio buttons.
 			JLabel lblSelectTheTestArea = new JLabel("Select the test area");
 			lblSelectTheTestArea.setHorizontalAlignment(SwingConstants.LEFT);
-			lblSelectTheTestArea.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblSelectTheTestArea.setBounds(12, 15, 398, 35);
+			lblSelectTheTestArea.setFont(fontDialog);
+			lblSelectTheTestArea.setBounds(intColumn1, 15, intColumnWidth1, 35);
 			getContentPane().add(lblSelectTheTestArea);
-			rdbtnLocal.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			rdbtnLocal.setBounds(12, 45, 127, 25);
+			rdbtnLocal.setFont(fontDialog);
+			rdbtnLocal.setBounds(intColumn1, 45, intColumnWidth1, 25);
 			rdbtnLocal.addActionListener(this);
 			getContentPane().add(rdbtnLocal);
-			rdbtnPublic.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			rdbtnPublic.setBounds(12, 70, 127, 25);
+			rdbtnPublic.setFont(fontDialog);
+			rdbtnPublic.setBounds(intColumn1, 70, intColumnWidth1, 25);
 			rdbtnPublic.addActionListener(this);
 			getContentPane().add(rdbtnPublic);
-			rdbtnInternal.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			rdbtnInternal.setBounds(12, 95, 127, 25);
+			rdbtnInternal.setFont(fontDialog);
+			rdbtnInternal.setBounds(intColumn1, 95, intColumnWidth1, 25);
 			rdbtnInternal.addActionListener(this);
 			getContentPane().add(rdbtnInternal);
 			ButtonGroup group = new ButtonGroup();
@@ -702,23 +716,23 @@ public class Dragonfly {
 			//SelectTheBrowser Group radio buttons.
 			JLabel lblSelectTheBrowser = new JLabel("Select the browser");
 			lblSelectTheBrowser.setHorizontalAlignment(SwingConstants.LEFT);
-			lblSelectTheBrowser.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			lblSelectTheBrowser.setBounds(427, 15, 398, 35);
+			lblSelectTheBrowser.setFont(fontDialog);
+			lblSelectTheBrowser.setBounds(intColumn2, 15, intColumnWidth2, 35);
 			getContentPane().add(lblSelectTheBrowser);
-			rdbtnTestValue.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			rdbtnTestValue.setBounds(427, 45, 150, 25);
+			rdbtnTestValue.setFont(fontDialog);
+			rdbtnTestValue.setBounds(intColumn2, 45, intColumnWidth2, 25);
 			rdbtnTestValue.addActionListener(this);
 			getContentPane().add(rdbtnTestValue);
-			rdbtnIE.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			rdbtnIE.setBounds(427, 70, 127, 25);
+			rdbtnIE.setFont(fontDialog);
+			rdbtnIE.setBounds(intColumn2, 70, intColumnWidth2, 25);
 			rdbtnIE.addActionListener(this);
 			getContentPane().add(rdbtnIE);
-			rdbtnChrome.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			rdbtnChrome.setBounds(427, 95, 127, 25);
+			rdbtnChrome.setFont(fontDialog);
+			rdbtnChrome.setBounds(intColumn2, 95, intColumnWidth2, 25);
 			rdbtnChrome.addActionListener(this);
 			getContentPane().add(rdbtnChrome);
-			rdbtnFirefox.setFont(new Font("Tahoma", Font.PLAIN, 20));
-			rdbtnFirefox.setBounds(427, 120, 127, 25);
+			rdbtnFirefox.setFont(fontDialog);
+			rdbtnFirefox.setBounds(intColumn2, 120, intColumnWidth2, 25);
 			getContentPane().add(rdbtnFirefox);
 			rdbtnFirefox.addActionListener(this);
 			ButtonGroup groupBrowser = new ButtonGroup();
@@ -726,13 +740,55 @@ public class Dragonfly {
 			groupBrowser.add(rdbtnIE);
 			groupBrowser.add(rdbtnChrome);
 			groupBrowser.add(rdbtnFirefox);
+			//SelectTheEnvironment Group radio buttons.
+			JLabel lblSelectTheEnvironment = new JLabel("Select the environment");
+			lblSelectTheEnvironment.setHorizontalAlignment(SwingConstants.LEFT);
+			lblSelectTheEnvironment.setFont(fontDialog);
+			lblSelectTheEnvironment.setBounds(intColumn3, 15, intColumnWidth3, 35);
+			getContentPane().add(lblSelectTheEnvironment);
+			rdbtnEnvTestValue.setFont(fontDialog);
+			rdbtnEnvTestValue.setBounds(intColumn3, 45, intColumnWidth3, 25);
+			rdbtnEnvTestValue.addActionListener(this);
+			getContentPane().add(rdbtnEnvTestValue);
+			rdbtnEnv1.setFont(fontDialog);
+			rdbtnEnv1.setBounds(intColumn3, 70, intColumnWidth3, 25);
+			rdbtnEnv1.addActionListener(this);
+			getContentPane().add(rdbtnEnv1);
+			rdbtnEnv2.setFont(fontDialog);
+			rdbtnEnv2.setBounds(intColumn3, 95, intColumnWidth3, 25);
+			rdbtnEnv2.addActionListener(this);
+			getContentPane().add(rdbtnEnv2);
+			rdbtnEnv3.setFont(fontDialog);
+			rdbtnEnv3.setBounds(intColumn3, 120, intColumnWidth3, 25);
+			rdbtnEnv3.addActionListener(this);
+			getContentPane().add(rdbtnEnv3);
+			rdbtnEnv4.setFont(fontDialog);
+			rdbtnEnv4.setBounds(intColumn3, 145, intColumnWidth3, 25);
+			rdbtnEnv4.addActionListener(this);
+			getContentPane().add(rdbtnEnv4);
+			rdbtnEnv5.setFont(fontDialog);
+			rdbtnEnv5.setBounds(intColumn3, 170, intColumnWidth3, 25);
+			rdbtnEnv5.addActionListener(this);
+			getContentPane().add(rdbtnEnv5);
+			rdbtnEnv6.setFont(fontDialog);
+			rdbtnEnv6.setBounds(intColumn3, 195, intColumnWidth3, 25);
+			rdbtnEnv6.addActionListener(this);
+			getContentPane().add(rdbtnEnv6);
+			ButtonGroup groupEnvironment = new ButtonGroup();
+			groupEnvironment.add(rdbtnEnvTestValue);
+			groupEnvironment.add(rdbtnEnv1);
+			groupEnvironment.add(rdbtnEnv2);
+			groupEnvironment.add(rdbtnEnv3);
+			groupEnvironment.add(rdbtnEnv4);
+			groupEnvironment.add(rdbtnEnv5);
+			groupEnvironment.add(rdbtnEnv6);
 			//lblSelectTheApplication
 			JLabel lblSelectTheApplication = new JLabel("Select the application");
-			lblSelectTheApplication.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			lblSelectTheApplication.setFont(fontDialog);
 			lblSelectTheApplication.setHorizontalAlignment(SwingConstants.LEFT);
 			lblSelectTheApplication.setBounds(12, 141, 398, 35);
 			getContentPane().add(lblSelectTheApplication);
-			comboApplication.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			comboApplication.setFont(fontDialog);
 			comboApplication.setToolTipText("Tip the tool");
 			comboApplication.setBounds(12, 175, 410, 40);
 			comboApplication.setEnabled(false);
@@ -741,21 +797,21 @@ public class Dragonfly {
 			//lblSelectTheTest
 			JLabel lblSelectTheTest = new JLabel("Select the test");
 			lblSelectTheTest.setHorizontalAlignment(SwingConstants.LEFT);
-			lblSelectTheTest.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			lblSelectTheTest.setFont(fontDialog);
 			lblSelectTheTest.setBounds(12, 252, 398, 35);
 			getContentPane().add(lblSelectTheTest);
 			comboTest.setToolTipText("Tip the tool");
-			comboTest.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			comboTest.setFont(fontDialog);
 			comboTest.setBounds(12, 283, 708, 40);
 			comboTest.setEnabled(false);
 			comboTest.addActionListener(this);
 			getContentPane().add(comboTest);
-			btnRun.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			btnRun.setFont(fontDialog);
 			btnRun.setBounds(12, 373, 310, 55);
 			btnRun.setEnabled(false);
 			btnRun.addActionListener(this);
 			getContentPane().add(btnRun);
-			btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+			btnCancel.setFont(fontDialog);
 			btnCancel.setBounds(410, 373, 310, 55);
 			btnCancel.addActionListener(this);
 			getContentPane().add(btnCancel);
@@ -769,47 +825,27 @@ public class Dragonfly {
 				this.gstrTestArea = "local";
 				objPaths.gstrTestArea = "local";
 				objPaths.setDirectory("local");
-				//System.out.println("objPaths.gstrTestArea = " + objPaths.gstrTestArea);
-				//System.out.println(objPaths.gstrPathSystemUserDir);
-				//System.out.println(objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
-				// 	dirPath = objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
-				// 	dirPath = dirPath + "/" + objPaths.gstrPathTestConfiguration;
 				dirPath = (objPaths.gstrPathSystemUserDir + "/" + objPaths.gstrPathTestConfiguration).replaceAll("\\\\", "/");
-				//System.out.println("dirPath = " + dirPath);
 				this.getApplications();
 			}
 			if (objActionEvent.getSource() == rdbtnPublic) {
 				this.gstrTestArea = "public";
 				objPaths.gstrTestArea = "public";
 				objPaths.setDirectory("public");
-				//System.out.println("objPaths.gstrTestArea = " + objPaths.gstrTestArea);
-				//System.out.println(objPaths.gstrPathSystemUserDir);
-				//System.out.println(objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
-				// 	dirPath = objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
-				// 	dirPath = dirPath + "/" + objPaths.gstrPathTestConfiguration;
 				dirPath = (objPaths.gstrPathSystemUserDir + "/" + objPaths.gstrPathTestConfiguration).replaceAll("\\\\", "/");
-				//System.out.println("dirPath = " + dirPath);
 				this.getApplications();
 			}
 			if (objActionEvent.getSource() == rdbtnInternal) {
 				this.gstrTestArea = "internal";
 				objPaths.gstrTestArea = "internal";
 				objPaths.setDirectory("internal");
-				//System.out.println("objPaths.gstrTestArea = " + objPaths.gstrTestArea);
-				//System.out.println(objPaths.gstrPathSystemUserDir);
-				//System.out.println(objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/"));
-				// 	dirPath = objPaths.gstrPathSystemUserDir.replaceAll("\\\\", "/");
-				// 	dirPath = dirPath + "/" + objPaths.gstrPathTestConfiguration;
 				dirPath = (objPaths.gstrPathSystemUserDir + "/" + objPaths.gstrPathTestConfiguration).replaceAll("\\\\", "/");
-				//System.out.println("dirPath = " + dirPath);
 				this.getApplications();
 			}
 			if (objActionEvent.getSource() == comboApplication) {
-				//System.out.println(comboApplication.getSelectedItem());
 				this.getTests();
 			}
 			if (objActionEvent.getSource() == comboTest) {
-				//System.out.println("comboTest");
 				btnRun.setEnabled(true);
 			}
 			if (objActionEvent.getSource() == rdbtnTestValue) {
@@ -825,7 +861,6 @@ public class Dragonfly {
 				objVariablesCommon.gstrBrowserSelection = "ie";
 			}
 			if (objActionEvent.getSource() == btnRun) {
-				//System.out.println(comboTest.getSelectedItem());
 				objPaths.gstrNameTest = (String) comboTest.getSelectedItem();
 				dispose();
 				return;
@@ -857,7 +892,6 @@ public class Dragonfly {
 				comboApplication.setModel(new DefaultComboBoxModel<String>(arrDrop));
 			} else {
 				for (File aFile : files) {
-					//System.out.println(aFile.getName());
 					String strKeyword = "";
 					int intRightArrowPosition = aFile.getName().indexOf("_");
 					if (intRightArrowPosition > -1) {
@@ -874,7 +908,6 @@ public class Dragonfly {
 				comboApplication.setSelectedItem(null);
 				comboApplication.addActionListener(this);
 			}
-			//System.out.println(hs);
 			comboTest.setModel(new DefaultComboBoxModel<String>(arrDropEmpty));
 			comboTest.setEnabled(false);
 		}
@@ -1995,7 +2028,6 @@ public class Dragonfly {
 						strValueToSelect = objSelect.getOptions().get(randomNumberRange(intStartRange, intOptionsLength - 1)).getText();
 						logger.add("ElementSet strValueToSelect = " + strValueToSelect);
 						break;
-					//TODO add regex options
 					case "<starts>":
 						strKeywordValue = getKeywordValue(strInputValue);
 						logger.add("ElementSet strKeywordValue = " + strKeywordValue);
@@ -2050,6 +2082,7 @@ public class Dragonfly {
 						logger.add("ElementSet: KeywordReturn Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 						break;
 					case "<re>":
+						//TODO add regex options
 						break;
 					default:
 						break;
@@ -5250,6 +5283,9 @@ public class Dragonfly {
 				break;
 			case "keystroke":
 				strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " key was pressed" + strMsWaitedDetailHtml;
+				break;
+			case "kill_ie":
+				strActualHtml = "The action kill_ie killed all IE processes was executed.";
 				break;
 			case "mouse_out":
 				strActualHtml = strTagAttributesHtml + " mouse out is complete" + strMsWaitedDetailHtml;
