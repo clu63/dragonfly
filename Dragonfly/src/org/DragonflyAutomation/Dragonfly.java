@@ -585,16 +585,21 @@ public class Dragonfly {
 					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return Math.round(window.mozInnerScreenY * window.devicePixelRatio);");
 					variablesJSON.objectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
 					variablesJSON.objectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
-					objVariablesCommon.gdblDevicePixelRatio = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.devicePixelRatio;");
-					logger.add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + objVariablesCommon.gdblDevicePixelRatio.toString());
+					gdblDevicePixelRatio = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.devicePixelRatio;");
+					logger.add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + gdblDevicePixelRatio.toString());
 					logger.add("CoordinatesBrowserInner: lngBrowserInnerWidth = " + lngBrowserInnerWidth);
 					logger.add("CoordinatesBrowserInner: intBrowserInnerHeight = " + lngBrowserInnerHeight);
 					break;
 				case "chrome":
 					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
 					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
-					objVariablesCommon.gdblDevicePixelRatio = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.devicePixelRatio;");
-					logger.add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + objVariablesCommon.gdblDevicePixelRatio.toString());
+					
+					Long lngDevicePixelRatio = (Long) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.devicePixelRatio;");
+					logger.add("CoordinatesBrowserInner: lngDevicePixelRatio = " + lngDevicePixelRatio.toString());
+					//gdblDevicePixelRatio = (Double) ((JavascriptExecutor) objVariablesSelenium.gobjWebDriver).executeScript("return window.devicePixelRatio;");
+					
+					gdblDevicePixelRatio =  Double.parseDouble(lngDevicePixelRatio.toString()) ;
+					logger.add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + gdblDevicePixelRatio.toString());
 					variablesJSON.objectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
 					variablesJSON.objectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
 					break;
@@ -622,18 +627,18 @@ public class Dragonfly {
 				System.out.println("Solution rect.left = " + rect.left);
 				System.out.println("Solution rect.top = " + rect.top);
 				if (objVariablesSelenium.gobjWebElement != null) {
-					Double dblDevicePixelRatio = objVariablesCommon.gdblDevicePixelRatio;
 					Coordinates objElementCoordinates = ((Locatable) objVariablesSelenium.gobjWebElement).getCoordinates();
 					Point objElementPoint = objElementCoordinates.inViewPort();
 					Dimension objElementDimension = objVariablesSelenium.gobjWebElement.getSize();
-					variablesJSON.objectStep.putInt("intElementX", (int) Math.round(objElementPoint.x * dblDevicePixelRatio));
-					variablesJSON.objectStep.putInt("intElementY", (int) Math.round(objElementPoint.y * dblDevicePixelRatio));
-					variablesJSON.objectStep.putInt("intElementWidth", (int) Math.round(objElementDimension.width * dblDevicePixelRatio));
-					variablesJSON.objectStep.putInt("intElementHeight", (int) Math.round(objElementDimension.height * dblDevicePixelRatio));
+					variablesJSON.objectStep.putInt("intElementX", (int) Math.round(objElementPoint.x * gdblDevicePixelRatio));
+					variablesJSON.objectStep.putInt("intElementY", (int) Math.round(objElementPoint.y * gdblDevicePixelRatio));
+					variablesJSON.objectStep.putInt("intElementWidth", (int) Math.round(objElementDimension.width * gdblDevicePixelRatio));
+					variablesJSON.objectStep.putInt("intElementHeight", (int) Math.round(objElementDimension.height * gdblDevicePixelRatio));
 					logger.add("  ==end==>CoordinatesElement objElementPoint.x " + objElementPoint.x);
 					logger.add("  ==end==>CoordinatesElement objElementPoint.y " + objElementPoint.y);
 					logger.add("  ==end==>CoordinatesElement objElementDimension.width " + objElementDimension.width);
 					logger.add("  ==end==>CoordinatesElement objElementDimension.height " + objElementDimension.height);
+					logger.add("  ==end==>CoordinatesElement gdblDevicePixelRatio " + gdblDevicePixelRatio.toString());
 				}
 				int intElementX = variablesJSON.objectStep.getInt("intElementX");
 				int intElementY = variablesJSON.objectStep.getInt("intElementY");
@@ -3546,7 +3551,7 @@ public class Dragonfly {
 			String[] arrKeys = new StepNames().getOriginal();
 			boolean blnValid = false;
 			String[] arrKeywordsValid;
-			objVariablesCommon.strOriginalAttributes = createObjectName();
+			gstrOriginalAttributes = createObjectName();
 			for (String strKey : arrKeys) {
 				switch (strKey) {
 				case "strAction":
@@ -3615,7 +3620,7 @@ public class Dragonfly {
 					variablesJSON.objectStep.putValue("strAttributeValues", strKeywordValueCombined);
 					break;
 				case "strInputValue":
-					objVariablesCommon.strOriginalInputValue = variablesJSON.objectStep.getString(strKey);
+					gstrOriginalInputValue = variablesJSON.objectStep.getString(strKey);
 					this.getKeywordsAndValue(variablesJSON.objectStep.getString(strKey));
 					for (String strResultsEach : arrResults) {
 						for (String strKeywordsValidEach : arrKV_strInputValue) {
@@ -4350,15 +4355,13 @@ public class Dragonfly {
 		}
 	}
 
-	private class VariablesCommon {
-		private String strExitTest;
-		private String strExitTestIterations;
-		private String strOriginalInputValue;
-		private String strOriginalAttributes;
-		private WinDef.HWND hwndParentWindow;
-		Double gdblDevicePixelRatio = (double) 1;
-	}
-
+	//	private class VariablesCommon {
+	//		private String strExitTest;
+	//		private String strExitTestIterations;
+	//		//private String strOriginalInputValue;
+	//		//private String strOriginalAttributes;
+	//		private WinDef.HWND hwndParentWindow;
+	//	}
 	private class VariablesJSON {
 		private JSONObject obj = new JSONObject();
 		private JSONArray gobjJsonArrayTestInstances = null;
@@ -5021,6 +5024,9 @@ public class Dragonfly {
 		}
 	}
 	// System.exit(0);
+	private String gstrOriginalAttributes;
+	private String gstrOriginalInputValue;
+	Double gdblDevicePixelRatio = (double) 1;
 	private String gstrEnvironment;
 	private String gstrBrowserSelection;
 	Logger logger = new Logger("  ==start==>Dragonfly ");
@@ -5032,8 +5038,8 @@ public class Dragonfly {
 	VariablesJSON variablesJSON = new VariablesJSON();
 	VariablesSetSync objVariablesSetSync = new VariablesSetSync();
 	StepsManual objStepsManual = new StepsManual();
-	VariablesCommon objVariablesCommon = new VariablesCommon();
 
+	//VariablesCommon objVariablesCommon = new VariablesCommon();
 	public String data_DateDaysOut(String strDaysOut) {
 		logger.add("  ==start==>data_DateDaysOut " + getDateTimestamp());
 		Integer intDaysOut = Integer.parseInt(strDaysOut);
@@ -5403,9 +5409,9 @@ public class Dragonfly {
 		logger.add("  ==start==>StepCreateExpected " + getDateTimestamp());
 		String strStepExpected = "";
 		String strAction = "";
-		String strInputValue = objVariablesCommon.strOriginalInputValue;
+		String strInputValue = gstrOriginalInputValue;
 		String strMillisecondsToWait = variablesJSON.objectStep.getString("intMillisecondsToWait");
-		String strObjectName = objVariablesCommon.strOriginalAttributes;
+		String strObjectName = gstrOriginalAttributes;
 		String strTagName = variablesJSON.objectStep.getString("strTagName");
 		String strAssert = variablesJSON.objectStep.getString("strAssert");
 		String strMillisecondsToWaitHtml = " within {<b>" + strMillisecondsToWait + "</b>} milliseconds.";
