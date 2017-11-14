@@ -37,6 +37,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -59,7 +60,6 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.DefaultButtonModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -70,6 +70,7 @@ import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -100,14 +101,15 @@ import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
+import org.w3c.dom.Node;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
+import org.xml.sax.InputSource;
 import autoitx4java.AutoItX;
 import com.jacob.com.LibraryLoader;
 import com.opera.core.systems.OperaDriver;
-import com.sun.jna.Native;
-import com.sun.jna.Pointer;
-import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
-import com.sun.jna.win32.W32APIOptions;
 
 public class Dragonfly {
 	private class AlertFind {
@@ -218,9 +220,20 @@ public class Dragonfly {
 					objDesiredCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
 					logger.add("BrowserLaunch: webdriver.ie.driver" + System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
 					System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
+					System.setProperty("webdriver.ie.driver.loglevel", "DEBUG");
+					//System.setProperty("webdriver.ie.driver.logfile", "C:\\temp\\IEDriverLog.log");
+					System.setProperty("webdriver.ie.driver.logfile", gobjPaths.gstrPathResults + "IEDriverLog.log");
+					// System.setProperty("webdriver.ie.driver.host","5555");
 					logger.add("BrowserLaunch: new InternetExplorerDriver(desiredCapabilities)");
 					gobjWebDriver = new InternetExplorerDriver(objDesiredCapabilities);
-					//gobjWebDriver.manage().getCookieNamed("JSESSIONID");
+					//					gobjWebDriver.manage().getCookieNamed("JSESSIONID");
+					try {
+						System.out.println("BrowserLaunch: getCookieNamed JSESSIONID " + gobjWebDriver.manage().getCookies().toString());
+						//System.out.println("BrowserLaunch: getCookieNamed JSESSIONID " +gobjWebDriver.manage().getCookieNamed("JSESSIONID").toString());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						logger.add("BrowserLaunch: Exception getCookieNamed " + e.toString());
+					}
 					// gobjWebDriver.manage().deleteCookieNamed("JSESSIONID");
 					logger.add("BrowserLaunch: gobjectStep.getString(strInputValue)  = " + gobjectStep.getString("strInputValue"));
 					gobjWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
@@ -419,7 +432,7 @@ public class Dragonfly {
 		private CoordinateHighlightScreenshot(final JSONObjectExtended objJsonObjectStepHighlightArea) {
 			logger.add("  ==start==>CoordinateHighlightScreenshot " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
-			JFrame objJFrame = new JFrame() {
+			JDialog objJDialog = new JDialog() {
 				private static final long serialVersionUID = 1L;
 				{
 					Rectangle objHighlightArea = new Rectangle(0, 0, 0, 0);
@@ -444,7 +457,6 @@ public class Dragonfly {
 							objHighlightColor = Color.MAGENTA;
 							break;
 						}
-						setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 						logger.add("CoordinateHighlightScreenshot: strHighlightArea = " + gobjectStep.getString("strHighlightArea"));
 						new RectangleAreaByName(intThickness, gobjectStep.getString("strHighlightArea"), objHighlightArea);
 						setBounds(objHighlightArea.x, objHighlightArea.y, objHighlightArea.width, objHighlightArea.height);
@@ -476,8 +488,8 @@ public class Dragonfly {
 				} catch (InterruptedException e) {
 					logger.add("CoordinateHighlightScreenshot: Exception " + e.toString());
 				}
-				objJFrame.setVisible(false);
-				objJFrame.dispose();
+				objJDialog.setVisible(false);
+				objJDialog.dispose();
 			}
 			logger.add("CoordinateHighlightScreenshot: Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 		}
@@ -3424,10 +3436,9 @@ public class Dragonfly {
 			super(parent);
 		}
 
-//		private JSONObjectExtended(Map<String, String> map) {
-//			super(map);
-//		}
-
+		//		private JSONObjectExtended(Map<String, String> map) {
+		//			super(map);
+		//		}
 		@SuppressWarnings("unchecked")
 		private void addJsonObject(JSONObjectExtended objJsonObjectToAdd) {
 			if (this.isEmpty() == true) {
@@ -4975,7 +4986,7 @@ public class Dragonfly {
 				writeFile(gobjPaths.gstrPathResults + "StepsManual.txt", gobjStepsManual.get());
 				gobjPaths.changeDirectoryNameStatus(strTestStatus);
 				if (gobjWebDriver.toString().contains("InternetExplorerDriver")) {
-					new WindowsProcessKill("taskkill /F /IM IEDriverServer.exe");
+					//	new WindowsProcessKill("taskkill /F /IM IEDriverServer.exe");
 				}
 			}
 			logger.deleteLog();
@@ -5757,6 +5768,22 @@ public class Dragonfly {
 			writeFile(strFile, strHTML);
 			writeFile(strTestStepsFile, strHTML);
 			logger.add("WriteReportToHtml: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+		}
+	}
+
+	private String formatXML(String input) {
+		try {
+			final InputSource src = new InputSource(new StringReader(input));
+			final Node document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(src).getDocumentElement();
+			final DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
+			final DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
+			final LSSerializer writer = impl.createLSSerializer();
+			writer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
+			writer.getDomConfig().setParameter("xml-declaration", true);
+			return writer.writeToString(document);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return input;
 		}
 	}
 }
