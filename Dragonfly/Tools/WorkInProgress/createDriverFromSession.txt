@@ -1,0 +1,128 @@
+package snippet;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Field;
+import java.net.URL;
+import java.util.Collections;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.Command;
+import org.openqa.selenium.remote.CommandExecutor;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.HttpCommandExecutor;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.Response;
+import org.openqa.selenium.remote.SessionId;
+import org.openqa.selenium.remote.http.W3CHttpCommandCodec;
+import org.openqa.selenium.remote.http.W3CHttpResponseCodec;
+
+public class Snippet {
+	public static RemoteWebDriver createDriverFromSession(String sessionId, URL command_executor) {
+		CommandExecutor executor = new HttpCommandExecutor(command_executor) {
+			@Override
+			public Response execute(Command command) throws IOException {
+				Response response = null;
+				System.out.println("command.getName() " + command.getName());
+				if (command.getName() == "newSession") {
+					response = new Response();
+					response.setSessionId(sessionId);
+					response.setStatus(0);
+					response.setValue(Collections.<String, String> emptyMap());
+					try {
+						Field commandCodec = null;
+						commandCodec = this.getClass().getSuperclass().getDeclaredField("commandCodec");
+						commandCodec.setAccessible(true);
+						commandCodec.set(this, new W3CHttpCommandCodec());
+						Field responseCodec = null;
+						responseCodec = this.getClass().getSuperclass().getDeclaredField("responseCodec");
+						responseCodec.setAccessible(true);
+						responseCodec.set(this, new W3CHttpResponseCodec());
+					} catch (NoSuchFieldException e) {
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					}
+				} else {
+					response = super.execute(command);
+				}
+				return response;
+			}
+		};
+		return new RemoteWebDriver(executor, new DesiredCapabilities());
+	}
+
+	public static void main(String[] args) {
+		URL url = null;
+		SessionId session_id;
+		String sessionId = "";
+		boolean blnAttach = true;
+		if (blnAttach == false) {
+			System.setProperty("webdriver.chrome.driver", "C:\\SeleniumTest\\chromedriver_233\\chromedriver.exe");
+			//ChromeOptions options = new ChromeOptions();
+			//options.addArguments("test-type");
+			//options.addArguments("disable-popup-blocking");
+			//DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+			//capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+			//ChromeDriver driver = new ChromeDriver(capabilities);
+			ChromeDriver driver = new ChromeDriver();
+			HttpCommandExecutor executor = (HttpCommandExecutor) driver.getCommandExecutor();
+			url = executor.getAddressOfRemoteServer();
+			System.out.println("url " + url);
+			try {
+				FileOutputStream fosURL = new FileOutputStream("c:\\temp\\url.ser");
+				ObjectOutputStream oosURL = new ObjectOutputStream(fosURL);
+				oosURL.writeObject(url);
+				oosURL.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			session_id = driver.getSessionId();
+			System.out.println("session_id " + session_id);
+			try {
+				BufferedWriter objBufferedWriter = new BufferedWriter(new FileWriter("c:\\temp\\SessionId.txt"));
+				objBufferedWriter.write(session_id.toString());
+				objBufferedWriter.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				FileInputStream fisURL = new FileInputStream("c:\\temp\\url.ser");
+				ObjectInputStream oisURL = new ObjectInputStream(fisURL);
+				url = (URL) oisURL.readObject();
+				oisURL.close();
+				System.out.println("url " + url);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			BufferedReader objBufferedRead = null;
+			try {
+				objBufferedRead = new BufferedReader(new FileReader("c:\\temp\\SessionId.txt"));
+				sessionId = objBufferedRead.readLine();
+				objBufferedRead.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			ChromeOptions options = new ChromeOptions();
+			options.addArguments("test-type");
+			options.addArguments("disable-popup-blocking");
+			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+			RemoteWebDriver driver2 = createDriverFromSession(sessionId, url);
+			driver2.get("https://www.google.com/");
+			//driver2.manage().window().maximize();
+			driver2.findElement(By.name("q")).sendKeys("Selenium Grid Tutorial");
+			driver2.findElement(By.name("q")).sendKeys(Keys.ENTER);
+		}
+	}
+}
