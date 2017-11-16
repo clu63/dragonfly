@@ -14,6 +14,7 @@ import java.net.URL;
 import java.util.Collections;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.Command;
@@ -23,10 +24,12 @@ import org.openqa.selenium.remote.HttpCommandExecutor;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.Response;
 import org.openqa.selenium.remote.SessionId;
-import org.openqa.selenium.remote.http.W3CHttpCommandCodec;
+import org.openqa.selenium.remote.http.JsonHttpCommandCodec;
 import org.openqa.selenium.remote.http.W3CHttpResponseCodec;
 
 public class Snippet {
+	static WebDriver objWebDriver = null;
+
 	public static RemoteWebDriver createDriverFromSession(String sessionId, URL command_executor) {
 		CommandExecutor executor = new HttpCommandExecutor(command_executor) {
 			@Override
@@ -42,7 +45,8 @@ public class Snippet {
 						Field commandCodec = null;
 						commandCodec = this.getClass().getSuperclass().getDeclaredField("commandCodec");
 						commandCodec.setAccessible(true);
-						commandCodec.set(this, new W3CHttpCommandCodec());
+						//commandCodec.set(this, new W3CHttpCommandCodec());  //for firefox
+						commandCodec.set(this, new JsonHttpCommandCodec());
 						Field responseCodec = null;
 						responseCodec = this.getClass().getSuperclass().getDeclaredField("responseCodec");
 						responseCodec.setAccessible(true);
@@ -65,17 +69,20 @@ public class Snippet {
 		URL url = null;
 		SessionId session_id;
 		String sessionId = "";
-		boolean blnAttach = true;
+		boolean blnAttach = false;
+		//boolean blnAttach = true;
 		if (blnAttach == false) {
 			System.setProperty("webdriver.chrome.driver", "C:\\SeleniumTest\\chromedriver_233\\chromedriver.exe");
-			//ChromeOptions options = new ChromeOptions();
-			//options.addArguments("test-type");
-			//options.addArguments("disable-popup-blocking");
-			//DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-			//capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-			//ChromeDriver driver = new ChromeDriver(capabilities);
-			ChromeDriver driver = new ChromeDriver();
-			HttpCommandExecutor executor = (HttpCommandExecutor) driver.getCommandExecutor();
+			ChromeOptions options = new ChromeOptions();
+			options.addArguments("test-type");
+			options.addArguments("disable-popup-blocking");
+			options.addArguments("disable-infobars");
+			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+			@SuppressWarnings("deprecation")
+			ChromeDriver objChromeDriver = new ChromeDriver(capabilities);
+			//ChromeDriver objChromeDriver = new ChromeDriver();
+			HttpCommandExecutor executor = (HttpCommandExecutor) objChromeDriver.getCommandExecutor();
 			url = executor.getAddressOfRemoteServer();
 			System.out.println("url " + url);
 			try {
@@ -86,7 +93,7 @@ public class Snippet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			session_id = driver.getSessionId();
+			session_id = objChromeDriver.getSessionId();
 			System.out.println("session_id " + session_id);
 			try {
 				BufferedWriter objBufferedWriter = new BufferedWriter(new FileWriter("c:\\temp\\SessionId.txt"));
@@ -95,6 +102,8 @@ public class Snippet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			objWebDriver = objChromeDriver;
+			objWebDriver.get("http://www.seleniumhq.org/");
 		} else {
 			try {
 				FileInputStream fisURL = new FileInputStream("c:\\temp\\url.ser");
@@ -113,16 +122,16 @@ public class Snippet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			ChromeOptions options = new ChromeOptions();
-			options.addArguments("test-type");
-			options.addArguments("disable-popup-blocking");
-			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-			RemoteWebDriver driver2 = createDriverFromSession(sessionId, url);
-			driver2.get("https://www.google.com/");
-			//driver2.manage().window().maximize();
-			driver2.findElement(By.name("q")).sendKeys("Selenium Grid Tutorial");
-			driver2.findElement(By.name("q")).sendKeys(Keys.ENTER);
+			//			ChromeOptions options = new ChromeOptions();
+			//			options.addArguments("test-type");
+			//			options.addArguments("disable-popup-blocking");
+			//			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+			//			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+			objWebDriver = createDriverFromSession(sessionId, url);
+			objWebDriver.manage().window().maximize();
+			objWebDriver.get("https://www.google.com/");
+			objWebDriver.findElement(By.name("q")).sendKeys("Selenium Grid Tutorial");
+			objWebDriver.findElement(By.name("q")).sendKeys(Keys.ENTER);
 		}
 	}
 }
