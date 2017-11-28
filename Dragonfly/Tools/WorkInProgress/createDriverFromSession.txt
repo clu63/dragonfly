@@ -31,10 +31,22 @@ import org.openqa.selenium.remote.http.W3CHttpCommandCodec;
 import org.openqa.selenium.remote.http.W3CHttpResponseCodec;
 
 public class Snippet {
-	static WebDriver objWebDriver = null;
-	static String browserName = null;
+	//				ChromeOptions options = new ChromeOptions();
+	//				options.addArguments("test-type");
+	//				options.addArguments("disable-popup-blocking");
+	//				options.addArguments("disable-infobars");
+	//				DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+	//				capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+	//	ChromeDriver objChromeDriver = new ChromeDriver(capabilities);
+	//
+	public static void main(String[] args) {
+		new Snippet().testBrowser();
+	}
+	public WebDriver objWebDriver = null;
+	String browserName = null;
+	DesiredCapabilities capabilities = null;
 
-	public static RemoteWebDriver createDriverFromSession(String sessionId, URL command_executor) {
+	public void createDriverFromSession(String sessionId, URL command_executor) {
 		CommandExecutor executor = new HttpCommandExecutor(command_executor) {
 			@Override
 			public Response execute(Command command) throws IOException {
@@ -45,6 +57,15 @@ public class Snippet {
 					response.setSessionId(sessionId);
 					response.setStatus(0);
 					response.setValue(Collections.<String, String> emptyMap());
+					//										ChromeOptions options = new ChromeOptions();
+					//										options.addArguments("test-type");
+					//										options.addArguments("disable-popup-blocking");
+					//										options.addArguments("disable-infobars");
+					//					capabilities = DesiredCapabilities.chrome();
+					//					capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+					//			System.out.println("options.asMap " + options.asMap());
+					//					System.out.println("capabilities.asMap() " + capabilities.asMap());
+					//							response.setValue(capabilities.asMap());
 					try {
 						Field commandCodec = null;
 						commandCodec = this.getClass().getSuperclass().getDeclaredField("commandCodec");
@@ -75,131 +96,59 @@ public class Snippet {
 						e.printStackTrace();
 					}
 				} else {
+					System.out.println("super.execute " + command.getName());
 					response = super.execute(command);
 				}
 				return response;
 			}
 		};
-		return new RemoteWebDriver(executor, new DesiredCapabilities());
+		System.out.println("before RemoteWebDriver");
+		//System.out.println(capabilities.toString());
+		//	return new RemoteWebDriver(executor, new DesiredCapabilities());
+		objWebDriver = new RemoteWebDriver(executor, new DesiredCapabilities());
+		//return new RemoteWebDriver(executor, capabilities);
 	}
 
-	private void BrowserLaunch(String browserName, boolean blnAttach) {
+	public void launchBrowser(String browserName, boolean blnAttach) {
 		URL url = null;
 		SessionId session_id;
 		String sessionId = "";
 		switch (browserName) {
 		case "chrome":
+			ChromeOptions options = new ChromeOptions();
+			options.addArguments("test-type");
+			options.addArguments("disable-popup-blocking");
+			options.addArguments("disable-infobars");
+			capabilities = DesiredCapabilities.chrome();
+			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+			System.out.println("options.toString() " + options.toString());
+			System.out.println("");
+			System.out.println(capabilities.toString());
 			if (blnAttach == false) {
 				System.setProperty("webdriver.chrome.driver", "C:\\SeleniumTest\\chromedriver_2.33\\chromedriver.exe");
-				ChromeOptions options = new ChromeOptions();
-				options.addArguments("test-type");
-				options.addArguments("disable-popup-blocking");
-				options.addArguments("disable-infobars");
-				DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-				capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-				@SuppressWarnings("deprecation")
-				ChromeDriver objChromeDriver = new ChromeDriver(capabilities);
+				//System.out.println("ChromeDriver().getCapabilities()" + new ChromeDriver().getCapabilities());
 				//ChromeDriver objChromeDriver = new ChromeDriver();
-				HttpCommandExecutor executor = (HttpCommandExecutor) objChromeDriver.getCommandExecutor();
-				url = executor.getAddressOfRemoteServer();
-				System.out.println("url " + url);
-				try {
-					FileOutputStream fosURL = new FileOutputStream("c:\\temp\\url.ser");
-					ObjectOutputStream oosURL = new ObjectOutputStream(fosURL);
-					oosURL.writeObject(url);
-					oosURL.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				session_id = objChromeDriver.getSessionId();
-				System.out.println("session_id " + session_id);
-				try {
-					BufferedWriter objBufferedWriter = new BufferedWriter(new FileWriter("c:\\temp\\SessionId.txt"));
-					objBufferedWriter.write(session_id.toString());
-					objBufferedWriter.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				ChromeDriver objChromeDriver = new ChromeDriver(capabilities);
 				objWebDriver = objChromeDriver;
-			} else {
-				try {
-					FileInputStream fisURL = new FileInputStream("c:\\temp\\url.ser");
-					ObjectInputStream oisURL = new ObjectInputStream(fisURL);
-					url = (URL) oisURL.readObject();
-					oisURL.close();
-					System.out.println("url " + url);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				BufferedReader objBufferedRead = null;
-				try {
-					objBufferedRead = new BufferedReader(new FileReader("c:\\temp\\SessionId.txt"));
-					sessionId = objBufferedRead.readLine();
-					objBufferedRead.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				//			ChromeOptions options = new ChromeOptions();
-				//			options.addArguments("test-type");
-				//			options.addArguments("disable-popup-blocking");
-				//			DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-				//			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-				objWebDriver = createDriverFromSession(sessionId, url);
 			}
 			break;
 		case "firefox":
-			System.out.println("url " + url);
 			if (blnAttach == false) {
 				System.setProperty("webdriver.gecko.driver", "C:\\SeleniumTest\\geckodriver_0.19.1\\geckodriver.exe");
+				//System.out.println("FirefoxDriver().getCapabilities()" + new FirefoxDriver().getCapabilities());
 				FirefoxDriver objFirefoxDriver = new FirefoxDriver();
-				HttpCommandExecutor executor = (HttpCommandExecutor) objFirefoxDriver.getCommandExecutor();
-				url = executor.getAddressOfRemoteServer();
-				System.out.println("url " + url);
-				try {
-					FileOutputStream fosURL = new FileOutputStream("c:\\temp\\url.ser");
-					ObjectOutputStream oosURL = new ObjectOutputStream(fosURL);
-					oosURL.writeObject(url);
-					oosURL.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				session_id = objFirefoxDriver.getSessionId();
-				System.out.println("session_id " + session_id);
-				try {
-					BufferedWriter objBufferedWriter = new BufferedWriter(new FileWriter("c:\\temp\\SessionId.txt"));
-					objBufferedWriter.write(session_id.toString());
-					objBufferedWriter.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 				objWebDriver = objFirefoxDriver;
-			} else {
-				try {
-					FileInputStream fisURL = new FileInputStream("c:\\temp\\url.ser");
-					ObjectInputStream oisURL = new ObjectInputStream(fisURL);
-					url = (URL) oisURL.readObject();
-					oisURL.close();
-					System.out.println("url " + url);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				BufferedReader objBufferedRead = null;
-				try {
-					objBufferedRead = new BufferedReader(new FileReader("c:\\temp\\SessionId.txt"));
-					sessionId = objBufferedRead.readLine();
-					objBufferedRead.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				objWebDriver = createDriverFromSession(sessionId, url);
 			}
 			break;
 		case "ie":
 		case "internet explorer":
 			if (blnAttach == false) {
 				System.setProperty("webdriver.ie.driver", "C:\\SeleniumTest\\IEDriverServer_x64_3.7.0\\IEDriverServer.exe");
-				InternetExplorerDriver objInternetExplorerDriver = new InternetExplorerDriver();
-				objWebDriver = objInternetExplorerDriver;
+				//System.out.println("InternetExplorerDriver().getCapabilities()" + new InternetExplorerDriver().getCapabilities());
+				//InternetExplorerDriver objInternetExplorerDriver = new InternetExplorerDriver();
+				//objWebDriver = objInternetExplorerDriver;
+				objWebDriver = new InternetExplorerDriver();
+				objWebDriver.get("https://www.google.com/");
 			}
 			break;
 		case "opera":
@@ -246,32 +195,51 @@ public class Snippet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			objWebDriver = createDriverFromSession(sessionId, url);
+			//objWebDriver = createDriverFromSession(sessionId, url);
+			createDriverFromSession(sessionId, url);
+			objWebDriver.get("http://www.seleniumhq.org/");
 		}
 	}
 
-	public static void main(String[] args) {
+	public void testBrowser() {
+		//System.setProperty("webdriver.chrome.driver", "C:\\SeleniumTest\\chromedriver_2.33\\chromedriver.exe");
+		//System.out.println("ChromeDriver().getCapabilities()" + new ChromeDriver().getCapabilities());
+		//System.setProperty("webdriver.gecko.driver", "C:\\SeleniumTest\\geckodriver_0.19.1\\geckodriver.exe");
+		//System.out.println("FirefoxDriver().getCapabilities()" + new FirefoxDriver().getCapabilities());
+		//System.setProperty("webdriver.ie.driver", "C:\\SeleniumTest\\IEDriverServer_x64_3.7.0\\IEDriverServer.exe");
+		//System.out.println("InternetExplorerDriver().getCapabilities()" + new InternetExplorerDriver().getCapabilities());
+		//	Capabilities getCapabilities();
+		//DesiredCapabilities	objDesiredCapabilities = DesiredCapabilities.internetExplorer();
+		//		DesiredCapabilities	objDesiredCapabilities = DesiredCapabilities.chrome().;
+		//		System.out.println("BrowserLaunch: objDesiredCapabilities.toString()" + objDesiredCapabilities.);
+		//
+		//boolean blnAttach = false;
 		boolean blnAttach = true;
 		//browserName = "chrome";
-		//browserName = "firefox";
-		browserName = "ie";
+		browserName = "firefox";
+		//browserName = "ie";
 		//browserName = "internet explorer";
 		//browserName = "opera";
 		//browserName = "safari";
-		new Snippet().BrowserLaunch(browserName, blnAttach);
-		if (blnAttach == true) {
-			objWebDriver.manage().window().maximize();
-			objWebDriver.get("https://www.google.com/");
-			objWebDriver.findElement(By.name("q")).sendKeys("Selenium Grid Tutorial");
-			objWebDriver.findElement(By.name("q")).sendKeys(Keys.ENTER);
-		} else {
-			objWebDriver.manage().window().maximize();
-			objWebDriver.get("https://www.google.com/");
-			objWebDriver.findElement(By.name("q")).sendKeys("Selenium Grid Tutorial");
-			objWebDriver.findElement(By.name("q")).sendKeys(Keys.ENTER);
-			//objWebDriver.manage().window().fullscreen();
-			objWebDriver.get("http://www.seleniumhq.org/");
-			objWebDriver.get("https://www.google.com/");
+		try {
+			launchBrowser(browserName, blnAttach);
+			if (blnAttach == true) {
+				objWebDriver.manage().window().maximize();
+				objWebDriver.get("https://www.google.com/");
+				objWebDriver.findElement(By.name("q")).sendKeys("Selenium Grid Tutorial");
+				objWebDriver.findElement(By.name("q")).sendKeys(Keys.ENTER);
+			} else {
+				//objWebDriver.manage().window().maximize();
+				objWebDriver.get("https://www.google.com/");
+				objWebDriver.findElement(By.name("q")).sendKeys("Selenium Grid Tutorial");
+				objWebDriver.findElement(By.name("q")).sendKeys(Keys.ENTER);
+				//objWebDriver.manage().window().fullscreen();
+				objWebDriver.get("http://www.seleniumhq.org/");
+				objWebDriver.get("https://www.google.com/");
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
