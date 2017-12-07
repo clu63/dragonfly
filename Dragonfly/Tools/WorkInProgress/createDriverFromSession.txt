@@ -2,21 +2,17 @@ package snippet;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -34,33 +30,32 @@ import org.openqa.selenium.remote.SessionId;
 import org.openqa.selenium.remote.http.JsonHttpCommandCodec;
 import org.openqa.selenium.remote.http.W3CHttpCommandCodec;
 import org.openqa.selenium.remote.http.W3CHttpResponseCodec;
+import com.google.common.base.Splitter;
 
-public class Snippet {
+class Snippet {
 	public static void main(String[] args) {
 		new Snippet().testBrowser();
 	}
-	WebDriver objWebDriver = null;
+	boolean blnAttach;
 	String browserName = null;
 	DesiredCapabilities capabilities = new DesiredCapabilities();
-	boolean blnAttach;
+	WebDriver objWebDriver = null;
+	String pathCapabilitiesMap = "c:\\temp\\map.txt";
+	String pathSessionId = "c:\\temp\\SessionId.txt";
+	String pathURL = "c:\\temp\\url.ser";
 	Map<String, String> theMap;
 
-	public void createDriverFromSession(String sessionId, URL command_executor) {
+	private void createDriverFromSession(String sessionId, URL command_executor) {
 		CommandExecutor executor = new HttpCommandExecutor(command_executor) {
 			@Override
 			public Response execute(Command command) throws IOException {
 				Response response = null;
-				System.out.println("command.getName() " + command.getName());
+				//System.out.println("command.getName() " + command.getName());
 				if (command.getName() == "newSession") {
 					response = new Response();
 					response.setSessionId(sessionId);
 					response.setStatus(0);
-					System.out.println("before  response.setValue");
-					//System.out.println("before  response.setValue " + objWebDriver.toString());
-					//response.setValue(Collections.<String, String> emptyMap());
-					response.setValue(capabilities.asMap());
-					//response.setValue(Map<String, Object>"{acceptInsecureCerts=false, browserName=internet explorer, browserVersion=11, javascriptEnabled=true, pageLoadStrategy=normal, platform=WINDOWS, platformName=WINDOWS, proxy=Proxy(), se:ieOptions={nativeEvents=true, browserAttachTimeout=0, ie.ensureCleanSession=true, elementScrollBehavior=0, enablePersistentHover=false, ie.browserCommandLineSwitches=, ie.forceCreateProcessApi=false, requireWindowFocus=true, initialBrowserUrl=about:blank, ignoreZoomSetting=false, ie.fileUploadDialogTimeout=3000, ignoreProtectedModeSettings=false}, setWindowRect=true, timeouts={implicit=0, pageLoad=300000, script=30000}, unhandledPromptBehavior=ignore}");
-					//response.setValue(theMap);
+					response.setValue(theMap);
 					try {
 						Field commandCodec = null;
 						commandCodec = this.getClass().getSuperclass().getDeclaredField("commandCodec");
@@ -91,21 +86,23 @@ public class Snippet {
 						e.printStackTrace();
 					}
 				} else {
-					System.out.println("super.execute " + command.getName());
 					response = super.execute(command);
 				}
 				return response;
 			}
 		};
-		//System.out.println("before RemoteWebDriver"+ objWebDriver.toString());
-		//		System.out.println("capabilities" + capabilities.toString());
-		//		System.out.println("capabilities" + capabilities.asMap());
-		objWebDriver = new RemoteWebDriver(executor, capabilities);
-		System.out.println("after RemoteWebDriver" + objWebDriver.toString());
+		objWebDriver = new RemoteWebDriver(executor, new DesiredCapabilities());
+	}
+
+	private void deleteFile(String filePath) {
+		File fileToDelete = new File(filePath);
+		if (fileToDelete.exists()) {
+			fileToDelete.delete();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public void launchBrowser() {
+	private void launchBrowser() {
 		URL url = null;
 		SessionId session_id;
 		String sessionId = "";
@@ -117,13 +114,6 @@ public class Snippet {
 			options.addArguments("disable-infobars");
 			//options.addArguments("--start-fullscreen");
 			capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-			//			System.out.println("options.toString() " + options.toString());
-			//			System.out.println("");
-			//			System.out.println(capabilities.toString());
-			//			
-			//	System.out.println("capabilities" + capabilities.toString());
-			//	System.out.println("capabilities" + capabilities.asMap());
-			//
 			if (blnAttach == false) {
 				System.setProperty("webdriver.chrome.driver", "C:\\SeleniumTest\\chromedriver_2.33\\chromedriver.exe");
 				objWebDriver = new ChromeDriver(capabilities);
@@ -158,187 +148,80 @@ public class Snippet {
 			break;
 		}
 		if (blnAttach == false) {
+			deleteFile(pathSessionId);
+			deleteFile(pathURL);
+			deleteFile(pathCapabilitiesMap);
+			//System.exit(0);
 			HttpCommandExecutor executor = (HttpCommandExecutor) ((RemoteWebDriver) objWebDriver).getCommandExecutor();
 			url = executor.getAddressOfRemoteServer();
-			System.out.println("url " + url);
 			try {
-				FileOutputStream fosURL = new FileOutputStream("c:\\temp\\url.ser");
+				FileOutputStream fosURL = new FileOutputStream(pathURL);
 				ObjectOutputStream oosURL = new ObjectOutputStream(fosURL);
 				oosURL.writeObject(url);
 				oosURL.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			//			System.out.println("before theMap");
-			//			//theMap = (Map<String, Object>) capabilities.asMap();
-			//			theMap = (Map<String, String>) ((RemoteWebDriver) objWebDriver).getCapabilities().asMap();
-			//			System.out.println("theMap " + theMap);
-			//			try {
-			//				FileOutputStream fosMap = new FileOutputStream("c:\\temp\\map.ser");
-			//				ObjectOutputStream oosMap = new ObjectOutputStream(fosMap);
-			//				oosMap.writeObject((Map<String, String>) theMap);
-			//				oosMap.close();
-			//			} catch (Exception e) {
-			//				e.printStackTrace();
-			//			}
 			session_id = ((RemoteWebDriver) objWebDriver).getSessionId();
-			System.out.println("session_id " + session_id);
-			try {
-				BufferedWriter objBufferedWriter = new BufferedWriter(new FileWriter("c:\\temp\\SessionId.txt"));
-				objBufferedWriter.write(session_id.toString());
-				objBufferedWriter.close();
-			} catch (Exception e) {
-				e.printStackTrace();
+			writeFile(session_id.toString(), pathSessionId);
+			String strMapFile = null;
+			Map<String, String> theMap2;
+			theMap2 = (Map<String, String>) ((RemoteWebDriver) objWebDriver).getCapabilities().asMap();
+			for (String key : theMap2.keySet()) {
+				if (strMapFile != null) {
+					strMapFile = strMapFile + "~~~~~~~~~~" + key + "++++++++++" + String.valueOf(theMap2.get(key));
+				} else {
+					strMapFile = key + "++++++++++" + String.valueOf(theMap2.get(key));
+				}
 			}
+			writeFile(strMapFile, pathCapabilitiesMap);
 		} else {
 			try {
-				FileInputStream fisURL = new FileInputStream("c:\\temp\\url.ser");
+				FileInputStream fisURL = new FileInputStream(pathURL);
 				ObjectInputStream oisURL = new ObjectInputStream(fisURL);
 				url = (URL) oisURL.readObject();
 				oisURL.close();
-				System.out.println("url " + url);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			//			try {
-			//				FileInputStream fisMap = new FileInputStream("c:\\temp\\map.ser");
-			//				ObjectInputStream oisMap = new ObjectInputStream(fisMap);
-			//				capabilities = (DesiredCapabilities) oisMap.readObject();
-			//				oisMap.close();
-			//				System.out.println("Map " + theMap);
-			//			} catch (Exception e) {
-			//				e.printStackTrace();
-			//			}
-			BufferedReader objBufferedRead = null;
-			try {
-				objBufferedRead = new BufferedReader(new FileReader("c:\\temp\\SessionId.txt"));
-				sessionId = objBufferedRead.readLine();
-				objBufferedRead.close();
-				System.out.println("sessionId " + sessionId.toString());
-			} catch (Exception e) {
-				e.printStackTrace();
+			sessionId = readFile(pathSessionId);
+			theMap = splitToMap(readFile(pathCapabilitiesMap));
+			for (String key : theMap.keySet()) {
 			}
 			createDriverFromSession(sessionId, url);
 		}
 	}
 
-	//	HashMap<K, V> map = new HashMap<K, V>();
-	//
-	//	//Write:
-	//	OutputStream os = new FileOutputStream(fileName.ser);
-	//	ObjectOutput oo = new ObjectOutputStream(os);
-	//	oo.writeObject(map);
-	//	oo.close();
-	//
-	//	//Read:
-	//	InputStream is = new FileInputStream(fileName.ser);
-	//	ObjectInput oi = new ObjectInputStream(is);
-	//	HashMap<K, V> newMap = oi.readObject();
-	//	oi.close();
+	private String readFile(String pathFile) {
+		String strReturn = null;
+		BufferedReader objBufferedRead = null;
+		try {
+			objBufferedRead = new BufferedReader(new FileReader(pathFile));
+			strReturn = objBufferedRead.readLine();
+			objBufferedRead.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return strReturn;
+	}
+
+	private Map<String, String> splitToMap(String in) {
+		return Splitter.on("~~~~~~~~~~").withKeyValueSeparator("++++++++++").split(in);
+	}
+
 	@SuppressWarnings("unchecked")
-	public void testBrowser() {
-		blnAttach = false;
-		//blnAttach = true;
-		browserName = "chrome";
+	private void testBrowser() {
+		//blnAttach = false;
+		blnAttach = true;
+		//browserName = "chrome";
 		//browserName = "firefox";
-		//browserName = "ie_32";
+		browserName = "ie_32";
 		//browserName = "ie_64";
 		//browserName = "opera";
 		//browserName = "safari";
 		//
-		//theMap = "{acceptInsecureCerts=false, browserName=internet explorer, browserVersion=11, javascriptEnabled=true, pageLoadStrategy=normal, platform=WINDOWS, platformName=WINDOWS, proxy=Proxy(), se:ieOptions={nativeEvents=true, browserAttachTimeout=0, ie.ensureCleanSession=true, elementScrollBehavior=0, enablePersistentHover=false, ie.browserCommandLineSwitches=, ie.forceCreateProcessApi=false, requireWindowFocus=true, initialBrowserUrl=about:blank, ignoreZoomSetting=false, ie.fileUploadDialogTimeout=3000, ignoreProtectedModeSettings=false}, setWindowRect=true, timeouts={implicit=0, pageLoad=300000, script=30000}, unhandledPromptBehavior=ignore}");
-		//DesiredCapabilities	capabilities2 = new DesiredCapabilities("{acceptInsecureCerts=false, browserName=internet explorer, browserVersion=11, javascriptEnabled=true, pageLoadStrategy=normal, platform=WINDOWS, platformName=WINDOWS, proxy=Proxy(), se:ieOptions={nativeEvents=true, browserAttachTimeout=0, ie.ensureCleanSession=true, elementScrollBehavior=0, enablePersistentHover=false, ie.browserCommandLineSwitches=, ie.forceCreateProcessApi=false, requireWindowFocus=true, initialBrowserUrl=about:blank, ignoreZoomSetting=false, ie.fileUploadDialogTimeout=3000, ignoreProtectedModeSettings=false}, setWindowRect=true, timeouts={implicit=0, pageLoad=300000, script=30000}, unhandledPromptBehavior=ignore}", "internetExplorer", null);
 		try {
 			launchBrowser();
-			Map<String, String> theMap2;
-			theMap2 = (Map<String, String>) ((RemoteWebDriver) objWebDriver).getCapabilities().asMap();
-			System.out.println("theMap2 " + theMap2);
-			System.out.println("theMap2.keySet() " + theMap2.keySet());
-			System.out.println("theMap2.values() " + theMap2.values());
-			//			
-			for (Entry<String, String> entry : theMap2.entrySet()) {
-				System.out.println(entry.getKey());
-				System.out.println(String.valueOf(entry.getValue()));
-				System.out.println("+++++++++++");
-			}
-			//			Map<String, String> map = theMap2;
-			//			for (Map.Entry<String, String> entry : map.entrySet()) {
-			//				//System.out.println(entry.getKey() );
-			//				System.out.println(String.valueOf(entry.getKey()));
-			//			}
-			//			Map<String, String> map2 = theMap2;
-			//			for (String entry2 : map2.values()) {
-			//				System.out.println(entry2.toString());
-			//				//    if(entry.getValue() != null && entry.getValue()..booleanValue()) {
-			//				//    	   //Do your task 
-			//				//    	}
-			//			}
-			//			for (String key : theMap2.keySet()) {
-			//				System.out.println(key);
-			//				System.out.println(key + "/" + theMap2.get(key));
-			//			}
-			//			for (Entry<String, String> entry : theMap2.entrySet()) {
-			//				System.out.println(entry.getKey());
-			//				System.out.println(entry.getValue());
-			//			}
-			//Map<String, String> map = ...
-			//for (Map.Entry<String, String> entry : map.entrySet())
-			//{
-			//    System.out.println(entry.getKey() + "/" + entry.getValue());
-			//}
-			//			OutputStream os = new FileOutputStream("c:\\temp\\map.ser");
-			//			ObjectOutput oo = new ObjectOutputStream(os);
-			//			oo.writeObject(theMap2);
-			//			oo.close();
-			//			Map<String, String> map = new HashMap<>();
-			//			map.put("key", "value");
-			//			 
-			//			ObjectMapper mapper = new ObjectMapper();
-			//			String jsonResult = mapper.writerWithDefaultPrettyPrinter()
-			//			  .writeValueAsString(map);
-			//			String jsonInput = "{\"key\": \"value\"}";
-			//			TypeReference<HashMap<String, String>> typeRef 
-			//			  = new TypeReference<HashMap<String, String>>() {};
-			//			Map<String, String> map = mapper.readValue(jsonInput, typeRef);
-			System.out.println("before hashmap");
-			//			HashMap<String, String> hashmap = new HashMap<String, String>();
-			//			
-			//			
-			//			hashmap =(HashMap<String, String>) theMap2;
-			//			
-			//			hashmap = (HashMap<String, String>) ((RemoteWebDriver) objWebDriver).getCapabilities().asMap();
-			//			System.out.println("hashmap " + hashmap);
-			//			System.out.println("before theMap");
-			//theMap = (Map<String, Object>) capabilities.asMap();
-			//theMap = (Map<String, String>) ((RemoteWebDriver) objWebDriver).getCapabilities().asMap();
-			//			System.out.println("theMap2 " + theMap2);
-			//			try {
-			//				FileOutputStream fosMap = new FileOutputStream("c:\\temp\\map.ser");
-			//				ObjectOutputStream oosMap = new ObjectOutputStream(fosMap);
-			//				oosMap.writeObject((Map<String, Object>) theMap2);
-			//				oosMap.close();
-			//			} catch (Exception e) {
-			//				e.printStackTrace();
-			//			}
-			//System.out.println("objWebDriver.getCapabilities() = " + ((RemoteWebDriver) objWebDriver).getCapabilities());
-			//DesiredCapabilities	capabilities3 = (DesiredCapabilities) ((RemoteWebDriver) objWebDriver).getCapabilities().asMap();
-			//theMap="{acceptInsecureCerts=false, browserName=internet explorer, browserVersion=11, javascriptEnabled=true, pageLoadStrategy=normal, platform=WINDOWS, platformName=WINDOWS, proxy=Proxy(), se:ieOptions={nativeEvents=true, browserAttachTimeout=0, ie.ensureCleanSession=true, elementScrollBehavior=0, enablePersistentHover=false, ie.browserCommandLineSwitches=, ie.forceCreateProcessApi=false, requireWindowFocus=true, initialBrowserUrl=about:blank, ignoreZoomSetting=false, ie.fileUploadDialogTimeout=3000, ignoreProtectedModeSettings=false}, setWindowRect=true, timeouts={implicit=0, pageLoad=300000, script=30000}, unhandledPromptBehavior=ignore}";
-			//DesiredCapabilities	capabilities3 = new DesiredCapabilities(Map<String, String> );
-			//DesiredCapabilities capabilities3 = new DesiredCapabilities(((RemoteWebDriver) objWebDriver).getCapabilities());
-			//System.out.println("capabilities3 = " + capabilities3.asMap());
-			//System.out.println("before capabilities3");
-			//theMap = (Map<String, Object>) capabilities.asMap();
-			//theMap = (Map<String, String>) ((RemoteWebDriver) objWebDriver).getCapabilities().asMap();
-			//			System.out.println("theMap " + theMap);
-			//			try {
-			//				FileOutputStream fosMap = new FileOutputStream("c:\\temp\\map.ser");
-			//				ObjectOutputStream oosMap = new ObjectOutputStream(fosMap);
-			//				oosMap.writeObject(capabilities3);
-			//				oosMap.close();
-			//			} catch (Exception e) {
-			//				e.printStackTrace();
-			//			}
-			System.out.println("objWebDriver.getCapabilities() = " + ((RemoteWebDriver) objWebDriver).getCapabilities());
 			if (blnAttach == true) {
 				objWebDriver.manage().window().maximize();
 				objWebDriver.get("https://www.google.com/");
@@ -358,20 +241,13 @@ public class Snippet {
 		}
 	}
 
-	private Map<String, String> getMap() {
-		DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
-		Map<String, String> theMap = null;
-		desiredCapabilities.setJavascriptEnabled(true);
-		desiredCapabilities.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, "ignore");
-		desiredCapabilities.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
-		desiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
-		desiredCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
-		System.setProperty("webdriver.ie.driver", "C:\\SeleniumTest\\IEDriverServer_x32_3.7.0\\IEDriverServer.exe");
-		RemoteWebDriver objWebDriver2 = new InternetExplorerDriver(desiredCapabilities);
-		//InternetExplorerDriver.
-		//ChromeDriver.class.
-		//FirefoxDriver.class.
-		theMap = (Map<String, String>) objWebDriver2.getCapabilities().asMap();
-		return theMap;
+	private void writeFile(String stringToWrite, String pathFile) {
+		try {
+			BufferedWriter objBufferedWriter = new BufferedWriter(new FileWriter(pathFile));
+			objBufferedWriter.write(stringToWrite.toString());
+			objBufferedWriter.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
