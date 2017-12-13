@@ -71,7 +71,7 @@ import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.apache.commons.io.FileUtils;
+//import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -93,11 +93,13 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.internal.Coordinates;
-import org.openqa.selenium.internal.Base64Encoder;
-import org.openqa.selenium.internal.Locatable;
+//import org.openqa.selenium.internal.Base64Encoder;
+//import org.openqa.selenium.internal.Locatable;
+import org.openqa.selenium.interactions.internal.Locatable;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
@@ -109,7 +111,11 @@ import org.xml.sax.InputSource;
 import autoitx4java.AutoItX;
 import com.jacob.com.LibraryLoader;
 import com.opera.core.systems.OperaDriver;
-import com.sun.jna.platform.win32.WinDef;
+//import com.sun.jna.platform.win32.WinDef;
+import java.util.Base64;
+import org.apache.commons.io.FileUtils;
+import java.io.File;
+import java.io.IOException;
 
 public class Dragonfly {
 	private class AlertFind {
@@ -184,6 +190,7 @@ public class Dragonfly {
 			// TODO combine duplicate code
 			// TODO add desiredCapabilities.setJavascriptEnabled(true); to all browsers
 			logger.add("  ==start==>BrowserLaunch " + getDateTimestamp());
+			DesiredCapabilities objDesiredCapabilities = null;
 			Long lngTimeStart = System.currentTimeMillis();
 			logger.add("objVariablesCommon.gstrBrowserSelection = " + gstrBrowserSelection);
 			if (gstrBrowserSelection != "value in test") {
@@ -191,7 +198,6 @@ public class Dragonfly {
 			} else {
 				gstrBrowserSelection = gobjectStep.getString("strTagName");
 			}
-			DesiredCapabilities objDesiredCapabilities = null;
 			try {
 				gobjectStep.putValue("strStatus", "pass");
 				switch (gobjectStep.getString("strTagName")) {
@@ -201,6 +207,20 @@ public class Dragonfly {
 					gobjWebDriver.manage().window().maximize();
 					Actions myAction = new Actions(gobjWebDriver);
 					myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL).build().perform();
+					break;
+				case "ie_64":
+					objDesiredCapabilities = DesiredCapabilities.internetExplorer();
+					objDesiredCapabilities.setJavascriptEnabled(true);
+					objDesiredCapabilities.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, "ignore");
+					objDesiredCapabilities.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
+					objDesiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, false);
+					objDesiredCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
+					objDesiredCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, false);
+					objDesiredCapabilities.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
+					//if (blnAttach == false) {
+					System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_64.exe");
+					gobjWebDriver = new InternetExplorerDriver(new InternetExplorerOptions().merge(objDesiredCapabilities));
+					//}
 					break;
 				case "ie":
 				case "internet explorer":
@@ -218,8 +238,8 @@ public class Dragonfly {
 					objDesiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
 					logger.add("BrowserLaunch: INITIAL_BROWSER_URL");
 					objDesiredCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
-					logger.add("BrowserLaunch: webdriver.ie.driver" + System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
-					System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
+					logger.add("BrowserLaunch: webdriver.ie.driver" + System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
+					System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
 					System.setProperty("webdriver.ie.driver.loglevel", "DEBUG");
 					//System.setProperty("webdriver.ie.driver.logfile", "C:\\temp\\IEDriverLog.log");
 					System.setProperty("webdriver.ie.driver.logfile", gobjPaths.gstrPathResults + "IEDriverLog.log");
@@ -266,6 +286,7 @@ public class Dragonfly {
 					ChromeOptions options = new ChromeOptions();
 					options.addArguments("test-type");
 					options.addArguments("disable-popup-blocking");
+					options.addArguments("disable-infobars");
 					DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 					capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 					//WebDriver driver = new ChromeDriver(capabilities);
@@ -626,18 +647,26 @@ public class Dragonfly {
 			logger.add("  ==start==>CoordinatesElement " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			try {
+				Rectangle rect = new Rectangle(0, 0, -1, -1);
 				//	WinDef.RECT rect = returnIECLientScreenXY();
-				WinDef.RECT rect = new WinDef.RECT();
-				rect.top = gobjectStep.getInt("intBrowserInnerHeight");
-				rect.left = gobjectStep.getInt("intBrowserInnerWidth");
-				rect.right = 0;
-				rect.bottom = 0;
-				System.out.println("Solution = " + rect.toRectangle().toString());
-				System.out.println("Solution rect.left = " + rect.left);
-				System.out.println("Solution rect.top = " + rect.top);
+				//WinDef.RECT rect = new WinDef.RECT();
+				rect.height = gobjectStep.getInt("intBrowserInnerHeight");
+				rect.width = gobjectStep.getInt("intBrowserInnerWidth");
+				rect.x = 0;
+				rect.y = 0;
+				System.out.println("Solution = " + rect.getBounds().toString());
+				System.out.println("Solution rect.left = " + rect.width);
+				System.out.println("Solution rect.top = " + rect.height);
 				if (gobjWebElement != null) {
+					System.out.println("before objElementCoordinates");
 					Coordinates objElementCoordinates = ((Locatable) gobjWebElement).getCoordinates();
+					System.out.println("objElementCoordinates.toString() = " + objElementCoordinates.toString());
+					System.out.println("objElementCoordinates.onPage() = " + objElementCoordinates.onPage());
+					//System.out.println("objElementCoordinates.onScreen() = " + objElementCoordinates.onScreen());
+					System.out.println("objElementCoordinates.inViewPort() = " + objElementCoordinates.inViewPort());
+					System.out.println("before objElementPoint");
 					Point objElementPoint = objElementCoordinates.inViewPort();
+					System.out.println("before objElementDimension");
 					Dimension objElementDimension = gobjWebElement.getSize();
 					gobjectStep.putInt("intElementX", (int) Math.round(objElementPoint.x * gdblDevicePixelRatio));
 					gobjectStep.putInt("intElementY", (int) Math.round(objElementPoint.y * gdblDevicePixelRatio));
@@ -649,10 +678,12 @@ public class Dragonfly {
 					logger.add("  ==end==>CoordinatesElement objElementDimension.height " + objElementDimension.height);
 					logger.add("  ==end==>CoordinatesElement gdblDevicePixelRatio " + gdblDevicePixelRatio.toString());
 				}
+				System.out.println("before intElementX");
 				int intElementX = gobjectStep.getInt("intElementX");
 				int intElementY = gobjectStep.getInt("intElementY");
-				int intElementScreenX = rect.left + intElementX;
-				int intElementScreenY = rect.top + intElementY;
+				int intElementScreenX = rect.width + intElementX;
+				int intElementScreenY = rect.height + intElementY;
+				System.out.println("before putInt");
 				gobjectStep.putInt("intElementScreenX", intElementScreenX);
 				gobjectStep.putInt("intElementScreenY", intElementScreenY);
 			} catch (Exception e) {
@@ -3309,8 +3340,7 @@ public class Dragonfly {
 			BufferedImage objBufferedImage = null;
 			byte[] arrImageByte;
 			try {
-				Base64Encoder objBASE64Decoder = new Base64Encoder();
-				arrImageByte = objBASE64Decoder.decode(strImageString);
+				arrImageByte = Base64.getDecoder().decode(strImageString);
 				ByteArrayInputStream objByteArrayInputStream = new ByteArrayInputStream(arrImageByte);
 				objBufferedImage = ImageIO.read(objByteArrayInputStream);
 				objByteArrayInputStream.close();
@@ -3329,13 +3359,12 @@ public class Dragonfly {
 			try {
 				ImageIO.write(objBufferedImage, strImageType, objByteArrayOutputStreams);
 				byte[] arrImageByte = objByteArrayOutputStreams.toByteArray();
-				Base64Encoder objBASE64Encoder = new Base64Encoder();
-				strImageString = objBASE64Encoder.encode(arrImageByte);
+				strImageString = Base64.getEncoder().encodeToString(arrImageByte);
 				objByteArrayOutputStreams.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.toString();
 			}
-			return strImageString;
+			return strImageString.toString();
 		}
 	}
 
@@ -3347,7 +3376,7 @@ public class Dragonfly {
 			new SleepMilliseconds(1000);
 			desiredCapabilities = DesiredCapabilities.internetExplorer();
 			desiredCapabilities.setJavascriptEnabled(true);
-			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
+			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
 			gobjWebDriver = new InternetExplorerDriver(desiredCapabilities);
 			gobjWebDriver.get("about:blank");
 			gobjWebDriver.manage().deleteCookieNamed("JSESSIONID");
@@ -3359,7 +3388,7 @@ public class Dragonfly {
 			gobjWebDriver.quit();
 			new WindowsProcessKill("taskkill /F /IM iexplore.exe");
 			new SleepMilliseconds(1000);
-			new WindowsProcessKill("taskkill /F /IM IEDriverServer.exe");
+			new WindowsProcessKill("taskkill /F /IM IEDriverServer_32.exe");
 			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
 			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 2
 			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 1
@@ -3829,7 +3858,7 @@ public class Dragonfly {
 			logger.add("  ==start==>ProcessKillInternetExplorer " + getDateTimestamp());
 			new WindowsProcessKill("taskkill /F /IM iexplore.exe");
 			new SleepMilliseconds(1000);
-			new WindowsProcessKill("taskkill /F /IM IEDriverServer.exe");
+			new WindowsProcessKill("taskkill /F /IM IEDriverServer_32.exe");
 		}
 	}
 
@@ -4454,7 +4483,7 @@ public class Dragonfly {
 	private class WebDriverTest {
 		private WebDriverTest() {
 			new ProcessKillInternetExplorer().run();
-			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
+			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
 			DesiredCapabilities objDesiredCapabilities = null;
 			// logger.add("BrowserLaunch: DesiredCapabilities");
 			objDesiredCapabilities = DesiredCapabilities.internetExplorer();
@@ -4469,8 +4498,8 @@ public class Dragonfly {
 			objDesiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
 			// logger.add("BrowserLaunch: INITIAL_BROWSER_URL");
 			objDesiredCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
-			// logger.add("BrowserLaunch: webdriver.ie.driver" + System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
-			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer.exe");
+			// logger.add("BrowserLaunch: webdriver.ie.driver" + System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
+			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
 			// logger.add("BrowserLaunch: new InternetExplorerDriver(desiredCapabilities)");
 			WebDriver objWebDriver = new InternetExplorerDriver(objDesiredCapabilities);
 			//objWebDriver = new InternetExplorerDriver();
@@ -4986,7 +5015,7 @@ public class Dragonfly {
 				writeFile(gobjPaths.gstrPathResults + "StepsManual.txt", gobjStepsManual.get());
 				gobjPaths.changeDirectoryNameStatus(strTestStatus);
 				if (gobjWebDriver.toString().contains("InternetExplorerDriver")) {
-					//	new WindowsProcessKill("taskkill /F /IM IEDriverServer.exe");
+					//	new WindowsProcessKill("taskkill /F /IM IEDriverServer_32.exe");
 				}
 			}
 			logger.deleteLog();
