@@ -15,11 +15,15 @@ import java.net.URL;
 import java.util.Map;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.Command;
 import org.openqa.selenium.remote.CommandExecutor;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -34,27 +38,31 @@ import com.google.common.base.Splitter;
 
 class Snippet {
 	class MyFile {
-		private void delete(String filePath) {
-			File fileToDelete = new File(filePath);
-			if (this.exists(filePath)) {
-				fileToDelete.delete();
+		File fileToCreate = null;
+
+		public MyFile(String pathFile) {
+			fileToCreate = new File(pathFile);
+		}
+
+		private void delete() {
+			if (this.exists()) {
+				fileToCreate.delete();
 			}
 		}
 
-		private boolean exists(String filePath) {
-			File fileToDelete = new File(filePath);
-			if (fileToDelete.exists()) {
+		private boolean exists() {
+			if (fileToCreate.exists()) {
 				return true;
 			} else {
 				return false;
 			}
 		}
 
-		private String read(String pathFile) {
+		private String read() {
 			String strReturn = null;
 			BufferedReader objBufferedRead = null;
 			try {
-				objBufferedRead = new BufferedReader(new FileReader(pathFile));
+				objBufferedRead = new BufferedReader(new FileReader(fileToCreate.getPath()));
 				strReturn = objBufferedRead.readLine();
 				objBufferedRead.close();
 			} catch (Exception e) {
@@ -63,10 +71,10 @@ class Snippet {
 			return strReturn;
 		}
 
-		private void write(String stringToWrite, String pathFile) {
+		private void write(String stringToWrite) {
 			try {
-				BufferedWriter objBufferedWriter = new BufferedWriter(new FileWriter(pathFile));
-				objBufferedWriter.write(stringToWrite.toString());
+				BufferedWriter objBufferedWriter = new BufferedWriter(new FileWriter(fileToCreate.getPath()));
+				objBufferedWriter.write(stringToWrite);
 				objBufferedWriter.close();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -135,12 +143,6 @@ class Snippet {
 		objWebDriver = new RemoteWebDriver(executor, new DesiredCapabilities());
 	}
 
-	//	private void deleteFile(String filePath) {
-	//		File fileToDelete = new File(filePath);
-	//		if (fileToDelete.exists()) {
-	//			fileToDelete.delete();
-	//		}
-	//	}
 	@SuppressWarnings("unchecked")
 	private void launchBrowser() {
 		URL url = null;
@@ -148,43 +150,62 @@ class Snippet {
 		String sessionId = "";
 		switch (browserName) {
 		case "chrome":
-			ChromeOptions options = new ChromeOptions();
-			options.addArguments("test-type");
-			options.addArguments("disable-popup-blocking");
-			options.addArguments("disable-infobars");
+			desiredCapabilities = DesiredCapabilities.chrome();
+			desiredCapabilities.setJavascriptEnabled(true);
+			ChromeOptions chromeOptions = new ChromeOptions();
+			chromeOptions.addArguments("test-type");
+			chromeOptions.addArguments("disable-popup-blocking");
+			chromeOptions.addArguments("disable-infobars");
+			chromeOptions.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.IGNORE);
 			//options.addArguments("--start-fullscreen");
-			desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
 			if (blnAttach == false) {
 				System.setProperty("webdriver.chrome.driver", "C:\\SeleniumTest\\drivers\\chromedriver.exe");
-				objWebDriver = new ChromeDriver(desiredCapabilities);
+				objWebDriver = new ChromeDriver(chromeOptions);
+				desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
 			}
 			break;
 		case "firefox":
+			FirefoxProfile firefoxProfile = new FirefoxProfile();
+			firefoxProfile.setAcceptUntrustedCertificates(false);
+			firefoxProfile.setPreference("ui.popup.disable_autohide", false);
+			desiredCapabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
+			desiredCapabilities = DesiredCapabilities.firefox();
+			desiredCapabilities.setJavascriptEnabled(true);
+			//FirefoxOptions firefoxOptions = new FirefoxOptions();
+			//firefoxOptions.setProfile(firefoxProfile);
+			//desiredCapabilities.addArguments();
 			if (blnAttach == false) {
 				System.setProperty("webdriver.gecko.driver", "C:\\SeleniumTest\\drivers\\geckodriver.exe");
-				objWebDriver = new FirefoxDriver(desiredCapabilities);
+				//objWebDriver = new FirefoxDriver(new FirefoxOptions().merge(desiredCapabilities));
+				objWebDriver = new FirefoxDriver(new FirefoxOptions().merge(desiredCapabilities));
 			}
 			break;
 		case "ie_32":
+			desiredCapabilities = DesiredCapabilities.internetExplorer();
 			desiredCapabilities.setJavascriptEnabled(true);
 			desiredCapabilities.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, "ignore");
 			desiredCapabilities.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
 			desiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
 			desiredCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
+			desiredCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, false);
+			desiredCapabilities.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
 			if (blnAttach == false) {
 				System.setProperty("webdriver.ie.driver", "C:\\SeleniumTest\\drivers\\IEDriverServer_32.exe");
-				objWebDriver = new InternetExplorerDriver(desiredCapabilities);
+				objWebDriver = new InternetExplorerDriver(new InternetExplorerOptions().merge(desiredCapabilities));
 			}
 			break;
 		case "ie_64":
+			desiredCapabilities = DesiredCapabilities.internetExplorer();
 			desiredCapabilities.setJavascriptEnabled(true);
 			desiredCapabilities.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, "ignore");
 			desiredCapabilities.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
-			//desiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
+			desiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, false);
 			desiredCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
+			desiredCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, false);
+			desiredCapabilities.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
 			if (blnAttach == false) {
 				System.setProperty("webdriver.ie.driver", "C:\\SeleniumTest\\drivers\\IEDriverServer_64.exe");
-				objWebDriver = new InternetExplorerDriver(desiredCapabilities);
+				objWebDriver = new InternetExplorerDriver(new InternetExplorerOptions().merge(desiredCapabilities));
 			}
 			break;
 		case "opera":
@@ -193,9 +214,9 @@ class Snippet {
 			break;
 		}
 		if (blnAttach == false) {
-			new MyFile().delete(pathSessionId);
-			new MyFile().delete(pathURL);
-			new MyFile().delete(pathCapabilitiesMap);
+			new MyFile(pathSessionId).delete();
+			new MyFile(pathURL).delete();
+			new MyFile(pathCapabilitiesMap).delete();
 			//System.exit(0);
 			HttpCommandExecutor executor = (HttpCommandExecutor) ((RemoteWebDriver) objWebDriver).getCommandExecutor();
 			url = executor.getAddressOfRemoteServer();
@@ -208,7 +229,7 @@ class Snippet {
 				e.printStackTrace();
 			}
 			session_id = ((RemoteWebDriver) objWebDriver).getSessionId();
-			new MyFile().write(session_id.toString(), pathSessionId);
+			new MyFile(pathSessionId).write(session_id.toString());
 			String strMapFile = null;
 			Map<String, String> theMap2;
 			theMap2 = (Map<String, String>) ((RemoteWebDriver) objWebDriver).getCapabilities().asMap();
@@ -219,7 +240,7 @@ class Snippet {
 					strMapFile = key + "++++++++++" + String.valueOf(theMap2.get(key));
 				}
 			}
-			new MyFile().write(strMapFile, pathCapabilitiesMap);
+			new MyFile(pathCapabilitiesMap).write(strMapFile);
 		} else {
 			try {
 				FileInputStream fisURL = new FileInputStream(pathURL);
@@ -229,43 +250,28 @@ class Snippet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			sessionId = new MyFile().read(pathSessionId);
-			desiredCapabilitiesMap = splitToMap(new MyFile().read(pathCapabilitiesMap));
+			sessionId = new MyFile(pathSessionId).read();
+			desiredCapabilitiesMap = Splitter.on("~~~~~~~~~~").withKeyValueSeparator("++++++++++").split(new MyFile(pathCapabilitiesMap).read());
 			for (String key : desiredCapabilitiesMap.keySet()) {
 			}
 			createDriverFromSession(sessionId, url);
 		}
 	}
 
-	//	private String readFile(String pathFile) {
-	//		String strReturn = null;
-	//		BufferedReader objBufferedRead = null;
-	//		try {
-	//			objBufferedRead = new BufferedReader(new FileReader(pathFile));
-	//			strReturn = objBufferedRead.readLine();
-	//			objBufferedRead.close();
-	//		} catch (Exception e) {
-	//			e.printStackTrace();
-	//		}
-	//		return strReturn;
-	//	}
-	private Map<String, String> splitToMap(String in) {
-		return Splitter.on("~~~~~~~~~~").withKeyValueSeparator("++++++++++").split(in);
-	}
-
 	@SuppressWarnings("unchecked")
 	private void testBrowser() {
-		//blnAttach = false;
-		blnAttach = true;
-		browserName = "chrome";
-		//browserName = "firefox";
+		blnAttach = false;
+		//blnAttach = true;
+		//browserName = "chrome";
+		browserName = "firefox";
 		//browserName = "ie_32";
-		browserName = "ie_64";
+		//browserName = "ie_64";
 		//browserName = "opera";
 		//browserName = "safari";
 		//
 		try {
 			launchBrowser();
+			System.out.println("objWebDriver.getCapabilities() = " + ((RemoteWebDriver) objWebDriver).getCapabilities().asMap());
 			if (blnAttach == true) {
 				objWebDriver.manage().window().maximize();
 				objWebDriver.get("https://www.google.com/");
@@ -284,13 +290,4 @@ class Snippet {
 			e.printStackTrace();
 		}
 	}
-	//	private void writeFile(String stringToWrite, String pathFile) {
-	//		try {
-	//			BufferedWriter objBufferedWriter = new BufferedWriter(new FileWriter(pathFile));
-	//			objBufferedWriter.write(stringToWrite.toString());
-	//			objBufferedWriter.close();
-	//		} catch (Exception e) {
-	//			e.printStackTrace();
-	//		}
-	//	}
 }
