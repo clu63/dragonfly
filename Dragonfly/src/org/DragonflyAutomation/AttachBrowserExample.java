@@ -1,5 +1,27 @@
 package org.DragonflyAutomation;
 
+//import org.openqa.selenium.WebDriver;
+//import org.openqa.selenium.remote.RemoteWebDriver;
+//import org.openqa.selenium.remote.DesiredCapabilities;
+//import java.net.URL;
+//
+//class RemoteTest {
+//
+//  public static void main(String[] args) throws Exception {
+//    // Change this to match the location of your server
+//    URL server = new URL("http://127.0.0.1:4444/wd/hub");
+//
+//    DesiredCapabilities capabilities = new DesiredCapabilities();
+//    capabilities.setBrowserName("firefox");
+//
+//    System.out.println("Connecting to " + server);
+//
+//    WebDriver driver = new RemoteWebDriver(server, capabilities);
+//
+//    driver.get("http://www.google.com");
+//
+//    driver.quit();
+//  }
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -37,10 +59,10 @@ import org.openqa.selenium.remote.http.W3CHttpResponseCodec;
 import com.google.common.base.Splitter;
 
 class AttachBrowserExample {
-	class MyFile {
+	class FileManagement {
 		File fileToCreate = null;
 
-		public MyFile(String pathFile) {
+		public FileManagement(String pathFile) {
 			fileToCreate = new File(pathFile);
 		}
 
@@ -93,6 +115,7 @@ class AttachBrowserExample {
 	String pathCapabilitiesMap = "c:\\temp\\map.txt";
 	String pathSessionId = "c:\\temp\\session_id.txt";
 	String pathURL = "c:\\temp\\url.ser";
+	String pathGeckoDriver = "C:\\SeleniumTest\\drivers\\geckodriver.exe";
 
 	private void createDriverFromSession(String sessionId, URL command_executor) {
 		CommandExecutor executor = new HttpCommandExecutor(command_executor) {
@@ -149,8 +172,6 @@ class AttachBrowserExample {
 		String sessionId = "";
 		switch (browserName) {
 		case "chrome":
-			desiredCapabilities = DesiredCapabilities.chrome();
-			desiredCapabilities.setJavascriptEnabled(true);
 			ChromeOptions chromeOptions = new ChromeOptions();
 			chromeOptions.addArguments("test-type");
 			chromeOptions.addArguments("disable-popup-blocking");
@@ -160,23 +181,16 @@ class AttachBrowserExample {
 			if (blnAttach == false) {
 				System.setProperty("webdriver.chrome.driver", "C:\\SeleniumTest\\drivers\\chromedriver.exe");
 				objWebDriver = new ChromeDriver(chromeOptions);
-				desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+				//desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
 			}
 			break;
 		case "firefox":
-			FirefoxProfile firefoxProfile = new FirefoxProfile();
-			firefoxProfile.setAcceptUntrustedCertificates(false);
-			firefoxProfile.setPreference("ui.popup.disable_autohide", false);
-			desiredCapabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
-			desiredCapabilities = DesiredCapabilities.firefox();
-			desiredCapabilities.setJavascriptEnabled(true);
-			//FirefoxOptions firefoxOptions = new FirefoxOptions();
-			//firefoxOptions.setProfile(firefoxProfile);
-			//desiredCapabilities.addArguments();
+			FirefoxOptions firefoxOptions = new FirefoxOptions();
+			firefoxOptions.addPreference("ui.popup.disable_autohide", true);
+			firefoxOptions.setAcceptInsecureCerts(true);
 			if (blnAttach == false) {
-				System.setProperty("webdriver.gecko.driver", "C:\\SeleniumTest\\drivers\\geckodriver.exe");
-				//objWebDriver = new FirefoxDriver(new FirefoxOptions().merge(desiredCapabilities));
-				objWebDriver = new FirefoxDriver(new FirefoxOptions().merge(desiredCapabilities));
+				System.setProperty("webdriver.gecko.driver", pathGeckoDriver);
+				objWebDriver = new FirefoxDriver(firefoxOptions);
 			}
 			break;
 		case "ie_32":
@@ -213,9 +227,9 @@ class AttachBrowserExample {
 			break;
 		}
 		if (blnAttach == false) {
-			new MyFile(pathSessionId).delete();
-			new MyFile(pathURL).delete();
-			new MyFile(pathCapabilitiesMap).delete();
+			new FileManagement(pathSessionId).delete();
+			new FileManagement(pathURL).delete();
+			new FileManagement(pathCapabilitiesMap).delete();
 			//System.exit(0);
 			HttpCommandExecutor executor = (HttpCommandExecutor) ((RemoteWebDriver) objWebDriver).getCommandExecutor();
 			url = executor.getAddressOfRemoteServer();
@@ -228,7 +242,7 @@ class AttachBrowserExample {
 				e.printStackTrace();
 			}
 			session_id = ((RemoteWebDriver) objWebDriver).getSessionId();
-			new MyFile(pathSessionId).write(session_id.toString());
+			new FileManagement(pathSessionId).write(session_id.toString());
 			String strMapFile = null;
 			Map<String, String> theMap2;
 			theMap2 = (Map<String, String>) ((RemoteWebDriver) objWebDriver).getCapabilities().asMap();
@@ -239,7 +253,7 @@ class AttachBrowserExample {
 					strMapFile = key + "++++++++++" + String.valueOf(theMap2.get(key));
 				}
 			}
-			new MyFile(pathCapabilitiesMap).write(strMapFile);
+			new FileManagement(pathCapabilitiesMap).write(strMapFile);
 		} else {
 			try {
 				FileInputStream fisURL = new FileInputStream(pathURL);
@@ -249,8 +263,8 @@ class AttachBrowserExample {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			sessionId = new MyFile(pathSessionId).read();
-			desiredCapabilitiesMap = Splitter.on("~~~~~~~~~~").withKeyValueSeparator("++++++++++").split(new MyFile(pathCapabilitiesMap).read());
+			sessionId = new FileManagement(pathSessionId).read();
+			desiredCapabilitiesMap = Splitter.on("~~~~~~~~~~").withKeyValueSeparator("++++++++++").split(new FileManagement(pathCapabilitiesMap).read());
 			for (String key : desiredCapabilitiesMap.keySet()) {
 			}
 			createDriverFromSession(sessionId, url);
@@ -258,6 +272,8 @@ class AttachBrowserExample {
 	}
 
 	private void testBrowser() {
+		//blnAttach = false;
+		blnAttach = true;
 		browserName = "chrome";
 		//browserName = "firefox";
 		//browserName = "ie_32";

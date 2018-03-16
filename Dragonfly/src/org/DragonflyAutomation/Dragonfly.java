@@ -17,6 +17,18 @@
 //strNameTestSteps
 //strValueTestSteps
 //
+//
+//Member variables can be accessed outside a class with following rules
+//
+//Modifier      Package  Subclass  World
+//
+//public          Yes      Yes     Yes
+//
+//protected       Yes      Yes     No
+//
+//Default (no
+//modifier)       Yes       No     No
+//
 package org.DragonflyAutomation;
 
 import java.awt.Color;
@@ -727,9 +739,7 @@ public class Dragonfly {
 		private JRadioButton rdoTestValue = new JRadioButton("value in test", true);
 		private String mstrPath = "", mstrNameTest = "", mstrTestArea = "";
 		private String[] arrDropEmpty = new String[0];
-		private int intColumn1 = 12, intColumn2 = 245, intColumn3 = 465,
-				intColumnWidth1 = 200, intColumnWidth2 = 200,
-				intColumnWidth3 = 220;
+		private int intColumn1 = 12, intColumn2 = 245, intColumn3 = 465, intColumnWidth1 = 200, intColumnWidth2 = 200, intColumnWidth3 = 220;
 
 		private DialogLaunch() {
 			this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
