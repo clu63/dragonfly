@@ -44,43 +44,43 @@ class Paths {
 		String pathResultsNew = pathResults.substring(0, pathResults.length() - 1) + "_" + testStatus + "\\";
 		Logger.getInstance().add("Paths:changeDirectoryNameStatus pathResultsNew = " + pathResultsNew);
 		File directoryNew = new File(pathResultsNew);
-		directoryOld.renameTo(directoryNew);
-		pathResults = pathResultsNew;
-	}
-
-	String getDateTimestamp() {
-		return new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(new Date());
+		if (directoryOld.renameTo(directoryNew)) {
+			System.out.println("Paths:changeDirectoryNameStatus - Directory renamed successfully");
+			this.pathResults = pathResultsNew;
+		} else {
+			System.out.println("Paths:changeDirectoryNameStatus - Failed to rename directory");
+		}
 	}
 
 	void setDirectory(String testArea) {
-		pathData = "Data/" + testArea + "/";
-		pathSystemUserDir = System.getProperty("user.dir");
-		pathTestConfiguration = pathData + "test_configuration/";
-		pathTestData = pathData + "test_data/";
-		pathTestElements = pathData + "test_elements/";
-		pathTestInstances = pathData + "test_instances/";
-		pathTestModules = pathData + "test_modules/";
-		pathTestSteps = pathData + "test_steps/";
+		this.pathData = "Data/" + testArea + "/";
+		this.pathSystemUserDir = System.getProperty("user.dir");
+		this.pathTestConfiguration = this.pathData + "test_configuration/";
+		this.pathTestData = this.pathData + "test_data/";
+		this.pathTestElements = this.pathData + "test_elements/";
+		this.pathTestInstances = this.pathData + "test_instances/";
+		this.pathTestModules = this.pathData + "test_modules/";
+		this.pathTestSteps = this.pathData + "test_steps/";
 	}
 
 	void setPathResults(int testInstanceSize, String testConfigurationFileName) {
 		Logger.getInstance().add("Paths:setPathResults testInstanceSize = " + testInstanceSize);
 		Logger.getInstance().add("Paths:setPathResults testConfigurationFileName = " + testConfigurationFileName);
-		String dateTimestamp = getDateTimestamp();
+		String dateTimestamp = new DateTimestamp().get();
 		Logger.getInstance().add("Paths:setPathResults dateTimestamp = " + dateTimestamp);
-		Logger.getInstance().add("Paths:setPathResults pathImages==null = " + pathImages);
-		if (pathImages == null) {
-			pathResultsTop = pathSystemUserDir + "\\Results\\" + testConfigurationFileName.replace(".json", "") + "\\";
-			Logger.getInstance().add("Paths:setPathResults pathResults = " + pathResults);
+		Logger.getInstance().add("Paths:setPathResults this.pathImages = " + this.pathImages);
+		if (this.pathImages == null) {
+			this.pathResultsTop = this.pathSystemUserDir + "\\Results\\" + testConfigurationFileName.replace(".json", "") + "\\";
+			Logger.getInstance().add("Paths:setPathResults  this.pathResults = " + this.pathResults);
 			if (testInstanceSize > 1) {
-				pathResultsTop = pathResultsTop + dateTimestamp + "\\Iterations_" + testInstanceSize + "\\";
-				Logger.getInstance().add("Paths:setPathResults pathResults = " + pathResults);
+				this.pathResultsTop = this.pathResultsTop + dateTimestamp + "\\Iterations_" + testInstanceSize + "\\";
+				Logger.getInstance().add("Paths:setPathResults  this.pathResults = " + this.pathResults);
 			}
 		}
-		pathResults = pathResultsTop + dateTimestamp + "\\";
-		Logger.getInstance().add("Paths:setPathResults pathResults = " + pathResults);
+		this.pathResults = this.pathResultsTop + dateTimestamp + "\\";
+		Logger.getInstance().add("Paths:setPathResults  this.pathResults = " + this.pathResults);
 		pathImages = pathResults + "images\\";
-		Logger.getInstance().add("Paths:setPathResults pathImages = " + pathImages);
+		Logger.getInstance().add("Paths:setPathResults  this.pathImages = " + this.pathImages);
 		new File(pathImages).mkdirs();
 	}
 }
