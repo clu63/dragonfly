@@ -45,9 +45,6 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -55,12 +52,10 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-//import com.sun.jna.platform.win32.WinDef;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Collection;
@@ -88,11 +83,9 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.io.FileUtils;
-//import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
@@ -115,8 +108,6 @@ import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.internal.Coordinates;
-//import org.openqa.selenium.internal.Base64Encoder;
-//import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.interactions.internal.Locatable;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
@@ -131,6 +122,36 @@ import com.opera.core.systems.OperaDriver;
 import autoitx4java.AutoItX;
 
 public class Dragonfly {
+	// System.exit(0);
+	private AutoItSetObject objAutoItSetObject = new AutoItSetObject();
+	private Boolean gblnSyncAlert = false;
+	private Boolean gblnSyncAngularJs = false;
+	private Boolean gblnSyncDoPostBack = false;
+	private Boolean gblnSyncJQueryAjax = false;
+	private Boolean gblnSyncJQueryAnimation = false;
+	private Boolean gblnSyncPleaseWait = false;
+	private Boolean gblnSyncWaitForReadyState = false;
+	private Double gdblDevicePixelRatio = (double) 1;
+	private JSONArray gobjJsonArrayTestInstances = null;
+	private JSONArray gobjJsonArrayTestSteps = null;
+	private OperatingSystem gobjOperatingSystem = new OperatingSystem();
+	private String gstrBrowserSelection;
+	private String gstrEnvironment;
+	private String gstrOriginalAttributes;
+	private String gstrOriginalInputValue;
+	private TestConfigurationSetup objTestConfigurationSetup = new TestConfigurationSetup();
+	private WebDriver gobjWebDriver = null;
+	private WebElement gobjWebElement = null;
+	private WebElement gobjWebElementDrag = null;
+	private WebElement gobjWebElementDrop = null;
+	private WebElement gobjWebElementPleaseWait = null;
+	private JSONObjectExtended gobjectElement = new JSONObjectExtended();
+	private JSONObjectExtended gobjectLinks = new JSONObjectExtended();
+	private JSONObjectExtended gobjectProcessing = new JSONObjectExtended();
+	private JSONObjectExtended gobjectStep = new JSONObjectExtended();
+	private JSONObjectExtended gobjectTestData = new JSONObjectExtended();
+	private JSONObjectExtended gobjectTestInstancesEach = new JSONObjectExtended();
+
 	private class AlertFind {
 		private boolean run() {
 			Logger.getInstance().add("  ==start==>AlertFind " + getDateTimestamp());
@@ -154,7 +175,6 @@ public class Dragonfly {
 		}
 	}
 
-	//public Rectangle logger;
 	private class AutoItSetObject {
 		private AutoItX objAutoIt;
 
@@ -914,15 +934,12 @@ public class Dragonfly {
 			if (objActionEvent.getSource() == btnRun) {
 				Paths.getInstance().nameTest = (String) cboTest.getSelectedItem();
 				if (!gstrEnvironment.equals("test value")) {
-					//JSONParser objJsonParser = new JSONParser();
 					Logger.getInstance().add("DialogLaunch:actionPerformed Paths.getInstance().pathTestData = " + Paths.getInstance().pathTestData);
 					String strFilePathTestData = Paths.getInstance().pathTestData + "Environments.json";
 					Logger.getInstance().add("DialogLaunch:actionPerformed strFilePathTestData = " + strFilePathTestData);
 					try {
 						JSONObjectExtended objJsonObjectFile = new JSONObjectExtended();
 						objJsonObjectFile.replaceAllFromFile(strFilePathTestData);
-						//JSONObjectExtended objJsonObjectFile = new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathTestData)));
-						//JSONObject objJsonObjectFile =  (JSONObject) ( objJsonParser.parse(new FileReader(strFilePathTestData)));
 						Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
 						gstrEnvironment = objJsonObjectFile.getString(gstrEnvironment);
 						Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
@@ -1864,8 +1881,6 @@ public class Dragonfly {
 				Logger.getInstance().add("ElementPleaseWait: objectProcessing.size() = " + gobjectProcessing.size());
 				if (blnPleaseWait == true) {
 					for (intPleaseWaitEach = 1; intPleaseWaitEach < gobjectProcessing.size(); intPleaseWaitEach++) {
-						//JSONObjectExtended objJsonObjectPleaseWaitNode = gobjectProcessing.getNode("PleaseWait_" + intPleaseWaitEach);
-						//JSONObjectExtended objJsonObjectPleaseWaitNode = new JSONObjectExtended(gobjectProcessing.getNode("PleaseWait_" + intPleaseWaitEach));
 						objJsonObjectPleaseWaitNode.putAll(gobjectProcessing.getNode("PleaseWait_" + intPleaseWaitEach));
 						try {
 							strAttributeNames = objJsonObjectPleaseWaitNode.getValue("strAttributeNames", "");
@@ -3465,169 +3480,7 @@ public class Dragonfly {
 			}
 		}
 	}
-	//	private class JSONArrayExtended extends JSONArray {
-	//		private static final long serialVersionUID = 1L;
-	//
-	//		private JSONArrayExtended(JSONObject parent) {
-	//			super();
-	//		}
-	//	}
 
-	//	//@SuppressWarnings("unchecked")
-	//	private class JSONObjectExtended {
-	//		//private static final long serialVersionUID = 1L;
-	//		JSONObject jSONObject = null;
-	//
-	//		JSONObjectExtended() {
-	//		}
-	//
-	//		JSONObjectExtended(JSONObject parent) {
-	//			this.jSONObject.putAll(parent);
-	//		}
-	//
-	//		int size() {
-	//			return this.jSONObject.size();
-	//		}
-	//
-	//		void addJsonObject(JSONObject objJsonObjectToAdd) {
-	//			if (this.jSONObject.isEmpty() == true) {
-	//			} else {
-	//				this.jSONObject.putAll(objJsonObjectToAdd);
-	//			}
-	//		}
-	//
-	//		Boolean getBoolean(String strKeyName) {
-	//			return Boolean.parseBoolean(this.jSONObject.get(strKeyName).toString());
-	//		}
-	//
-	//		int getInt(String strKeyName) {
-	//			if (this.getString(strKeyName).equals("")) {
-	//				return 0;
-	//			}
-	//			return Integer.parseInt(this.jSONObject.get(strKeyName).toString());
-	//		}
-	//
-	//		String getLowerCase(String strKeyName) {
-	//			return this.getString(strKeyName).toLowerCase();
-	//		}
-	//
-	//		JSONObject getNode(String strKeyName) {
-	//			return (JSONObject) this.jSONObject.get(strKeyName);
-	//		}
-	//
-	//		int getValueLength(String strKeyName) {
-	//			return this.jSONObject.get(strKeyName).toString().trim().length();
-	//		}
-	//
-	//		String getString(String strKeyName) {
-	//			String strJSONObjectValue = "";
-	//			if (this.jSONObject.containsKey(strKeyName)) {
-	//				strJSONObjectValue = this.jSONObject.get(strKeyName).toString();
-	//				// Logger.getInstance().add("JSONObjectExtended:getString strJSONObjectValue = " + strJSONObjectValue);
-	//				return strJSONObjectValue;
-	//			} else {
-	//				// Logger.getInstance().add("JSONObjectExtended:getString JSON Key " + strKeyName + " for keyword link name " + strKeyName + " not present");
-	//				return "";
-	//			}
-	//		}
-	//
-	//		String getValue(String strInputValue, String strKeywordName) throws ExceptionJSONKeyNotPresent {
-	//			String strJSONObjectKey = strInputValue.replace(strKeywordName, "");
-	//			String strJSONObjectValue = "";
-	//			this.validateKey(strJSONObjectKey);
-	//			strJSONObjectValue = this.getString(strJSONObjectKey);
-	//			return strJSONObjectValue;
-	//		}
-	//
-	//		void replaceAllFromMap(Map<String, String> map) {
-	//			this.jSONObject.clear();
-	//			this.jSONObject.putAll((Map<String, String>) map);
-	//		}
-	//
-	//		void replaceAllFromFile(String pathFileToParse) throws ParseException, FileNotFoundException, IOException {
-	//			this.jSONObject.clear();
-	//			//this.jSONObject.putAll((Map<String, String>) new JSONParser().parse(new FileReader(pathFileToParse)));
-	//			this.jSONObject = (JSONObject) new JSONParser().parse(new FileReader(pathFileToParse));
-	//		}
-	//
-	//		void putInt(String strKeyName, int intKeyValue) {
-	//			this.jSONObject.put(strKeyName, Integer.toString(intKeyValue));
-	//		}
-	//
-	//		void putLong(String strKeyName, Long lngKeyValue) {
-	//			this.jSONObject.put(strKeyName, Long.toString(lngKeyValue));
-	//		}
-	//
-	//		void putString(String strKeyName, String strKeyValue) {
-	//			this.jSONObject.put(strKeyName, strKeyValue);
-	//		}
-	//
-	//		void putValue(String strKeyName, String strKeyValue) {
-	//			this.jSONObject.put(strKeyName, strKeyValue);
-	//		}
-	//
-	//		String returnKeyword(String strKeyName1) {
-	//			String strValueToFindKeyword = this.getLowerCase(strKeyName1);
-	//			int intRightArrowPosition = strValueToFindKeyword.indexOf(">");
-	//			String strKeyword = "";
-	//			if (intRightArrowPosition > -1) {
-	//				strKeyword = strValueToFindKeyword.substring(0, intRightArrowPosition + 1);
-	//			}
-	//			return strKeyword;
-	//		}
-	//
-	//		void validateKey(String strKeyName) throws ExceptionJSONKeyNotPresent {
-	//			if (!this.jSONObject.containsKey(strKeyName)) {
-	//				throw new ExceptionJSONKeyNotPresent("JSON Key " + strKeyName + " not present");
-	//			}
-	//		}
-	//
-	//		Boolean verifyEquals(String strKeyName, String strLowerCaseValue) {
-	//			return this.jSONObject.get(strKeyName).toString().trim().toLowerCase().equals(strLowerCaseValue);
-	//		}
-	//
-	//		Boolean verifyKeyValue(String file) {
-	//			return null;
-	//		}
-	//
-	//		void writeKeys(String file) throws IOException {
-	//			for (Iterator<?> iterator = this.jSONObject.keySet().iterator(); iterator.hasNext();) {
-	//				String key = (String) iterator.next();
-	//				Logger.getInstance().add("WriteJsonKeys: " + key + " = " + this.jSONObject.get(key));
-	//			}
-	//		}
-	//
-	//		boolean containsKey(String strKeyName) {
-	//			return this.jSONObject.containsKey(strKeyName);
-	//		}
-	//
-	//		JSONArray getArray(String strJsonArrayName) {
-	//			return (JSONArray) this.jSONObject.get(strJsonArrayName);
-	//		}
-	//
-	//		void putAll(JSONObject objJsonObjectEach) {
-	//			this.jSONObject.putAll((Map<String, String>) objJsonObjectEach);
-	//		}
-	//
-	//		String toJSONString() {
-	//			return this.jSONObject.toJSONString();
-	//		}
-	//
-	//		//		public void parseFileReader(FileReader filereader) throws IOException, ParseException {
-	//		//			this.jSONObject = (JSONObject) new JSONParser().parse(filereader);
-	//		//		}
-	//		void parseString(String stringToParse) throws ParseException {
-	//			this.jSONObject = (JSONObject) new JSONParser().parse(stringToParse);
-	//		}
-	//		//public String toJSONStringPrety() {
-	//		//return this.jSONObject.toString(4);
-	//		//	}
-	//
-	//		void replaceAllFromString(String stringToParse) throws ParseException {
-	//			//this.jSONObject.clear();
-	//			this.jSONObject = (JSONObject) new JSONParser().parse(stringToParse);
-	//		}
-	//	}
 	private class JvmBitVersion {
 		private String get() {
 			String strJvmBitVersion = System.getProperty("sun.arch.data.model");
@@ -3804,29 +3657,6 @@ public class Dragonfly {
 		}
 	}
 
-	//	private class Logger.getInstance() {
-	//		private StringBuilder objStringBuilder = new StringBuilder();;
-	//
-	//		private Logger.getInstance()(String strTextToAdd) {
-	//			System.out.println(strTextToAdd);
-	//			this.objStringBuilder.append(strTextToAdd);
-	//			this.objStringBuilder.append(System.getProperty("line.separator"));
-	//		}
-	//
-	//		private void add(String strTextToAdd) {
-	//			System.out.println(strTextToAdd);
-	//			objStringBuilder.append(strTextToAdd);
-	//			objStringBuilder.append(System.getProperty("line.separator"));
-	//		}
-	//
-	//		private void deleteLog() {
-	//			objStringBuilder.delete(0, objStringBuilder.length());
-	//		}
-	//
-	//		private String getLog() {
-	//			return objStringBuilder.toString();
-	//		}
-	//	}
 	private class MonthGet {
 		private String run(int month) {
 			Logger.getInstance().add("  ==start==>MonthGet " + getDateTimestamp());
@@ -3854,62 +3684,6 @@ public class Dragonfly {
 		}
 	}
 
-	//	private class PathCreation {
-	//		private String gstrPathSystemUserDir = System.getProperty("user.dir");
-	//		private String gstrTestArea;
-	//		private String gstrPathData;
-	//		private String gstrPathTestConfiguration;
-	//		private String gstrPathTestData;
-	//		private String gstrPathTestElements;
-	//		private String gstrPathTestInstances;
-	//		private String gstrPathTestModules;
-	//		private String gstrPathTestSteps;
-	//		private String gstrPathImages;
-	//		private String gstrPathResults;
-	//		private String gstrPathResultsTop;
-	//		private String gstrNameTest;
-	//
-	//		private void changeDirectoryNameStatus(String strTestStatus) {
-	//			Logger.getInstance().add("PathCreation:changeDirectoryNameStatus gstrPathResults = " + gstrPathResults);
-	//			File objDirectoryOld = new File(gstrPathResults);
-	//			String strPathResultsNew = gstrPathResults.substring(0, gstrPathResults.length() - 1) + "_" + strTestStatus + "\\";
-	//			Logger.getInstance().add("PathCreation:changeDirectoryNameStatus strPathResultsNew = " + strPathResultsNew);
-	//			File objDirectoryNew = new File(strPathResultsNew);
-	//			objDirectoryOld.renameTo(objDirectoryNew);
-	//			gstrPathResults = strPathResultsNew;
-	//		}
-	//
-	//		private void setDirectory(String strTestArea) {
-	//			gstrPathData = "Data/" + strTestArea + "/";
-	//			gstrPathTestConfiguration = gstrPathData + "test_configuration/";
-	//			gstrPathTestData = gstrPathData + "test_data/";
-	//			gstrPathTestElements = gstrPathData + "test_elements/";
-	//			gstrPathTestInstances = gstrPathData + "test_instances/";
-	//			gstrPathTestModules = gstrPathData + "test_modules/";
-	//			gstrPathTestSteps = gstrPathData + "test_steps/";
-	//		}
-	//
-	//		private void setPathResults(int intTestInstanceSize, String strTestConfigurationFileName) {
-	//			Logger.getInstance().add("PathCreation:setPathResults intTestInstanceSize = " + intTestInstanceSize);
-	//			Logger.getInstance().add("PathCreation:setPathResults strTestConfigurationFileName = " + strTestConfigurationFileName);
-	//			String gstrDateTimestamp = getDateTimestamp();
-	//			Logger.getInstance().add("PathCreation:setPathResults gstrDateTimestamp = " + gstrDateTimestamp);
-	//			Logger.getInstance().add("PathCreation:setPathResults gstrPathImages==null = " + gstrPathImages);
-	//			if (gstrPathImages == null) {
-	//				gstrPathResultsTop = gstrPathSystemUserDir + "\\Results\\" + strTestConfigurationFileName.replace(".json", "") + "\\";
-	//				Logger.getInstance().add("PathCreation:setPathResults gstrPathResults = " + gstrPathResults);
-	//				if (intTestInstanceSize > 1) {
-	//					gstrPathResultsTop = gstrPathResultsTop + gstrDateTimestamp + "\\Iterations_" + intTestInstanceSize + "\\";
-	//					Logger.getInstance().add("PathCreation:setPathResults gstrPathResults = " + gstrPathResults);
-	//				}
-	//			}
-	//			gstrPathResults = gstrPathResultsTop + gstrDateTimestamp + "\\";
-	//			Logger.getInstance().add("PathCreation:setPathResults gstrPathResults = " + gstrPathResults);
-	//			gstrPathImages = gstrPathResults + "images\\";
-	//			Logger.getInstance().add("PathCreation:setPathResults gstrPathImages = " + gstrPathImages);
-	//			new File(gstrPathImages).mkdirs();
-	//		}
-	//	}
 	class ProcessKillInternetExplorer {
 		void run() {
 			Logger.getInstance().add("  ==start==>ProcessKillInternetExplorer " + getDateTimestamp());
@@ -4127,7 +3901,6 @@ public class Dragonfly {
 				} catch (Exception e) {
 					Logger.getInstance().add("StepSetupDefaults: Exception = " + e.toString());
 				}
-				//if (gobjectStep.getNode(strKey).toString().trim().length() == 0) {
 				if (gobjectStep.getValueLength(strKey) == 0) {
 					try {
 						gobjectStep.putValue(strKey, (String) objField.get(this));
@@ -4143,22 +3916,6 @@ public class Dragonfly {
 		}
 	}
 
-	//	private class StepsManual {
-	//		private StringBuilder mobjStringBuilder = new StringBuilder();;
-	//
-	//		private void delete() {
-	//			mobjStringBuilder.delete(0, mobjStringBuilder.length());
-	//		}
-	//
-	//		private String get() {
-	//			return mobjStringBuilder.toString();
-	//		}
-	//
-	//		private void set(String strTextToAdd) {
-	//			mobjStringBuilder.append(strTextToAdd);
-	//			mobjStringBuilder.append(System.getProperty("line.separator"));
-	//		}
-	//	}
 	private class SyncAlert {
 		private SyncAlert() throws ExceptionAlertNotComplete {
 			Logger.getInstance().add("  ==start==>SyncAlert " + getDateTimestamp());
@@ -4306,7 +4063,6 @@ public class Dragonfly {
 	private class TestConfigurationSetup {
 		private int intTestInstanceSize;
 		private JSONObjectExtended objJsonObjectTestConfigurationFile = new JSONObjectExtended();
-		///private JSONParser objJsonParser = new JSONParser();
 
 		@SuppressWarnings("unchecked")
 		private JSONArray putAllArrays(String strJsonArrayName, String strJsonObjectName, String strPath) {
@@ -4327,7 +4083,6 @@ public class Dragonfly {
 					strFilePathJsonArray = strPath + strFileNameEach;
 					Logger.getInstance().add("TestConfigurationSetup:putAllArrays strFilePathJsonArray = " + strFilePathJsonArray);
 					try {
-						//objJsonObjectFileEach = new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathJsonArray)));
 						objJsonObjectFileEach.replaceAllFromFile(strFilePathJsonArray);
 						objJsonArrayEach = (JSONArray) objJsonObjectFileEach.getArray(strJsonObjectName);
 						int intStep = -1;
@@ -4359,8 +4114,6 @@ public class Dragonfly {
 		@SuppressWarnings("unchecked")
 		private JSONObjectExtended putAllObjects(String strJsonArrayName, String strJsonObjectName, String strPath) {
 			Logger.getInstance().add("  ==start==>putAllObjects " + getDateTimestamp());
-			//JSONParser objJsonParser = new JSONParser();
-			//JSONObject obj = new JSONObject();
 			Integer intJsonObjectEach = 0;
 			JSONArray objJsonArrayList = null;
 			JSONObjectExtended objJsonObject = new JSONObjectExtended();
@@ -4380,7 +4133,6 @@ public class Dragonfly {
 				strFilePathJsonArray = strPath + strFileNameEach;
 				Logger.getInstance().add("TestConfigurationSetup:putAllObjects strFilePathJsonArray = " + strFilePathJsonArray);
 				try {
-					//objJsonObjectFileEach.putAllReplace((Map<String, String>) objJsonParser.parse(new FileReader(strFilePathJsonArray)));
 					objJsonObjectFileEach.replaceAllFromFile(strFilePathJsonArray);
 					Logger.getInstance().add("TestConfigurationSetup:putAllObjects objJsonObjectFileEach = " + objJsonObjectFileEach);
 					objJsonObjectEach.replaceAllFromMap((Map<String, String>) objJsonObjectFileEach.getArray(strJsonObjectName));
@@ -4403,8 +4155,6 @@ public class Dragonfly {
 			try {
 				strFilePathTestConfiguration = Paths.getInstance().pathTestConfiguration + strFileNameTestConfiguration;
 				Logger.getInstance().add("TestConfigurationSetup: strPathTestConfiguration = " + strFilePathTestConfiguration);
-				//objJsonObjectTestConfigurationFile = new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathTestConfiguration)));
-				//objJsonObjectTestConfigurationFile.replaceAllFromFile(strFilePathTestConfiguration);
 				objJsonObjectTestConfigurationFile.replaceAllFromFile(strFilePathTestConfiguration);
 				Logger.getInstance().add("TestConfigurationSetup: objJsonObjectTestConfigurationFile = " + objJsonObjectTestConfigurationFile.toJSONString());
 				// test_instances
@@ -4428,7 +4178,6 @@ public class Dragonfly {
 				Logger.getInstance().add("TestConfigurationSetup: gobjJsonArrayTestSteps.toString = " + gobjJsonArrayTestSteps.toString());
 				// TODO add error handling, report no test modules and fail
 				// test_links
-				//gobjectLinks.putAllReplace((Map<String, String>) objJsonParser.parse("{\"link\":[{}]}"));
 				gobjectLinks.parseString("{\"link\":[{}]}");
 				// test_data
 				Logger.getInstance().add("TestConfigurationSetup: test_data");
@@ -4462,15 +4211,6 @@ public class Dragonfly {
 		}
 	}
 
-	//	private class VariablesJSON {
-	//		private JSONObject obj = new JSONObject();
-	//		//private JSONObjectExtended objectElement = new JSONObjectExtended(obj);
-	//		private JSONObjectExtended objectLinks = new JSONObjectExtended(obj);
-	//		private JSONObjectExtended objectProcessing = new JSONObjectExtended(obj);
-	//		private JSONObjectExtended objectStep = new JSONObjectExtended(obj);
-	//		private JSONObjectExtended objectTestData = new JSONObjectExtended(obj);
-	//		private JSONObjectExtended objectTestInstancesEach = new JSONObjectExtended(obj);
-	//	}
 	private class VerifyMatch {
 		private String run(String strActual, String strExpected) throws ExceptionValueNotMatched {
 			Logger.getInstance().add("  ==start==>VerifyMatch " + getDateTimestamp());
@@ -4547,70 +4287,6 @@ public class Dragonfly {
 		}
 	}
 
-	//	private class WebDriverTest {
-	//		private WebDriverTest() {
-	//			new ProcessKillInternetExplorer().run();
-	//			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
-	//			DesiredCapabilities objDesiredCapabilities = null;
-	//			// Logger.getInstance().add("BrowserLaunch: DesiredCapabilities");
-	//			objDesiredCapabilities = DesiredCapabilities.internetExplorer();
-	//			// Logger.getInstance().add("BrowserLaunch: objDesiredCapabilities.toString()" + objDesiredCapabilities);
-	//			// Logger.getInstance().add("BrowserLaunch: setJavascriptEnabled");
-	//			objDesiredCapabilities.setJavascriptEnabled(true);
-	//			// Logger.getInstance().add("BrowserLaunch: UNEXPECTED_ALERT_BEHAVIOR");
-	//			objDesiredCapabilities.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, "ignore");
-	//			// Logger.getInstance().add("BrowserLaunch: IE_ENSURE_CLEAN_SESSION");
-	//			objDesiredCapabilities.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
-	//			// Logger.getInstance().add("BrowserLaunch: REQUIRE_WINDOW_FOCUS");
-	//			objDesiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
-	//			// Logger.getInstance().add("BrowserLaunch: INITIAL_BROWSER_URL");
-	//			objDesiredCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
-	//			// Logger.getInstance().add("BrowserLaunch: webdriver.ie.driver" + System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
-	//			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
-	//			// Logger.getInstance().add("BrowserLaunch: new InternetExplorerDriver(desiredCapabilities)");
-	//			WebDriver objWebDriver = new InternetExplorerDriver(objDesiredCapabilities);
-	//			//objWebDriver = new InternetExplorerDriver();
-	//			//DesiredCapabilities desiredCapabilities = null;
-	//			//desiredCapabilities = DesiredCapabilities.internetExplorer();
-	//			//desiredCapabilities.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
-	//			//desiredCapabilities.setCapability(InternetExplorerDriver.IE_SWITCHES, "-noframemerging");
-	//			//objWebDriver = new InternetExplorerDriver(desiredCapabilities);
-	//			//objWebDriver.get("https://www.google.com/");
-	//			String strLocalWebsiteFilePath = "file:///" + System.getProperty("user.dir").replaceAll("\\\\", "/") + "/Websites/tooltip.html";
-	//			objWebDriver.get(strLocalWebsiteFilePath);
-	//			//Capabilities getCapabilities();
-	//			//		driver = new FirefoxDriver();
-	//			//		driver = new HtmlUnitDriver(true);
-	//			//	assertTrue(true);
-	//			//driver.close();
-	//			//driver.quit();
-	//			new SleepMilliseconds(2000);
-	//			WebElement objWebElement = objWebDriver.findElement(By.id("tooltipID"));
-	//			Actions ToolTip1 = new Actions(objWebDriver);
-	//			ToolTip1.moveToElement(objWebElement).build().perform();
-	//			//ToolTip1.clickAndHold(objWebElement).build().perform();
-	//			new SleepMilliseconds(1000);
-	//			System.out.println(objWebElement.getLocation().getX());
-	//			System.out.println(objWebElement.getLocation().getY());
-	//			System.out.println(objWebElement.getSize().width);
-	//			System.out.println(objWebElement.getSize().height);
-	//			Dimension objWebDriverDimension = objWebElement.getSize();
-	//			int intBrowserOuterWidth = objWebDriverDimension.width;
-	//			int intBrowserOuterHeight = objWebDriverDimension.height;
-	//			//' Grab tooltip
-	//			//ToolTip = Window("nativeclass:=tooltips_class32").GetROProperty("text")
-	//			//String strToolTip = objAutoItSetObject.objAutoIt.controlGetText("tooltips_class32", "", "");
-	//			System.out.println(-((intBrowserOuterWidth / 2) + 1));
-	//			System.out.println(-((intBrowserOuterHeight / 2) + 1));
-	//			ToolTip1.moveByOffset(-((intBrowserOuterWidth / 2) + 1), -((intBrowserOuterHeight / 2) + 1)).build().perform();
-	//			String ToolTipText = objWebElement.getAttribute("title");
-	//			//Assert.assertEquals(ToolTipText, "Google");
-	//			System.out.println("Tooltip value is: " + ToolTipText);
-	//			//ToolTip1.release(objWebElement).perform();
-	//			//ToolTip1.release().perform();
-	//			//ToolTip1.moveByOffset(0, 0);
-	//		}
-	//	}
 	private class WebElementAttributes {
 		private WebElementAttributes() {
 			Logger.getInstance().add("  ==start==>WebElementAttributes " + getDateTimestamp());
@@ -4688,7 +4364,6 @@ public class Dragonfly {
 			Logger.getInstance().add("  ==start==>WebElementCollectionTable " + getDateTimestamp());
 			// TODO webElementCollectionTable send output to html file
 			int intCount = 0;
-			//JSONObjectExtended objStepNew = null;
 			if (strTagName.toLowerCase().startsWith("input_")) {
 				strTagName = "input";
 			}
@@ -4823,6 +4498,150 @@ public class Dragonfly {
 		objDragonfly.mainDragonfly(args, objDragonfly);
 	}
 
+	private String createObjectName() {
+		String strAttributeValue = "";
+		String strAttributeValues = ReplaceHtmlArrows(gobjectStep.getString("strAttributeValues"));
+		String strObjectsAttributes = "";
+		String strObjectName = "";
+		String strObjectNames = gobjectStep.getString("strAttributeNames");
+		String[] arrAttributeValues = strAttributeValues.split("\\|");
+		String[] arrObjectNames = strObjectNames.split("\\|");
+		for (int intEach = 0; intEach < arrObjectNames.length; intEach++) {
+			strObjectName = arrObjectNames[intEach].toString();
+			strAttributeValue = arrAttributeValues[intEach].toString();
+			if (intEach == 0) {
+				strObjectsAttributes = strObjectName + "=" + strAttributeValue;
+				Logger.getInstance().add("createObjectName strObjectAttribute =" + strObjectsAttributes);
+			} else {
+				strObjectsAttributes = strObjectsAttributes + "|" + strObjectName + "=" + strAttributeValue;
+				Logger.getInstance().add("createObjectName strObjectAttribute =" + strObjectsAttributes);
+			}
+		}
+		return strObjectsAttributes;
+	}
+
+	public String data_DateDaysOut(String strDaysOut) {
+		Logger.getInstance().add("  ==start==>data_DateDaysOut " + getDateTimestamp());
+		Integer intDaysOut = Integer.parseInt(strDaysOut);
+		SimpleDateFormat objFormattedDATE = new SimpleDateFormat("MM/dd/yyyy");
+		Calendar objCalendar = Calendar.getInstance();
+		objCalendar.add(Calendar.DATE, intDaysOut);
+		String strNewDate = (objFormattedDATE.format(objCalendar.getTime()));
+		return strNewDate;
+	}
+
+	public String data_EnvironmentURL(String strApplication_Environment) {
+		Logger.getInstance().add("data_EnvironmentURL: gstrEnvironment = " + gstrEnvironment);
+		Logger.getInstance().add("  ==start==>data_EnvironmentURL " + getDateTimestamp());
+		String strURL = "";
+		Logger.getInstance().add("data_EnvironmentURL: Paths.getInstance().pathTestData = " + Paths.getInstance().pathTestData);
+		String strFilePathTestData = Paths.getInstance().pathTestData + "Environment.json";
+		//gstrEnvironment
+		Logger.getInstance().add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
+		try {
+			Logger.getInstance().add("data_EnvironmentURL: gstrEnvironment = " + gstrEnvironment);
+			if (!gstrEnvironment.equals("test value")) {
+				String[] arrApplication_Environment = strApplication_Environment.split("_");
+				strApplication_Environment = arrApplication_Environment[0] + "_" + gstrEnvironment;
+				Logger.getInstance().add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
+			}
+			Logger.getInstance().add("data_EnvironmentURL: strFilePathTestData = " + strFilePathTestData);
+			JSONObjectExtended objJsonObjectFile = new JSONObjectExtended();
+			objJsonObjectFile.replaceAllFromFile(strFilePathTestData);
+			Logger.getInstance().add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
+			strURL = objJsonObjectFile.getString(strApplication_Environment);
+			Logger.getInstance().add("data_EnvironmentURL: strURL = " + strURL);
+		} catch (Exception e) {
+			Logger.getInstance().add("data_EnvironmentURL: Exception = " + e.toString());
+		}
+		return strURL;
+	}
+
+	public String data_localWebsiteFilePath(String strWebsite) {
+		Logger.getInstance().add("  ==start==>data_localWebsiteFilePath " + getDateTimestamp());
+		String strLocalWebsiteFilePath = "file:///" + System.getProperty("user.dir").replaceAll("\\\\", "/") + "/Websites/" + strWebsite;
+		Logger.getInstance().add("data_localWebsiteFilePath: strLocalWebsiteFilePath = " + strLocalWebsiteFilePath);
+		return strLocalWebsiteFilePath;
+	}
+
+	public String data_RandomFourNumbers(String strDaysOut) {
+		Logger.getInstance().add("  ==start==>data_RandomFourNumbers " + getDateTimestamp());
+		return Integer.toString(randomNumberRange(1000, 9999));
+	}
+
+	public String data_RandomRangeFiveNumbers(String strDataInput) {
+		Logger.getInstance().add("  ==start==>data_RandomRangeFiveNumbers " + getDateTimestamp());
+		return Integer.toString(randomNumberRange(1, 99999));
+	}
+
+	private String formatDateTime(Long lngStartTimeMillis) {
+		Logger.getInstance().add("  ==start==>DateTimeFormat " + getDateTimestamp());
+		return new SimpleDateFormat("MMM dd, yyyy HH:mm:ss:SSS").format(new Date(lngStartTimeMillis));
+	}
+
+	private String formatXML(String input) {
+		try {
+			final InputSource src = new InputSource(new StringReader(input));
+			final Node document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(src).getDocumentElement();
+			final DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
+			final DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
+			final LSSerializer writer = impl.createLSSerializer();
+			writer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
+			writer.getDomConfig().setParameter("xml-declaration", true);
+			return writer.writeToString(document);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return input;
+		}
+	}
+
+	private String getDateTimestamp() {
+		return new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(new Date());
+	}
+
+	private String getKeyword(String strValue) {
+		String strValueToFindKeyword = strValue.toLowerCase();
+		int intRightArrowPosition = strValueToFindKeyword.indexOf(">");
+		String strKeyword = "";
+		if (intRightArrowPosition > -1) {
+			strKeyword = strValueToFindKeyword.substring(0, intRightArrowPosition + 1);
+		}
+		Logger.getInstance().add("getKeyword: strKeyword = " + strKeyword);
+		return strKeyword;
+	}
+
+	private int getKeywordIntValue(String strValue) {
+		String strValueToFindInt = "";
+		int intRightArrowPosition = strValue.indexOf(">");
+		int intKeywordValue = 0;
+		if (intRightArrowPosition > -1) {
+			strValueToFindInt = strValue.substring(intRightArrowPosition + 1);
+			if (isNum(strValueToFindInt) == true) {
+				intKeywordValue = Integer.parseInt(strValueToFindInt);
+			}
+		}
+		Logger.getInstance().add("getKeywordIntValue: intKeywordValue " + intKeywordValue);
+		return intKeywordValue;
+	}
+
+	private String getKeywordValue(String strValue) {
+		int intRightArrowPosition = strValue.indexOf(">");
+		String strKeywordValue = "";
+		if (intRightArrowPosition > -1) {
+			strKeywordValue = strValue.substring(intRightArrowPosition + 1);
+		} else {
+			strKeywordValue = strValue;
+		}
+		Logger.getInstance().add("getKeywordValue: strKeywordValue " + strKeywordValue);
+		return strKeywordValue;
+	}
+
+	private void logStepDetails() {
+		for (String strKey : new StepNames().getOriginal()) {
+			Logger.getInstance().add("LogStepDetails: " + strKey + " = " + gobjectStep.getString(strKey));
+		}
+	}
+
 	public void mainDragonfly(String[] args, Dragonfly objDragonfly) {
 		JSONArray objJsonArrayTestSteps = null;
 		JSONArray objJsonArrayTestStepsRun = new JSONArray();
@@ -4884,7 +4703,6 @@ public class Dragonfly {
 				for (intStep = 0; intStep < objJsonArrayTestSteps.size(); intStep++) {
 					Logger.getInstance().add("mainDragonfly: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
 					gobjWebElement = null;
-					//gobjectStep = new JSONObjectExtended((JSONObject) objJsonArrayTestSteps.get(intStep));
 					gobjectStep.replaceAllFromString((String) objJsonArrayTestSteps.get(intStep).toString());
 					new StepSetupDefaults(strCurrentWindowHandle);
 					String strInputValue = gobjectStep.getString("strInputValue");
@@ -5087,169 +4905,6 @@ public class Dragonfly {
 			}
 			Logger.getInstance().deleteLog();
 			StepsManual.getInstance().delete();
-		}
-	}
-	// System.exit(0);
-	private AutoItSetObject objAutoItSetObject = new AutoItSetObject();
-	private Boolean gblnSyncAlert = false;
-	private Boolean gblnSyncAngularJs = false;
-	private Boolean gblnSyncDoPostBack = false;
-	private Boolean gblnSyncJQueryAjax = false;
-	private Boolean gblnSyncJQueryAnimation = false;
-	private Boolean gblnSyncPleaseWait = false;
-	private Boolean gblnSyncWaitForReadyState = false;
-	private Double gdblDevicePixelRatio = (double) 1;
-	private JSONArray gobjJsonArrayTestInstances = null;
-	private JSONArray gobjJsonArrayTestSteps = null;
-	//private Logger Logger.getInstance() = new Logger("  ==start==>Dragonfly ");
-	private OperatingSystem gobjOperatingSystem = new OperatingSystem();
-	//private PathCreation gobjPaths = new PathCreation();
-	//private StepsManual gobjStepsManual = new StepsManual();
-	private String gstrBrowserSelection;
-	private String gstrEnvironment;
-	private String gstrOriginalAttributes;
-	private String gstrOriginalInputValue;
-	private TestConfigurationSetup objTestConfigurationSetup = new TestConfigurationSetup();
-	private WebDriver gobjWebDriver = null;
-	private WebElement gobjWebElement = null;
-	private WebElement gobjWebElementDrag = null;
-	private WebElement gobjWebElementDrop = null;
-	private WebElement gobjWebElementPleaseWait = null;
-	//private JSONObject gobj = new JSONObject();
-	private JSONObjectExtended gobjectElement = new JSONObjectExtended();
-	private JSONObjectExtended gobjectLinks = new JSONObjectExtended();
-	private JSONObjectExtended gobjectProcessing = new JSONObjectExtended();
-	private JSONObjectExtended gobjectStep = new JSONObjectExtended();
-	private JSONObjectExtended gobjectTestData = new JSONObjectExtended();
-	private JSONObjectExtended gobjectTestInstancesEach = new JSONObjectExtended();
-
-	public String data_DateDaysOut(String strDaysOut) {
-		Logger.getInstance().add("  ==start==>data_DateDaysOut " + getDateTimestamp());
-		Integer intDaysOut = Integer.parseInt(strDaysOut);
-		SimpleDateFormat objFormattedDATE = new SimpleDateFormat("MM/dd/yyyy");
-		Calendar objCalendar = Calendar.getInstance();
-		objCalendar.add(Calendar.DATE, intDaysOut);
-		String strNewDate = (objFormattedDATE.format(objCalendar.getTime()));
-		return strNewDate;
-	}
-
-	public String data_EnvironmentURL(String strApplication_Environment) {
-		Logger.getInstance().add("data_EnvironmentURL: gstrEnvironment = " + gstrEnvironment);
-		//JSONParser objJsonParser = new JSONParser();
-		Logger.getInstance().add("  ==start==>data_EnvironmentURL " + getDateTimestamp());
-		String strURL = "";
-		Logger.getInstance().add("data_EnvironmentURL: Paths.getInstance().pathTestData = " + Paths.getInstance().pathTestData);
-		String strFilePathTestData = Paths.getInstance().pathTestData + "Environment.json";
-		//gstrEnvironment
-		Logger.getInstance().add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
-		try {
-			Logger.getInstance().add("data_EnvironmentURL: gstrEnvironment = " + gstrEnvironment);
-			if (!gstrEnvironment.equals("test value")) {
-				String[] arrApplication_Environment = strApplication_Environment.split("_");
-				strApplication_Environment = arrApplication_Environment[0] + "_" + gstrEnvironment;
-				Logger.getInstance().add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
-			}
-			Logger.getInstance().add("data_EnvironmentURL: strFilePathTestData = " + strFilePathTestData);
-			//JSONObjectExtended objJsonObjectFile = new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathTestData)));
-			JSONObjectExtended objJsonObjectFile = new JSONObjectExtended();
-			objJsonObjectFile.replaceAllFromFile(strFilePathTestData);
-			Logger.getInstance().add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
-			strURL = objJsonObjectFile.getString(strApplication_Environment);
-			Logger.getInstance().add("data_EnvironmentURL: strURL = " + strURL);
-		} catch (Exception e) {
-			Logger.getInstance().add("data_EnvironmentURL: Exception = " + e.toString());
-		}
-		return strURL;
-	}
-
-	public String data_localWebsiteFilePath(String strWebsite) {
-		Logger.getInstance().add("  ==start==>data_localWebsiteFilePath " + getDateTimestamp());
-		String strLocalWebsiteFilePath = "file:///" + System.getProperty("user.dir").replaceAll("\\\\", "/") + "/Websites/" + strWebsite;
-		Logger.getInstance().add("data_localWebsiteFilePath: strLocalWebsiteFilePath = " + strLocalWebsiteFilePath);
-		return strLocalWebsiteFilePath;
-	}
-
-	public String data_RandomFourNumbers(String strDaysOut) {
-		Logger.getInstance().add("  ==start==>data_RandomFourNumbers " + getDateTimestamp());
-		return Integer.toString(randomNumberRange(1000, 9999));
-	}
-
-	public String data_RandomRangeFiveNumbers(String strDataInput) {
-		Logger.getInstance().add("  ==start==>data_RandomRangeFiveNumbers " + getDateTimestamp());
-		return Integer.toString(randomNumberRange(1, 99999));
-	}
-
-	private String createObjectName() {
-		String strAttributeValue = "";
-		String strAttributeValues = ReplaceHtmlArrows(gobjectStep.getString("strAttributeValues"));
-		String strObjectsAttributes = "";
-		String strObjectName = "";
-		String strObjectNames = gobjectStep.getString("strAttributeNames");
-		String[] arrAttributeValues = strAttributeValues.split("\\|");
-		String[] arrObjectNames = strObjectNames.split("\\|");
-		for (int intEach = 0; intEach < arrObjectNames.length; intEach++) {
-			strObjectName = arrObjectNames[intEach].toString();
-			strAttributeValue = arrAttributeValues[intEach].toString();
-			if (intEach == 0) {
-				strObjectsAttributes = strObjectName + "=" + strAttributeValue;
-				Logger.getInstance().add("createObjectName strObjectAttribute =" + strObjectsAttributes);
-			} else {
-				strObjectsAttributes = strObjectsAttributes + "|" + strObjectName + "=" + strAttributeValue;
-				Logger.getInstance().add("createObjectName strObjectAttribute =" + strObjectsAttributes);
-			}
-		}
-		return strObjectsAttributes;
-	}
-
-	private String formatDateTime(Long lngStartTimeMillis) {
-		Logger.getInstance().add("  ==start==>DateTimeFormat " + getDateTimestamp());
-		return new SimpleDateFormat("MMM dd, yyyy HH:mm:ss:SSS").format(new Date(lngStartTimeMillis));
-	}
-
-	private String getDateTimestamp() {
-		return new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(new Date());
-	}
-
-	private String getKeyword(String strValue) {
-		String strValueToFindKeyword = strValue.toLowerCase();
-		int intRightArrowPosition = strValueToFindKeyword.indexOf(">");
-		String strKeyword = "";
-		if (intRightArrowPosition > -1) {
-			strKeyword = strValueToFindKeyword.substring(0, intRightArrowPosition + 1);
-		}
-		Logger.getInstance().add("getKeyword: strKeyword = " + strKeyword);
-		return strKeyword;
-	}
-
-	private int getKeywordIntValue(String strValue) {
-		String strValueToFindInt = "";
-		int intRightArrowPosition = strValue.indexOf(">");
-		int intKeywordValue = 0;
-		if (intRightArrowPosition > -1) {
-			strValueToFindInt = strValue.substring(intRightArrowPosition + 1);
-			if (isNum(strValueToFindInt) == true) {
-				intKeywordValue = Integer.parseInt(strValueToFindInt);
-			}
-		}
-		Logger.getInstance().add("getKeywordIntValue: intKeywordValue " + intKeywordValue);
-		return intKeywordValue;
-	}
-
-	private String getKeywordValue(String strValue) {
-		int intRightArrowPosition = strValue.indexOf(">");
-		String strKeywordValue = "";
-		if (intRightArrowPosition > -1) {
-			strKeywordValue = strValue.substring(intRightArrowPosition + 1);
-		} else {
-			strKeywordValue = strValue;
-		}
-		Logger.getInstance().add("getKeywordValue: strKeywordValue " + strKeywordValue);
-		return strKeywordValue;
-	}
-
-	private void logStepDetails() {
-		for (String strKey : new StepNames().getOriginal()) {
-			Logger.getInstance().add("LogStepDetails: " + strKey + " = " + gobjectStep.getString(strKey));
 		}
 	}
 
@@ -5716,7 +5371,6 @@ public class Dragonfly {
 			for (int intTestStepRow = 0; intTestStepRow < objTestSteps.size(); intTestStepRow++) {
 				objStringBuilder.append("</tr>");
 				objStringBuilder.append("<td> " + (intTestStepRow) + "</td>");
-				//JSONObjectExtended objStepReport = new JSONObjectExtended((JSONObject) objTestSteps.get(intTestStepRow));
 				objStepReport.replaceAllFromString((String) objTestSteps.get(intTestStepRow).toString());
 				for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
 					strKey = arrKeys[intKeysEach].toString();
@@ -5805,8 +5459,6 @@ public class Dragonfly {
 			objStringBuilder.append("<br>");
 			objStringBuilder.append("<br>");
 			for (intTestStepRow = 0; intTestStepRow < objJsonArrayReportSteps.size(); intTestStepRow++) {
-				//objJsonObjectReportStep = JSONObjectExtended((JSONObject) objJsonArrayReportSteps.get(intTestStepRow));
-				//objJsonObjectReportStep = JSONObjectExtended((JSONObject) objJsonArrayReportSteps.get(intTestStepRow));
 				objJsonObjectReportStep.parseString((String) objJsonArrayReportSteps.get(intTestStepRow));
 				Logger.getInstance().add("WriteReportToHtml: objJsonObjectReportStep = " + objJsonObjectReportStep.toJSONString());
 				objStringBuilder.append("<div id=step_" + intTestStepRow + ">");
@@ -5870,22 +5522,6 @@ public class Dragonfly {
 			writeFile(strFile, strHTML);
 			writeFile(strTestStepsFile, strHTML);
 			Logger.getInstance().add("WriteReportToHtml: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-		}
-	}
-
-	private String formatXML(String input) {
-		try {
-			final InputSource src = new InputSource(new StringReader(input));
-			final Node document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(src).getDocumentElement();
-			final DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
-			final DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
-			final LSSerializer writer = impl.createLSSerializer();
-			writer.getDomConfig().setParameter("format-pretty-print", Boolean.TRUE);
-			writer.getDomConfig().setParameter("xml-declaration", true);
-			return writer.writeToString(document);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return input;
 		}
 	}
 }
