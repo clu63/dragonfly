@@ -45,6 +45,8 @@ import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
@@ -53,10 +55,13 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+//import com.sun.jna.platform.win32.WinDef;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
@@ -77,16 +82,17 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.apache.commons.io.FileUtils;
 //import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
@@ -120,44 +126,40 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.InputSource;
-import autoitx4java.AutoItX;
 import com.jacob.com.LibraryLoader;
 import com.opera.core.systems.OperaDriver;
-//import com.sun.jna.platform.win32.WinDef;
-import java.util.Base64;
-import org.apache.commons.io.FileUtils;
-import java.io.File;
-import java.io.IOException;
+import autoitx4java.AutoItX;
 
 public class Dragonfly {
 	private class AlertFind {
 		private boolean run() {
-			logger.add("  ==start==>AlertFind " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>AlertFind " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			try {
 				String strAlertPresent = gobjWebDriver.switchTo().alert().getText();
-				logger.add("AlertFind: alert found:  " + strAlertPresent);
+				Logger.getInstance().add("AlertFind: alert found:  " + strAlertPresent);
 				return true;
 			} catch (UnhandledAlertException e) {
-				logger.add("AlertFind: UnhandledAlertException = " + e.toString());
+				Logger.getInstance().add("AlertFind: UnhandledAlertException = " + e.toString());
 				return true;
 			} catch (NoAlertPresentException e) {
-				logger.add("AlertFind: NoAlertPresentException = " + e.toString());
+				Logger.getInstance().add("AlertFind: NoAlertPresentException = " + e.toString());
 				return false;
 			} catch (Exception e) {
-				logger.add("AlertFind: Exception = " + e.toString());
+				Logger.getInstance().add("AlertFind: Exception = " + e.toString());
 				return false;
 			} finally {
-				logger.add("AlertFind: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("AlertFind: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
+	//public Rectangle logger;
 	private class AutoItSetObject {
 		private AutoItX objAutoIt;
 
 		private void createObject() {
-			logger.add("  ==start==>AutoItSetObject " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>AutoItSetObject " + getDateTimestamp());
 			String strJacobDllVersionToUse;
 			JvmBitVersion objJvmBitVersion = new JvmBitVersion();
 			if (objJvmBitVersion.get().contains("32")) {
@@ -165,11 +167,11 @@ public class Dragonfly {
 			} else {
 				strJacobDllVersionToUse = "jacob-1.18-x64.dll";
 			}
-			logger.add("AutoItSetObject: System.getProperty(java.library.path) = " + System.getProperty("java.library.path") + " " + getDateTimestamp());
-			logger.add("AutoItSetObject: strJacobDllVersionToUse = " + strJacobDllVersionToUse + " " + getDateTimestamp());
+			Logger.getInstance().add("AutoItSetObject: System.getProperty(java.library.path) = " + System.getProperty("java.library.path") + " " + getDateTimestamp());
+			Logger.getInstance().add("AutoItSetObject: strJacobDllVersionToUse = " + strJacobDllVersionToUse + " " + getDateTimestamp());
 			File objFile = new File("Libraries", strJacobDllVersionToUse);
-			logger.add("AutoItSetObject: LibraryLoader.JACOB_DLL_PATH = " + LibraryLoader.JACOB_DLL_PATH + " " + getDateTimestamp());
-			logger.add("AutoItSetObject: objFile.getAbsolutePath() = " + objFile.getAbsolutePath() + " " + getDateTimestamp());
+			Logger.getInstance().add("AutoItSetObject: LibraryLoader.JACOB_DLL_PATH = " + LibraryLoader.JACOB_DLL_PATH + " " + getDateTimestamp());
+			Logger.getInstance().add("AutoItSetObject: objFile.getAbsolutePath() = " + objFile.getAbsolutePath() + " " + getDateTimestamp());
 			System.setProperty(LibraryLoader.JACOB_DLL_PATH, objFile.getAbsolutePath());
 			objAutoIt = new AutoItX();
 		}
@@ -201,10 +203,10 @@ public class Dragonfly {
 		private BrowserLaunch() throws ExceptionBrowserDriverNotSupported {
 			// TODO combine duplicate code
 			// TODO add desiredCapabilities.setJavascriptEnabled(true); to all browsers
-			logger.add("  ==start==>BrowserLaunch " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>BrowserLaunch " + getDateTimestamp());
 			DesiredCapabilities objDesiredCapabilities = null;
 			Long lngTimeStart = System.currentTimeMillis();
-			logger.add("objVariablesCommon.gstrBrowserSelection = " + gstrBrowserSelection);
+			Logger.getInstance().add("objVariablesCommon.gstrBrowserSelection = " + gstrBrowserSelection);
 			if (gstrBrowserSelection != "value in test") {
 				gobjectStep.putValue("strTagName", gstrBrowserSelection);
 			} else {
@@ -237,26 +239,26 @@ public class Dragonfly {
 				case "ie":
 				case "internet explorer":
 					//new SleepMilliseconds(1000);
-					logger.add("BrowserLaunch: DesiredCapabilities");
+					Logger.getInstance().add("BrowserLaunch: DesiredCapabilities");
 					objDesiredCapabilities = DesiredCapabilities.internetExplorer();
-					logger.add("BrowserLaunch: objDesiredCapabilities.toString()" + objDesiredCapabilities);
-					logger.add("BrowserLaunch: setJavascriptEnabled");
+					Logger.getInstance().add("BrowserLaunch: objDesiredCapabilities.toString()" + objDesiredCapabilities);
+					Logger.getInstance().add("BrowserLaunch: setJavascriptEnabled");
 					objDesiredCapabilities.setJavascriptEnabled(true);
-					logger.add("BrowserLaunch: UNEXPECTED_ALERT_BEHAVIOR");
+					Logger.getInstance().add("BrowserLaunch: UNEXPECTED_ALERT_BEHAVIOR");
 					objDesiredCapabilities.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, "ignore");
-					logger.add("BrowserLaunch: IE_ENSURE_CLEAN_SESSION");
+					Logger.getInstance().add("BrowserLaunch: IE_ENSURE_CLEAN_SESSION");
 					objDesiredCapabilities.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
-					logger.add("BrowserLaunch: REQUIRE_WINDOW_FOCUS");
+					Logger.getInstance().add("BrowserLaunch: REQUIRE_WINDOW_FOCUS");
 					objDesiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
-					logger.add("BrowserLaunch: INITIAL_BROWSER_URL");
+					Logger.getInstance().add("BrowserLaunch: INITIAL_BROWSER_URL");
 					objDesiredCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
-					logger.add("BrowserLaunch: webdriver.ie.driver" + System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
+					Logger.getInstance().add("BrowserLaunch: webdriver.ie.driver" + System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
 					System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
 					System.setProperty("webdriver.ie.driver.loglevel", "DEBUG");
 					//System.setProperty("webdriver.ie.driver.logfile", "C:\\temp\\IEDriverLog.log");
-					System.setProperty("webdriver.ie.driver.logfile", gobjPaths.gstrPathResults + "IEDriverLog.log");
+					System.setProperty("webdriver.ie.driver.logfile", Paths.getInstance().pathResults + "IEDriverLog.log");
 					// System.setProperty("webdriver.ie.driver.host","5555");
-					logger.add("BrowserLaunch: new InternetExplorerDriver(desiredCapabilities)");
+					Logger.getInstance().add("BrowserLaunch: new InternetExplorerDriver(desiredCapabilities)");
 					gobjWebDriver = new InternetExplorerDriver(objDesiredCapabilities);
 					//					gobjWebDriver.manage().getCookieNamed("JSESSIONID");
 					try {
@@ -264,16 +266,16 @@ public class Dragonfly {
 						//System.out.println("BrowserLaunch: getCookieNamed JSESSIONID " +gobjWebDriver.manage().getCookieNamed("JSESSIONID").toString());
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
-						logger.add("BrowserLaunch: Exception getCookieNamed " + e.toString());
+						Logger.getInstance().add("BrowserLaunch: Exception getCookieNamed " + e.toString());
 					}
 					// gobjWebDriver.manage().deleteCookieNamed("JSESSIONID");
-					logger.add("BrowserLaunch: gobjectStep.getString(strInputValue)  = " + gobjectStep.getString("strInputValue"));
+					Logger.getInstance().add("BrowserLaunch: gobjectStep.getString(strInputValue)  = " + gobjectStep.getString("strInputValue"));
 					gobjWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
 					//gobjWebDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
 					gobjWebDriver.manage().timeouts().setScriptTimeout(0, TimeUnit.SECONDS);
 					gobjWebDriver.get(gobjectStep.getString("strInputValue"));
-					// logger.add("browserLaunch: getCookieNamed(JSESSIONID) = " + gobjWebDriver.manage().getCookieNamed("JSESSIONID").toString());
-					logger.add("BrowserLaunch: gobjWebDriver.manage().window().maximize()");
+					// Logger.getInstance().add("browserLaunch: getCookieNamed(JSESSIONID) = " + gobjWebDriver.manage().getCookieNamed("JSESSIONID").toString());
+					Logger.getInstance().add("BrowserLaunch: gobjWebDriver.manage().window().maximize()");
 					gobjWebDriver.manage().window().maximize();
 					//Capabilities getCapabilities();
 					break;
@@ -346,7 +348,7 @@ public class Dragonfly {
 					throw new ExceptionBrowserDriverNotSupported("Browser '" + gobjectStep.getString("strTagName") + "' not supported");
 				}
 			} catch (Exception e) {
-				logger.add("BrowserLaunch: Exception" + e.toString());
+				Logger.getInstance().add("BrowserLaunch: Exception" + e.toString());
 			} finally {
 				gobjectStep.putValue("strCurrentWindowHandle", gobjWebDriver.getWindowHandle());
 			}
@@ -355,13 +357,13 @@ public class Dragonfly {
 
 	private class BrowserLaunchSync {
 		private BrowserLaunchSync() {
-			logger.add("  ==start==>BrowserLaunchSync " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>BrowserLaunchSync " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			try {
 				new BrowserLaunch();
 			} catch (ExceptionBrowserDriverNotSupported e) {
 				// TODO confirm the exceptions to catch in main some may need to be removed
-				logger.add("BrowserLaunchSync: " + e.toString());
+				Logger.getInstance().add("BrowserLaunchSync: " + e.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -371,14 +373,14 @@ public class Dragonfly {
 				new CoordinateHighlightScreenshot(gobjectStep);
 				gobjectStep.putValue("strStepActual", "browser_launch");
 				stepDuration("BrowserLaunchSync", lngStartTime, "browser_launch");
-				logger.add("BrowserLaunchSync: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("BrowserLaunchSync: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
 	private class BrowserRefresh {
 		private BrowserRefresh() {
-			logger.add("  ==start==>BrowserRefresh " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>BrowserRefresh " + getDateTimestamp());
 			gobjWebDriver.navigate().refresh();
 		}
 	}
@@ -394,7 +396,7 @@ public class Dragonfly {
 
 	private class ClearMyTracksByProcessCache {
 		private ClearMyTracksByProcessCache() throws Exception {
-			logger.add("  ==start==>ClearMyTracksByProcessCache " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ClearMyTracksByProcessCache " + getDateTimestamp());
 			String[] arrCommandLine = { "\"RunDll32.exe\"", "\"InetCpl.cpl,ClearMyTracksByProcess 8\"" };
 			Process objProcess = Runtime.getRuntime().exec(arrCommandLine);
 			objProcess.waitFor();
@@ -403,7 +405,7 @@ public class Dragonfly {
 
 	private class ClearMyTracksByProcessCookies {
 		private ClearMyTracksByProcessCookies() throws Exception {
-			logger.add("  ==start==>ClearMyTracksByProcessCookies " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ClearMyTracksByProcessCookies " + getDateTimestamp());
 			String[] arrCommandLine = { "\"cmd.exe\"", "\"RunDll32.exe\"", "\"InetCpl.cpl,ClearMyTracksByProcess 2\"" };
 			Process objProcess = Runtime.getRuntime().exec(arrCommandLine);
 			objProcess.waitFor();
@@ -412,13 +414,13 @@ public class Dragonfly {
 
 	private class ClipboardGet {
 		private String run() {
-			logger.add("  ==start==>ClipboardGet " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ClipboardGet " + getDateTimestamp());
 			String strClipboardData = "";
 			try {
 				strClipboardData = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
-				logger.add("ClipboardGet: strClipboardData = " + strClipboardData);
+				Logger.getInstance().add("ClipboardGet: strClipboardData = " + strClipboardData);
 			} catch (Exception e) {
-				logger.add("ClipboardGet: Exception = " + e.toString());
+				Logger.getInstance().add("ClipboardGet: Exception = " + e.toString());
 			}
 			return strClipboardData;
 		}
@@ -426,25 +428,25 @@ public class Dragonfly {
 
 	private class CommandLineExecution {
 		private CommandLineExecution() throws Exception {
-			logger.add("  ==start==>CommandLineExecution " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>CommandLineExecution " + getDateTimestamp());
 			Process p = Runtime.getRuntime().exec("taskkill /F /IM iexplore.exe");
 			p.waitFor();
 			Process p5 = Runtime.getRuntime().exec("RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 10");
 			p5.waitFor();
 			String strPathCookiesLow = System.getenv("APPDATA") + "\\Microsoft\\Windows\\Cookies\\Low\\";
 			strPathCookiesLow = strPathCookiesLow.replaceAll("\\\\", "/");
-			logger.add("CommandLineExecution: strPathCookiesLow = " + strPathCookiesLow);
+			Logger.getInstance().add("CommandLineExecution: strPathCookiesLow = " + strPathCookiesLow);
 			FileUtils.deleteDirectory(new File(strPathCookiesLow));
 			String strPathCacheLow = System.getenv("APPDATA") + "Local/Microsoft/Windows/Temporary Internet Files/Low/";
 			strPathCacheLow = strPathCacheLow.replaceAll("\\\\", "/");
-			logger.add("CommandLineExecution: strPathCacheLow = " + strPathCacheLow);
+			Logger.getInstance().add("CommandLineExecution: strPathCacheLow = " + strPathCacheLow);
 			FileUtils.deleteDirectory(new File(strPathCacheLow));
 		}
 	}
 
 	private class ConvertPathByOperatingSystem {
 		private void run(String strPath) {
-			// logger.add("main: gstrOperatingSystem = " + gobjOperatingSystem.strOS);
+			// Logger.getInstance().add("main: gstrOperatingSystem = " + gobjOperatingSystem.strOS);
 			// 	switch (gstrOperatingSystem) {
 			// 	case "Windows":
 			// 		strPathResults = gobjPaths.getPathSystemUserDir() + "\\Results\\" + strTestConfigurationFileName.replace(".json", "") + "\\" + gstrPathResults + "\\";
@@ -455,7 +457,7 @@ public class Dragonfly {
 			// 		strPathImages = "images/";
 			// 		break;
 			// 	default:
-			// 		 logger.add("main: switch gstrOperatingSystem = " + gstrOperatingSystem + "  not supported");
+			// 		 Logger.getInstance().add("main: switch gstrOperatingSystem = " + gstrOperatingSystem + "  not supported");
 			// 		return;
 			// 	}
 		}
@@ -463,7 +465,7 @@ public class Dragonfly {
 
 	private class CoordinateHighlightScreenshot {
 		private CoordinateHighlightScreenshot(final JSONObjectExtended objJsonObjectStepHighlightArea) {
-			logger.add("  ==start==>CoordinateHighlightScreenshot " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>CoordinateHighlightScreenshot " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			JDialog objJDialog = new JDialog() {
 				private static final long serialVersionUID = 1L;
@@ -490,7 +492,7 @@ public class Dragonfly {
 							objHighlightColor = Color.MAGENTA;
 							break;
 						}
-						logger.add("CoordinateHighlightScreenshot: strHighlightArea = " + gobjectStep.getString("strHighlightArea"));
+						Logger.getInstance().add("CoordinateHighlightScreenshot: strHighlightArea = " + gobjectStep.getString("strHighlightArea"));
 						new RectangleAreaByName(intThickness, gobjectStep.getString("strHighlightArea"), objHighlightArea);
 						setBounds(objHighlightArea.x, objHighlightArea.y, objHighlightArea.width, objHighlightArea.height);
 						setUndecorated(true);
@@ -507,30 +509,30 @@ public class Dragonfly {
 				try {
 					new RectangleAreaByName(0, gobjectStep.getString("strScreenshotArea"), objHighlightArea);
 					BufferedImage objScreenShot = new Robot().createScreenCapture(objHighlightArea);
-					strScreenshotFilePath = gobjPaths.gstrPathImages + "Screenshot_" + getDateTimestamp() + ".jpg";
+					strScreenshotFilePath = Paths.getInstance().pathImages + "Screenshot_" + getDateTimestamp() + ".jpg";
 					Thread objThread = new Thread(new ThreadSaveImage(objScreenShot, "jpg", strScreenshotFilePath));
 					objThread.start();
 					gobjectStep.putValue("strScreenshotFilePath", strScreenshotFilePath);
 				} catch (Exception e) {
-					logger.add("CoordinateHighlightScreenshot: Exception " + e.toString());
+					Logger.getInstance().add("CoordinateHighlightScreenshot: Exception " + e.toString());
 				}
 			}
 			if (gobjectStep.getBoolean("blnHighlight") == true) {
 				try {
 					Thread.sleep(intSleepMilliseconds);
 				} catch (InterruptedException e) {
-					logger.add("CoordinateHighlightScreenshot: Exception " + e.toString());
+					Logger.getInstance().add("CoordinateHighlightScreenshot: Exception " + e.toString());
 				}
 				objJDialog.setVisible(false);
 				objJDialog.dispose();
 			}
-			logger.add("CoordinateHighlightScreenshot: Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+			Logger.getInstance().add("CoordinateHighlightScreenshot: Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 		}
 	}
 
 	private class CoordinatesAlert {
 		private CoordinatesAlert() {
-			logger.add("  ==start==>CoordinatesAlert " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>CoordinatesAlert " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			AutoItX objAutoIt = objAutoItSetObject.getObject();
 			int intClientSizeHeight = 0;
@@ -600,16 +602,16 @@ public class Dragonfly {
 				gobjectStep.putInt("intElementWidth", intWinPosWidth);
 				gobjectStep.putInt("intElementHeight", intWinPosHeight);
 			} catch (Exception e) {
-				logger.add("CoordinatesAlert: Exception = " + e.toString());
+				Logger.getInstance().add("CoordinatesAlert: Exception = " + e.toString());
 			} finally {
-				logger.add("CoordinatesAlert: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("CoordinatesAlert: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
 	private class CoordinatesBrowserInner {
 		private CoordinatesBrowserInner() throws WebDriverException {
-			logger.add("  ==start==>CoordinatesBrowserInner " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>CoordinatesBrowserInner " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			long lngBrowserInnerWidth = 0;
 			long lngBrowserInnerHeight = 0;
@@ -617,46 +619,46 @@ public class Dragonfly {
 				switch (gstrBrowserSelection.toLowerCase()) {
 				case "ie":
 				case "internet explorer":
-					logger.add("CoordinatesBrowserInner: ie");
+					Logger.getInstance().add("CoordinatesBrowserInner: ie");
 					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.screenLeft;");
 					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.screenTop;");
 					gobjectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
 					gobjectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
 					break;
 				case "firefox":
-					logger.add("CoordinatesBrowserInner: firefox");
+					Logger.getInstance().add("CoordinatesBrowserInner: firefox");
 					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return Math.round(window.mozInnerScreenX * window.devicePixelRatio);");
 					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return Math.round(window.mozInnerScreenY * window.devicePixelRatio);");
 					gobjectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
 					gobjectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
 					gdblDevicePixelRatio = (Double) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.devicePixelRatio;");
-					logger.add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + gdblDevicePixelRatio.toString());
-					logger.add("CoordinatesBrowserInner: lngBrowserInnerWidth = " + lngBrowserInnerWidth);
-					logger.add("CoordinatesBrowserInner: intBrowserInnerHeight = " + lngBrowserInnerHeight);
+					Logger.getInstance().add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + gdblDevicePixelRatio.toString());
+					Logger.getInstance().add("CoordinatesBrowserInner: lngBrowserInnerWidth = " + lngBrowserInnerWidth);
+					Logger.getInstance().add("CoordinatesBrowserInner: intBrowserInnerHeight = " + lngBrowserInnerHeight);
 					break;
 				case "chrome":
 					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
 					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
 					Long lngDevicePixelRatio = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.devicePixelRatio;");
-					logger.add("CoordinatesBrowserInner: lngDevicePixelRatio = " + lngDevicePixelRatio.toString());
+					Logger.getInstance().add("CoordinatesBrowserInner: lngDevicePixelRatio = " + lngDevicePixelRatio.toString());
 					//gdblDevicePixelRatio = (Double) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.devicePixelRatio;");
 					gdblDevicePixelRatio = Double.parseDouble(lngDevicePixelRatio.toString());
-					logger.add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + gdblDevicePixelRatio.toString());
+					Logger.getInstance().add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + gdblDevicePixelRatio.toString());
 					gobjectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
 					gobjectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
 					break;
 				}
 			} catch (Exception e) {
-				logger.add("CoordinatesBrowserInner: Exception = " + e.toString());
+				Logger.getInstance().add("CoordinatesBrowserInner: Exception = " + e.toString());
 			} finally {
-				logger.add("CoordinatesBrowserInner: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("CoordinatesBrowserInner: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
 	private class CoordinatesElement {
 		private CoordinatesElement() {
-			logger.add("  ==start==>CoordinatesElement " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>CoordinatesElement " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			try {
 				Rectangle rect = new Rectangle(0, 0, -1, -1);
@@ -684,11 +686,11 @@ public class Dragonfly {
 					gobjectStep.putInt("intElementY", (int) Math.round(objElementPoint.y * gdblDevicePixelRatio));
 					gobjectStep.putInt("intElementWidth", (int) Math.round(objElementDimension.width * gdblDevicePixelRatio));
 					gobjectStep.putInt("intElementHeight", (int) Math.round(objElementDimension.height * gdblDevicePixelRatio));
-					logger.add("  ==end==>CoordinatesElement objElementPoint.x " + objElementPoint.x);
-					logger.add("  ==end==>CoordinatesElement objElementPoint.y " + objElementPoint.y);
-					logger.add("  ==end==>CoordinatesElement objElementDimension.width " + objElementDimension.width);
-					logger.add("  ==end==>CoordinatesElement objElementDimension.height " + objElementDimension.height);
-					logger.add("  ==end==>CoordinatesElement gdblDevicePixelRatio " + gdblDevicePixelRatio.toString());
+					Logger.getInstance().add("  ==end==>CoordinatesElement objElementPoint.x " + objElementPoint.x);
+					Logger.getInstance().add("  ==end==>CoordinatesElement objElementPoint.y " + objElementPoint.y);
+					Logger.getInstance().add("  ==end==>CoordinatesElement objElementDimension.width " + objElementDimension.width);
+					Logger.getInstance().add("  ==end==>CoordinatesElement objElementDimension.height " + objElementDimension.height);
+					Logger.getInstance().add("  ==end==>CoordinatesElement gdblDevicePixelRatio " + gdblDevicePixelRatio.toString());
 				}
 				System.out.println("before intElementX");
 				int intElementX = gobjectStep.getInt("intElementX");
@@ -699,10 +701,10 @@ public class Dragonfly {
 				gobjectStep.putInt("intElementScreenX", intElementScreenX);
 				gobjectStep.putInt("intElementScreenY", intElementScreenY);
 			} catch (Exception e) {
-				logger.add("CoordinatesElement: Exception = " + e.toString());
+				Logger.getInstance().add("CoordinatesElement: Exception = " + e.toString());
 			} finally {
-				logger.add("  ==end==>CoordinatesElement " + getDateTimestamp());
-				logger.add("CoordinatesElement: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("  ==end==>CoordinatesElement " + getDateTimestamp());
+				Logger.getInstance().add("CoordinatesElement: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
@@ -739,7 +741,9 @@ public class Dragonfly {
 		private JRadioButton rdoTestValue = new JRadioButton("value in test", true);
 		private String mstrPath = "", mstrNameTest = "", mstrTestArea = "";
 		private String[] arrDropEmpty = new String[0];
-		private int intColumn1 = 12, intColumn2 = 245, intColumn3 = 465, intColumnWidth1 = 200, intColumnWidth2 = 200, intColumnWidth3 = 220;
+		private int intColumn1 = 12, intColumn2 = 245, intColumn3 = 465,
+				intColumnWidth1 = 200, intColumnWidth2 = 200,
+				intColumnWidth3 = 220;
 
 		private DialogLaunch() {
 			this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -887,18 +891,18 @@ public class Dragonfly {
 				strRadioButtonText = objJRadioButton.getText();
 				if (grpSelectedGroup.equals(grpTestArea)) {
 					this.mstrTestArea = strRadioButtonText;
-					gobjPaths.gstrTestArea = strRadioButtonText;
-					gobjPaths.setDirectory(strRadioButtonText);
-					logger.add("data_EnvironmentURL: gobjPaths.gstrPathTestData = " + gobjPaths.gstrPathTestData);
-					mstrPath = (gobjPaths.gstrPathSystemUserDir + "/" + gobjPaths.gstrPathTestConfiguration).replaceAll("\\\\", "/");
-					logger.add("DialogLaunch:actionPerformed mstrPath = " + mstrPath);
+					Paths.getInstance().testArea = strRadioButtonText;
+					Paths.getInstance().setDirectory(strRadioButtonText);
+					Logger.getInstance().add("data_EnvironmentURL: Paths.getInstance().pathTestData = " + Paths.getInstance().pathTestData);
+					mstrPath = (Paths.getInstance().pathSystemUserDir + "/" + Paths.getInstance().pathTestConfiguration).replaceAll("\\\\", "/");
+					Logger.getInstance().add("DialogLaunch:actionPerformed mstrPath = " + mstrPath);
 					this.getApplications();
 				} else if (grpSelectedGroup.equals(grpBrowser)) {
 					gstrBrowserSelection = strRadioButtonText;
 				} else if (grpSelectedGroup.equals(grpEnvironment)) {
-					logger.add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
+					Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
 					gstrEnvironment = strRadioButtonText;
-					logger.add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
+					Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
 				}
 			}
 			if (objActionEvent.getSource() == cboApplication) {
@@ -908,19 +912,22 @@ public class Dragonfly {
 				btnRun.setEnabled(true);
 			}
 			if (objActionEvent.getSource() == btnRun) {
-				gobjPaths.gstrNameTest = (String) cboTest.getSelectedItem();
+				Paths.getInstance().nameTest = (String) cboTest.getSelectedItem();
 				if (!gstrEnvironment.equals("test value")) {
-					JSONParser objJsonParser = new JSONParser();
-					logger.add("DialogLaunch:actionPerformed gobjPaths.gstrPathTestData = " + gobjPaths.gstrPathTestData);
-					String strFilePathTestData = gobjPaths.gstrPathTestData + "Environments.json";
-					logger.add("DialogLaunch:actionPerformed strFilePathTestData = " + strFilePathTestData);
+					//JSONParser objJsonParser = new JSONParser();
+					Logger.getInstance().add("DialogLaunch:actionPerformed Paths.getInstance().pathTestData = " + Paths.getInstance().pathTestData);
+					String strFilePathTestData = Paths.getInstance().pathTestData + "Environments.json";
+					Logger.getInstance().add("DialogLaunch:actionPerformed strFilePathTestData = " + strFilePathTestData);
 					try {
-						JSONObjectExtended objJsonObjectFile = new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathTestData)));
-						logger.add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
+						JSONObjectExtended objJsonObjectFile = new JSONObjectExtended();
+						objJsonObjectFile.replaceAllFromFile(strFilePathTestData);
+						//JSONObjectExtended objJsonObjectFile = new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathTestData)));
+						//JSONObject objJsonObjectFile =  (JSONObject) ( objJsonParser.parse(new FileReader(strFilePathTestData)));
+						Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
 						gstrEnvironment = objJsonObjectFile.getString(gstrEnvironment);
-						logger.add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
+						Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
 					} catch (Exception e) {
-						logger.add("DialogLaunch:actionPerformed Exception = " + e.toString());
+						Logger.getInstance().add("DialogLaunch:actionPerformed Exception = " + e.toString());
 					}
 				}
 				dispose();
@@ -1005,7 +1012,7 @@ public class Dragonfly {
 
 	private class ElementDisabled {
 		private ElementDisabled() throws ExceptionElementNotDisabled {
-			logger.add("  ==start==>ElementDisabled " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementDisabled " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			try {
 				if (gobjWebElement.isEnabled()) {
@@ -1014,14 +1021,14 @@ public class Dragonfly {
 					return;
 				}
 			} finally {
-				logger.add("ElementDisabled: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("ElementDisabled: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
 	private class ElementDisabledSync {
 		private ElementDisabledSync() {
-			logger.add("  ==start==>ElementDisabledSync " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementDisabledSync " + getDateTimestamp());
 			Long lngTimeStart = System.currentTimeMillis();
 			Boolean blnDisabled = false;
 			Boolean blnExit = false;
@@ -1054,11 +1061,11 @@ public class Dragonfly {
 					blnVisible = false;
 					blnDisabled = false;
 					strActualResult = "not_visible";
-					logger.add("ElementDisabledSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementDisabledSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotDisabled e) {
 					blnDisabled = false;
 					strActualResult = "not_disabled";
-					logger.add("ElementDisabledSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementDisabledSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					gobjectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementDisabledSync", "syncdisabled", lngTimeStart) == true) {
@@ -1074,7 +1081,7 @@ public class Dragonfly {
 
 	private class ElementDragSync {
 		private ElementDragSync() {
-			logger.add("  ==start==>ElementDragSync " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementDragSync " + getDateTimestamp());
 			Long lngTimeStart = System.currentTimeMillis();
 			Boolean blnEnabled = false;
 			Boolean blnExit = false;
@@ -1086,13 +1093,13 @@ public class Dragonfly {
 				try {
 					if (blnFound == false) {
 						new ElementFind();
-						logger.add("ElementDragSync: elementFind over");
+						Logger.getInstance().add("ElementDragSync: elementFind over");
 						if (gobjWebElement != null) {
 							strOuterHTML = gobjWebElement.getAttribute("outerHTML");
-							logger.add("ElementDragSync: outerHTML = " + strOuterHTML);
-							logger.add("ElementDragSync: outerHTML Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+							Logger.getInstance().add("ElementDragSync: outerHTML = " + strOuterHTML);
+							Logger.getInstance().add("ElementDragSync: outerHTML Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 						}
-						logger.add("ElementDragSync: strOuterHTML over");
+						Logger.getInstance().add("ElementDragSync: strOuterHTML over");
 						blnFound = true;
 					}
 					if (blnVisible == false) {
@@ -1107,13 +1114,13 @@ public class Dragonfly {
 					blnStatus = true;
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
-					logger.add("ElementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					blnVisible = false;
-					logger.add("ElementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotEnabled e) {
 					blnEnabled = false;
-					logger.add("ElementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementDragSync", "drag", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(gobjectStep);
@@ -1127,7 +1134,7 @@ public class Dragonfly {
 
 	private class ElementDropSync {
 		private ElementDropSync() {
-			logger.add("  ==start==>ElementDropSync " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementDropSync " + getDateTimestamp());
 			Long lngTimeStart = System.currentTimeMillis();
 			Boolean blnEnabled = false;
 			Boolean blnExit = false;
@@ -1139,13 +1146,13 @@ public class Dragonfly {
 				try {
 					if (blnFound == false) {
 						new ElementFind();
-						logger.add("ElementDropSync: elementFind over");
+						Logger.getInstance().add("ElementDropSync: elementFind over");
 						if (gobjWebElement != null) {
 							strOuterHTML = gobjWebElement.getAttribute("outerHTML");
-							logger.add("ElementDropSync: outerHTML = " + strOuterHTML);
-							logger.add("ElementDropSync: outerHTML Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+							Logger.getInstance().add("ElementDropSync: outerHTML = " + strOuterHTML);
+							Logger.getInstance().add("ElementDropSync: outerHTML Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 						}
-						logger.add("ElementDropSync: strOuterHTML over");
+						Logger.getInstance().add("ElementDropSync: strOuterHTML over");
 						blnFound = true;
 					}
 					if (blnVisible == false) {
@@ -1171,13 +1178,13 @@ public class Dragonfly {
 					blnStatus = true;
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
-					logger.add("ElementDropSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementDropSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					blnVisible = false;
-					logger.add("ElementDropSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementDropSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotEnabled e) {
 					blnEnabled = false;
-					logger.add("ElementDropSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementDropSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementDropSync", "drop", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(gobjectStep);
@@ -1190,7 +1197,7 @@ public class Dragonfly {
 
 	private class ElementEnabled {
 		private ElementEnabled() throws ExceptionElementNotEnabled {
-			logger.add("  ==start==>ElementEnabled " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementEnabled " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			try {
 				if (gobjectStep.verifyEquals("strTagName", "alert")) {
@@ -1206,14 +1213,14 @@ public class Dragonfly {
 					throw new ExceptionElementNotEnabled("ElementEnabled - Element is not enabled");
 				}
 			} finally {
-				logger.add("ElementEnabled: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("ElementEnabled: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
 	private class ElementEnabledSync {
 		private ElementEnabledSync() {
-			logger.add("  ==start==>ElementEnabledSync " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementEnabledSync " + getDateTimestamp());
 			Long lngTimeStart = System.currentTimeMillis();
 			Boolean blnEnabled = false;
 			Boolean blnExit = false;
@@ -1242,15 +1249,15 @@ public class Dragonfly {
 					blnVisible = false;
 					blnEnabled = false;
 					strActualResult = "not_found";
-					logger.add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					blnVisible = false;
 					strActualResult = "not_visible";
-					logger.add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotEnabled e) {
 					blnEnabled = false;
 					strActualResult = "not_enabled";
-					logger.add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					gobjectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementEnabledSync", "syncenabled", lngTimeStart) == true) {
@@ -1266,7 +1273,7 @@ public class Dragonfly {
 
 	private class ElementFind {
 		private ElementFind() throws ExceptionElementNotFound, ExceptionMultipleElementsFound {
-			logger.add("  ==start==>ElementFind " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementFind " + getDateTimestamp());
 			if (gobjectStep.verifyEquals("strTagName", "alert")) {
 				gobjectStep.putValue("strTagType", "alert");
 				if (new AlertFind().run() == true) {
@@ -1277,7 +1284,7 @@ public class Dragonfly {
 					throw new ExceptionElementNotFound("Alert popup not found!");
 				}
 			}
-			if (gobjectStep.get("strTagName").toString().toLowerCase().equals("title")) {
+			if (gobjectStep.getString("strTagName").toLowerCase().equals("title")) {
 				gobjectStep.putValue("strTagType", "title");
 				return;
 			}
@@ -1285,7 +1292,7 @@ public class Dragonfly {
 			Object[] arrHandles = gobjWebDriver.getWindowHandles().toArray();
 			Collections.reverse(Arrays.asList(arrHandles));
 			for (Object objWindowHandlesEach : arrHandles) {
-				logger.add("ElementFind: objWindowHandlesEach.toString() = " + objWindowHandlesEach.toString());
+				Logger.getInstance().add("ElementFind: objWindowHandlesEach.toString() = " + objWindowHandlesEach.toString());
 			}
 			for (Object objWindowHandlesEach : arrHandles) {
 				try {
@@ -1295,16 +1302,16 @@ public class Dragonfly {
 					List<Integer> arrRouteOriginal = new ArrayList<Integer>();
 					new ElementFindFramesSearch().run(arrRouteOriginal);
 					if (gobjWebElement != null) {
-						// logger.add("elementFind: gobjWebDriver.switchTo().window(strWindowHandle) = " + strWindowHandle);
-						// logger.add("elementFind: gobjWebDriver.getTitle = " + gobjWebDriver.getTitle());
-						// logger.add("ElementFindFramesSearch: gobjWebDriver.getTitle = " + gobjWebDriver.getTitle());
-						// logger.add("ElementFindFramesSearch: gobjWebDriver.getCurrentUrl = " + gobjWebDriver.getCurrentUrl());
-						// logger.add("ElementFindFramesSearch: gobjWebDriver.getWindowHandle = " + gobjWebDriver.getWindowHandle());
-						// logger.add("ElementFindFramesSearch gobjWebDriver.getPageSource = " + gobjWebDriver.getPageSource());
+						// Logger.getInstance().add("elementFind: gobjWebDriver.switchTo().window(strWindowHandle) = " + strWindowHandle);
+						// Logger.getInstance().add("elementFind: gobjWebDriver.getTitle = " + gobjWebDriver.getTitle());
+						// Logger.getInstance().add("ElementFindFramesSearch: gobjWebDriver.getTitle = " + gobjWebDriver.getTitle());
+						// Logger.getInstance().add("ElementFindFramesSearch: gobjWebDriver.getCurrentUrl = " + gobjWebDriver.getCurrentUrl());
+						// Logger.getInstance().add("ElementFindFramesSearch: gobjWebDriver.getWindowHandle = " + gobjWebDriver.getWindowHandle());
+						// Logger.getInstance().add("ElementFindFramesSearch gobjWebDriver.getPageSource = " + gobjWebDriver.getPageSource());
 						return;
 					}
 				} catch (Exception e) {
-					logger.add("ElementFind: Exception = " + e.toString());
+					Logger.getInstance().add("ElementFind: Exception = " + e.toString());
 				}
 			}
 			throw new ExceptionElementNotFound("Element properties did not return an element, try refining attributes");
@@ -1313,7 +1320,7 @@ public class Dragonfly {
 
 	private class ElementFindBy {
 		private ElementFindBy(String strAttributeNames, String strAttributeValues, String strTagName) throws ExceptionElementNotFound, ExceptionMultipleElementsFound {
-			logger.add("  ==start==>ElementFindBy " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementFindBy " + getDateTimestamp());
 			int intAttributeEach = 0;
 			List<WebElement> objWebElementCollection = new ArrayList<WebElement>();
 			String arrAttributeNames[] = strAttributeNames.toString().split("\\|", -1);
@@ -1329,16 +1336,16 @@ public class Dragonfly {
 				blnRegularExpression = true;
 			}
 			if (strAttributeNames.toLowerCase().equals("xpath") && blnRegularExpression.equals(false)) {
-				logger.add("ElementFindBy: xpath  " + strAttributeNames + " = " + strAttributeValues);
+				Logger.getInstance().add("ElementFindBy: xpath  " + strAttributeNames + " = " + strAttributeValues);
 				objWebElementCollection = gobjWebDriver.findElements(By.xpath(strAttributeValues));
 			} else if (strAttributeNames.toLowerCase().equals("id") && blnRegularExpression.equals(false)) {
-				logger.add("ElementFindBy: id  " + strAttributeNames + " = " + strAttributeValues);
+				Logger.getInstance().add("ElementFindBy: id  " + strAttributeNames + " = " + strAttributeValues);
 				objWebElementCollection = gobjWebDriver.findElements(By.id(strAttributeValues));
 			} else if (strAttributeNames.toLowerCase().equals("name") && blnRegularExpression.equals(false)) {
-				logger.add("ElementFindBy: name  " + strAttributeNames + " = " + strAttributeValues);
+				Logger.getInstance().add("ElementFindBy: name  " + strAttributeNames + " = " + strAttributeValues);
 				objWebElementCollection = gobjWebDriver.findElements(By.name(strAttributeValues));
 			} else if (strAttributeNames.toLowerCase().equals("class") && blnRegularExpression.equals(false)) {
-				logger.add("ElementFindBy: class  " + strAttributeNames + " = " + strAttributeValues);
+				Logger.getInstance().add("ElementFindBy: class  " + strAttributeNames + " = " + strAttributeValues);
 				objWebElementCollection = gobjWebDriver.findElements(By.className(strAttributeValues));
 			} else {
 				for (intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
@@ -1399,7 +1406,7 @@ public class Dragonfly {
 					strXpathAttributes = "[" + strXpathAttributes + "]";
 				}
 				strXpath = "(//" + strTagName + strXpathAttributes + ")" + strIndex;
-				logger.add("ElementFindBy: strXpath = " + strXpath);
+				Logger.getInstance().add("ElementFindBy: strXpath = " + strXpath);
 				objWebElementCollection = gobjWebDriver.findElements(By.xpath(strXpath));
 			}
 			switch (objWebElementCollection.size()) {
@@ -1417,11 +1424,11 @@ public class Dragonfly {
 					gobjWebElement = objWebElementCollection.get(intRandomElement);
 					break;
 				} else {
-					logger.add("ElementFindBy: Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
+					Logger.getInstance().add("ElementFindBy: Element properties did not return a unique element, try again with more attributes.  " + objWebElementCollection.size());
 					Iterator<WebElement> objWebElementEach = ((Collection<WebElement>) objWebElementCollection).iterator();
 					while (objWebElementEach.hasNext()) {
 						WebElement row = objWebElementEach.next();
-						logger.add("ElementFindBy: outerHTML:=  " + row.getAttribute("outerHTML"));
+						Logger.getInstance().add("ElementFindBy: outerHTML:=  " + row.getAttribute("outerHTML"));
 					}
 					throw new ExceptionMultipleElementsFound(objWebElementCollection.size() + " elements found. Element properties did not return an element, try refining attributes");
 				}
@@ -1431,7 +1438,7 @@ public class Dragonfly {
 
 	private class ElementFindFramesSearch {
 		private boolean run(List<Integer> arrFramePath) throws ExceptionElementNotFound, ExceptionMultipleElementsFound {
-			logger.add("  ==start==>ElementFindFramesSearch " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementFindFramesSearch " + getDateTimestamp());
 			boolean blnReturn;
 			int intMaximumDepth = 100;
 			String strTagName = gobjectStep.getLowerCase("strTagName");
@@ -1448,11 +1455,11 @@ public class Dragonfly {
 				} else {
 					gobjectStep.putValue("strTagType", gobjectStep.getString("strTagName"));
 				}
-				logger.add("ElementFindFramesSearch: gobjWebElement outerHTML = " + gobjWebElement.getAttribute("outerHTML"));
+				Logger.getInstance().add("ElementFindFramesSearch: gobjWebElement outerHTML = " + gobjWebElement.getAttribute("outerHTML"));
 				return true;
 			} catch (ExceptionElementNotFound | ExceptionMultipleElementsFound | StaleElementReferenceException e) {
 				blnReturn = false;
-				logger.add("ElementFindFramesSearch: Exception = " + e.toString());
+				Logger.getInstance().add("ElementFindFramesSearch: Exception = " + e.toString());
 			}
 			if (arrFramePath.size() < intMaximumDepth) {
 				int intFramesCount = gobjWebDriver.findElements(By.tagName("frame")).size();
@@ -1470,10 +1477,10 @@ public class Dragonfly {
 							gobjWebDriver.switchTo().frame(intFramesPathEach);
 					} catch (NoSuchFrameException error) {
 						blnReturn = false;
-						logger.add("ElementFindFramesSearch: NoSuchFrameException = " + error.toString());
+						Logger.getInstance().add("ElementFindFramesSearch: NoSuchFrameException = " + error.toString());
 						break;
 					} catch (Exception error) {
-						logger.add("ElementFindFramesSearch: Exception = " + error.toString());
+						Logger.getInstance().add("ElementFindFramesSearch: Exception = " + error.toString());
 					}
 				}
 			}
@@ -1483,7 +1490,7 @@ public class Dragonfly {
 
 	private class ElementGet {
 		private String run() throws ExceptionElementTagNameNotSupported {
-			logger.add("  ==start==>ElementGet " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementGet " + getDateTimestamp());
 			AutoItX objAutoIt = objAutoItSetObject.getObject();
 			switch (gobjectStep.getLowerCase("strTagType")) {
 			case "title":
@@ -1528,7 +1535,7 @@ public class Dragonfly {
 				// 	Select objSelect = new Select(gobjWebElement);
 				// 	objSelect.getOptions();
 				// 	WebElement option = ((Select) gobjWebElement).getFirstSelectedOption();
-				// 	logger.add("ElementGet: option.getText() = " + option.getText());
+				// 	Logger.getInstance().add("ElementGet: option.getText() = " + option.getText());
 				//return ((Select) gobjWebElement).getFirstSelectedOption().getText().replaceAll("\\s{2,}", " ");
 				JavascriptExecutor objExecutor = (JavascriptExecutor) gobjWebDriver;
 				return ((String) objExecutor.executeScript("var select = arguments[0];var selection=select.options[select.selectedIndex].text;return selection;", gobjWebElement)).trim();
@@ -1548,7 +1555,7 @@ public class Dragonfly {
 
 	private class ElementGetSync {
 		private ElementGetSync() {
-			logger.add("  ==start==>ElementGetSync " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementGetSync " + getDateTimestamp());
 			Long lngTimeStart = System.currentTimeMillis();
 			Boolean blnExit = false;
 			Boolean blnFound = false;
@@ -1577,15 +1584,15 @@ public class Dragonfly {
 				} catch (ExceptionElementTagNameNotSupported e) {
 					blnExit = true;
 					strActualResult = "tag_not_supported";
-					logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					strActualResult = "not_found";
-					logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					blnVisible = false;
 					strActualResult = "not_visible";
-					logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					gobjectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementGetSync", "get", lngTimeStart) == true) {
@@ -1602,7 +1609,7 @@ public class Dragonfly {
 
 	private class ElementHidden {
 		private ElementHidden() throws ExceptionElementNotHidden {
-			logger.add("  ==start==>ElementHidden " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementHidden " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			try {
 				if (gobjectStep.verifyEquals("strTagName", "alert")) {
@@ -1616,21 +1623,21 @@ public class Dragonfly {
 				if (gobjWebElement.isDisplayed() == false) {
 					return;
 				} else {
-					logger.add("ElementHidden: gobjWebElement.isDisplayed() = return true Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+					Logger.getInstance().add("ElementHidden: gobjWebElement.isDisplayed() = return true Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 					throw new ExceptionElementNotHidden("Element is displayed.");
 				}
 			} catch (NullPointerException | WebDriverException e) {
-				logger.add("ElementHidden: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("ElementHidden: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 				return;
 			} finally {
-				logger.add("ElementHidden: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("ElementHidden: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
 	private class ElementHiddenSync {
 		private ElementHiddenSync() {
-			logger.add("  ==start==>ElementHiddenSync " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementHiddenSync " + getDateTimestamp());
 			Long lngTimeStart = System.currentTimeMillis();
 			Boolean blnExit = false;
 			Boolean blnFound = false;
@@ -1654,22 +1661,22 @@ public class Dragonfly {
 					blnHidden = true;
 					blnStatus = true;
 					strActualResult = "sync_hidden";
-					logger.add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					blnHidden = false;
 					strActualResult = "not_found";
-					logger.add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotHidden e) {
 					blnHidden = false;
 					strActualResult = "not_hidden";
-					logger.add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (Exception e) {
 					blnFound = false;
 					blnHidden = false;
 					strActualResult = "exception";
 					;
-					logger.add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					gobjectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementHiddenSync", "synchidden", lngTimeStart) == true) {
@@ -1688,7 +1695,7 @@ public class Dragonfly {
 			return null;
 			//long lngStartTimegetElementsByTagName2 = System.currentTimeMillis();
 			//List<WebElement> objCollectionJS2 = (List<WebElement>) ((JavascriptExecutor) gobjWebDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
-			// logger.add("ElementJavascriptExecutorGetElementsByTagName objCollectionJS2 = " + objCollectionJS2.size() + " strTagName = " + strTagName + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName2));
+			// Logger.getInstance().add("ElementJavascriptExecutorGetElementsByTagName objCollectionJS2 = " + objCollectionJS2.size() + " strTagName = " + strTagName + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName2));
 			//if (objCollectionJS2.size() > 0) {
 			//	long lngStartTimeByXpath = System.currentTimeMillis();
 			//}
@@ -1697,14 +1704,14 @@ public class Dragonfly {
 
 	private class ElementJavascriptExecutorXPath {
 		private String run() {
-			logger.add("  ==start==>ElementJavascriptExecutorXPath " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementJavascriptExecutorXPath " + getDateTimestamp());
 			return (String) ((JavascriptExecutor) gobjWebDriver).executeScript("gPt=function(c){if(c.id!==''){return'id(\"'+c.id+'\")'}if(c===document.body){return c.tagName}var a=0;var e=c.parentNode.childNodes;for(var b=0;b<e.length;b++){var d=e[b];if(d===c){return gPt(c.parentNode)+'/'+c.tagName+'['+(a+1)+']'}if(d.nodeType===1&&d.tagName===c.tagName){a++}}};return gPt(arguments[0]).toLowerCase();", gobjWebElement);
 		}
 	}
 
 	private class ElementOnMouseOut {
 		private ElementOnMouseOut() {
-			logger.add("  ==start==>ElementOnMouseOut " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementOnMouseOut " + getDateTimestamp());
 			Actions objActions = new Actions(gobjWebDriver);
 			// Dimension objWebDriverDimension = gobjWebElement.getSize();
 			// int intElementWidth = objWebDriverDimension.width;
@@ -1719,7 +1726,7 @@ public class Dragonfly {
 
 	private class ElementOnMouseOutSync {
 		private ElementOnMouseOutSync() {
-			logger.add("  ==start==>ElementOnMouseOutSync " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementOnMouseOutSync " + getDateTimestamp());
 			Long lngTimeStart = System.currentTimeMillis();
 			Boolean blnEnabled = false;
 			Boolean blnExit = false;
@@ -1751,15 +1758,15 @@ public class Dragonfly {
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					strActualResult = "not_found";
-					logger.add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					blnVisible = false;
 					strActualResult = "not_visible";
-					logger.add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotEnabled e) {
 					blnEnabled = false;
 					strActualResult = "not_enabled";
-					logger.add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					gobjectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementOnMouseOutSync", "mouse_out", lngTimeStart) == true) {
@@ -1775,7 +1782,7 @@ public class Dragonfly {
 
 	private class ElementOnMouseOver {
 		private ElementOnMouseOver() {
-			logger.add("  ==start==>ElementOnMouseOver " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementOnMouseOver " + getDateTimestamp());
 			Actions objActions = new Actions(gobjWebDriver);
 			objActions.moveToElement(gobjWebElement).build().perform();
 			JavascriptExecutor objJavascriptExecutor = null;
@@ -1786,7 +1793,7 @@ public class Dragonfly {
 
 	private class ElementOnMouseOverSync {
 		private ElementOnMouseOverSync() {
-			logger.add("  ==start==>ElementOnMouseOverSync " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementOnMouseOverSync " + getDateTimestamp());
 			Long lngTimeStart = System.currentTimeMillis();
 			Boolean blnEnabled = false;
 			Boolean blnExit = false;
@@ -1818,15 +1825,15 @@ public class Dragonfly {
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					strActualResult = "not_found";
-					logger.add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					blnVisible = false;
 					strActualResult = "not_visible";
-					logger.add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotEnabled e) {
 					blnEnabled = false;
 					strActualResult = "not_enabled";
-					logger.add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					gobjectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementOnMouseOverSync", "mouse_over", lngTimeStart) == true) {
@@ -1842,7 +1849,7 @@ public class Dragonfly {
 
 	private class ElementPleaseWait {
 		private ElementPleaseWait() throws ExceptionElementNotHidden {
-			logger.add("  ==start==>ElementPleaseWait " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementPleaseWait " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			Boolean blnPleaseWait = Boolean.parseBoolean(gobjectStep.getString("blnPleaseWait"));
 			Integer intPleaseWaitEach;
@@ -1851,20 +1858,23 @@ public class Dragonfly {
 			String strTagName = null;
 			Boolean blnFound = false;
 			String strMessage = "";
+			JSONObjectExtended objJsonObjectPleaseWaitNode = new JSONObjectExtended();
 			try {
 				gobjWebElementPleaseWait = gobjWebElement;
-				logger.add("ElementPleaseWait: objectProcessing.size() = " + gobjectProcessing.size());
+				Logger.getInstance().add("ElementPleaseWait: objectProcessing.size() = " + gobjectProcessing.size());
 				if (blnPleaseWait == true) {
 					for (intPleaseWaitEach = 1; intPleaseWaitEach < gobjectProcessing.size(); intPleaseWaitEach++) {
-						JSONObjectExtended objJsonObjectPleaseWaitNode = (JSONObjectExtended) gobjectProcessing.get("PleaseWait_" + intPleaseWaitEach);
+						//JSONObjectExtended objJsonObjectPleaseWaitNode = gobjectProcessing.getNode("PleaseWait_" + intPleaseWaitEach);
+						//JSONObjectExtended objJsonObjectPleaseWaitNode = new JSONObjectExtended(gobjectProcessing.getNode("PleaseWait_" + intPleaseWaitEach));
+						objJsonObjectPleaseWaitNode.putAll(gobjectProcessing.getNode("PleaseWait_" + intPleaseWaitEach));
 						try {
 							strAttributeNames = objJsonObjectPleaseWaitNode.getValue("strAttributeNames", "");
 							strAttributeValues = objJsonObjectPleaseWaitNode.getValue("strAttributeValues", "");
 							strTagName = objJsonObjectPleaseWaitNode.getValue("strTagName", "");
-							logger.add("ElementPleaseWait: variables = " + strAttributeNames + " " + strAttributeValues + " " + strTagName);
+							Logger.getInstance().add("ElementPleaseWait: variables = " + strAttributeNames + " " + strAttributeValues + " " + strTagName);
 						} catch (ExceptionJSONKeyNotPresent e1) {
 							// TODO Auto-generated catch block
-							logger.add("ElementPleaseWait: ExceptionJSONKeyNotPresent = " + e1.toString());
+							Logger.getInstance().add("ElementPleaseWait: ExceptionJSONKeyNotPresent = " + e1.toString());
 						}
 						try {
 							new ElementFindBy(strAttributeNames, strAttributeValues, strTagName);
@@ -1872,21 +1882,21 @@ public class Dragonfly {
 							strMessage = "Element found.";
 						} catch (ExceptionElementNotFound e) {
 							blnFound = false;
-							logger.add("ElementPleaseWait: ElementFindBy = blnFound = false Milliseconds Waited = " + (System.currentTimeMillis()));
+							Logger.getInstance().add("ElementPleaseWait: ElementFindBy = blnFound = false Milliseconds Waited = " + (System.currentTimeMillis()));
 						} catch (ExceptionMultipleElementsFound e) {
 							blnFound = true;
 							strMessage = "Multiple elements found.";
-							logger.add("ElementPleaseWait: ElementFindBy = blnFound = true Milliseconds Waited = " + (System.currentTimeMillis()));
+							Logger.getInstance().add("ElementPleaseWait: ElementFindBy = blnFound = true Milliseconds Waited = " + (System.currentTimeMillis()));
 						}
 						if (blnFound == true) {
 							if (gobjWebElement.isDisplayed() == true) {
-								logger.add("ElementPleaseWait: gobjWebElement.isDisplayed() = return true Milliseconds Waited = " + (System.currentTimeMillis()));
+								Logger.getInstance().add("ElementPleaseWait: gobjWebElement.isDisplayed() = return true Milliseconds Waited = " + (System.currentTimeMillis()));
 								//throw new ExceptionElementNotHidden("Element is displayed.");
 								blnFound = true;
 								strMessage = "Element is displayed.";
 							} else {
 								blnFound = false;
-								logger.add("ElementPleaseWait: gobjWebElement.isDisplayed() = return false Milliseconds Waited = " + (System.currentTimeMillis()));
+								Logger.getInstance().add("ElementPleaseWait: gobjWebElement.isDisplayed() = return false Milliseconds Waited = " + (System.currentTimeMillis()));
 							}
 						}
 						if (blnFound == true) {
@@ -1895,7 +1905,7 @@ public class Dragonfly {
 					}
 				}
 			} finally {
-				logger.add("ElementPleaseWait: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("ElementPleaseWait: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 				gobjWebElement = gobjWebElementPleaseWait;
 				if (blnFound == true) {
 					throw new ExceptionElementNotHidden(strMessage);
@@ -1914,7 +1924,7 @@ public class Dragonfly {
 
 	private class ElementScrollSync {
 		private ElementScrollSync() {
-			logger.add("  ==start==>ElementScrollSync " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementScrollSync " + getDateTimestamp());
 			Long lngTimeStart = System.currentTimeMillis();
 			Boolean blnExit = false;
 			Boolean blnFound = false;
@@ -1926,7 +1936,7 @@ public class Dragonfly {
 					if (blnFound == false) {
 						new ElementFind();
 						blnFound = true;
-						logger.add("ElementScrollSync: blnFound = true");
+						Logger.getInstance().add("ElementScrollSync: blnFound = true");
 					}
 					if (blnVisible == false) {
 						new ElementVisible();
@@ -1936,15 +1946,15 @@ public class Dragonfly {
 					// 		JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) gobjWebDriver;
 					// 		objJavascriptExecutor.executeScript("arguments[0].scrollIntoView(false);", gobjWebElement);
 					blnStatus = true;
-					logger.add("ElementScrollSync: blnStatus = true");
+					Logger.getInstance().add("ElementScrollSync: blnStatus = true");
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					strActualResult = "not_found";
-					logger.add("ElementScrollSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementScrollSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					blnVisible = false;
 					strActualResult = "not_visible";
-					logger.add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					gobjectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementScrollSync", "scroll", lngTimeStart) == true) {
@@ -1958,8 +1968,8 @@ public class Dragonfly {
 
 	private class ElementSet {
 		private ElementSet(String strOuterHTML) throws ExceptionElementTagNameNotSupported, ExceptionVisibleTextNotInSelectList, ExceptionKeywordNotValid {
-			logger.add("  ==start==>ElementSet " + getDateTimestamp());
-			logger.add("ElementSet: " + gobjectStep.getLowerCase("strAttributeValues"));
+			Logger.getInstance().add("  ==start==>ElementSet " + getDateTimestamp());
+			Logger.getInstance().add("ElementSet: " + gobjectStep.getLowerCase("strAttributeValues"));
 			long lngStartTime = System.currentTimeMillis();
 			String strInputValue = gobjectStep.getString("strInputValue");
 			String strValueToSelect = strInputValue;
@@ -2087,23 +2097,23 @@ public class Dragonfly {
 					case "<random>":
 						int intStartRange = getKeywordIntValue(strInputValue);
 						strValueToSelect = objSelect.getOptions().get(randomNumberRange(intStartRange, intOptionsLength - 1)).getText();
-						logger.add("ElementSet strValueToSelect = " + strValueToSelect);
+						Logger.getInstance().add("ElementSet strValueToSelect = " + strValueToSelect);
 						break;
 					case "<starts>":
 						strKeywordValue = getKeywordValue(strInputValue);
-						logger.add("ElementSet strKeywordValue = " + strKeywordValue);
+						Logger.getInstance().add("ElementSet strKeywordValue = " + strKeywordValue);
 						lngStartTime = System.currentTimeMillis();
 						int intRightArrowPosition = strOptions.indexOf(">" + strKeywordValue);
 						if (intRightArrowPosition > -1) {
 							int intLeftArrowPosition = strOptions.indexOf("<", intRightArrowPosition);
 							strValueToSelect = strOptions.substring(intRightArrowPosition + 1, intLeftArrowPosition);
 						}
-						logger.add("ElementSet: strKeywordValue2 " + strValueToSelect);
-						logger.add("ElementSet: KeywordReturn Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+						Logger.getInstance().add("ElementSet: strKeywordValue2 " + strValueToSelect);
+						Logger.getInstance().add("ElementSet: KeywordReturn Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 						break;
 					case "<ends>":
 						strKeywordValue = getKeywordValue(strInputValue);
-						logger.add("ElementSet strKeywordValue = " + strKeywordValue);
+						Logger.getInstance().add("ElementSet strKeywordValue = " + strKeywordValue);
 						lngStartTime = System.currentTimeMillis();
 						int intMatchPosition = strOptions.indexOf(strKeywordValue + "<");
 						intRightArrowPosition = strOptions.lastIndexOf(">", intMatchPosition);
@@ -2111,36 +2121,36 @@ public class Dragonfly {
 							int intLeftArrowPosition = strOptions.indexOf("<", intRightArrowPosition);
 							strValueToSelect = strOptions.substring(intRightArrowPosition + 1, intLeftArrowPosition);
 						}
-						logger.add("ElementSet: strValueToSelect " + strValueToSelect);
-						logger.add("ElementSet: KeywordReturn Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+						Logger.getInstance().add("ElementSet: strValueToSelect " + strValueToSelect);
+						Logger.getInstance().add("ElementSet: KeywordReturn Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 						break;
 					case "<contains>":
 						int intStart = 0;
 						strKeywordValue = getKeywordValue(strInputValue);
-						logger.add("ElementSet strKeywordValue = " + strKeywordValue);
+						Logger.getInstance().add("ElementSet strKeywordValue = " + strKeywordValue);
 						lngStartTime = System.currentTimeMillis();
 						int intKeywordCount = strOptions.length() - strOptions.replace(strKeywordValue, "").length();
-						logger.add("ElementSet: intKeywordCount = " + intKeywordCount);
+						Logger.getInstance().add("ElementSet: intKeywordCount = " + intKeywordCount);
 						for (int intTestInstanceEach = 0; intTestInstanceEach < intKeywordCount; intTestInstanceEach++) {
-							logger.add("ElementSet: intStart = " + intStart);
+							Logger.getInstance().add("ElementSet: intStart = " + intStart);
 							intMatchPosition = strOptions.indexOf(strKeywordValue, intStart);
-							logger.add("ElementSet: intMatchPosition = " + intMatchPosition);
+							Logger.getInstance().add("ElementSet: intMatchPosition = " + intMatchPosition);
 							intRightArrowPosition = strOptions.lastIndexOf(">", intMatchPosition);
-							logger.add("ElementSet: intRightArrowPosition = " + intRightArrowPosition);
+							Logger.getInstance().add("ElementSet: intRightArrowPosition = " + intRightArrowPosition);
 							if (intRightArrowPosition > -1) {
 								int intLeftArrowPosition = strOptions.indexOf("<", intMatchPosition);
-								logger.add("ElementSet: intLeftArrowPosition = " + intLeftArrowPosition);
+								Logger.getInstance().add("ElementSet: intLeftArrowPosition = " + intLeftArrowPosition);
 								strValueToSelect = strOptions.substring(intRightArrowPosition + 1, intLeftArrowPosition);
 							}
-							logger.add("ElementSet: strValueToSelect = " + strValueToSelect);
+							Logger.getInstance().add("ElementSet: strValueToSelect = " + strValueToSelect);
 							if (strValueToSelect.startsWith("<option")) {
 								intStart = intMatchPosition + 1;
 							} else {
 								break;
 							}
 						}
-						logger.add("ElementSet: strValueToSelect " + strValueToSelect);
-						logger.add("ElementSet: KeywordReturn Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+						Logger.getInstance().add("ElementSet: strValueToSelect " + strValueToSelect);
+						Logger.getInstance().add("ElementSet: KeywordReturn Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 						break;
 					case "<re>":
 						//TODO add regex options
@@ -2148,7 +2158,7 @@ public class Dragonfly {
 					default:
 						break;
 					}
-					logger.add("ElementSet: strValueToSelect " + strValueToSelect);
+					Logger.getInstance().add("ElementSet: strValueToSelect " + strValueToSelect);
 					gobjectStep.putString("strInputValue", strValueToSelect);
 					try {
 						strStepExpected = "select";
@@ -2158,7 +2168,7 @@ public class Dragonfly {
 						gobjectStep.putValue("strStepActual", "notinlist");
 						strOptionsList = optionsList(strOptions);
 						gobjectStep.putValue("strOutputValue", strOptionsList);
-						logger.add("ElementSet: options list removeTags = " + strOptionsList);
+						Logger.getInstance().add("ElementSet: options list removeTags = " + strOptionsList);
 						throw new ExceptionVisibleTextNotInSelectList(e.getMessage());
 					}
 					break;
@@ -2187,15 +2197,15 @@ public class Dragonfly {
 				}
 			} finally {
 				gobjectStep.putValue("strStepExpected", strStepExpected);
-				logger.add("ElementSet: finally strStepExpected = " + strStepExpected);
-				logger.add("ElementSet: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("ElementSet: finally strStepExpected = " + strStepExpected);
+				Logger.getInstance().add("ElementSet: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
 	private class ElementSetJavascriptExecutor {
 		private ElementSetJavascriptExecutor(String strOuterHTML) throws ExceptionElementTagNameNotSupported, ExceptionElementNotSet, ExceptionKeywordNotValid {
-			logger.add("  ==start==>ElementSetJavascriptExecutor " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			String strInputValue = gobjectStep.getString("strInputValue");
 			String strValueToSelect = "";
@@ -2252,21 +2262,21 @@ public class Dragonfly {
 				case "textarea":
 				case "input_email":
 				case "input_textarea":
-					// logger.add("  ==start==>ElementSetJavascriptExecutor inputtext" + getDateTimestamp());
+					// Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor inputtext" + getDateTimestamp());
 					objJavascriptExecutor.executeScript("arguments[0].focus();", gobjWebElement);
-					// logger.add("  ==start==>ElementSetJavascriptExecutor focus" + getDateTimestamp());
+					// Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor focus" + getDateTimestamp());
 					objJavascriptExecutor.executeScript("arguments[0].value = '';", gobjWebElement);
-					// logger.add("  ==start==>ElementSetJavascriptExecutor value" + getDateTimestamp());
+					// Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor value" + getDateTimestamp());
 					objJavascriptExecutor.executeScript("arguments[0].value = '" + strInputValue + "';", gobjWebElement);
-					// logger.add("  ==start==>ElementSetJavascriptExecutor value" + getDateTimestamp());
+					// Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor value" + getDateTimestamp());
 					objJavascriptExecutor.executeScript("arguments[0].blur();", gobjWebElement);
-					// logger.add("onchange blur");
+					// Logger.getInstance().add("onchange blur");
 					if (strOuterHTML.toLowerCase().contains("onchange")) {
 						try {
-							// logger.add("  ==start==>ElementSetJavascriptExecutor strOuterHTML" + getDateTimestamp());
+							// Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor strOuterHTML" + getDateTimestamp());
 							objJavascriptExecutor.executeScript("arguments[0].onchange();", gobjWebElement);
 						} catch (WebDriverException e) {
-							logger.add("ElementSetJavascriptExecutor = WebDriverException: " + e.toString());
+							Logger.getInstance().add("ElementSetJavascriptExecutor = WebDriverException: " + e.toString());
 						}
 					}
 					break;
@@ -2283,7 +2293,7 @@ public class Dragonfly {
 								try {
 									objJavascriptExecutor.executeScript("arguments[0].onchange();", gobjWebElement);
 								} catch (WebDriverException e) {
-									logger.add("ElementSetJavascriptExecutor = " + e.toString());
+									Logger.getInstance().add("ElementSetJavascriptExecutor = " + e.toString());
 								}
 							}
 						}
@@ -2303,7 +2313,7 @@ public class Dragonfly {
 								try {
 									objJavascriptExecutor.executeScript("arguments[0].onchange();", gobjWebElement);
 								} catch (WebDriverException e) {
-									logger.add("ElementSetJavascriptExecutor = " + e.toString());
+									Logger.getInstance().add("ElementSetJavascriptExecutor = " + e.toString());
 								}
 							}
 						}
@@ -2317,7 +2327,7 @@ public class Dragonfly {
 								try {
 									objJavascriptExecutor.executeScript("arguments[0].onchange();", gobjWebElement);
 								} catch (WebDriverException e) {
-									logger.add("ElementSetJavascriptExecutor = " + e.toString());
+									Logger.getInstance().add("ElementSetJavascriptExecutor = " + e.toString());
 								}
 							}
 						}
@@ -2338,7 +2348,7 @@ public class Dragonfly {
 					// 		strOptions = strOptions.substring(1);
 					// 		arrOptions = strOptions.split("\\|");
 					// 		for (intOptionsEach = 0; intOptionsEach < arrOptions.length; intOptionsEach++) {
-					// 			 logger.add("ElementSetJavascriptExecutor: arrOptions[intOptionsEach].toString() = " + arrOptions[intOptionsEach].toString());
+					// 			 Logger.getInstance().add("ElementSetJavascriptExecutor: arrOptions[intOptionsEach].toString() = " + arrOptions[intOptionsEach].toString());
 					// 			if (arrOptions[intOptionsEach].toString().equals(gobjectStep.get("strInputValue").toString())) {
 					// 				blnSet = true;
 					// 				Select objSelect = new Select(gobjWebElement);
@@ -2350,7 +2360,7 @@ public class Dragonfly {
 					// 				// try {
 					// 				// objJavascriptExecutor.executeScript("arguments[0].onchange();", gobjWebElement);
 					// 				// } catch (WebDriverException e) {
-					// 				//  logger.add("ElementSetJavascriptExecutor = " + e.toString());
+					// 				//  Logger.getInstance().add("ElementSetJavascriptExecutor = " + e.toString());
 					// 				// }
 					// 				// }
 					// 				break;
@@ -2428,14 +2438,14 @@ public class Dragonfly {
 					throw new ExceptionElementTagNameNotSupported("ElementSetJavascriptExecutor: Element tag {" + strTagType + "} not supported");
 				}
 			} finally {
-				logger.add("ElementSetJavascriptExecutor: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("ElementSetJavascriptExecutor: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
 	private class ElementSetSync {
 		private ElementSetSync(boolean blnJavascriptExecutor) {
-			logger.add("  ==start==>ElementSetSync " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementSetSync " + getDateTimestamp());
 			Long lngTimeStart = System.currentTimeMillis();
 			Boolean blnAssert = false;
 			Boolean blnEnabled = false;
@@ -2453,8 +2463,8 @@ public class Dragonfly {
 						new ElementFind();
 						if (gobjWebElement != null) {
 							strOuterHTML = gobjWebElement.getAttribute("outerHTML");
-							logger.add("ElementSetSync: " + strOuterHTML);
-							logger.add("ElementSetSync: outerHTML Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+							Logger.getInstance().add("ElementSetSync: " + strOuterHTML);
+							Logger.getInstance().add("ElementSetSync: outerHTML Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 						}
 						blnFound = true;
 					}
@@ -2598,42 +2608,42 @@ public class Dragonfly {
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					strActualResult = "not_found";
-					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					blnVisible = false;
 					strActualResult = "not_visible";
-					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotEnabled e) {
 					blnEnabled = false;
 					strActualResult = "not_enabled";
-					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementTagNameNotSupported e) {
 					blnExit = true;
 					strActualResult = "tag_not_supported";
-					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionKeywordNotValid e) {
 					blnExit = true;
-					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionVisibleTextNotInSelectList e) {
 					blnSet = false;
-					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotHidden e) {
 					blnAssert = false;
-					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionValueNotMatched e) {
 					blnSet = false;
 					blnSetSync = false;
 					blnAssert = false;
-					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotSet e) {
 					blnSet = false;
 					blnAssert = false;
 				} catch (ExceptionElementNotDisabled e) {
 					blnAssert = false;
-					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionAlertNotComplete | ExceptionDoPostBackNotComplete | ExceptionJQueryAjaxNotComplete | ExceptionJQueryAnimationNotComplete | ExceptionAngularJsNotComplete | ExceptionPleaseWaitNotComplete e) {
 					blnSetSync = false;
-					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (Exception e) {
 					blnAssert = false;
 					blnEnabled = false;
@@ -2642,18 +2652,18 @@ public class Dragonfly {
 					blnSetSync = false;
 					blnVisible = false;
 					strActualResult = "exception";
-					logger.add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					gobjectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementSetSync", "set", lngTimeStart) == true) {
 						if (blnStatus == false) {
 							new CoordinateHighlightScreenshot(gobjectStep);
 						}
-						logger.add("elementSetSync: strOutputValue = " + gobjectStep.getString("strOutputValue"));
+						Logger.getInstance().add("elementSetSync: strOutputValue = " + gobjectStep.getString("strOutputValue"));
 						if (gobjectStep.verifyEquals("strOutputValue", "")) {
 							gobjectStep.putValue("strOutputValue", gobjectStep.getString("strInputValue"));
 						}
-						logger.add("elementSetSync: strOutputValue after = " + gobjectStep.getString("strOutputValue"));
+						Logger.getInstance().add("elementSetSync: strOutputValue after = " + gobjectStep.getString("strOutputValue"));
 						return;
 					}
 				}
@@ -2663,7 +2673,7 @@ public class Dragonfly {
 
 	private class ElementSetSyncComplete {
 		private ElementSetSyncComplete(String strOuterHTML) throws ExceptionAlertNotComplete, ExceptionDoPostBackNotComplete, ExceptionJQueryAjaxNotComplete, ExceptionJQueryAnimationNotComplete, ExceptionAngularJsNotComplete, ExceptionPleaseWaitNotComplete {
-			logger.add("  ==start==>ElementSetSyncComplete " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementSetSyncComplete " + getDateTimestamp());
 			long lngTimeStart = System.currentTimeMillis();
 			try {
 				if (gblnSyncPleaseWait == false) {
@@ -2702,7 +2712,7 @@ public class Dragonfly {
 					gblnSyncAngularJs = true;
 				}
 			} finally {
-				logger.add("ElementSetSyncComplete: finally Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngTimeStart));
+				Logger.getInstance().add("ElementSetSyncComplete: finally Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngTimeStart));
 			}
 		}
 	}
@@ -2879,7 +2889,7 @@ public class Dragonfly {
 
 	private class ElementTooltipGetSync {
 		private ElementTooltipGetSync() {
-			logger.add("  ==start==>ElementGetSync " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementGetSync " + getDateTimestamp());
 			Long lngTimeStart = System.currentTimeMillis();
 			Boolean blnExit = false;
 			Boolean blnFound = false;
@@ -2905,13 +2915,13 @@ public class Dragonfly {
 					blnStatus = true;
 					// 	} catch (ExceptionElementTagNameNotSupported e) {
 					// 		blnExit = true;
-					// 		 logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					// 		 Logger.getInstance().add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
-					logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					blnVisible = false;
-					logger.add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementGetSync", "get", lngTimeStart) == true) {
 						new CoordinateHighlightScreenshot(gobjectStep);
@@ -2927,7 +2937,7 @@ public class Dragonfly {
 
 	private class ElementVerifyNotValue {
 		private String run() throws ExceptionValueMatched, ExceptionElementTagNameNotSupported {
-			logger.add("  ==start==>ElementVerifyNotValue " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementVerifyNotValue " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			String strActualValue = "";
 			String strGetValue = "";
@@ -2935,12 +2945,12 @@ public class Dragonfly {
 			try {
 				strGetValue = new ElementGet().run();
 				strActualValue = new VerifyNotMatch().run(strGetValue, strValueExpected);
-				logger.add("ElementVerifyNotValue: after VerifyNotMatch");
+				Logger.getInstance().add("ElementVerifyNotValue: after VerifyNotMatch");
 			} catch (ExceptionValueMatched e) {
-				logger.add("ElementVerifyNotValue: " + e.toString());
+				Logger.getInstance().add("ElementVerifyNotValue: " + e.toString());
 				throw new ExceptionValueMatched("ElementVerifyNotValue: Exception strActualValue = {" + strActualValue + "}");
 			} finally {
-				logger.add("ElementVerifyNotValue: finally strGetValue = {" + strGetValue + "} strValueExpected = {" + strValueExpected + "} strActualValue = {" + strActualValue + "} Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("ElementVerifyNotValue: finally strGetValue = {" + strGetValue + "} strValueExpected = {" + strValueExpected + "} strActualValue = {" + strActualValue + "} Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngStartTime));
 			}
 			return strActualValue;
 		}
@@ -2948,7 +2958,7 @@ public class Dragonfly {
 
 	private class ElementVerifyNotValueSync {
 		private ElementVerifyNotValueSync() {
-			logger.add("  ==start==>ElementVerifyNotValueSync " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementVerifyNotValueSync " + getDateTimestamp());
 			Long lngTimeStart = System.currentTimeMillis();
 			Boolean blnExit = false;
 			Boolean blnFound = false;
@@ -2976,21 +2986,21 @@ public class Dragonfly {
 				} catch (ExceptionElementTagNameNotSupported e) {
 					blnExit = true;
 					strActualResult = "tag_not_supported";
-					logger.add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
 					blnVisible = false;
 					strActualResult = "not_found";
-					logger.add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					strActualResult = "not_visible";
-					logger.add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionValueMatched e) {
 					strActualResult = "not_verify_not";
-					logger.add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (Exception e) {
 					strActualResult = "exception";
-					logger.add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					gobjectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementVerifyNotValueSync", "verify_not", lngTimeStart) == true) {
@@ -3007,7 +3017,7 @@ public class Dragonfly {
 
 	private class ElementVerifyValue {
 		private String run() throws ExceptionValueNotMatched, ExceptionElementTagNameNotSupported {
-			logger.add("  ==start==>ElementVerifyValue " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementVerifyValue " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			String strActualValue = "";
 			String strGetValue = "";
@@ -3016,7 +3026,7 @@ public class Dragonfly {
 				strGetValue = new ElementGet().run();
 				strActualValue = new VerifyMatch().run(strGetValue, strValueExpected);
 			} finally {
-				logger.add("ElementVerifyValue: finally strGetValue = {" + strGetValue + "} strValueExpected = {" + strValueExpected + "} strActualValue = {" + strActualValue + "} Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("ElementVerifyValue: finally strGetValue = {" + strGetValue + "} strValueExpected = {" + strValueExpected + "} strActualValue = {" + strActualValue + "} Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngStartTime));
 			}
 			return strActualValue;
 		}
@@ -3024,7 +3034,7 @@ public class Dragonfly {
 
 	private class ElementVerifyValueSync {
 		private ElementVerifyValueSync() {
-			logger.add("  ==start==>ElementVerifyValueSync " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementVerifyValueSync " + getDateTimestamp());
 			Long lngTimeStart = System.currentTimeMillis();
 			Boolean blnExit = false;
 			Boolean blnFound = false;
@@ -3054,23 +3064,23 @@ public class Dragonfly {
 					blnVisible = false;
 					blnVerified = false;
 					strActualResult = "not_found";
-					logger.add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					blnVisible = false;
 					strActualResult = "not_visible";
-					logger.add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementTagNameNotSupported e) {
 					blnExit = true;
 					strActualResult = "tag_not_supported";
-					logger.add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionValueNotMatched e) {
 					blnVerified = false;
 					strActualResult = "not_verified";
-					logger.add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (Exception e) {
 					blnVerified = false;
 					strActualResult = "exception";
-					logger.add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					gobjectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementVerifyValueSync", "verify", lngTimeStart) == true) {
@@ -3088,7 +3098,7 @@ public class Dragonfly {
 	private class ElementVisible {
 		private ElementVisible() throws ExceptionElementNotVisible {
 			// TODO elementVisible add check for class and css, commented code needs to be tested
-			logger.add("  ==start==>ElementVisible " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementVisible " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			Boolean blnVisible = false;
 			try {
@@ -3114,8 +3124,8 @@ public class Dragonfly {
 					// if (gobjectStep.containsKey("intElementWidth")) {
 					// int intElementWidth = Integer.parseInt(gobjectStep.get("intElementWidth").toString());
 					// int intElementHeight = Integer.parseInt(gobjectStep.get("intElementHeight").toString());
-					//  logger.add("elementVisible intElementWidth = " + intElementWidth);
-					//  logger.add("elementVisible intElementHeight = " + intElementHeight);
+					//  Logger.getInstance().add("elementVisible intElementWidth = " + intElementWidth);
+					//  Logger.getInstance().add("elementVisible intElementHeight = " + intElementHeight);
 					// if (intElementWidth == 0 || intElementHeight == 0) {
 					// throw new ExceptionElementNotVisible("Element's heigh or width is 0");
 					// } else {
@@ -3128,14 +3138,14 @@ public class Dragonfly {
 					throw new ExceptionElementNotVisible("Element isDisplayed failed");
 				}
 			} finally {
-				logger.add("ElementVisible: finally blnVisible = " + blnVisible + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("ElementVisible: finally blnVisible = " + blnVisible + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
 	private class ElementVisibleSync {
 		private ElementVisibleSync() {
-			logger.add("  ==start==>ElementVisibleSync " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ElementVisibleSync " + getDateTimestamp());
 			Long lngTimeStart = System.currentTimeMillis();
 			Boolean blnExit = false;
 			Boolean blnFound = false;
@@ -3158,11 +3168,11 @@ public class Dragonfly {
 					blnFound = false;
 					blnVisible = false;
 					strActualResult = "not_found";
-					logger.add("ElementVisibleSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementVisibleSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} catch (ExceptionElementNotVisible e) {
 					blnVisible = false;
 					strActualResult = "not_visible";
-					logger.add("ElementVisibleSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+					Logger.getInstance().add("ElementVisibleSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					gobjectStep.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementVisibleSync", "syncvisible", lngTimeStart) == true) {
@@ -3288,10 +3298,10 @@ public class Dragonfly {
 		}
 	}
 
-	private class ExceptionJSONKeyNotPresent extends Exception {
+	class ExceptionJSONKeyNotPresent extends Exception {
 		private static final long serialVersionUID = 1L;
 
-		private ExceptionJSONKeyNotPresent(String message) {
+		ExceptionJSONKeyNotPresent(String message) {
 			super(message);
 		}
 	}
@@ -3346,7 +3356,7 @@ public class Dragonfly {
 
 	private class ImageDecodeFromString {
 		private BufferedImage run(String strImageString) {
-			logger.add("  ==start==>ImageDecodeFromString " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ImageDecodeFromString " + getDateTimestamp());
 			BufferedImage objBufferedImage = null;
 			byte[] arrImageByte;
 			try {
@@ -3363,7 +3373,7 @@ public class Dragonfly {
 
 	private class ImageEncodeToString {
 		private String run(BufferedImage objBufferedImage, String strImageType) {
-			logger.add("  ==start==>ImageEncodeToString " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ImageEncodeToString " + getDateTimestamp());
 			String strImageString = null;
 			ByteArrayOutputStream objByteArrayOutputStreams = new ByteArrayOutputStream();
 			try {
@@ -3380,7 +3390,7 @@ public class Dragonfly {
 
 	private class InternetExplorerProcessKill {
 		private InternetExplorerProcessKill() {
-			logger.add("  ==start==>InternetExplorerProcessKill " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>InternetExplorerProcessKill " + getDateTimestamp());
 			DesiredCapabilities desiredCapabilities = null;
 			new WindowsProcessKill("taskkill /F /IM iexplore.exe");
 			new SleepMilliseconds(1000);
@@ -3419,7 +3429,7 @@ public class Dragonfly {
 		private String strActualKeyValue = "";
 
 		private void verify() throws IOException {
-			logger.add("  ==start==>InternetExplorerVersion " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>InternetExplorerVersion " + getDateTimestamp());
 			for (int intKeysEach = 0; intKeysEach < 3; intKeysEach++) {
 				switch (intKeysEach) {
 				case 0:
@@ -3449,140 +3459,179 @@ public class Dragonfly {
 				String[] arrActualKeyValue = strFullRegistryKey.replaceAll("\\s+", " ").trim().split(" ");
 				strActualKeyValue = arrActualKeyValue[arrActualKeyValue.length - 1];
 				if (strActualKeyValue.equals(strExpectedKeyValue)) {
-					logger.add(strFullRegistryKey.replaceAll("\\s+", " ").trim());
-					logger.add(strActualKeyValue);
+					Logger.getInstance().add(strFullRegistryKey.replaceAll("\\s+", " ").trim());
+					Logger.getInstance().add(strActualKeyValue);
 				}
 			}
 		}
 	}
+	//	private class JSONArrayExtended extends JSONArray {
+	//		private static final long serialVersionUID = 1L;
+	//
+	//		private JSONArrayExtended(JSONObject parent) {
+	//			super();
+	//		}
+	//	}
 
-	private class JSONArrayExtended extends JSONArray {
-		private static final long serialVersionUID = 1L;
-
-		private JSONArrayExtended(JSONObject parent) {
-			super();
-		}
-	}
-
-	private class JSONObjectExtended extends JSONObject {
-		private static final long serialVersionUID = 1L;
-
-		private JSONObjectExtended(JSONObject parent) {
-			super(parent);
-		}
-
-		private JSONObjectExtended(JSONObjectExtended parent) {
-			super(parent);
-		}
-
-		//		private JSONObjectExtended(Map<String, String> map) {
-		//			super(map);
-		//		}
-		@SuppressWarnings("unchecked")
-		private void addJsonObject(JSONObjectExtended objJsonObjectToAdd) {
-			if (this.isEmpty() == true) {
-			} else {
-				this.putAll(objJsonObjectToAdd);
-			}
-		}
-
-		private Boolean getBoolean(String strKeyName) {
-			return Boolean.parseBoolean(this.get(strKeyName).toString());
-		}
-
-		private int getInt(String strKeyName) {
-			if (this.getString(strKeyName).equals("")) {
-				return 0;
-			}
-			return Integer.parseInt(this.get(strKeyName).toString());
-		}
-
-		private String getLowerCase(String strKeyName) {
-			return this.getString(strKeyName).toLowerCase();
-		}
-
-		private String getString(String strKeyName) {
-			String strJSONObjectValue = "";
-			if (this.containsKey(strKeyName)) {
-				strJSONObjectValue = this.get(strKeyName).toString();
-				// logger.add("JSONObjectExtended:getString strJSONObjectValue = " + strJSONObjectValue);
-				return strJSONObjectValue;
-			} else {
-				// logger.add("JSONObjectExtended:getString JSON Key " + strKeyName + " for keyword link name " + strKeyName + " not present");
-				return "";
-			}
-		}
-
-		private String getValue(String strInputValue, String strKeywordName) throws ExceptionJSONKeyNotPresent {
-			String strJSONObjectKey = strInputValue.replace(strKeywordName, "");
-			String strJSONObjectValue = "";
-			this.validateKey(strJSONObjectKey);
-			strJSONObjectValue = this.getString(strJSONObjectKey);
-			return strJSONObjectValue;
-		}
-
-		@SuppressWarnings({ "unused", "unchecked" })
-		private void putAllReplace(Map<String, String> map) {
-			this.clear();
-			this.putAll(map);
-		}
-
-		@SuppressWarnings("unchecked")
-		private void putInt(String strKeyName, int intKeyValue) {
-			this.put(strKeyName, Integer.toString(intKeyValue));
-		}
-
-		@SuppressWarnings("unchecked")
-		private void putLong(String strKeyName, Long lngKeyValue) {
-			this.put(strKeyName, Long.toString(lngKeyValue));
-		}
-
-		@SuppressWarnings("unchecked")
-		private void putString(String strKeyName, String strKeyValue) {
-			this.put(strKeyName, strKeyValue);
-		}
-
-		@SuppressWarnings("unchecked")
-		private void putValue(String strKeyName, String strKeyValue) {
-			this.put(strKeyName, strKeyValue);
-		}
-
-		private String returnKeyword(String strKeyName1) {
-			String strValueToFindKeyword = this.getLowerCase(strKeyName1);
-			int intRightArrowPosition = strValueToFindKeyword.indexOf(">");
-			String strKeyword = "";
-			if (intRightArrowPosition > -1) {
-				strKeyword = strValueToFindKeyword.substring(0, intRightArrowPosition + 1);
-			}
-			return strKeyword;
-		}
-
-		private void validateKey(String strKeyName) throws ExceptionJSONKeyNotPresent {
-			if (!this.containsKey(strKeyName)) {
-				throw new ExceptionJSONKeyNotPresent("JSON Key " + strKeyName + " not present");
-			}
-		}
-
-		private Boolean verifyEquals(String strKeyName, String strLowerCaseValue) {
-			return this.get(strKeyName).toString().trim().toLowerCase().equals(strLowerCaseValue);
-		}
-
-		private Boolean verifyKeyValue(String file) {
-			return null;
-		}
-
-		private void writeKeys(String file) throws IOException {
-			for (Iterator<?> iterator = this.keySet().iterator(); iterator.hasNext();) {
-				String key = (String) iterator.next();
-				logger.add("WriteJsonKeys: " + key + " = " + this.get(key));
-			}
-		}
-	}
-
+	//	//@SuppressWarnings("unchecked")
+	//	private class JSONObjectExtended {
+	//		//private static final long serialVersionUID = 1L;
+	//		JSONObject jSONObject = null;
+	//
+	//		JSONObjectExtended() {
+	//		}
+	//
+	//		JSONObjectExtended(JSONObject parent) {
+	//			this.jSONObject.putAll(parent);
+	//		}
+	//
+	//		int size() {
+	//			return this.jSONObject.size();
+	//		}
+	//
+	//		void addJsonObject(JSONObject objJsonObjectToAdd) {
+	//			if (this.jSONObject.isEmpty() == true) {
+	//			} else {
+	//				this.jSONObject.putAll(objJsonObjectToAdd);
+	//			}
+	//		}
+	//
+	//		Boolean getBoolean(String strKeyName) {
+	//			return Boolean.parseBoolean(this.jSONObject.get(strKeyName).toString());
+	//		}
+	//
+	//		int getInt(String strKeyName) {
+	//			if (this.getString(strKeyName).equals("")) {
+	//				return 0;
+	//			}
+	//			return Integer.parseInt(this.jSONObject.get(strKeyName).toString());
+	//		}
+	//
+	//		String getLowerCase(String strKeyName) {
+	//			return this.getString(strKeyName).toLowerCase();
+	//		}
+	//
+	//		JSONObject getNode(String strKeyName) {
+	//			return (JSONObject) this.jSONObject.get(strKeyName);
+	//		}
+	//
+	//		int getValueLength(String strKeyName) {
+	//			return this.jSONObject.get(strKeyName).toString().trim().length();
+	//		}
+	//
+	//		String getString(String strKeyName) {
+	//			String strJSONObjectValue = "";
+	//			if (this.jSONObject.containsKey(strKeyName)) {
+	//				strJSONObjectValue = this.jSONObject.get(strKeyName).toString();
+	//				// Logger.getInstance().add("JSONObjectExtended:getString strJSONObjectValue = " + strJSONObjectValue);
+	//				return strJSONObjectValue;
+	//			} else {
+	//				// Logger.getInstance().add("JSONObjectExtended:getString JSON Key " + strKeyName + " for keyword link name " + strKeyName + " not present");
+	//				return "";
+	//			}
+	//		}
+	//
+	//		String getValue(String strInputValue, String strKeywordName) throws ExceptionJSONKeyNotPresent {
+	//			String strJSONObjectKey = strInputValue.replace(strKeywordName, "");
+	//			String strJSONObjectValue = "";
+	//			this.validateKey(strJSONObjectKey);
+	//			strJSONObjectValue = this.getString(strJSONObjectKey);
+	//			return strJSONObjectValue;
+	//		}
+	//
+	//		void replaceAllFromMap(Map<String, String> map) {
+	//			this.jSONObject.clear();
+	//			this.jSONObject.putAll((Map<String, String>) map);
+	//		}
+	//
+	//		void replaceAllFromFile(String pathFileToParse) throws ParseException, FileNotFoundException, IOException {
+	//			this.jSONObject.clear();
+	//			//this.jSONObject.putAll((Map<String, String>) new JSONParser().parse(new FileReader(pathFileToParse)));
+	//			this.jSONObject = (JSONObject) new JSONParser().parse(new FileReader(pathFileToParse));
+	//		}
+	//
+	//		void putInt(String strKeyName, int intKeyValue) {
+	//			this.jSONObject.put(strKeyName, Integer.toString(intKeyValue));
+	//		}
+	//
+	//		void putLong(String strKeyName, Long lngKeyValue) {
+	//			this.jSONObject.put(strKeyName, Long.toString(lngKeyValue));
+	//		}
+	//
+	//		void putString(String strKeyName, String strKeyValue) {
+	//			this.jSONObject.put(strKeyName, strKeyValue);
+	//		}
+	//
+	//		void putValue(String strKeyName, String strKeyValue) {
+	//			this.jSONObject.put(strKeyName, strKeyValue);
+	//		}
+	//
+	//		String returnKeyword(String strKeyName1) {
+	//			String strValueToFindKeyword = this.getLowerCase(strKeyName1);
+	//			int intRightArrowPosition = strValueToFindKeyword.indexOf(">");
+	//			String strKeyword = "";
+	//			if (intRightArrowPosition > -1) {
+	//				strKeyword = strValueToFindKeyword.substring(0, intRightArrowPosition + 1);
+	//			}
+	//			return strKeyword;
+	//		}
+	//
+	//		void validateKey(String strKeyName) throws ExceptionJSONKeyNotPresent {
+	//			if (!this.jSONObject.containsKey(strKeyName)) {
+	//				throw new ExceptionJSONKeyNotPresent("JSON Key " + strKeyName + " not present");
+	//			}
+	//		}
+	//
+	//		Boolean verifyEquals(String strKeyName, String strLowerCaseValue) {
+	//			return this.jSONObject.get(strKeyName).toString().trim().toLowerCase().equals(strLowerCaseValue);
+	//		}
+	//
+	//		Boolean verifyKeyValue(String file) {
+	//			return null;
+	//		}
+	//
+	//		void writeKeys(String file) throws IOException {
+	//			for (Iterator<?> iterator = this.jSONObject.keySet().iterator(); iterator.hasNext();) {
+	//				String key = (String) iterator.next();
+	//				Logger.getInstance().add("WriteJsonKeys: " + key + " = " + this.jSONObject.get(key));
+	//			}
+	//		}
+	//
+	//		boolean containsKey(String strKeyName) {
+	//			return this.jSONObject.containsKey(strKeyName);
+	//		}
+	//
+	//		JSONArray getArray(String strJsonArrayName) {
+	//			return (JSONArray) this.jSONObject.get(strJsonArrayName);
+	//		}
+	//
+	//		void putAll(JSONObject objJsonObjectEach) {
+	//			this.jSONObject.putAll((Map<String, String>) objJsonObjectEach);
+	//		}
+	//
+	//		String toJSONString() {
+	//			return this.jSONObject.toJSONString();
+	//		}
+	//
+	//		//		public void parseFileReader(FileReader filereader) throws IOException, ParseException {
+	//		//			this.jSONObject = (JSONObject) new JSONParser().parse(filereader);
+	//		//		}
+	//		void parseString(String stringToParse) throws ParseException {
+	//			this.jSONObject = (JSONObject) new JSONParser().parse(stringToParse);
+	//		}
+	//		//public String toJSONStringPrety() {
+	//		//return this.jSONObject.toString(4);
+	//		//	}
+	//
+	//		void replaceAllFromString(String stringToParse) throws ParseException {
+	//			//this.jSONObject.clear();
+	//			this.jSONObject = (JSONObject) new JSONParser().parse(stringToParse);
+	//		}
+	//	}
 	private class JvmBitVersion {
 		private String get() {
 			String strJvmBitVersion = System.getProperty("sun.arch.data.model");
-			logger.add("JvmBitVersion: System.getProperty(sun.arch.data.model) = " + strJvmBitVersion + " " + getDateTimestamp());
+			Logger.getInstance().add("JvmBitVersion: System.getProperty(sun.arch.data.model) = " + strJvmBitVersion + " " + getDateTimestamp());
 			return strJvmBitVersion;
 		}
 	}
@@ -3631,7 +3680,7 @@ public class Dragonfly {
 						for (String strKeywordsValidEach : arrKV_strLogicalName) {
 							if (strResultsEach.equals(strKeywordsValidEach)) {
 								blnValid = true;
-								JSONObjectExtended objJsonObjectElementNode = new JSONObjectExtended((JSONObject) gobjectElement.get(strKeywordValue));
+								JSONObjectExtended objJsonObjectElementNode = new JSONObjectExtended(gobjectElement.getNode(strKeywordValue));
 								try {
 									gobjectStep.putValue("strTagName", objJsonObjectElementNode.getValue("strTagName", ""));
 									gobjectStep.putValue("strAttributeNames", objJsonObjectElementNode.getValue("strAttributeNames", ""));
@@ -3651,8 +3700,8 @@ public class Dragonfly {
 					for (String strAttributeValuesEach : arrAttributeValues) {
 						this.getKeywordsAndValue(strAttributeValuesEach);
 						for (String strResultsEach : arrResults) {
-							// logger.add("strResultsEach = " + strResultsEach);
-							// logger.add("strKeywordValue = " + strKeywordValue);
+							// Logger.getInstance().add("strResultsEach = " + strResultsEach);
+							// Logger.getInstance().add("strKeywordValue = " + strKeywordValue);
 							for (String strKeywordsValidEach : arrKV_strAttributeValues) {
 								if (strResultsEach.equals(strKeywordsValidEach)) {
 									blnValid = true;
@@ -3683,10 +3732,10 @@ public class Dragonfly {
 							}
 						}
 					}
-					logger.add("KeywordsValid: blnValid = " + blnValid);
+					Logger.getInstance().add("KeywordsValid: blnValid = " + blnValid);
 					gobjectStep.putValue("strInputValue", strKeywordValue);
-					// logger.add("strKeywordValue = " + strKeywordValue);
-					// logger.add("strInputValueFromJson = " + strInputValueFromJson);
+					// Logger.getInstance().add("strKeywordValue = " + strKeywordValue);
+					// Logger.getInstance().add("strInputValueFromJson = " + strInputValueFromJson);
 					break;
 				case "strLoopOrIf":
 					break;
@@ -3695,8 +3744,8 @@ public class Dragonfly {
 		}
 
 		private void getJsonValue(String strKeyword, String strInputValue) {
-			logger.add("getJsonValue strKeyword = " + strKeyword);
-			logger.add("getJsonValue strInputValue = " + strInputValue);
+			Logger.getInstance().add("getJsonValue strKeyword = " + strKeyword);
+			Logger.getInstance().add("getJsonValue strInputValue = " + strInputValue);
 			try {
 				switch (strKeyword) {
 				case "<td>":
@@ -3720,7 +3769,7 @@ public class Dragonfly {
 				}
 			} catch (ExceptionJSONKeyNotPresent e) {
 				// TODO Auto-generated catch block
-				logger.add("StepSetupDefaults: Exception = " + e.toString());
+				Logger.getInstance().add("StepSetupDefaults: Exception = " + e.toString());
 			}
 		}
 
@@ -3742,7 +3791,7 @@ public class Dragonfly {
 					if (strKeyword.equals("<re>") || strKeyword.equals("<contains>") || strKeyword.equals("<starts>")) {
 						strKeywordValue = strKeyword + strKeywordValue;
 					}
-					logger.add("getKeywordsAndValue strKeyword = " + strKeyword);
+					Logger.getInstance().add("getKeywordsAndValue strKeyword = " + strKeyword);
 					if (strKeywordCombined.length() == 0) {
 						strKeywordCombined = strKeyword;
 					} else {
@@ -3755,33 +3804,32 @@ public class Dragonfly {
 		}
 	}
 
-	private class Logger {
-		private StringBuilder objStringBuilder = new StringBuilder();;
-
-		private Logger(String strTextToAdd) {
-			System.out.println(strTextToAdd);
-			this.objStringBuilder.append(strTextToAdd);
-			this.objStringBuilder.append(System.getProperty("line.separator"));
-		}
-
-		private void add(String strTextToAdd) {
-			System.out.println(strTextToAdd);
-			objStringBuilder.append(strTextToAdd);
-			objStringBuilder.append(System.getProperty("line.separator"));
-		}
-
-		private void deleteLog() {
-			objStringBuilder.delete(0, objStringBuilder.length());
-		}
-
-		private String getLog() {
-			return objStringBuilder.toString();
-		}
-	}
-
+	//	private class Logger.getInstance() {
+	//		private StringBuilder objStringBuilder = new StringBuilder();;
+	//
+	//		private Logger.getInstance()(String strTextToAdd) {
+	//			System.out.println(strTextToAdd);
+	//			this.objStringBuilder.append(strTextToAdd);
+	//			this.objStringBuilder.append(System.getProperty("line.separator"));
+	//		}
+	//
+	//		private void add(String strTextToAdd) {
+	//			System.out.println(strTextToAdd);
+	//			objStringBuilder.append(strTextToAdd);
+	//			objStringBuilder.append(System.getProperty("line.separator"));
+	//		}
+	//
+	//		private void deleteLog() {
+	//			objStringBuilder.delete(0, objStringBuilder.length());
+	//		}
+	//
+	//		private String getLog() {
+	//			return objStringBuilder.toString();
+	//		}
+	//	}
 	private class MonthGet {
 		private String run(int month) {
-			logger.add("  ==start==>MonthGet " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>MonthGet " + getDateTimestamp());
 			return new DateFormatSymbols().getMonths()[month];
 		}
 	}
@@ -3790,7 +3838,7 @@ public class Dragonfly {
 		private String strOS = "";
 
 		private OperatingSystem() {
-			logger.add("  ==start==>OperatingSystem " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>OperatingSystem " + getDateTimestamp());
 			strOS = System.getProperty("os.name").toLowerCase();
 			if (strOS.contains("win")) {
 				strOS = "Windows";
@@ -3806,66 +3854,65 @@ public class Dragonfly {
 		}
 	}
 
-	private class PathCreation {
-		private String gstrPathSystemUserDir = System.getProperty("user.dir");
-		private String gstrTestArea;
-		private String gstrPathData;
-		private String gstrPathTestConfiguration;
-		private String gstrPathTestData;
-		private String gstrPathTestElements;
-		private String gstrPathTestInstances;
-		private String gstrPathTestModules;
-		private String gstrPathTestSteps;
-		private String gstrPathImages;
-		private String gstrPathResults;
-		private String gstrPathResultsTop;
-		private String gstrNameTest;
-
-		private void changeDirectoryNameStatus(String strTestStatus) {
-			logger.add("PathCreation:changeDirectoryNameStatus gstrPathResults = " + gstrPathResults);
-			File objDirectoryOld = new File(gstrPathResults);
-			String strPathResultsNew = gstrPathResults.substring(0, gstrPathResults.length() - 1) + "_" + strTestStatus + "\\";
-			logger.add("PathCreation:changeDirectoryNameStatus strPathResultsNew = " + strPathResultsNew);
-			File objDirectoryNew = new File(strPathResultsNew);
-			objDirectoryOld.renameTo(objDirectoryNew);
-			gstrPathResults = strPathResultsNew;
-		}
-
-		private void setDirectory(String strTestArea) {
-			gstrPathData = "Data/" + strTestArea + "/";
-			gstrPathTestConfiguration = gstrPathData + "test_configuration/";
-			gstrPathTestData = gstrPathData + "test_data/";
-			gstrPathTestElements = gstrPathData + "test_elements/";
-			gstrPathTestInstances = gstrPathData + "test_instances/";
-			gstrPathTestModules = gstrPathData + "test_modules/";
-			gstrPathTestSteps = gstrPathData + "test_steps/";
-		}
-
-		private void setPathResults(int intTestInstanceSize, String strTestConfigurationFileName) {
-			logger.add("PathCreation:setPathResults intTestInstanceSize = " + intTestInstanceSize);
-			logger.add("PathCreation:setPathResults strTestConfigurationFileName = " + strTestConfigurationFileName);
-			String gstrDateTimestamp = getDateTimestamp();
-			logger.add("PathCreation:setPathResults gstrDateTimestamp = " + gstrDateTimestamp);
-			logger.add("PathCreation:setPathResults gstrPathImages==null = " + gstrPathImages);
-			if (gstrPathImages == null) {
-				gstrPathResultsTop = gstrPathSystemUserDir + "\\Results\\" + strTestConfigurationFileName.replace(".json", "") + "\\";
-				logger.add("PathCreation:setPathResults gstrPathResults = " + gstrPathResults);
-				if (intTestInstanceSize > 1) {
-					gstrPathResultsTop = gstrPathResultsTop + gstrDateTimestamp + "\\Iterations_" + intTestInstanceSize + "\\";
-					logger.add("PathCreation:setPathResults gstrPathResults = " + gstrPathResults);
-				}
-			}
-			gstrPathResults = gstrPathResultsTop + gstrDateTimestamp + "\\";
-			logger.add("PathCreation:setPathResults gstrPathResults = " + gstrPathResults);
-			gstrPathImages = gstrPathResults + "images\\";
-			logger.add("PathCreation:setPathResults gstrPathImages = " + gstrPathImages);
-			new File(gstrPathImages).mkdirs();
-		}
-	}
-
-	private class ProcessKillInternetExplorer {
-		private void run() {
-			logger.add("  ==start==>ProcessKillInternetExplorer " + getDateTimestamp());
+	//	private class PathCreation {
+	//		private String gstrPathSystemUserDir = System.getProperty("user.dir");
+	//		private String gstrTestArea;
+	//		private String gstrPathData;
+	//		private String gstrPathTestConfiguration;
+	//		private String gstrPathTestData;
+	//		private String gstrPathTestElements;
+	//		private String gstrPathTestInstances;
+	//		private String gstrPathTestModules;
+	//		private String gstrPathTestSteps;
+	//		private String gstrPathImages;
+	//		private String gstrPathResults;
+	//		private String gstrPathResultsTop;
+	//		private String gstrNameTest;
+	//
+	//		private void changeDirectoryNameStatus(String strTestStatus) {
+	//			Logger.getInstance().add("PathCreation:changeDirectoryNameStatus gstrPathResults = " + gstrPathResults);
+	//			File objDirectoryOld = new File(gstrPathResults);
+	//			String strPathResultsNew = gstrPathResults.substring(0, gstrPathResults.length() - 1) + "_" + strTestStatus + "\\";
+	//			Logger.getInstance().add("PathCreation:changeDirectoryNameStatus strPathResultsNew = " + strPathResultsNew);
+	//			File objDirectoryNew = new File(strPathResultsNew);
+	//			objDirectoryOld.renameTo(objDirectoryNew);
+	//			gstrPathResults = strPathResultsNew;
+	//		}
+	//
+	//		private void setDirectory(String strTestArea) {
+	//			gstrPathData = "Data/" + strTestArea + "/";
+	//			gstrPathTestConfiguration = gstrPathData + "test_configuration/";
+	//			gstrPathTestData = gstrPathData + "test_data/";
+	//			gstrPathTestElements = gstrPathData + "test_elements/";
+	//			gstrPathTestInstances = gstrPathData + "test_instances/";
+	//			gstrPathTestModules = gstrPathData + "test_modules/";
+	//			gstrPathTestSteps = gstrPathData + "test_steps/";
+	//		}
+	//
+	//		private void setPathResults(int intTestInstanceSize, String strTestConfigurationFileName) {
+	//			Logger.getInstance().add("PathCreation:setPathResults intTestInstanceSize = " + intTestInstanceSize);
+	//			Logger.getInstance().add("PathCreation:setPathResults strTestConfigurationFileName = " + strTestConfigurationFileName);
+	//			String gstrDateTimestamp = getDateTimestamp();
+	//			Logger.getInstance().add("PathCreation:setPathResults gstrDateTimestamp = " + gstrDateTimestamp);
+	//			Logger.getInstance().add("PathCreation:setPathResults gstrPathImages==null = " + gstrPathImages);
+	//			if (gstrPathImages == null) {
+	//				gstrPathResultsTop = gstrPathSystemUserDir + "\\Results\\" + strTestConfigurationFileName.replace(".json", "") + "\\";
+	//				Logger.getInstance().add("PathCreation:setPathResults gstrPathResults = " + gstrPathResults);
+	//				if (intTestInstanceSize > 1) {
+	//					gstrPathResultsTop = gstrPathResultsTop + gstrDateTimestamp + "\\Iterations_" + intTestInstanceSize + "\\";
+	//					Logger.getInstance().add("PathCreation:setPathResults gstrPathResults = " + gstrPathResults);
+	//				}
+	//			}
+	//			gstrPathResults = gstrPathResultsTop + gstrDateTimestamp + "\\";
+	//			Logger.getInstance().add("PathCreation:setPathResults gstrPathResults = " + gstrPathResults);
+	//			gstrPathImages = gstrPathResults + "images\\";
+	//			Logger.getInstance().add("PathCreation:setPathResults gstrPathImages = " + gstrPathImages);
+	//			new File(gstrPathImages).mkdirs();
+	//		}
+	//	}
+	class ProcessKillInternetExplorer {
+		void run() {
+			Logger.getInstance().add("  ==start==>ProcessKillInternetExplorer " + getDateTimestamp());
 			new WindowsProcessKill("taskkill /F /IM iexplore.exe");
 			new SleepMilliseconds(1000);
 			new WindowsProcessKill("taskkill /F /IM IEDriverServer_32.exe");
@@ -3874,8 +3921,8 @@ public class Dragonfly {
 
 	private class RectangleAreaByName {
 		private RectangleAreaByName(Integer intThickness, String strAreaObjectName, Rectangle objRectangleArea) {
-			logger.add("  ==start==>RectangleAreaByName " + getDateTimestamp());
-			logger.add("RectangleAreaByName: strAreaObjectName = " + strAreaObjectName);
+			Logger.getInstance().add("  ==start==>RectangleAreaByName " + getDateTimestamp());
+			Logger.getInstance().add("RectangleAreaByName: strAreaObjectName = " + strAreaObjectName);
 			long lngStartTime = System.currentTimeMillis();
 			int intX = 0;
 			int intY = 0;
@@ -3929,7 +3976,7 @@ public class Dragonfly {
 					intHeight = gobjectStep.getInt("intElementHeight") + (2 * intThickness);
 					break;
 				default:
-					logger.add("RectangleAreaByName: epected values = screen, window, page and element not " + strAreaObjectName);
+					Logger.getInstance().add("RectangleAreaByName: epected values = screen, window, page and element not " + strAreaObjectName);
 					break;
 				}
 			} finally {
@@ -3942,7 +3989,7 @@ public class Dragonfly {
 					intY = 0;
 				}
 				objRectangleArea.setBounds(intX, intY, intWidth, intHeight);
-				logger.add("RectangleAreaByName: finally strAreaObjectName = " + strAreaObjectName.toLowerCase() + " objRectangleArea = " + objRectangleArea + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("RectangleAreaByName: finally strAreaObjectName = " + strAreaObjectName.toLowerCase() + " objRectangleArea = " + objRectangleArea + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
@@ -3951,7 +3998,7 @@ public class Dragonfly {
 		private String run(String strPattern, String strActualValue) throws ExceptionValueNotMatched {
 			Boolean blnMatched = false;
 			Long lngStartTime = System.currentTimeMillis();
-			logger.add("  ==start==>RegularExpressionMatch " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>RegularExpressionMatch " + getDateTimestamp());
 			String strMatchedString = "";
 			try {
 				Matcher objMatcher = Pattern.compile(strPattern).matcher(strActualValue);
@@ -3960,17 +4007,17 @@ public class Dragonfly {
 				blnMatched = true;
 				return strMatchedString;
 			} catch (Exception e) {
-				logger.add("RegularExpressionMatch: Exception " + e.toString());
+				Logger.getInstance().add("RegularExpressionMatch: Exception " + e.toString());
 				throw new ExceptionValueNotMatched("RegularExpressionMatch: Exception " + e.toString());
 			} finally {
-				logger.add("RegularExpressionMatch: finally Matched = {" + blnMatched + "} strMatchedString = {" + strMatchedString + "} strPattern = {" + strPattern + "} strActualValue = {" + strActualValue + "} Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("RegularExpressionMatch: finally Matched = {" + blnMatched + "} strMatchedString = {" + strMatchedString + "} strPattern = {" + strPattern + "} strActualValue = {" + strActualValue + "} Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
 	private class ScrollToBottom {
 		private ScrollToBottom() {
-			logger.add("  ==start==>ScrollToBottom " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>ScrollToBottom " + getDateTimestamp());
 			// TODO debug all browser types, should use instanceof from windowFocus???? should combine into 1 line?
 			JavascriptExecutor executor = (JavascriptExecutor) gobjWebDriver;
 			executor.executeScript("window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
@@ -3983,15 +4030,15 @@ public class Dragonfly {
 		}
 	}
 
-	private class SleepMilliseconds {
-		private SleepMilliseconds(int intMillisecondsToWait) {
-			// logger.add("  ==start==>SleepMilliseconds " + getDateTimestamp());
+	class SleepMilliseconds {
+		SleepMilliseconds(int intMillisecondsToWait) {
+			// Logger.getInstance().add("  ==start==>SleepMilliseconds " + getDateTimestamp());
 			try {
 				TimeUnit.MILLISECONDS.sleep(intMillisecondsToWait);
 				gobjectStep.putString("strStatus", "pass");
 			} catch (Exception e) {
 				gobjectStep.putString("strStatus", "fail");
-				logger.add("SleepMilliseconds: Exception = " + e.toString());
+				Logger.getInstance().add("SleepMilliseconds: Exception = " + e.toString());
 			}
 		}
 	}
@@ -4067,27 +4114,28 @@ public class Dragonfly {
 			try {
 				objClass = Class.forName("org.DragonflyAutomation.Dragonfly$StepSetupDefaults");
 			} catch (ClassNotFoundException e) {
-				logger.add("StepSetupDefaults: ClassNotFoundException = " + e.toString());
+				Logger.getInstance().add("StepSetupDefaults: ClassNotFoundException = " + e.toString());
 			} catch (Exception e) {
-				logger.add("StepSetupDefaults: Class.forName Exception = " + e.toString());
+				Logger.getInstance().add("StepSetupDefaults: Class.forName Exception = " + e.toString());
 			}
 			for (String strKey : arrDefaultKeys) {
 				Field objField = null;
 				try {
 					objField = objClass.getDeclaredField("strDefault_" + strKey);
 				} catch (NoSuchFieldException | SecurityException e) {
-					logger.add("StepSetupDefaults: NoSuchFieldException = " + e.toString());
+					Logger.getInstance().add("StepSetupDefaults: NoSuchFieldException = " + e.toString());
 				} catch (Exception e) {
-					logger.add("StepSetupDefaults: Exception = " + e.toString());
+					Logger.getInstance().add("StepSetupDefaults: Exception = " + e.toString());
 				}
-				if (gobjectStep.get(strKey).toString().trim().length() == 0) {
+				//if (gobjectStep.getNode(strKey).toString().trim().length() == 0) {
+				if (gobjectStep.getValueLength(strKey) == 0) {
 					try {
 						gobjectStep.putValue(strKey, (String) objField.get(this));
 					} catch (IllegalArgumentException | IllegalAccessException e) {
-						logger.add("StepSetupDefaults: IllegalArgumentException = " + e.toString());
+						Logger.getInstance().add("StepSetupDefaults: IllegalArgumentException = " + e.toString());
 						e.printStackTrace();
 					} catch (Exception e) {
-						logger.add("StepSetupDefaults: Exception = " + e.toString());
+						Logger.getInstance().add("StepSetupDefaults: Exception = " + e.toString());
 					}
 				}
 			}
@@ -4095,26 +4143,25 @@ public class Dragonfly {
 		}
 	}
 
-	private class StepsManual {
-		private StringBuilder mobjStringBuilder = new StringBuilder();;
-
-		private void delete() {
-			mobjStringBuilder.delete(0, mobjStringBuilder.length());
-		}
-
-		private String get() {
-			return mobjStringBuilder.toString();
-		}
-
-		private void set(String strTextToAdd) {
-			mobjStringBuilder.append(strTextToAdd);
-			mobjStringBuilder.append(System.getProperty("line.separator"));
-		}
-	}
-
+	//	private class StepsManual {
+	//		private StringBuilder mobjStringBuilder = new StringBuilder();;
+	//
+	//		private void delete() {
+	//			mobjStringBuilder.delete(0, mobjStringBuilder.length());
+	//		}
+	//
+	//		private String get() {
+	//			return mobjStringBuilder.toString();
+	//		}
+	//
+	//		private void set(String strTextToAdd) {
+	//			mobjStringBuilder.append(strTextToAdd);
+	//			mobjStringBuilder.append(System.getProperty("line.separator"));
+	//		}
+	//	}
 	private class SyncAlert {
 		private SyncAlert() throws ExceptionAlertNotComplete {
-			logger.add("  ==start==>SyncAlert " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>SyncAlert " + getDateTimestamp());
 			if (new AlertFind().run() == true) {
 				throw new ExceptionAlertNotComplete("");
 			}
@@ -4123,41 +4170,41 @@ public class Dragonfly {
 
 	private class SyncAngularJs {
 		private SyncAngularJs() throws ExceptionAngularJsNotComplete {
-			logger.add("  ==start==>SyncAngularJs " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>SyncAngularJs " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			boolean blnAngularJs = false;
 			long lngAngularJsInjectorActive = 0;
 			try {
 				blnAngularJs = (boolean) ((JavascriptExecutor) gobjWebDriver).executeScript("return (window.angular != null);");
-				logger.add("SyncAngularJs: = " + blnAngularJs);
+				Logger.getInstance().add("SyncAngularJs: = " + blnAngularJs);
 				lngAngularJsInjectorActive = (long) ((JavascriptExecutor) gobjWebDriver).executeScript("return (angular.element(document).injector().get(‘$http’).pendingRequests.length);");
 				if (lngAngularJsInjectorActive > 0) {
 					throw new ExceptionAngularJsNotComplete("");
 				}
 			} catch (Exception e) {
-				logger.add("SyncAngularJs: AngularJS Exception = " + e.toString());
+				Logger.getInstance().add("SyncAngularJs: AngularJS Exception = " + e.toString());
 			} finally {
-				logger.add("SyncAngularJs: lngAngularJsInjectorActive = " + lngAngularJsInjectorActive + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("SyncAngularJs: lngAngularJsInjectorActive = " + lngAngularJsInjectorActive + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
 	private class SyncDoPostBack {
 		private SyncDoPostBack(String strOuterHTML) throws ExceptionDoPostBackNotComplete {
-			logger.add("  ==start==>SyncDoPostBack " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>SyncDoPostBack " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			boolean blnEventTarget = false;
 			if (strOuterHTML.contains("__doPostBack")) {
 				try {
-					logger.add("SyncDoPostBack: __EVENTTARGET value = " + gobjWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
+					Logger.getInstance().add("SyncDoPostBack: __EVENTTARGET value = " + gobjWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
 					blnEventTarget = !gobjWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value").equals("");
 					if (blnEventTarget == true) {
 						throw new ExceptionDoPostBackNotComplete("");
 					}
 				} catch (Exception e) {
-					logger.add("SyncDoPostBack: Exception = " + e.toString());
+					Logger.getInstance().add("SyncDoPostBack: Exception = " + e.toString());
 				} finally {
-					logger.add("SyncDoPostBack: blnEventTarget = " + blnEventTarget + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+					Logger.getInstance().add("SyncDoPostBack: blnEventTarget = " + blnEventTarget + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 				}
 			}
 		}
@@ -4165,7 +4212,7 @@ public class Dragonfly {
 
 	private class SyncJQueryAjax {
 		private SyncJQueryAjax() throws ExceptionJQueryAjaxNotComplete {
-			logger.add("  ==start==>SyncJQueryAjax " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>SyncJQueryAjax " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			boolean blnJquery = false;
 			long lngJqueryActive = 0;
@@ -4173,22 +4220,22 @@ public class Dragonfly {
 				blnJquery = (boolean) ((JavascriptExecutor) gobjWebDriver).executeScript("return (window.jQuery != null);");
 				if (blnJquery == true) {
 					lngJqueryActive = (long) ((JavascriptExecutor) gobjWebDriver).executeScript("return (jQuery.active);");
-					logger.add("SyncJQueryAjax: lngJqueryActive = " + lngJqueryActive);
+					Logger.getInstance().add("SyncJQueryAjax: lngJqueryActive = " + lngJqueryActive);
 					if (lngJqueryActive > 0) {
 						throw new ExceptionJQueryAjaxNotComplete("");
 					}
 				}
 			} catch (Exception e) {
-				logger.add("SyncJQueryAjax: JqueryActive Exception = " + e.toString());
+				Logger.getInstance().add("SyncJQueryAjax: JqueryActive Exception = " + e.toString());
 			} finally {
-				logger.add("SyncJQueryAjax: lngJqueryActive = " + lngJqueryActive + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("SyncJQueryAjax: lngJqueryActive = " + lngJqueryActive + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
 	private class SyncJQueryAnimation {
 		private SyncJQueryAnimation() throws ExceptionJQueryAnimationNotComplete {
-			logger.add("  ==start==>SyncJQueryAnimation " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>SyncJQueryAnimation " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			long lngElementsAnimated = 0;
 			boolean blnJqueryExist = false;
@@ -4201,9 +4248,9 @@ public class Dragonfly {
 					throw new ExceptionJQueryAnimationNotComplete("");
 				}
 			} catch (Exception e) {
-				logger.add("SyncJQueryAnimation: Exception = " + e.toString());
+				Logger.getInstance().add("SyncJQueryAnimation: Exception = " + e.toString());
 			} finally {
-				logger.add("SyncJQueryAnimation: lngElementsAnimated = " + lngElementsAnimated + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("SyncJQueryAnimation: lngElementsAnimated = " + lngElementsAnimated + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
@@ -4211,16 +4258,16 @@ public class Dragonfly {
 	private class SyncPleaseWait {
 		private SyncPleaseWait() throws ExceptionDoPostBackNotComplete {
 			long lngStartTime = System.currentTimeMillis();
-			logger.add("  ==start==>SyncPleaseWait " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>SyncPleaseWait " + getDateTimestamp());
 			try {
 				new ElementPleaseWait();
 			} catch (ExceptionElementNotHidden e1) {
-				logger.add("SyncPleaseWait: ExceptionElementNotHidden = " + e1.toString());
+				Logger.getInstance().add("SyncPleaseWait: ExceptionElementNotHidden = " + e1.toString());
 				throw new ExceptionDoPostBackNotComplete("");
 			} catch (Exception e) {
-				logger.add("SyncPleaseWait: Exception = " + e.toString());
+				Logger.getInstance().add("SyncPleaseWait: Exception = " + e.toString());
 			} finally {
-				logger.add("SyncPleaseWait: Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("SyncPleaseWait: Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
@@ -4245,21 +4292,21 @@ public class Dragonfly {
 	private class SyncWaitForReadyState {
 		private SyncWaitForReadyState() {
 			long lngStartTime = System.currentTimeMillis();
-			logger.add("  ==start==>SyncWaitForReadyState " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>SyncWaitForReadyState " + getDateTimestamp());
 			try {
 				new WaitForReadyState().run();
 			} catch (Exception e) {
-				logger.add("SyncWaitForReadyState: Exception = " + e.toString());
+				Logger.getInstance().add("SyncWaitForReadyState: Exception = " + e.toString());
 			} finally {
-				logger.add("SyncWaitForReadyState: Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("SyncWaitForReadyState: Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
 	private class TestConfigurationSetup {
 		private int intTestInstanceSize;
-		private JSONObjectExtended objJsonObjectTestConfigurationFile = null;
-		private JSONParser objJsonParser = new JSONParser();
+		private JSONObjectExtended objJsonObjectTestConfigurationFile = new JSONObjectExtended();
+		///private JSONParser objJsonParser = new JSONParser();
 
 		@SuppressWarnings("unchecked")
 		private JSONArray putAllArrays(String strJsonArrayName, String strJsonObjectName, String strPath) {
@@ -4267,20 +4314,22 @@ public class Dragonfly {
 			JSONArray objJsonArray = null;
 			JSONArray objJsonArrayEach = null;
 			JSONArray objJsonArrayList = null;
-			JSONObjectExtended objJsonObjectFileEach = null;
+			JSONObjectExtended objJsonObjectFileEach = new JSONObjectExtended();
 			String strFileNameEach = "";
 			String strFilePathJsonArray = "";
-			objJsonArrayList = (JSONArray) objJsonObjectTestConfigurationFile.get(strJsonArrayName);
-			if (objJsonArrayList.size() == 0) {
+			objJsonArrayList = (JSONArray) objJsonObjectTestConfigurationFile.getArray(strJsonArrayName);
+			if (objJsonArrayList == null) {
+				// if (objJsonArrayList.size() == 0) ||  (objJsonArrayList() == null){
 				return null;
 			} else {
 				for (intJsonArrayEach = 0; intJsonArrayEach < objJsonArrayList.size(); intJsonArrayEach++) {
 					strFileNameEach = objJsonArrayList.get(intJsonArrayEach).toString();
 					strFilePathJsonArray = strPath + strFileNameEach;
-					logger.add("TestConfigurationSetup:putAllArrays strFilePathJsonArray = " + strFilePathJsonArray);
+					Logger.getInstance().add("TestConfigurationSetup:putAllArrays strFilePathJsonArray = " + strFilePathJsonArray);
 					try {
-						objJsonObjectFileEach = new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathJsonArray)));
-						objJsonArrayEach = (JSONArray) objJsonObjectFileEach.get(strJsonObjectName);
+						//objJsonObjectFileEach = new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathJsonArray)));
+						objJsonObjectFileEach.replaceAllFromFile(strFilePathJsonArray);
+						objJsonArrayEach = (JSONArray) objJsonObjectFileEach.getArray(strJsonObjectName);
 						int intStep = -1;
 						Iterator<JSONObject> iterator = objJsonArrayEach.iterator();
 						while (iterator.hasNext()) {
@@ -4293,7 +4342,7 @@ public class Dragonfly {
 						}
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
-						logger.add("TestConfigurationSetup:putAllArrays objJsonArray = " + objJsonArray);
+						Logger.getInstance().add("TestConfigurationSetup:putAllArrays objJsonArray = " + objJsonArray);
 						e.printStackTrace();
 					}
 					if (intJsonArrayEach == 0) {
@@ -4303,83 +4352,91 @@ public class Dragonfly {
 					}
 				}
 			}
-			logger.add("TestConfigurationSetup:putAllArrays objJsonArray = " + objJsonArray);
+			Logger.getInstance().add("TestConfigurationSetup:putAllArrays objJsonArray = " + objJsonArray);
 			return objJsonArray;
 		}
 
 		@SuppressWarnings("unchecked")
 		private JSONObjectExtended putAllObjects(String strJsonArrayName, String strJsonObjectName, String strPath) {
-			logger.add("  ==start==>putAllObjects " + getDateTimestamp());
-			JSONParser objJsonParser = new JSONParser();
-			JSONObject obj = new JSONObject();
+			Logger.getInstance().add("  ==start==>putAllObjects " + getDateTimestamp());
+			//JSONParser objJsonParser = new JSONParser();
+			//JSONObject obj = new JSONObject();
 			Integer intJsonObjectEach = 0;
 			JSONArray objJsonArrayList = null;
-			JSONObjectExtended objJsonObject = new JSONObjectExtended(obj);
-			JSONObjectExtended objJsonObjectEach = new JSONObjectExtended(obj);
-			JSONObjectExtended objJsonObjectFileEach = new JSONObjectExtended(obj);
+			JSONObjectExtended objJsonObject = new JSONObjectExtended();
+			JSONObjectExtended objJsonObjectEach = new JSONObjectExtended();
+			JSONObjectExtended objJsonObjectFileEach = new JSONObjectExtended();
 			String strFileNameEach = "";
 			String strFilePathJsonArray = "";
-			objJsonArrayList = (JSONArray) objJsonObjectTestConfigurationFile.get(strJsonArrayName);
-			logger.add("TestConfigurationSetup:putAllObjects objJsonArrayList.size() " + objJsonArrayList.size());
+			objJsonArrayList = (JSONArray) objJsonObjectTestConfigurationFile.getArray(strJsonArrayName);
+			//			if (objJsonArrayList == null) {
+			//				Logger.getInstance().add("TestConfigurationSetup:putAllObjects objJsonArrayList.size() = NULL" );
+			//				return objJsonObject;
+			//			}
+			Logger.getInstance().add("TestConfigurationSetup:putAllObjects objJsonArrayList.size() " + objJsonArrayList.size());
 			for (intJsonObjectEach = 0; intJsonObjectEach < objJsonArrayList.size(); intJsonObjectEach++) {
 				strFileNameEach = objJsonArrayList.get(intJsonObjectEach).toString();
-				logger.add("TestConfigurationSetup:putAllObjects strFileNameEach " + strFileNameEach);
+				Logger.getInstance().add("TestConfigurationSetup:putAllObjects strFileNameEach " + strFileNameEach);
 				strFilePathJsonArray = strPath + strFileNameEach;
-				logger.add("TestConfigurationSetup:putAllObjects strFilePathJsonArray = " + strFilePathJsonArray);
+				Logger.getInstance().add("TestConfigurationSetup:putAllObjects strFilePathJsonArray = " + strFilePathJsonArray);
 				try {
-					objJsonObjectFileEach.putAllReplace((Map<String, String>) objJsonParser.parse(new FileReader(strFilePathJsonArray)));
-					logger.add("TestConfigurationSetup:putAllObjects objJsonObjectFileEach = " + objJsonObjectFileEach);
-					objJsonObjectEach.putAllReplace((Map<String, String>) objJsonObjectFileEach.get(strJsonObjectName));
-					logger.add("TestConfigurationSetup:putAllObjects objJsonObjectEach = " + objJsonObjectEach);
+					//objJsonObjectFileEach.putAllReplace((Map<String, String>) objJsonParser.parse(new FileReader(strFilePathJsonArray)));
+					objJsonObjectFileEach.replaceAllFromFile(strFilePathJsonArray);
+					Logger.getInstance().add("TestConfigurationSetup:putAllObjects objJsonObjectFileEach = " + objJsonObjectFileEach);
+					objJsonObjectEach.replaceAllFromMap((Map<String, String>) objJsonObjectFileEach.getArray(strJsonObjectName));
+					Logger.getInstance().add("TestConfigurationSetup:putAllObjects objJsonObjectEach = " + objJsonObjectEach);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				objJsonObject.putAll(objJsonObjectEach);
+				objJsonObject.putAll(objJsonObjectEach.jSONObject);
 			}
-			logger.add("TestConfigurationSetup:putAllObjects objJsonObject = " + objJsonObject);
+			Logger.getInstance().add("TestConfigurationSetup:putAllObjects objJsonObject = " + objJsonObject);
 			return objJsonObject;
 		}
 
 		private void run(String strFileNameTestConfiguration) {
 			// TODO complete TestConfigurationSetup method to create json objects for test
-			logger.add("  ==start==>TestConfigurationSetup " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>TestConfigurationSetup " + getDateTimestamp());
 			long lngStartTime = System.currentTimeMillis();
 			String strFilePathTestConfiguration = "";
 			try {
-				strFilePathTestConfiguration = gobjPaths.gstrPathTestConfiguration + strFileNameTestConfiguration;
-				logger.add("TestConfigurationSetup: strPathTestConfiguration = " + strFilePathTestConfiguration);
-				objJsonObjectTestConfigurationFile = new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathTestConfiguration)));
-				logger.add("TestConfigurationSetup: objJsonObjectTestConfigurationFile = " + objJsonObjectTestConfigurationFile);
+				strFilePathTestConfiguration = Paths.getInstance().pathTestConfiguration + strFileNameTestConfiguration;
+				Logger.getInstance().add("TestConfigurationSetup: strPathTestConfiguration = " + strFilePathTestConfiguration);
+				//objJsonObjectTestConfigurationFile = new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathTestConfiguration)));
+				//objJsonObjectTestConfigurationFile.replaceAllFromFile(strFilePathTestConfiguration);
+				objJsonObjectTestConfigurationFile.replaceAllFromFile(strFilePathTestConfiguration);
+				Logger.getInstance().add("TestConfigurationSetup: objJsonObjectTestConfigurationFile = " + objJsonObjectTestConfigurationFile.toJSONString());
 				// test_instances
-				logger.add("TestConfigurationSetup: test_instances");
-				if (this.putAllArrays("test_instances", "test_instances", gobjPaths.gstrPathTestInstances) == null) {
+				Logger.getInstance().add("TestConfigurationSetup: test_instances");
+				if (this.putAllArrays("test_instances", "test_instances", Paths.getInstance().pathTestInstances) == null) {
 					gobjJsonArrayTestInstances = null;
 					intTestInstanceSize = 0;
 				} else {
-					gobjJsonArrayTestInstances = this.putAllArrays("test_instances", "test_instances", gobjPaths.gstrPathTestInstances);
+					gobjJsonArrayTestInstances = this.putAllArrays("test_instances", "test_instances", Paths.getInstance().pathTestInstances);
 					intTestInstanceSize = gobjJsonArrayTestInstances.size();
 				}
 				// test_elements
-				logger.add("TestConfigurationSetup: test_elements");
-				gobjectElement = this.putAllObjects("test_elements", "elements", gobjPaths.gstrPathTestElements);
+				Logger.getInstance().add("TestConfigurationSetup: test_elements");
+				gobjectElement = this.putAllObjects("test_elements", "elements", Paths.getInstance().pathTestElements);
 				// processing
-				logger.add("TestConfigurationSetup: processing");
-				gobjectProcessing = this.putAllObjects("test_elements", "processing", gobjPaths.gstrPathTestElements);
+				Logger.getInstance().add("TestConfigurationSetup: processing");
+				gobjectProcessing = this.putAllObjects("test_elements", "processing", Paths.getInstance().pathTestElements);
 				// test_modules
-				logger.add("TestConfigurationSetup: test_modules");
-				gobjJsonArrayTestSteps = this.putAllArrays("test_modules", "steps", gobjPaths.gstrPathTestModules);
-				logger.add("TestConfigurationSetup: gobjJsonArrayTestSteps.toString = " + gobjJsonArrayTestSteps.toString());
+				Logger.getInstance().add("TestConfigurationSetup: test_modules");
+				gobjJsonArrayTestSteps = this.putAllArrays("test_modules", "steps", Paths.getInstance().pathTestModules);
+				Logger.getInstance().add("TestConfigurationSetup: gobjJsonArrayTestSteps.toString = " + gobjJsonArrayTestSteps.toString());
 				// TODO add error handling, report no test modules and fail
 				// test_links
-				gobjectLinks.putAllReplace((Map<String, String>) objJsonParser.parse("{\"link\":[{}]}"));
+				//gobjectLinks.putAllReplace((Map<String, String>) objJsonParser.parse("{\"link\":[{}]}"));
+				gobjectLinks.parseString("{\"link\":[{}]}");
 				// test_data
-				logger.add("TestConfigurationSetup: test_data");
-				gobjectTestData = this.putAllObjects("test_data", "test_data", gobjPaths.gstrPathTestData);
+				Logger.getInstance().add("TestConfigurationSetup: test_data");
+				gobjectTestData = this.putAllObjects("test_data", "test_data", Paths.getInstance().pathTestData);
 			} catch (Exception e) {
-				logger.add("TestConfigurationSetup: Exception = " + e.toString());
+				Logger.getInstance().add("TestConfigurationSetup: Exception = " + e.toString());
 			} finally {
-				logger.add("TestConfigurationSetup: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("TestConfigurationSetup: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
@@ -4400,7 +4457,7 @@ public class Dragonfly {
 			try {
 				ImageIO.write(objScreenShot, strImageType.toUpperCase(), new File(strPathFileName));
 			} catch (Exception e) {
-				logger.add("ThreadSaveImage:run Exception = " + e.toString());
+				Logger.getInstance().add("ThreadSaveImage:run Exception = " + e.toString());
 			}
 		}
 	}
@@ -4416,8 +4473,8 @@ public class Dragonfly {
 	//	}
 	private class VerifyMatch {
 		private String run(String strActual, String strExpected) throws ExceptionValueNotMatched {
-			logger.add("  ==start==>VerifyMatch " + getDateTimestamp());
-			logger.add("VerifyMatch strActual = " + strActual);
+			Logger.getInstance().add("  ==start==>VerifyMatch " + getDateTimestamp());
+			Logger.getInstance().add("VerifyMatch strActual = " + strActual);
 			Boolean blnMatched = false;
 			long lngStartTime = System.currentTimeMillis();
 			try {
@@ -4434,17 +4491,17 @@ public class Dragonfly {
 					}
 				}
 			} catch (Exception e) {
-				logger.add("VerifyMatch: Exception " + e.toString());
+				Logger.getInstance().add("VerifyMatch: Exception " + e.toString());
 				throw new ExceptionValueNotMatched("VerifyMatch: Exception " + e.toString());
 			} finally {
-				logger.add("VerifyMatch: finally Matched = {" + blnMatched + "} strActual = {" + strActual + "} strExpected = {" + strExpected + "} Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("VerifyMatch: finally Matched = {" + blnMatched + "} strActual = {" + strActual + "} strExpected = {" + strExpected + "} Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
 	private class VerifyNotMatch {
 		private String run(String strActual, String strExpected) throws ExceptionValueMatched {
-			logger.add("  ==start==>VerifyNotMatch " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>VerifyNotMatch " + getDateTimestamp());
 			Boolean blnMatched = false;
 			long lngStartTime = System.currentTimeMillis();
 			String strMatchedValue = "";
@@ -4454,11 +4511,11 @@ public class Dragonfly {
 					try {
 						strMatchedValue = new RegularExpressionMatch().run(strPattern, strActual);
 					} catch (Exception e) {
-						logger.add("VerifyNotMatch: Exception " + e.toString());
+						Logger.getInstance().add("VerifyNotMatch: Exception " + e.toString());
 						return strMatchedValue;
 					}
 					blnMatched = true;
-					logger.add("VerifyNotMatch: before throw blnMatched = " + blnMatched);
+					Logger.getInstance().add("VerifyNotMatch: before throw blnMatched = " + blnMatched);
 					throw new ExceptionValueMatched("VerifyNotMatch: Exception strMatchedValue = {" + strMatchedValue + "}");
 				} else {
 					if (strExpected.equals(strActual)) {
@@ -4470,124 +4527,123 @@ public class Dragonfly {
 					}
 				}
 			} finally {
-				logger.add("VerifyNotMatch: finally Matched = {" + blnMatched + "} strExpected = {" + strExpected + "} strActual = {" + strActual + "} strMatchedValue = {" + strMatchedValue + "} Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				Logger.getInstance().add("VerifyNotMatch: finally Matched = {" + blnMatched + "} strExpected = {" + strExpected + "} strActual = {" + strActual + "} strMatchedValue = {" + strMatchedValue + "} Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
 		}
 	}
 
 	private class WaitForAngularRequestsToFinish {
 		private WaitForAngularRequestsToFinish(JavascriptExecutor objDriver) {
-			logger.add("  ==start==>WaitForAngularRequestsToFinish " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>WaitForAngularRequestsToFinish " + getDateTimestamp());
 			objDriver.executeAsyncScript("var callback = arguments[arguments.length - 1];" + "angular.element(document.body).injector().get('$browser').notifyWhenNoOutstandingRequests(callback);");
 		}
 	}
 
 	private class WaitForReadyState {
 		private boolean run() {
-			logger.add("  ==start==>WaitForReadyState " + getDateTimestamp());
-			logger.add("waitForReadyState: document.readyState Milliseconds Waited = " + ((JavascriptExecutor) gobjWebDriver).executeScript("return document.readyState"));
+			Logger.getInstance().add("  ==start==>WaitForReadyState " + getDateTimestamp());
+			Logger.getInstance().add("waitForReadyState: document.readyState Milliseconds Waited = " + ((JavascriptExecutor) gobjWebDriver).executeScript("return document.readyState"));
 			return false;
 		}
 	}
 
-	private class WebDriverTest {
-		private WebDriverTest() {
-			new ProcessKillInternetExplorer().run();
-			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
-			DesiredCapabilities objDesiredCapabilities = null;
-			// logger.add("BrowserLaunch: DesiredCapabilities");
-			objDesiredCapabilities = DesiredCapabilities.internetExplorer();
-			// logger.add("BrowserLaunch: objDesiredCapabilities.toString()" + objDesiredCapabilities);
-			// logger.add("BrowserLaunch: setJavascriptEnabled");
-			objDesiredCapabilities.setJavascriptEnabled(true);
-			// logger.add("BrowserLaunch: UNEXPECTED_ALERT_BEHAVIOR");
-			objDesiredCapabilities.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, "ignore");
-			// logger.add("BrowserLaunch: IE_ENSURE_CLEAN_SESSION");
-			objDesiredCapabilities.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
-			// logger.add("BrowserLaunch: REQUIRE_WINDOW_FOCUS");
-			objDesiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
-			// logger.add("BrowserLaunch: INITIAL_BROWSER_URL");
-			objDesiredCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
-			// logger.add("BrowserLaunch: webdriver.ie.driver" + System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
-			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
-			// logger.add("BrowserLaunch: new InternetExplorerDriver(desiredCapabilities)");
-			WebDriver objWebDriver = new InternetExplorerDriver(objDesiredCapabilities);
-			//objWebDriver = new InternetExplorerDriver();
-			//DesiredCapabilities desiredCapabilities = null;
-			//desiredCapabilities = DesiredCapabilities.internetExplorer();
-			//desiredCapabilities.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
-			//desiredCapabilities.setCapability(InternetExplorerDriver.IE_SWITCHES, "-noframemerging");
-			//objWebDriver = new InternetExplorerDriver(desiredCapabilities);
-			//objWebDriver.get("https://www.google.com/");
-			String strLocalWebsiteFilePath = "file:///" + System.getProperty("user.dir").replaceAll("\\\\", "/") + "/Websites/tooltip.html";
-			objWebDriver.get(strLocalWebsiteFilePath);
-			//Capabilities getCapabilities();
-			//		driver = new FirefoxDriver();
-			//		driver = new HtmlUnitDriver(true);
-			//	assertTrue(true);
-			//driver.close();
-			//driver.quit();
-			new SleepMilliseconds(2000);
-			WebElement objWebElement = objWebDriver.findElement(By.id("tooltipID"));
-			Actions ToolTip1 = new Actions(objWebDriver);
-			ToolTip1.moveToElement(objWebElement).build().perform();
-			//ToolTip1.clickAndHold(objWebElement).build().perform();
-			new SleepMilliseconds(1000);
-			System.out.println(objWebElement.getLocation().getX());
-			System.out.println(objWebElement.getLocation().getY());
-			System.out.println(objWebElement.getSize().width);
-			System.out.println(objWebElement.getSize().height);
-			Dimension objWebDriverDimension = objWebElement.getSize();
-			int intBrowserOuterWidth = objWebDriverDimension.width;
-			int intBrowserOuterHeight = objWebDriverDimension.height;
-			//' Grab tooltip
-			//ToolTip = Window("nativeclass:=tooltips_class32").GetROProperty("text")
-			//String strToolTip = objAutoItSetObject.objAutoIt.controlGetText("tooltips_class32", "", "");
-			System.out.println(-((intBrowserOuterWidth / 2) + 1));
-			System.out.println(-((intBrowserOuterHeight / 2) + 1));
-			ToolTip1.moveByOffset(-((intBrowserOuterWidth / 2) + 1), -((intBrowserOuterHeight / 2) + 1)).build().perform();
-			String ToolTipText = objWebElement.getAttribute("title");
-			//Assert.assertEquals(ToolTipText, "Google");
-			System.out.println("Tooltip value is: " + ToolTipText);
-			//ToolTip1.release(objWebElement).perform();
-			//ToolTip1.release().perform();
-			//ToolTip1.moveByOffset(0, 0);
-		}
-	}
-
+	//	private class WebDriverTest {
+	//		private WebDriverTest() {
+	//			new ProcessKillInternetExplorer().run();
+	//			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
+	//			DesiredCapabilities objDesiredCapabilities = null;
+	//			// Logger.getInstance().add("BrowserLaunch: DesiredCapabilities");
+	//			objDesiredCapabilities = DesiredCapabilities.internetExplorer();
+	//			// Logger.getInstance().add("BrowserLaunch: objDesiredCapabilities.toString()" + objDesiredCapabilities);
+	//			// Logger.getInstance().add("BrowserLaunch: setJavascriptEnabled");
+	//			objDesiredCapabilities.setJavascriptEnabled(true);
+	//			// Logger.getInstance().add("BrowserLaunch: UNEXPECTED_ALERT_BEHAVIOR");
+	//			objDesiredCapabilities.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, "ignore");
+	//			// Logger.getInstance().add("BrowserLaunch: IE_ENSURE_CLEAN_SESSION");
+	//			objDesiredCapabilities.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
+	//			// Logger.getInstance().add("BrowserLaunch: REQUIRE_WINDOW_FOCUS");
+	//			objDesiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
+	//			// Logger.getInstance().add("BrowserLaunch: INITIAL_BROWSER_URL");
+	//			objDesiredCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
+	//			// Logger.getInstance().add("BrowserLaunch: webdriver.ie.driver" + System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
+	//			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
+	//			// Logger.getInstance().add("BrowserLaunch: new InternetExplorerDriver(desiredCapabilities)");
+	//			WebDriver objWebDriver = new InternetExplorerDriver(objDesiredCapabilities);
+	//			//objWebDriver = new InternetExplorerDriver();
+	//			//DesiredCapabilities desiredCapabilities = null;
+	//			//desiredCapabilities = DesiredCapabilities.internetExplorer();
+	//			//desiredCapabilities.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
+	//			//desiredCapabilities.setCapability(InternetExplorerDriver.IE_SWITCHES, "-noframemerging");
+	//			//objWebDriver = new InternetExplorerDriver(desiredCapabilities);
+	//			//objWebDriver.get("https://www.google.com/");
+	//			String strLocalWebsiteFilePath = "file:///" + System.getProperty("user.dir").replaceAll("\\\\", "/") + "/Websites/tooltip.html";
+	//			objWebDriver.get(strLocalWebsiteFilePath);
+	//			//Capabilities getCapabilities();
+	//			//		driver = new FirefoxDriver();
+	//			//		driver = new HtmlUnitDriver(true);
+	//			//	assertTrue(true);
+	//			//driver.close();
+	//			//driver.quit();
+	//			new SleepMilliseconds(2000);
+	//			WebElement objWebElement = objWebDriver.findElement(By.id("tooltipID"));
+	//			Actions ToolTip1 = new Actions(objWebDriver);
+	//			ToolTip1.moveToElement(objWebElement).build().perform();
+	//			//ToolTip1.clickAndHold(objWebElement).build().perform();
+	//			new SleepMilliseconds(1000);
+	//			System.out.println(objWebElement.getLocation().getX());
+	//			System.out.println(objWebElement.getLocation().getY());
+	//			System.out.println(objWebElement.getSize().width);
+	//			System.out.println(objWebElement.getSize().height);
+	//			Dimension objWebDriverDimension = objWebElement.getSize();
+	//			int intBrowserOuterWidth = objWebDriverDimension.width;
+	//			int intBrowserOuterHeight = objWebDriverDimension.height;
+	//			//' Grab tooltip
+	//			//ToolTip = Window("nativeclass:=tooltips_class32").GetROProperty("text")
+	//			//String strToolTip = objAutoItSetObject.objAutoIt.controlGetText("tooltips_class32", "", "");
+	//			System.out.println(-((intBrowserOuterWidth / 2) + 1));
+	//			System.out.println(-((intBrowserOuterHeight / 2) + 1));
+	//			ToolTip1.moveByOffset(-((intBrowserOuterWidth / 2) + 1), -((intBrowserOuterHeight / 2) + 1)).build().perform();
+	//			String ToolTipText = objWebElement.getAttribute("title");
+	//			//Assert.assertEquals(ToolTipText, "Google");
+	//			System.out.println("Tooltip value is: " + ToolTipText);
+	//			//ToolTip1.release(objWebElement).perform();
+	//			//ToolTip1.release().perform();
+	//			//ToolTip1.moveByOffset(0, 0);
+	//		}
+	//	}
 	private class WebElementAttributes {
 		private WebElementAttributes() {
-			logger.add("  ==start==>WebElementAttributes " + getDateTimestamp());
-			logger.add("text:=  " + gobjWebElement.getTagName());
-			logger.add("tag_type:=  " + gobjWebElement.getTagName() + "_" + gobjWebElement.getAttribute("type"));
-			logger.add("TagName:=  " + gobjWebElement.getAttribute("TagName"));
-			logger.add("type:=  " + gobjWebElement.getAttribute("type"));
-			logger.add("id:=  " + gobjWebElement.getAttribute("id"));
-			logger.add("name:=  " + gobjWebElement.getAttribute("name"));
-			logger.add("text:=  " + gobjWebElement.getAttribute("text"));
-			logger.add("innerText:=  " + gobjWebElement.getAttribute("innerText"));
-			logger.add("outerText:=  " + gobjWebElement.getAttribute("outerText"));
-			logger.add("innerHTML:=  " + gobjWebElement.getAttribute("innerHTML"));
-			logger.add("outerHTML:=  " + gobjWebElement.getAttribute("outerHTML"));
-			logger.add("uniqueID:=  " + gobjWebElement.getAttribute("uniqueID"));
-			logger.add("class:=  " + gobjWebElement.getAttribute("class"));
-			logger.add("type:=  " + gobjWebElement.getAttribute("type"));
-			logger.add("TYPE:=  " + gobjWebElement.getAttribute("TYPE"));
-			logger.add("href:=  " + gobjWebElement.getAttribute("href"));
-			logger.add("NameProp:=  " + gobjWebElement.getAttribute("NameProp"));
-			logger.add("isDisplayed:=  " + gobjWebElement.isDisplayed());
-			logger.add("name:=  " + gobjWebElement.isEnabled());
-			logger.add("getLocation().x:=  " + gobjWebElement.getLocation().x);
-			logger.add("getLocation().y:=  " + gobjWebElement.getLocation().y);
-			logger.add("getSize().height:=  " + gobjWebElement.getSize().height);
-			logger.add("getLocation().y:=  " + gobjWebElement.getSize().width);
-			logger.add("src:=  " + gobjWebElement.getAttribute("src"));
+			Logger.getInstance().add("  ==start==>WebElementAttributes " + getDateTimestamp());
+			Logger.getInstance().add("text:=  " + gobjWebElement.getTagName());
+			Logger.getInstance().add("tag_type:=  " + gobjWebElement.getTagName() + "_" + gobjWebElement.getAttribute("type"));
+			Logger.getInstance().add("TagName:=  " + gobjWebElement.getAttribute("TagName"));
+			Logger.getInstance().add("type:=  " + gobjWebElement.getAttribute("type"));
+			Logger.getInstance().add("id:=  " + gobjWebElement.getAttribute("id"));
+			Logger.getInstance().add("name:=  " + gobjWebElement.getAttribute("name"));
+			Logger.getInstance().add("text:=  " + gobjWebElement.getAttribute("text"));
+			Logger.getInstance().add("innerText:=  " + gobjWebElement.getAttribute("innerText"));
+			Logger.getInstance().add("outerText:=  " + gobjWebElement.getAttribute("outerText"));
+			Logger.getInstance().add("innerHTML:=  " + gobjWebElement.getAttribute("innerHTML"));
+			Logger.getInstance().add("outerHTML:=  " + gobjWebElement.getAttribute("outerHTML"));
+			Logger.getInstance().add("uniqueID:=  " + gobjWebElement.getAttribute("uniqueID"));
+			Logger.getInstance().add("class:=  " + gobjWebElement.getAttribute("class"));
+			Logger.getInstance().add("type:=  " + gobjWebElement.getAttribute("type"));
+			Logger.getInstance().add("TYPE:=  " + gobjWebElement.getAttribute("TYPE"));
+			Logger.getInstance().add("href:=  " + gobjWebElement.getAttribute("href"));
+			Logger.getInstance().add("NameProp:=  " + gobjWebElement.getAttribute("NameProp"));
+			Logger.getInstance().add("isDisplayed:=  " + gobjWebElement.isDisplayed());
+			Logger.getInstance().add("name:=  " + gobjWebElement.isEnabled());
+			Logger.getInstance().add("getLocation().x:=  " + gobjWebElement.getLocation().x);
+			Logger.getInstance().add("getLocation().y:=  " + gobjWebElement.getLocation().y);
+			Logger.getInstance().add("getSize().height:=  " + gobjWebElement.getSize().height);
+			Logger.getInstance().add("getLocation().y:=  " + gobjWebElement.getSize().width);
+			Logger.getInstance().add("src:=  " + gobjWebElement.getAttribute("src"));
 		}
 	}
 
 	private class WebElementCollectionAttributes {
 		private WebElementCollectionAttributes(String strTagName) {
-			logger.add("  ==start==>WebElementCollectionAttributes " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>WebElementCollectionAttributes " + getDateTimestamp());
 			int intCount = 0;
 			if (strTagName.toLowerCase().startsWith("input_")) {
 				strTagName = "input";
@@ -4597,31 +4653,31 @@ public class Dragonfly {
 			while (objWebElementEach.hasNext()) {
 				WebElement row = objWebElementEach.next();
 				intCount = intCount + 1;
-				logger.add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~WebElementCollectionAttributes " + intCount);
-				logger.add("text:=  " + row.getTagName());
-				logger.add("tag_type:=  " + row.getTagName() + "_" + row.getAttribute("type"));
-				logger.add("TagName:=  " + row.getAttribute("TagName"));
-				logger.add("type:=  " + row.getAttribute("type"));
-				logger.add("id:=  " + row.getAttribute("id"));
-				logger.add("name:=  " + row.getAttribute("name"));
-				logger.add("text:=  " + row.getAttribute("text"));
-				logger.add("innerText:=  " + row.getAttribute("innerText"));
-				logger.add("outerText:=  " + row.getAttribute("outerText"));
-				logger.add("innerHTML:=  " + row.getAttribute("innerHTML"));
-				logger.add("outerHTML:=  " + row.getAttribute("outerHTML"));
-				logger.add("uniqueID:=  " + row.getAttribute("uniqueID"));
-				logger.add("class:=  " + row.getAttribute("class"));
-				logger.add("type:=  " + row.getAttribute("type"));
-				logger.add("TYPE:=  " + row.getAttribute("TYPE"));
-				logger.add("href:=  " + row.getAttribute("href"));
-				logger.add("NameProp:=  " + row.getAttribute("NameProp"));
-				logger.add("isDisplayed:=  " + row.isDisplayed());
-				logger.add("name:=  " + row.isEnabled());
-				logger.add("getLocation().x:=  " + row.getLocation().x);
-				logger.add("getLocation().y:=  " + row.getLocation().y);
-				logger.add("getSize().height:=  " + row.getSize().height);
-				logger.add("getLocation().y:=  " + row.getSize().width);
-				logger.add("src:=  " + row.getAttribute("src"));
+				Logger.getInstance().add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~WebElementCollectionAttributes " + intCount);
+				Logger.getInstance().add("text:=  " + row.getTagName());
+				Logger.getInstance().add("tag_type:=  " + row.getTagName() + "_" + row.getAttribute("type"));
+				Logger.getInstance().add("TagName:=  " + row.getAttribute("TagName"));
+				Logger.getInstance().add("type:=  " + row.getAttribute("type"));
+				Logger.getInstance().add("id:=  " + row.getAttribute("id"));
+				Logger.getInstance().add("name:=  " + row.getAttribute("name"));
+				Logger.getInstance().add("text:=  " + row.getAttribute("text"));
+				Logger.getInstance().add("innerText:=  " + row.getAttribute("innerText"));
+				Logger.getInstance().add("outerText:=  " + row.getAttribute("outerText"));
+				Logger.getInstance().add("innerHTML:=  " + row.getAttribute("innerHTML"));
+				Logger.getInstance().add("outerHTML:=  " + row.getAttribute("outerHTML"));
+				Logger.getInstance().add("uniqueID:=  " + row.getAttribute("uniqueID"));
+				Logger.getInstance().add("class:=  " + row.getAttribute("class"));
+				Logger.getInstance().add("type:=  " + row.getAttribute("type"));
+				Logger.getInstance().add("TYPE:=  " + row.getAttribute("TYPE"));
+				Logger.getInstance().add("href:=  " + row.getAttribute("href"));
+				Logger.getInstance().add("NameProp:=  " + row.getAttribute("NameProp"));
+				Logger.getInstance().add("isDisplayed:=  " + row.isDisplayed());
+				Logger.getInstance().add("name:=  " + row.isEnabled());
+				Logger.getInstance().add("getLocation().x:=  " + row.getLocation().x);
+				Logger.getInstance().add("getLocation().y:=  " + row.getLocation().y);
+				Logger.getInstance().add("getSize().height:=  " + row.getSize().height);
+				Logger.getInstance().add("getLocation().y:=  " + row.getSize().width);
+				Logger.getInstance().add("src:=  " + row.getAttribute("src"));
 			}
 		}
 	}
@@ -4629,30 +4685,30 @@ public class Dragonfly {
 	private class WebElementCollectionTable {
 		private WebElementCollectionTable(String strTagName) {
 			boolean blnSkip = false;
-			logger.add("  ==start==>WebElementCollectionTable " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>WebElementCollectionTable " + getDateTimestamp());
 			// TODO webElementCollectionTable send output to html file
 			int intCount = 0;
 			//JSONObjectExtended objStepNew = null;
 			if (strTagName.toLowerCase().startsWith("input_")) {
 				strTagName = "input";
 			}
-			logger.add("WebElementCollectionTable: strTagName = " + strTagName);
-			logger.add("WebElementCollectionTable: lngStartTimeSwitchTo = " + gobjWebDriver.getTitle());
+			Logger.getInstance().add("WebElementCollectionTable: strTagName = " + strTagName);
+			Logger.getInstance().add("WebElementCollectionTable: lngStartTimeSwitchTo = " + gobjWebDriver.getTitle());
 			gobjWebDriver.switchTo().defaultContent();
 			for (String winHandle : gobjWebDriver.getWindowHandles()) {
 				intCount = 0;
-				//  logger.add("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
-				logger.add("WebElementCollectionTable: winHandle = " + winHandle);
+				//  Logger.getInstance().add("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
+				Logger.getInstance().add("WebElementCollectionTable: winHandle = " + winHandle);
 				long lngStartTimeSwitchTo = System.currentTimeMillis();
 				// if (strCurrentWindowHandle.equals(winHandle)) {
 				// } else {
 				gobjWebDriver.switchTo().window(winHandle);
-				logger.add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-				logger.add("WebElementCollectionTable: lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
+				Logger.getInstance().add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+				Logger.getInstance().add("WebElementCollectionTable: lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
 				// }
-				logger.add("WebElementCollectionTable: gobjWebDriver.getTitle = " + gobjWebDriver.getTitle());
-				// logger.add("webElementCollectionTable gobjWebDriver.getPageSource = " + gobjWebDriver.getPageSource());
-				logger.add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+				Logger.getInstance().add("WebElementCollectionTable: gobjWebDriver.getTitle = " + gobjWebDriver.getTitle());
+				// Logger.getInstance().add("webElementCollectionTable gobjWebDriver.getPageSource = " + gobjWebDriver.getPageSource());
+				Logger.getInstance().add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 				List<WebElement> objWebElementCollection = gobjWebDriver.findElements(By.tagName(strTagName));
 				Iterator<WebElement> objWebElementEach = ((Collection<WebElement>) objWebElementCollection).iterator();
 				while (objWebElementEach.hasNext()) {
@@ -4667,56 +4723,56 @@ public class Dragonfly {
 							}
 						}
 						if (blnSkip == false) {
-							logger.add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementCollectionTable " + intCount);
-							logger.add("WebElementCollectionTable: getTagName:= '" + row.getTagName() + "'");
-							logger.add("WebElementCollectionTable: type:= '" + row.getAttribute("type") + "'");
-							logger.add("WebElementCollectionTable: getText:= '" + row.getText() + "'");
-							logger.add("WebElementCollectionTable: outerHTML = '" + row.getAttribute("outerHTML") + "'");
+							Logger.getInstance().add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementCollectionTable " + intCount);
+							Logger.getInstance().add("WebElementCollectionTable: getTagName:= '" + row.getTagName() + "'");
+							Logger.getInstance().add("WebElementCollectionTable: type:= '" + row.getAttribute("type") + "'");
+							Logger.getInstance().add("WebElementCollectionTable: getText:= '" + row.getText() + "'");
+							Logger.getInstance().add("WebElementCollectionTable: outerHTML = '" + row.getAttribute("outerHTML") + "'");
 						}
 					}
-					//  logger.add("text:=  " + objWebElementEach.);
-					//  logger.add("tag_type:= '" + row.getTagName() + "_" + row.getAttribute("type") + "'");
-					//  logger.add("TagName:= '" + row.getAttribute("TagName") + "'");
-					//  logger.add("Type:= '" + row.getAttribute("Type") + "'");
-					//  logger.add("TYPE:= '" + row.getAttribute("TYPE") + "'");
-					//  logger.add("id:= '" + row.getAttribute("id") + "'");
-					//  logger.add("name:= '" + row.getAttribute("name") + "'");
-					//  logger.add("text:= '" + row.getAttribute("text") + "'");
-					//  logger.add("innerText:= '" + row.getAttribute("innerText") + "'");
-					//  logger.add("outerText:= '" + row.getAttribute("outerText") + "'");
-					//  logger.add("innerHTML:= '" + row.getAttribute("innerHTML") + "'");
-					//  logger.add("uniqueID:= '" + row.getAttribute("uniqueID") + "'");
-					//  logger.add("class:= '" + row.getAttribute("class") + "'");
-					//  logger.add("href:= '" + row.getAttribute("href") + "'");
-					//  logger.add("NameProp:= '" + row.getAttribute("NameProp") + "'");
-					//  logger.add("isDisplayed:= '" + row.isDisplayed() + "'");
-					//  logger.add("isEnabled:= '" + row.isEnabled() + "'");
-					//  logger.add("getLocation().x:= '" + row.getLocation().x + "'");
-					//  logger.add("getLocation().y:= '" + row.getLocation().y + "'");
-					//  logger.add("getSize().height:= '" + row.getSize().height + "'");
-					//  logger.add("getSize().width:= '" + row.getSize().width + "'");
-					//  logger.add("src:= '" + row.getAttribute("src") + "'");
+					//  Logger.getInstance().add("text:=  " + objWebElementEach.);
+					//  Logger.getInstance().add("tag_type:= '" + row.getTagName() + "_" + row.getAttribute("type") + "'");
+					//  Logger.getInstance().add("TagName:= '" + row.getAttribute("TagName") + "'");
+					//  Logger.getInstance().add("Type:= '" + row.getAttribute("Type") + "'");
+					//  Logger.getInstance().add("TYPE:= '" + row.getAttribute("TYPE") + "'");
+					//  Logger.getInstance().add("id:= '" + row.getAttribute("id") + "'");
+					//  Logger.getInstance().add("name:= '" + row.getAttribute("name") + "'");
+					//  Logger.getInstance().add("text:= '" + row.getAttribute("text") + "'");
+					//  Logger.getInstance().add("innerText:= '" + row.getAttribute("innerText") + "'");
+					//  Logger.getInstance().add("outerText:= '" + row.getAttribute("outerText") + "'");
+					//  Logger.getInstance().add("innerHTML:= '" + row.getAttribute("innerHTML") + "'");
+					//  Logger.getInstance().add("uniqueID:= '" + row.getAttribute("uniqueID") + "'");
+					//  Logger.getInstance().add("class:= '" + row.getAttribute("class") + "'");
+					//  Logger.getInstance().add("href:= '" + row.getAttribute("href") + "'");
+					//  Logger.getInstance().add("NameProp:= '" + row.getAttribute("NameProp") + "'");
+					//  Logger.getInstance().add("isDisplayed:= '" + row.isDisplayed() + "'");
+					//  Logger.getInstance().add("isEnabled:= '" + row.isEnabled() + "'");
+					//  Logger.getInstance().add("getLocation().x:= '" + row.getLocation().x + "'");
+					//  Logger.getInstance().add("getLocation().y:= '" + row.getLocation().y + "'");
+					//  Logger.getInstance().add("getSize().height:= '" + row.getSize().height + "'");
+					//  Logger.getInstance().add("getSize().width:= '" + row.getSize().width + "'");
+					//  Logger.getInstance().add("src:= '" + row.getAttribute("src") + "'");
 					// if (objCollectionJS.size() > 0) {
 					//
 					// JavascriptExecutor objJavascriptExecutor = null;
 					// objJavascriptExecutor = (JavascriptExecutor) gobjWebDriver;
 					// long lngStartTimeJS = System.currentTimeMillis();
-					//  logger.add("JS value = " +
+					//  Logger.getInstance().add("JS value = " +
 					// objJavascriptExecutor.executeScript("return arguments[0].value;",
 					// objCollectionJS.get(0)) + " Milliseconds Waited = " +
 					// (System.currentTimeMillis() - lngStartTimeJS));
 					// lngStartTimeJS = System.currentTimeMillis();
-					//  logger.add("JS innerText = " +
+					//  Logger.getInstance().add("JS innerText = " +
 					// objJavascriptExecutor.executeScript("return arguments[0].innerText;",
 					// objCollectionJS.get(0)) + " Milliseconds Waited = " +
 					// (System.currentTimeMillis() - lngStartTimeJS));
 					// lngStartTimeJS = System.currentTimeMillis();
-					//  logger.add("JS innerHTML = " +
+					//  Logger.getInstance().add("JS innerHTML = " +
 					// objJavascriptExecutor.executeScript("return arguments[0].innerHTML;",
 					// objCollectionJS.get(0)) + " Milliseconds Waited = " +
 					// (System.currentTimeMillis() - lngStartTimeJS));
 					// lngStartTimeJS = System.currentTimeMillis();
-					//  logger.add("JS outerHTML = " +
+					//  Logger.getInstance().add("JS outerHTML = " +
 					// objJavascriptExecutor.executeScript("return arguments[0].outerHTML;",
 					// objCollectionJS.get(0)) + " Milliseconds Waited = " +
 					// (System.currentTimeMillis() - lngStartTimeJS));
@@ -4732,7 +4788,7 @@ public class Dragonfly {
 
 	private class WindowFocus {
 		private WindowFocus() {
-			logger.add("  ==start==>WindowFocus " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>WindowFocus " + getDateTimestamp());
 			// TODO debug gobjWebDriver instanceof JavascriptExecutor, what does it do and is it needed and debug all browser types
 			if (gobjWebDriver instanceof JavascriptExecutor) {
 				((JavascriptExecutor) gobjWebDriver).executeScript("window.focus();");
@@ -4742,12 +4798,12 @@ public class Dragonfly {
 
 	private class WindowsProcessKill {
 		private WindowsProcessKill(String strProcessToKill) {
-			logger.add("  ==start==>WindowsProcessKill " + getDateTimestamp());
+			Logger.getInstance().add("  ==start==>WindowsProcessKill " + getDateTimestamp());
 			try {
 				Runtime.getRuntime().exec(strProcessToKill);
-				logger.add("WindowsProcessKill: process killed = " + strProcessToKill);
+				Logger.getInstance().add("WindowsProcessKill: process killed = " + strProcessToKill);
 			} catch (Exception e) {
-				logger.add("WindowsProcessKill: Exception = " + e.toString());
+				Logger.getInstance().add("WindowsProcessKill: Exception = " + e.toString());
 			}
 		}
 	}
@@ -4772,7 +4828,7 @@ public class Dragonfly {
 		JSONArray objJsonArrayTestStepsRun = new JSONArray();
 		JSONParser objJsonParser = new JSONParser();
 		Boolean blnExit = false;
-		logger.add("  ==start==>mainDragonfly " + getDateTimestamp());
+		Logger.getInstance().add("  ==start==>mainDragonfly " + getDateTimestamp());
 		objAutoItSetObject.createObject();
 		windowsMinimizeAll();
 		String strNameTestConfiguration;
@@ -4781,7 +4837,7 @@ public class Dragonfly {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		strNameTestConfiguration = gobjPaths.gstrNameTest;
+		strNameTestConfiguration = Paths.getInstance().nameTest;
 		System.out.println("strNameTestConfiguration = " + strNameTestConfiguration);
 		if (strNameTestConfiguration == null) {
 			System.exit(0);
@@ -4810,7 +4866,7 @@ public class Dragonfly {
 					new SleepMilliseconds(100);
 					System.out.println("@@@@@@@@@@@@@The start of Iteration " + intTestInstanceSize);
 				}
-				logger.add(">>>>>>mainDragonfly: gobjectStep " + gobjectStep);
+				Logger.getInstance().add(">>>>>>mainDragonfly: gobjectStep " + gobjectStep);
 				objJsonArrayTestStepsRun.clear();
 				intStep = 0;
 				intLoopCount = 0;
@@ -4818,24 +4874,25 @@ public class Dragonfly {
 				intLoopStep = 0;
 				strCurrentWindowHandle = "";
 				strTestStatus = "pass";
-				gobjPaths.setPathResults(intTestInstanceSize, strNameTestConfiguration);
+				Paths.getInstance().setPathResults(intTestInstanceSize, strNameTestConfiguration);
 				objJsonArrayTestSteps = (JSONArray) objJsonParser.parse(strTestStepsCombinedOriginal);
 				if (intTestInstanceSize > 0) {
-					gobjectTestInstancesEach.putAllReplace((Map<String, String>) gobjJsonArrayTestInstances.get(intTestInstanceEach));
+					gobjectTestInstancesEach.replaceAllFromMap((Map<String, String>) gobjJsonArrayTestInstances.get(intTestInstanceEach));
 				}
-				strFileTestSteps = gobjPaths.gstrPathTestSteps + strNameTestConfiguration.replace(".json", ".html");
-				writeJsonStepsToHtml("original", objJsonArrayTestSteps, gobjPaths.gstrPathResults, "StepsOriginal.html");
+				strFileTestSteps = Paths.getInstance().pathTestSteps + strNameTestConfiguration.replace(".json", ".html");
+				writeJsonStepsToHtml(Paths.getInstance().pathResults, "original", objJsonArrayTestSteps, "StepsOriginal.html");
 				for (intStep = 0; intStep < objJsonArrayTestSteps.size(); intStep++) {
-					logger.add("mainDragonfly: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
+					Logger.getInstance().add("mainDragonfly: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
 					gobjWebElement = null;
-					gobjectStep = new JSONObjectExtended((JSONObject) objJsonArrayTestSteps.get(intStep));
+					//gobjectStep = new JSONObjectExtended((JSONObject) objJsonArrayTestSteps.get(intStep));
+					gobjectStep.replaceAllFromString((String) objJsonArrayTestSteps.get(intStep).toString());
 					new StepSetupDefaults(strCurrentWindowHandle);
 					String strInputValue = gobjectStep.getString("strInputValue");
 					logStepDetails();
-					if (gobjectStep.get("strLoopOrIf").toString().trim().length() > 0) {
-						if (gobjectStep.get("strLoopOrIf").toString().toLowerCase().startsWith("<loopstart>") == true) {
+					if (gobjectStep.getString("strLoopOrIf").trim().length() > 0) {
+						if (gobjectStep.getString("strLoopOrIf").toLowerCase().startsWith("<loopstart>") == true) {
 							if (intLoopEach == 0) {
-								intLoopCount = Integer.parseInt(gobjectStep.get("strLoopOrIf").toString().substring(11));
+								intLoopCount = Integer.parseInt(gobjectStep.getString("strLoopOrIf").substring(11));
 								gobjectStep.putValue("strLoopOrIf", "");
 								intLoopEach = 1;
 								intLoopStep = intStep;
@@ -4873,14 +4930,14 @@ public class Dragonfly {
 						break;
 					}
 					if (blnIf == true) {
-						logger.add("mainDragonfly: strInputValue = " + strInputValue);
+						Logger.getInstance().add("mainDragonfly: strInputValue = " + strInputValue);
 						if (strInputValue.trim().equalsIgnoreCase("<skip>")) {
 							gobjectStep.putValue("strStepActual", "skip");
 							stepDuration("<skip>", System.currentTimeMillis(), "skip");
 						} else {
 							switch (gobjectStep.getLowerCase("strAction")) {
 							case "break":
-								logger.add("mainDragonfly: switch strAction = break was entered to at this step to stop execution");
+								Logger.getInstance().add("mainDragonfly: switch strAction = break was entered to at this step to stop execution");
 								gobjectStep.putValue("strStepActual", "break");
 								stepDuration("break", System.currentTimeMillis(), "break");
 								blnExit = true;
@@ -4949,7 +5006,7 @@ public class Dragonfly {
 								new ElementVerifyNotValueSync();
 								break;
 							default:
-								logger.add("mainDragonfly: switch strAction = " + gobjectStep.getLowerCase("strAction") + "  not supported");
+								Logger.getInstance().add("mainDragonfly: switch strAction = " + gobjectStep.getLowerCase("strAction") + "  not supported");
 								stepDuration("action", System.currentTimeMillis(), "action");
 								blnExit = true;
 								break;
@@ -4959,8 +5016,8 @@ public class Dragonfly {
 						if (gobjectStep.getString("strOutputLinkName").trim().length() != 0) {
 							gobjectLinks.putValue(gobjectStep.getString("strOutputLinkName"), gobjectStep.getString("strOutputValue"));
 						}
-						objJsonArrayTestStepsRun.add(gobjectStep);
-						logger.add("mainDragonfly: objJsonArrayTestStepsRun - " + objJsonArrayTestStepsRun);
+						objJsonArrayTestStepsRun.add(gobjectStep.toJSONString());
+						Logger.getInstance().add("mainDragonfly: objJsonArrayTestStepsRun - " + objJsonArrayTestStepsRun);
 						if (blnExit == true) {
 							break;
 						}
@@ -4974,7 +5031,7 @@ public class Dragonfly {
 					}
 					switch (gobjectStep.returnKeyword("strLoopOrIf")) {
 					case "<loopexit>":
-						strLoopExitValue = gobjectStep.get("strLoopOrIf").toString().substring(10);
+						strLoopExitValue = gobjectStep.getString("strLoopOrIf").substring(10);
 						if (gobjectStep.verifyEquals("strOutputValue", strLoopExitValue)) {
 							intLoopCount = 0;
 							intLoopEach = 0;
@@ -5014,22 +5071,22 @@ public class Dragonfly {
 					}
 				}
 			} catch (Exception e) {
-				logger.add("mainDragonfly: Exception " + e.toString());
+				Logger.getInstance().add("mainDragonfly: Exception " + e.toString());
 			} finally {
-				writeFile(gobjPaths.gstrPathResults + "StepsAfterRun.json", objJsonArrayTestStepsRun.toString());
-				writeFile(gobjPaths.gstrPathResults + "StepsWithDefaults.json", gobjJsonArrayTestSteps.toString());
-				writeJsonStepsToHtml("original", objJsonArrayTestStepsRun, gobjPaths.gstrPathResults, "StepsWithDefaults.html");
-				writeJsonStepsToHtml("complete", objJsonArrayTestStepsRun, gobjPaths.gstrPathResults, "StepsAfterRun.html");
-				writeReportToHtml(objJsonArrayTestStepsRun, gobjPaths.gstrPathResults + "Report.html", strFileTestSteps, strNameTestConfiguration.replace(".json", ""));
-				writeFile(gobjPaths.gstrPathResults + "Dragonfly.log", logger.getLog());
-				writeFile(gobjPaths.gstrPathResults + "StepsManual.txt", gobjStepsManual.get());
-				gobjPaths.changeDirectoryNameStatus(strTestStatus);
+				writeFile(Paths.getInstance().pathResults + "StepsAfterRun.json", objJsonArrayTestStepsRun.toString());
+				writeFile(Paths.getInstance().pathResults + "StepsWithDefaults.json", gobjJsonArrayTestSteps.toString());
+				writeJsonStepsToHtml(Paths.getInstance().pathResults, "original", objJsonArrayTestStepsRun, "StepsWithDefaults.html");
+				writeJsonStepsToHtml(Paths.getInstance().pathResults, "complete", objJsonArrayTestStepsRun, "StepsAfterRun.html");
+				writeReportToHtml(Paths.getInstance().pathResults + "Report.html", objJsonArrayTestStepsRun, strFileTestSteps, strNameTestConfiguration.replace(".json", ""));
+				writeFile(Paths.getInstance().pathResults + "Dragonfly.log", Logger.getInstance().getLog());
+				writeFile(Paths.getInstance().pathResults + "StepsManual.txt", StepsManual.getInstance().get());
+				Paths.getInstance().changeDirectoryNameStatus(strTestStatus);
 				if (gobjWebDriver.toString().contains("InternetExplorerDriver")) {
 					//	new WindowsProcessKill("taskkill /F /IM IEDriverServer_32.exe");
 				}
 			}
-			logger.deleteLog();
-			gobjStepsManual.delete();
+			Logger.getInstance().deleteLog();
+			StepsManual.getInstance().delete();
 		}
 	}
 	// System.exit(0);
@@ -5044,10 +5101,10 @@ public class Dragonfly {
 	private Double gdblDevicePixelRatio = (double) 1;
 	private JSONArray gobjJsonArrayTestInstances = null;
 	private JSONArray gobjJsonArrayTestSteps = null;
-	private Logger logger = new Logger("  ==start==>Dragonfly ");
+	//private Logger Logger.getInstance() = new Logger("  ==start==>Dragonfly ");
 	private OperatingSystem gobjOperatingSystem = new OperatingSystem();
-	private PathCreation gobjPaths = new PathCreation();
-	private StepsManual gobjStepsManual = new StepsManual();
+	//private PathCreation gobjPaths = new PathCreation();
+	//private StepsManual gobjStepsManual = new StepsManual();
 	private String gstrBrowserSelection;
 	private String gstrEnvironment;
 	private String gstrOriginalAttributes;
@@ -5058,16 +5115,16 @@ public class Dragonfly {
 	private WebElement gobjWebElementDrag = null;
 	private WebElement gobjWebElementDrop = null;
 	private WebElement gobjWebElementPleaseWait = null;
-	private JSONObject gobj = new JSONObject();
-	private JSONObjectExtended gobjectElement = new JSONObjectExtended(gobj);
-	private JSONObjectExtended gobjectLinks = new JSONObjectExtended(gobj);
-	private JSONObjectExtended gobjectProcessing = new JSONObjectExtended(gobj);
-	private JSONObjectExtended gobjectStep = new JSONObjectExtended(gobj);
-	private JSONObjectExtended gobjectTestData = new JSONObjectExtended(gobj);
-	private JSONObjectExtended gobjectTestInstancesEach = new JSONObjectExtended(gobj);
+	//private JSONObject gobj = new JSONObject();
+	private JSONObjectExtended gobjectElement = new JSONObjectExtended();
+	private JSONObjectExtended gobjectLinks = new JSONObjectExtended();
+	private JSONObjectExtended gobjectProcessing = new JSONObjectExtended();
+	private JSONObjectExtended gobjectStep = new JSONObjectExtended();
+	private JSONObjectExtended gobjectTestData = new JSONObjectExtended();
+	private JSONObjectExtended gobjectTestInstancesEach = new JSONObjectExtended();
 
 	public String data_DateDaysOut(String strDaysOut) {
-		logger.add("  ==start==>data_DateDaysOut " + getDateTimestamp());
+		Logger.getInstance().add("  ==start==>data_DateDaysOut " + getDateTimestamp());
 		Integer intDaysOut = Integer.parseInt(strDaysOut);
 		SimpleDateFormat objFormattedDATE = new SimpleDateFormat("MM/dd/yyyy");
 		Calendar objCalendar = Calendar.getInstance();
@@ -5077,46 +5134,48 @@ public class Dragonfly {
 	}
 
 	public String data_EnvironmentURL(String strApplication_Environment) {
-		logger.add("data_EnvironmentURL: gstrEnvironment = " + gstrEnvironment);
-		JSONParser objJsonParser = new JSONParser();
-		logger.add("  ==start==>data_EnvironmentURL " + getDateTimestamp());
+		Logger.getInstance().add("data_EnvironmentURL: gstrEnvironment = " + gstrEnvironment);
+		//JSONParser objJsonParser = new JSONParser();
+		Logger.getInstance().add("  ==start==>data_EnvironmentURL " + getDateTimestamp());
 		String strURL = "";
-		logger.add("data_EnvironmentURL: gobjPaths.gstrPathTestData = " + gobjPaths.gstrPathTestData);
-		String strFilePathTestData = gobjPaths.gstrPathTestData + "Environment.json";
+		Logger.getInstance().add("data_EnvironmentURL: Paths.getInstance().pathTestData = " + Paths.getInstance().pathTestData);
+		String strFilePathTestData = Paths.getInstance().pathTestData + "Environment.json";
 		//gstrEnvironment
-		logger.add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
+		Logger.getInstance().add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
 		try {
-			logger.add("data_EnvironmentURL: gstrEnvironment = " + gstrEnvironment);
+			Logger.getInstance().add("data_EnvironmentURL: gstrEnvironment = " + gstrEnvironment);
 			if (!gstrEnvironment.equals("test value")) {
 				String[] arrApplication_Environment = strApplication_Environment.split("_");
 				strApplication_Environment = arrApplication_Environment[0] + "_" + gstrEnvironment;
-				logger.add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
+				Logger.getInstance().add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
 			}
-			logger.add("data_EnvironmentURL: strFilePathTestData = " + strFilePathTestData);
-			JSONObjectExtended objJsonObjectFile = new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathTestData)));
-			logger.add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
+			Logger.getInstance().add("data_EnvironmentURL: strFilePathTestData = " + strFilePathTestData);
+			//JSONObjectExtended objJsonObjectFile = new JSONObjectExtended((JSONObject) objJsonParser.parse(new FileReader(strFilePathTestData)));
+			JSONObjectExtended objJsonObjectFile = new JSONObjectExtended();
+			objJsonObjectFile.replaceAllFromFile(strFilePathTestData);
+			Logger.getInstance().add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
 			strURL = objJsonObjectFile.getString(strApplication_Environment);
-			logger.add("data_EnvironmentURL: strURL = " + strURL);
+			Logger.getInstance().add("data_EnvironmentURL: strURL = " + strURL);
 		} catch (Exception e) {
-			logger.add("data_EnvironmentURL: Exception = " + e.toString());
+			Logger.getInstance().add("data_EnvironmentURL: Exception = " + e.toString());
 		}
 		return strURL;
 	}
 
 	public String data_localWebsiteFilePath(String strWebsite) {
-		logger.add("  ==start==>data_localWebsiteFilePath " + getDateTimestamp());
+		Logger.getInstance().add("  ==start==>data_localWebsiteFilePath " + getDateTimestamp());
 		String strLocalWebsiteFilePath = "file:///" + System.getProperty("user.dir").replaceAll("\\\\", "/") + "/Websites/" + strWebsite;
-		logger.add("data_localWebsiteFilePath: strLocalWebsiteFilePath = " + strLocalWebsiteFilePath);
+		Logger.getInstance().add("data_localWebsiteFilePath: strLocalWebsiteFilePath = " + strLocalWebsiteFilePath);
 		return strLocalWebsiteFilePath;
 	}
 
 	public String data_RandomFourNumbers(String strDaysOut) {
-		logger.add("  ==start==>data_RandomFourNumbers " + getDateTimestamp());
+		Logger.getInstance().add("  ==start==>data_RandomFourNumbers " + getDateTimestamp());
 		return Integer.toString(randomNumberRange(1000, 9999));
 	}
 
 	public String data_RandomRangeFiveNumbers(String strDataInput) {
-		logger.add("  ==start==>data_RandomRangeFiveNumbers " + getDateTimestamp());
+		Logger.getInstance().add("  ==start==>data_RandomRangeFiveNumbers " + getDateTimestamp());
 		return Integer.toString(randomNumberRange(1, 99999));
 	}
 
@@ -5133,17 +5192,17 @@ public class Dragonfly {
 			strAttributeValue = arrAttributeValues[intEach].toString();
 			if (intEach == 0) {
 				strObjectsAttributes = strObjectName + "=" + strAttributeValue;
-				logger.add("createObjectName strObjectAttribute =" + strObjectsAttributes);
+				Logger.getInstance().add("createObjectName strObjectAttribute =" + strObjectsAttributes);
 			} else {
 				strObjectsAttributes = strObjectsAttributes + "|" + strObjectName + "=" + strAttributeValue;
-				logger.add("createObjectName strObjectAttribute =" + strObjectsAttributes);
+				Logger.getInstance().add("createObjectName strObjectAttribute =" + strObjectsAttributes);
 			}
 		}
 		return strObjectsAttributes;
 	}
 
 	private String formatDateTime(Long lngStartTimeMillis) {
-		logger.add("  ==start==>DateTimeFormat " + getDateTimestamp());
+		Logger.getInstance().add("  ==start==>DateTimeFormat " + getDateTimestamp());
 		return new SimpleDateFormat("MMM dd, yyyy HH:mm:ss:SSS").format(new Date(lngStartTimeMillis));
 	}
 
@@ -5158,7 +5217,7 @@ public class Dragonfly {
 		if (intRightArrowPosition > -1) {
 			strKeyword = strValueToFindKeyword.substring(0, intRightArrowPosition + 1);
 		}
-		logger.add("getKeyword: strKeyword = " + strKeyword);
+		Logger.getInstance().add("getKeyword: strKeyword = " + strKeyword);
 		return strKeyword;
 	}
 
@@ -5172,7 +5231,7 @@ public class Dragonfly {
 				intKeywordValue = Integer.parseInt(strValueToFindInt);
 			}
 		}
-		logger.add("getKeywordIntValue: intKeywordValue " + intKeywordValue);
+		Logger.getInstance().add("getKeywordIntValue: intKeywordValue " + intKeywordValue);
 		return intKeywordValue;
 	}
 
@@ -5184,13 +5243,13 @@ public class Dragonfly {
 		} else {
 			strKeywordValue = strValue;
 		}
-		logger.add("getKeywordValue: strKeywordValue " + strKeywordValue);
+		Logger.getInstance().add("getKeywordValue: strKeywordValue " + strKeywordValue);
 		return strKeywordValue;
 	}
 
 	private void logStepDetails() {
 		for (String strKey : new StepNames().getOriginal()) {
-			logger.add("LogStepDetails: " + strKey + " = " + gobjectStep.getString(strKey));
+			Logger.getInstance().add("LogStepDetails: " + strKey + " = " + gobjectStep.getString(strKey));
 		}
 	}
 
@@ -5205,28 +5264,28 @@ public class Dragonfly {
 		String strOptionsValue = "";
 		strOptionsToFindList = strOptionsToFindList.replaceAll("\\s{2,}", " ");
 		intOptionsCounts = (strOptionsToFindList.length() - strOptionsToFindList.replace("<option", "").length()) / 7;
-		// logger.add("optionsList: intOptionsCounts = " + intOptionsCounts);
+		// Logger.getInstance().add("optionsList: intOptionsCounts = " + intOptionsCounts);
 		for (int intOptionEach = 0; intOptionEach < intOptionsCounts; intOptionEach++) {
-			// logger.add("optionsList: intStart = " + intStart);
+			// Logger.getInstance().add("optionsList: intStart = " + intStart);
 			intLeftArrowPosition = strOptionsToFindList.indexOf("<option", intStart);
-			// logger.add("optionsList: intLeftArrowPosition <option = " + intLeftArrowPosition);
+			// Logger.getInstance().add("optionsList: intLeftArrowPosition <option = " + intLeftArrowPosition);
 			if (intLeftArrowPosition > -1) {
 				intRightArrowPosition = strOptionsToFindList.indexOf(">", intLeftArrowPosition);
-				// logger.add("optionsList: intRightArrowPosition = " + intRightArrowPosition);
+				// Logger.getInstance().add("optionsList: intRightArrowPosition = " + intRightArrowPosition);
 				intLeftArrowPosition = strOptionsToFindList.indexOf("<", intRightArrowPosition);
-				// logger.add("optionsList: intLeftArrowPosition < = " + intLeftArrowPosition);
+				// Logger.getInstance().add("optionsList: intLeftArrowPosition < = " + intLeftArrowPosition);
 				strOptionsValue = strOptionsToFindList.substring(intRightArrowPosition + 1, intLeftArrowPosition);
-				// logger.add("optionsList: strOptionsValue = " + strOptionsValue);
+				// Logger.getInstance().add("optionsList: strOptionsValue = " + strOptionsValue);
 				if (strOptionsList.length() == 0) {
 					strOptionsList = strOptionsValue.trim();
 				} else {
 					strOptionsList = strOptionsList + "; " + strOptionsValue.trim();
 				}
 				intStart = intRightArrowPosition + 1;
-				// logger.add("optionsList: inside if intStart = " + intStart);
+				// Logger.getInstance().add("optionsList: inside if intStart = " + intStart);
 			}
 		}
-		logger.add("OptionsList: Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+		Logger.getInstance().add("OptionsList: Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 		return strOptionsList.substring(0, strOptionsList.length());
 	}
 
@@ -5243,46 +5302,46 @@ public class Dragonfly {
 		int intStart = 0;
 		String[] arrKV_strInputValue = { "<re>", "<td>", "<ti>", "<tl>", "<click>", "<doubleclick>", "<rightclick>", "<on>", "<off>", "<blank>", "<first>", "<second>", "<third>", "<last>", "<random>", "<contains>", "<ends>", "<starts>", "<skip>" };
 		int intKeywordCount = strValueToFindKeyword.length() - strValueToFindKeyword.replace("<", "").length();
-		// logger.add("removeTags: intKeywordCount = " + intKeywordCount);
+		// Logger.getInstance().add("removeTags: intKeywordCount = " + intKeywordCount);
 		for (int intKeywordEach = 0; intKeywordEach < intKeywordCount; intKeywordEach++) {
 			blnRemove = true;
-			//logger.add("removeTags: intStart = " + intStart);
+			//Logger.getInstance().add("removeTags: intStart = " + intStart);
 			intLeftArrowPosition = strValueToFindKeyword.indexOf("<", intStart);
 			if (intLeftArrowPosition > -1) {
 				intRightArrowPosition = strValueToFindKeyword.indexOf(">");
 				strTextToReplace = strValueToFindKeyword.substring(intLeftArrowPosition, intRightArrowPosition + 1);
-				// logger.add("removeTags: strTextToReplace = " + strTextToReplace);
+				// Logger.getInstance().add("removeTags: strTextToReplace = " + strTextToReplace);
 				for (String strKeywordsValidEach : arrKV_strInputValue) {
 					if (strTextToReplace.equals(strKeywordsValidEach)) {
 						blnRemove = false;
 						intStart = intRightArrowPosition + 1;
-						//logger.add("removeTags: inside if intStart = " + intStart);
+						//Logger.getInstance().add("removeTags: inside if intStart = " + intStart);
 						break;
 					}
 				}
 				if (blnRemove.equals(true)) {
 					strValueToFindKeyword = strValueToFindKeyword.replaceAll(strTextToReplace, "");
 				}
-				// logger.add("removeTags: strValueToFindKeyword = " + intKeywordEach + "  " + strValueToFindKeyword);
+				// Logger.getInstance().add("removeTags: strValueToFindKeyword = " + intKeywordEach + "  " + strValueToFindKeyword);
 			}
 		}
-		// logger.add("removeTags: strValueToFindKeyword = " + strValueToFindKeyword);
+		// Logger.getInstance().add("removeTags: strValueToFindKeyword = " + strValueToFindKeyword);
 		return strValueToFindKeyword;
 	}
 
 	private String ReplaceHtmlArrows(String strText) {
-		logger.add("ReplaceHtmlArrows: strText = " + strText);
-		logger.add("ReplaceHtmlArrows: strText.replaceAll = " + strText.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
+		Logger.getInstance().add("ReplaceHtmlArrows: strText = " + strText);
+		Logger.getInstance().add("ReplaceHtmlArrows: strText.replaceAll = " + strText.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 		return strText.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 	}
 
 	private void stepCreateActual(String strStepType) {
-		logger.add("  ==start==>stepCreateActual " + getDateTimestamp());
+		Logger.getInstance().add("  ==start==>stepCreateActual " + getDateTimestamp());
 		String intWaited = gobjectStep.getString("strStepDuration");
 		String strActualHtml = "";
 		String strActualText = "";
 		String strInputValue = gobjectStep.getString("strInputValue");
-		logger.add("stepCreateActual strStepType.toLowerCase() = " + strStepType.toLowerCase());
+		Logger.getInstance().add("stepCreateActual strStepType.toLowerCase() = " + strStepType.toLowerCase());
 		String strOutputValue = gobjectStep.getString("strOutputValue");
 		String strTagName = gobjectStep.getString("strTagName");
 		String strObjectName = this.createObjectName();
@@ -5294,9 +5353,9 @@ public class Dragonfly {
 		String strInputValueHtmlPass = " value " + strHtmlPassStart + strInputValue + strHtmlEnd;
 		String strOutputValueHtmlPass = " value " + strHtmlPassStart + strOutputValue + strHtmlEnd;
 		String strOutputValueHtmlFail = " " + strHtmlFailStart + strOutputValue + strHtmlEnd;
-		logger.add("stepCreateActual strStepActual = " + gobjectStep.getString("strStepActual"));
+		Logger.getInstance().add("stepCreateActual strStepActual = " + gobjectStep.getString("strStepActual"));
 		strStepType = gobjectStep.getString("strStepActual");
-		logger.add("stepCreateActual strStepType.toLowerCase() = " + strStepType.toLowerCase());
+		Logger.getInstance().add("stepCreateActual strStepType.toLowerCase() = " + strStepType.toLowerCase());
 		try {
 			switch (strStepType.toLowerCase()) {
 			case "assert":
@@ -5334,7 +5393,7 @@ public class Dragonfly {
 				break;
 			case "get":
 				strActualHtml = strTagAttributesHtml + " actual value is" + strOutputValueHtmlPass + strMsWaitedDetailHtml;
-				logger.add("stepCreateActual get strActualHtml = " + strActualHtml);
+				Logger.getInstance().add("stepCreateActual get strActualHtml = " + strActualHtml);
 				break;
 			case "keystroke":
 				strActualHtml = strTagAttributesHtml + strInputValueHtmlPass + " key was pressed" + strMsWaitedDetailHtml;
@@ -5432,16 +5491,16 @@ public class Dragonfly {
 			}
 			strActualHtml = "<DIV align='left'><font size='5'>" + strActualHtml + "</font></DIV>";
 			strActualText = removeTags(strActualHtml);
-			logger.add("StepCreateActual: strActualText = " + strActualText);
+			Logger.getInstance().add("StepCreateActual: strActualText = " + strActualText);
 			gobjectStep.putValue("strStepActual", strActualHtml);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.add("stepCreateActual:Exception " + e.toString());
+			Logger.getInstance().add("stepCreateActual:Exception " + e.toString());
 		}
 	}
 
 	private void stepCreateExpected() {
-		logger.add("  ==start==>StepCreateExpected " + getDateTimestamp());
+		Logger.getInstance().add("  ==start==>StepCreateExpected " + getDateTimestamp());
 		String strStepExpected = "";
 		String strAction = "";
 		String strInputValue = gstrOriginalInputValue;
@@ -5453,14 +5512,14 @@ public class Dragonfly {
 		String strTagAttributesHtml = " {<b>" + strTagName + "</b>} tag with attributes {<b>" + strObjectName + "</b>}";
 		String strInputValueHtml = " {<b>" + strInputValue + "</b>}";
 		String strAssertHtml = " assert {<b>" + strAssert + "</b>}";
-		logger.add("stepCreateExpected: strStepExpected length = " + gobjectStep.get("strStepExpected").toString().length());
+		Logger.getInstance().add("stepCreateExpected: strStepExpected length = " + gobjectStep.getString("strStepExpected").length());
 		try {
-			if (gobjectStep.get("strStepExpected").toString().length() != 0) {
+			if (gobjectStep.getString("strStepExpected").length() != 0) {
 				strAction = gobjectStep.getString("strStepExpected");
 			} else {
 				strAction = gobjectStep.getString("strAction");
 			}
-			logger.add("stepCreateExpected: strAction = " + strAction);
+			Logger.getInstance().add("stepCreateExpected: strAction = " + strAction);
 			switch (strAction.toLowerCase()) {
 			case "break":
 				strStepExpected = "Break the execution.";
@@ -5483,7 +5542,7 @@ public class Dragonfly {
 			case "get":
 				strStepExpected = "Get" + strTagAttributesHtml + " value" + strMillisecondsToWaitHtml;
 				//strStepExpected = "Get" + strMillisecondsToWaitHtml + " value" + strMillisecondsToWaitHtml;
-				logger.add("stepCreateExpected: get strStepExpected = " + strStepExpected);
+				Logger.getInstance().add("stepCreateExpected: get strStepExpected = " + strStepExpected);
 				break;
 			case "kill_ie":
 				strStepExpected = "The action kill_ie killed all IE processes.";
@@ -5541,27 +5600,27 @@ public class Dragonfly {
 				break;
 			}
 			strStepExpected = "<DIV align='left'><font size='5'>" + strStepExpected + "</font></DIV>";
-			gobjStepsManual.set(removeTags(strStepExpected));
+			StepsManual.getInstance().set(removeTags(strStepExpected));
 			gobjectStep.putValue("strStepExpected", strStepExpected);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			logger.add("stepCreateExpected:Exception " + e.toString());
+			Logger.getInstance().add("stepCreateExpected:Exception " + e.toString());
 		}
 	}
 
 	private void stepDuration(String strMethodName, Long lngTimeStart, String strStepType) {
-		logger.add("  ==start==>StepDuration " + getDateTimestamp());
+		Logger.getInstance().add("  ==start==>StepDuration " + getDateTimestamp());
 		stepCreateExpected();
 		Long lngTimeEnd = System.currentTimeMillis();
 		gobjectStep.putValue("strStartTimestamp", formatDateTime(lngTimeStart));
 		gobjectStep.putValue("strStepDuration", Long.toString(lngTimeEnd - lngTimeStart));
 		gobjectStep.putValue("strEndTimestamp", formatDateTime(lngTimeEnd));
 		stepCreateActual(strStepType);
-		logger.add("StepDuration: " + strMethodName + " strStatus = " + gobjectStep.getString("strStatus") + " Milliseconds Waited = " + gobjectStep.getString("strStepDuration"));
+		Logger.getInstance().add("StepDuration: " + strMethodName + " strStatus = " + gobjectStep.getString("strStatus") + " Milliseconds Waited = " + gobjectStep.getString("strStepDuration"));
 	}
 
 	private Boolean syncFinally(Boolean blnExit, Boolean blnStatus, Boolean blnFound, String strMethodeName, String strAction, Long lngTimeStart) {
-		logger.add("SyncFinally:  blnExit = {" + blnExit + "} blnStatus = {" + blnStatus + "} blnFound = {" + blnFound + "} strMethodeName = {" + strMethodeName + "} strAction = {" + strAction + "}");
+		Logger.getInstance().add("SyncFinally:  blnExit = {" + blnExit + "} blnStatus = {" + blnStatus + "} blnFound = {" + blnFound + "} strMethodeName = {" + strMethodeName + "} strAction = {" + strAction + "}");
 		if (blnExit == true) {
 			gobjectStep.putValue("strStatus", "fail");
 			gobjectStep.putValue("blnExitOnFail", "true");
@@ -5592,7 +5651,7 @@ public class Dragonfly {
 	}
 
 	private void windowsMinimizeAll() {
-		logger.add("  ==start==>WindowsMinimizeAll " + getDateTimestamp());
+		Logger.getInstance().add("  ==start==>WindowsMinimizeAll " + getDateTimestamp());
 		Robot objRobot = null;
 		switch (gobjOperatingSystem.strOS) {
 		case "Windows":
@@ -5602,36 +5661,37 @@ public class Dragonfly {
 				objRobot.keyPress(KeyEvent.VK_D);
 				objRobot.keyRelease(KeyEvent.VK_D);
 				objRobot.keyRelease(KeyEvent.VK_WINDOWS);
-				logger.add("windowsMinimizeAll: Windows operating system minimize all windows.");
+				Logger.getInstance().add("windowsMinimizeAll: Windows operating system minimize all windows.");
 			} catch (Exception e) {
-				logger.add("windowsMinimizeAll: Exception = " + e.toString());
+				Logger.getInstance().add("windowsMinimizeAll: Exception = " + e.toString());
 			}
 			break;
 		default:
-			logger.add("WindowsMinimizeAll: the operating system not supported at this time " + gobjOperatingSystem.strOS);
+			Logger.getInstance().add("WindowsMinimizeAll: the operating system not supported at this time " + gobjOperatingSystem.strOS);
 		}
 	}
 
 	private void writeFile(String strFilePathFile, String strTextToWrite) {
-		logger.add("  ==start==>writeFile " + getDateTimestamp());
-		logger.add("writeFile: strFilePathFile = " + strFilePathFile);
+		Logger.getInstance().add("  ==start==>writeFile " + getDateTimestamp());
+		Logger.getInstance().add("writeFile: strFilePathFile = " + strFilePathFile);
 		try {
 			BufferedWriter objBufferedWriter = new BufferedWriter(new FileWriter(strFilePathFile));
 			objBufferedWriter.write(strTextToWrite);
 			objBufferedWriter.close();
 		} catch (Exception e) {
-			logger.add("writeFile: Exception" + e.toString());
+			Logger.getInstance().add("writeFile: Exception" + e.toString());
 		}
 	}
 
-	private void writeJsonStepsToHtml(String strStepHeader, JSONArray objTestSteps, String strPath, String strFileName) {
-		logger.add("  ==start==>WriteJsonStepsToHtml " + getDateTimestamp());
-		logger.add("WriteJsonStepsToHtml objTestSteps = " + objTestSteps);
+	private void writeJsonStepsToHtml(String strPath, String strStepHeader, JSONArray objTestSteps, String strFileName) {
+		Logger.getInstance().add("  ==start==>WriteJsonStepsToHtml " + getDateTimestamp());
+		Logger.getInstance().add("WriteJsonStepsToHtml objTestSteps = " + objTestSteps);
 		String strKey = "";
 		String[] arrKeys = null;
 		StepNames objStepNames = new StepNames();
 		StringBuilder objStringBuilder = new StringBuilder();
 		String strValue = "";
+		JSONObjectExtended objStepReport = new JSONObjectExtended();
 		switch (strStepHeader) {
 		case "original":
 			arrKeys = objStepNames.getOriginal();
@@ -5656,11 +5716,12 @@ public class Dragonfly {
 			for (int intTestStepRow = 0; intTestStepRow < objTestSteps.size(); intTestStepRow++) {
 				objStringBuilder.append("</tr>");
 				objStringBuilder.append("<td> " + (intTestStepRow) + "</td>");
-				JSONObjectExtended objStepReport = new JSONObjectExtended((JSONObject) objTestSteps.get(intTestStepRow));
+				//JSONObjectExtended objStepReport = new JSONObjectExtended((JSONObject) objTestSteps.get(intTestStepRow));
+				objStepReport.replaceAllFromString((String) objTestSteps.get(intTestStepRow).toString());
 				for (int intKeysEach = 0; intKeysEach < arrKeys.length; intKeysEach++) {
 					strKey = arrKeys[intKeysEach].toString();
 					if (objStepReport.containsKey(strKey) == true) {
-						strValue = objStepReport.get(strKey).toString().replaceAll("<", "&lt;");
+						strValue = objStepReport.getString(strKey).replaceAll("<", "&lt;");
 						strValue.replaceAll(">", "&gt;");
 						objStringBuilder.append("<td> " + strValue + "</td>");
 					} else {
@@ -5675,24 +5736,24 @@ public class Dragonfly {
 			String html = objStringBuilder.toString();
 			writeFile(strPath + strFileName, html);
 		} catch (Exception e) {
-			logger.add("WriteJsonStepsToHtml: Exception = " + e.toString());
-			logger.add("WriteJsonStepsToHtml: objStringBuilder.toString() = " + objStringBuilder.toString());
-			logger.add("WriteJsonStepsToHtml: Exception = " + e.toString());
-			logger.add("WriteJsonStepsToHtml: objStringBuilder.toString() = " + objStringBuilder.toString());
+			Logger.getInstance().add("WriteJsonStepsToHtml: Exception = " + e.toString());
+			Logger.getInstance().add("WriteJsonStepsToHtml: objStringBuilder.toString() = " + objStringBuilder.toString());
+			Logger.getInstance().add("WriteJsonStepsToHtml: Exception = " + e.toString());
+			Logger.getInstance().add("WriteJsonStepsToHtml: objStringBuilder.toString() = " + objStringBuilder.toString());
 		}
 	}
 
-	private void writeReportToHtml(JSONArray objJsonArrayReportSteps, String strFile, String strTestStepsFile, String strTestName) {
+	private void writeReportToHtml(String strFile, JSONArray objJsonArrayReportSteps, String strTestStepsFile, String strTestName) {
 		long lngStartTime = System.currentTimeMillis();
-		logger.add("  ==start==>WriteReportToHtml " + getDateTimestamp());
-		logger.add("WriteReportToHtml: strFile = " + strFile);
-		JSONObjectExtended objJsonObjectReportStep = null;
+		Logger.getInstance().add("  ==start==>WriteReportToHtml " + getDateTimestamp());
+		Logger.getInstance().add("WriteReportToHtml: strFile = " + strFile);
+		JSONObjectExtended objJsonObjectReportStep = new JSONObjectExtended();
 		String strScreenshotFilePath = "";
 		String strStatus = "";
 		String strStatusIcon = "";
 		StringBuilder objStringBuilder = new StringBuilder();
 		int intTestStepRow = 0;
-		logger.add("WriteReportToHtml: objJsonArrayReportSteps = " + objJsonArrayReportSteps);
+		Logger.getInstance().add("WriteReportToHtml: objJsonArrayReportSteps = " + objJsonArrayReportSteps.toJSONString());
 		try {
 			// 	function popUp() {
 			// 		var newWindow = window.open("", "Test", "width=300,height=300,scrollbars=1,resizable=1")
@@ -5744,8 +5805,10 @@ public class Dragonfly {
 			objStringBuilder.append("<br>");
 			objStringBuilder.append("<br>");
 			for (intTestStepRow = 0; intTestStepRow < objJsonArrayReportSteps.size(); intTestStepRow++) {
-				objJsonObjectReportStep = new JSONObjectExtended((JSONObject) objJsonArrayReportSteps.get(intTestStepRow));
-				logger.add("WriteReportToHtml: objJsonObjectReportStep = " + objJsonObjectReportStep);
+				//objJsonObjectReportStep = JSONObjectExtended((JSONObject) objJsonArrayReportSteps.get(intTestStepRow));
+				//objJsonObjectReportStep = JSONObjectExtended((JSONObject) objJsonArrayReportSteps.get(intTestStepRow));
+				objJsonObjectReportStep.parseString((String) objJsonArrayReportSteps.get(intTestStepRow));
+				Logger.getInstance().add("WriteReportToHtml: objJsonObjectReportStep = " + objJsonObjectReportStep.toJSONString());
 				objStringBuilder.append("<div id=step_" + intTestStepRow + ">");
 				objStringBuilder.append("<TABLE border=1 width=100% height=10%>");
 				objStringBuilder.append("<TR>");
@@ -5785,13 +5848,13 @@ public class Dragonfly {
 				objStringBuilder.append("<TD align=left valign=middle>" + objJsonObjectReportStep.getString("strStepActual") + "</TD>");
 				objStringBuilder.append("</TR>");
 				objStringBuilder.append("</TABLE> ");
-				if (objJsonObjectReportStep.get("strScreenshotFilePath").toString().trim().length() != 0) {
-					strScreenshotFilePath = objJsonObjectReportStep.get("strScreenshotFilePath").toString().replaceAll("\\\\\\\\", "\\");
+				if (objJsonObjectReportStep.getValueLength("strScreenshotFilePath") != 0) {
+					strScreenshotFilePath = objJsonObjectReportStep.getString("strScreenshotFilePath").replaceAll("\\\\\\\\", "\\");
 					try {
 						BufferedImage objBufferedImage = ImageIO.read(new File(strScreenshotFilePath));
 						objStringBuilder.append("<img id=img_" + intTestStepRow + " src=\"data:image/jpg;base64," + new ImageEncodeToString().run(objBufferedImage, "jpg") + "\" alt=\"Step " + intTestStepRow + "\" > ");
 					} catch (Exception e) {
-						logger.add("writeReportToHtml: Exception = " + e.toString());
+						Logger.getInstance().add("writeReportToHtml: Exception = " + e.toString());
 					}
 				}
 				objStringBuilder.append("</div>");
@@ -5799,14 +5862,14 @@ public class Dragonfly {
 				objStringBuilder.append("<br>");
 			}
 		} catch (Exception e) {
-			logger.add("WriteReportToHtml: " + e.toString());
+			Logger.getInstance().add("WriteReportToHtml: " + e.toString());
 		} finally {
 			objStringBuilder.append("</body>");
 			objStringBuilder.append("</html>");
 			String strHTML = objStringBuilder.toString().replace("varImageCount = -1", "varImageCount = " + (intTestStepRow - 1));
 			writeFile(strFile, strHTML);
 			writeFile(strTestStepsFile, strHTML);
-			logger.add("WriteReportToHtml: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+			Logger.getInstance().add("WriteReportToHtml: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 		}
 	}
 
@@ -5827,7 +5890,7 @@ public class Dragonfly {
 	}
 }
 //	private static ExpectedCondition<Boolean> waitForAngularFinishProcessing() {
-//		 logger.add("  ==start==>waitForAngularFinishProcessing " + getDateTimestamp());
+//		 Logger.getInstance().add("  ==start==>waitForAngularFinishProcessing " + getDateTimestamp());
 //		return new ExpectedCondition<Boolean>() {
 // @Override
 // private Boolean apply(WebDriver driver) {
