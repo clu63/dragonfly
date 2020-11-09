@@ -137,20 +137,20 @@ public class Dragonfly {
 	private OperatingSystem gobjOperatingSystem = new OperatingSystem();
 	private String gstrBrowserSelection;
 	private String gstrEnvironment;
-	private String gstrOriginalAttributes;
-	private String gstrOriginalInputValue;
+	static String gstrOriginalAttributes;
+	static String gstrOriginalInputValue;
 	private TestConfigurationSetup objTestConfigurationSetup = new TestConfigurationSetup();
 	private WebDriver gobjWebDriver = null;
 	private WebElement gobjWebElement = null;
 	private WebElement gobjWebElementDrag = null;
 	private WebElement gobjWebElementDrop = null;
 	private WebElement gobjWebElementPleaseWait = null;
-	private JSONObjectExtended gobjectElement = new JSONObjectExtended();
-	private JSONObjectExtended gobjectLinks = new JSONObjectExtended();
-	private JSONObjectExtended gobjectProcessing = new JSONObjectExtended();
-	private JSONObjectExtended gobjectStep = new JSONObjectExtended();
-	private JSONObjectExtended gobjectTestData = new JSONObjectExtended();
-	private JSONObjectExtended gobjectTestInstancesEach = new JSONObjectExtended();
+	static JSON gobjectElement = new JSON();
+	static JSON gobjectLinks = new JSON();
+	private JSON gobjectProcessing = new JSON();
+	static JSON gobjectStep = new JSON();
+	static JSON gobjectTestData = new JSON();
+	static JSON gobjectTestInstancesEach = new JSON();
 
 	private class AlertFind {
 		private boolean run() {
@@ -484,7 +484,7 @@ public class Dragonfly {
 	}
 
 	private class CoordinateHighlightScreenshot {
-		private CoordinateHighlightScreenshot(final JSONObjectExtended objJsonObjectStepHighlightArea) {
+		private CoordinateHighlightScreenshot(final JSON objJsonObjectStepHighlightArea) {
 			Logger.getInstance().add("  ==start==>CoordinateHighlightScreenshot " + new DateTimestamp().get());
 			long lngStartTime = System.currentTimeMillis();
 			JDialog objJDialog = new JDialog() {
@@ -617,10 +617,10 @@ public class Dragonfly {
 					intWinPosHeight = ((intWinPosHeight - intClientSizeHeight) - ((intWinPosWidth - intClientSizeWidth) / 2));
 					break;
 				}
-				gobjectStep.putInt("intElementScreenX", intWinPosX);
-				gobjectStep.putInt("intElementScreenY", intWinPosY);
-				gobjectStep.putInt("intElementWidth", intWinPosWidth);
-				gobjectStep.putInt("intElementHeight", intWinPosHeight);
+				gobjectStep.putValue("intElementScreenX", Integer.toString(intWinPosX));
+				gobjectStep.putValue("intElementScreenY", Integer.toString(intWinPosY));
+				gobjectStep.putValue("intElementWidth", Integer.toString(intWinPosWidth));
+				gobjectStep.putValue("intElementHeight", Integer.toString(intWinPosHeight));
 			} catch (Exception e) {
 				Logger.getInstance().add("CoordinatesAlert: Exception = " + e.toString());
 			} finally {
@@ -642,15 +642,15 @@ public class Dragonfly {
 					Logger.getInstance().add("CoordinatesBrowserInner: ie");
 					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.screenLeft;");
 					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.screenTop;");
-					gobjectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
-					gobjectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
+					gobjectStep.putValue("intBrowserInnerWidth", Long.toString(lngBrowserInnerWidth));
+					gobjectStep.putValue("intBrowserInnerHeight", Long.toString(lngBrowserInnerHeight));
 					break;
 				case "firefox":
 					Logger.getInstance().add("CoordinatesBrowserInner: firefox");
 					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return Math.round(window.mozInnerScreenX * window.devicePixelRatio);");
 					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return Math.round(window.mozInnerScreenY * window.devicePixelRatio);");
-					gobjectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
-					gobjectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
+					gobjectStep.putValue("intBrowserInnerWidth", Long.toString(lngBrowserInnerWidth));
+					gobjectStep.putValue("intBrowserInnerHeight", Long.toString(lngBrowserInnerHeight));
 					gdblDevicePixelRatio = (Double) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.devicePixelRatio;");
 					Logger.getInstance().add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + gdblDevicePixelRatio.toString());
 					Logger.getInstance().add("CoordinatesBrowserInner: lngBrowserInnerWidth = " + lngBrowserInnerWidth);
@@ -664,8 +664,8 @@ public class Dragonfly {
 					//gdblDevicePixelRatio = (Double) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.devicePixelRatio;");
 					gdblDevicePixelRatio = Double.parseDouble(lngDevicePixelRatio.toString());
 					Logger.getInstance().add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + gdblDevicePixelRatio.toString());
-					gobjectStep.putLong("intBrowserInnerWidth", lngBrowserInnerWidth);
-					gobjectStep.putLong("intBrowserInnerHeight", lngBrowserInnerHeight);
+					gobjectStep.putValue("intBrowserInnerWidth", Long.toString(lngBrowserInnerWidth));
+					gobjectStep.putValue("intBrowserInnerHeight", Long.toString(lngBrowserInnerHeight));
 					break;
 				}
 			} catch (Exception e) {
@@ -702,10 +702,10 @@ public class Dragonfly {
 					Point objElementPoint = objElementCoordinates.inViewPort();
 					System.out.println("before objElementDimension");
 					Dimension objElementDimension = gobjWebElement.getSize();
-					gobjectStep.putInt("intElementX", (int) Math.round(objElementPoint.x * gdblDevicePixelRatio));
-					gobjectStep.putInt("intElementY", (int) Math.round(objElementPoint.y * gdblDevicePixelRatio));
-					gobjectStep.putInt("intElementWidth", (int) Math.round(objElementDimension.width * gdblDevicePixelRatio));
-					gobjectStep.putInt("intElementHeight", (int) Math.round(objElementDimension.height * gdblDevicePixelRatio));
+					gobjectStep.putValue("intElementX", Integer.toString((int) Math.round(objElementPoint.x * gdblDevicePixelRatio)));
+					gobjectStep.putValue("intElementY", Integer.toString((int) Math.round(objElementPoint.y * gdblDevicePixelRatio)));
+					gobjectStep.putValue("intElementWidth", Integer.toString((int) Math.round(objElementDimension.width * gdblDevicePixelRatio)));
+					gobjectStep.putValue("intElementHeight", Integer.toString((int) Math.round(objElementDimension.height * gdblDevicePixelRatio)));
 					Logger.getInstance().add("  ==end==>CoordinatesElement objElementPoint.x " + objElementPoint.x);
 					Logger.getInstance().add("  ==end==>CoordinatesElement objElementPoint.y " + objElementPoint.y);
 					Logger.getInstance().add("  ==end==>CoordinatesElement objElementDimension.width " + objElementDimension.width);
@@ -718,8 +718,8 @@ public class Dragonfly {
 				int intElementScreenX = rect.width + intElementX;
 				int intElementScreenY = rect.height + intElementY;
 				System.out.println("before putInt");
-				gobjectStep.putInt("intElementScreenX", intElementScreenX);
-				gobjectStep.putInt("intElementScreenY", intElementScreenY);
+				gobjectStep.putValue("intElementScreenX", Integer.toString(intElementScreenX));
+				gobjectStep.putValue("intElementScreenY", Integer.toString(intElementScreenY));
 			} catch (Exception e) {
 				Logger.getInstance().add("CoordinatesElement: Exception = " + e.toString());
 			} finally {
@@ -938,7 +938,7 @@ public class Dragonfly {
 					String strFilePathTestData = Paths.getInstance().pathTestData + "Environments.json";
 					Logger.getInstance().add("DialogLaunch:actionPerformed strFilePathTestData = " + strFilePathTestData);
 					try {
-						JSONObjectExtended objJsonObjectFile = new JSONObjectExtended();
+						JSON objJsonObjectFile = new JSON();
 						objJsonObjectFile.replaceAllFromFile(strFilePathTestData);
 						Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
 						gstrEnvironment = objJsonObjectFile.getString(gstrEnvironment);
@@ -1875,13 +1875,13 @@ public class Dragonfly {
 			String strTagName = null;
 			Boolean blnFound = false;
 			String strMessage = "";
-			JSONObjectExtended objJsonObjectPleaseWaitNode = new JSONObjectExtended();
+			JSON objJsonObjectPleaseWaitNode = new JSON();
 			try {
 				gobjWebElementPleaseWait = gobjWebElement;
 				Logger.getInstance().add("ElementPleaseWait: objectProcessing.size() = " + gobjectProcessing.size());
 				if (blnPleaseWait == true) {
 					for (intPleaseWaitEach = 1; intPleaseWaitEach < gobjectProcessing.size(); intPleaseWaitEach++) {
-						objJsonObjectPleaseWaitNode.putAll(gobjectProcessing.getNode("PleaseWait_" + intPleaseWaitEach));
+						objJsonObjectPleaseWaitNode.replaceAllFromJSONObject(gobjectProcessing.getNode("PleaseWait_" + intPleaseWaitEach));
 						try {
 							strAttributeNames = objJsonObjectPleaseWaitNode.getValue("strAttributeNames", "");
 							strAttributeValues = objJsonObjectPleaseWaitNode.getValue("strAttributeValues", "");
@@ -2174,7 +2174,7 @@ public class Dragonfly {
 						break;
 					}
 					Logger.getInstance().add("ElementSet: strValueToSelect " + strValueToSelect);
-					gobjectStep.putString("strInputValue", strValueToSelect);
+					gobjectStep.putValue("strInputValue", strValueToSelect);
 					try {
 						strStepExpected = "select";
 						objSelect.selectByVisibleText(strValueToSelect);
@@ -3201,6 +3201,7 @@ public class Dragonfly {
 		}
 	}
 
+	//https://howtodoinjava.com/java/exception-handling/best-practices-for-for-exception-handling/
 	private class ExceptionAlertNotComplete extends Exception {
 		private static final long serialVersionUID = 1L;
 
@@ -3533,7 +3534,7 @@ public class Dragonfly {
 						for (String strKeywordsValidEach : arrKV_strLogicalName) {
 							if (strResultsEach.equals(strKeywordsValidEach)) {
 								blnValid = true;
-								JSONObjectExtended objJsonObjectElementNode = new JSONObjectExtended(gobjectElement.getNode(strKeywordValue));
+								JSON objJsonObjectElementNode = new JSON(gobjectElement.getNode(strKeywordValue));
 								try {
 									gobjectStep.putValue("strTagName", objJsonObjectElementNode.getValue("strTagName", ""));
 									gobjectStep.putValue("strAttributeNames", objJsonObjectElementNode.getValue("strAttributeNames", ""));
@@ -3809,9 +3810,9 @@ public class Dragonfly {
 			// Logger.getInstance().add("  ==start==>SleepMilliseconds " + new DateTimestamp().get());
 			try {
 				TimeUnit.MILLISECONDS.sleep(intMillisecondsToWait);
-				gobjectStep.putString("strStatus", "pass");
+				gobjectStep.putValue("strStatus", "pass");
 			} catch (Exception e) {
-				gobjectStep.putString("strStatus", "fail");
+				gobjectStep.putValue("strStatus", "fail");
 				Logger.getInstance().add("SleepMilliseconds: Exception = " + e.toString());
 			}
 		}
@@ -3826,7 +3827,7 @@ public class Dragonfly {
 		}
 	}
 
-	private class StepNames {
+	public class StepNames {
 		private String strKeys1 = "strAction|strLogicalName|strTagName|strAttributeNames|strAttributeValues|strInputValue|strAssert|blnOptional|blnExitOnFail";
 		private String strKeys2 = "|intMillisecondsToWait|strFunction|strOutputLinkName|strLoopOrIf|blnPleaseWait|blnHighlight|blnScreenshot|strAssistiveProperties|strOutputValue";
 		private String strKeys3 = "intBrowserInnerWidth|intBrowserInnerHeight|intBrowserOuterX|intBrowserOuterY|intBrowserOuterWidth|intBrowserOuterHeight";
@@ -3849,7 +3850,7 @@ public class Dragonfly {
 			return strKeysDefault.toString().split("\\|");
 		}
 
-		private String[] getOriginal() {
+		String[] getOriginal() {
 			objStringBuilder.append(strKeys1);
 			objStringBuilder.append(strKeys2);
 			return objStringBuilder.toString().split("\\|");
@@ -3864,7 +3865,7 @@ public class Dragonfly {
 	}
 
 	@SuppressWarnings("unused")
-	private class StepSetupDefaults {
+	public class StepSetupDefaults {
 		String strDefault_blnExitOnFail = "true";
 		String strDefault_blnHighlight = "true";
 		String strDefault_blnOptional = "false";
@@ -4062,7 +4063,7 @@ public class Dragonfly {
 
 	private class TestConfigurationSetup {
 		private int intTestInstanceSize;
-		private JSONObjectExtended objJsonObjectTestConfigurationFile = new JSONObjectExtended();
+		private JSON objJsonObjectTestConfigurationFile = new JSON();
 
 		@SuppressWarnings("unchecked")
 		private JSONArray putAllArrays(String strJsonArrayName, String strJsonObjectName, String strPath) {
@@ -4070,7 +4071,7 @@ public class Dragonfly {
 			JSONArray objJsonArray = null;
 			JSONArray objJsonArrayEach = null;
 			JSONArray objJsonArrayList = null;
-			JSONObjectExtended objJsonObjectFileEach = new JSONObjectExtended();
+			JSON objJsonObjectFileEach = new JSON();
 			String strFileNameEach = "";
 			String strFilePathJsonArray = "";
 			objJsonArrayList = (JSONArray) objJsonObjectTestConfigurationFile.getArray(strJsonArrayName);
@@ -4112,13 +4113,13 @@ public class Dragonfly {
 		}
 
 		@SuppressWarnings("unchecked")
-		private JSONObjectExtended putAllObjects(String strJsonArrayName, String strJsonObjectName, String strPath) {
+		private JSON putAllObjects(String strJsonArrayName, String strJsonObjectName, String strPath) {
 			Logger.getInstance().add("  ==start==>putAllObjects " + new DateTimestamp().get());
 			Integer intJsonObjectEach = 0;
 			JSONArray objJsonArrayList = null;
-			JSONObjectExtended objJsonObject = new JSONObjectExtended();
-			JSONObjectExtended objJsonObjectEach = new JSONObjectExtended();
-			JSONObjectExtended objJsonObjectFileEach = new JSONObjectExtended();
+			JSON objJsonObject = new JSON();
+			JSON objJsonObjectEach = new JSON();
+			JSON objJsonObjectFileEach = new JSON();
 			String strFileNameEach = "";
 			String strFilePathJsonArray = "";
 			objJsonArrayList = (JSONArray) objJsonObjectTestConfigurationFile.getArray(strJsonArrayName);
@@ -4141,7 +4142,7 @@ public class Dragonfly {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				objJsonObject.putAll(objJsonObjectEach.jSONObject);
+				objJsonObject.replaceAllFromJSONObject(objJsonObjectEach.jSONObject);
 			}
 			Logger.getInstance().add("TestConfigurationSetup:putAllObjects objJsonObject = " + objJsonObject);
 			return objJsonObject;
@@ -4186,27 +4187,6 @@ public class Dragonfly {
 				Logger.getInstance().add("TestConfigurationSetup: Exception = " + e.toString());
 			} finally {
 				Logger.getInstance().add("TestConfigurationSetup: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-			}
-		}
-	}
-
-	private class ThreadSaveImage implements Runnable {
-		private BufferedImage objScreenShot;
-		private String strImageType;
-		private String strPathFileName;
-
-		private ThreadSaveImage(BufferedImage objScreenShot, String strImageType, String strPathFileName) {
-			this.objScreenShot = objScreenShot;
-			this.strImageType = strImageType;
-			this.strPathFileName = strPathFileName;
-		}
-
-		@Override
-		public void run() {
-			try {
-				ImageIO.write(objScreenShot, strImageType.toUpperCase(), new File(strPathFileName));
-			} catch (Exception e) {
-				Logger.getInstance().add("ThreadSaveImage:run Exception = " + e.toString());
 			}
 		}
 	}
@@ -4498,7 +4478,7 @@ public class Dragonfly {
 		objDragonfly.mainDragonfly(args, objDragonfly);
 	}
 
-	private String createObjectName() {
+	static String createObjectName() {
 		String strAttributeValue = "";
 		String strAttributeValues = ReplaceHtmlArrows(gobjectStep.getString("strAttributeValues"));
 		String strObjectsAttributes = "";
@@ -4546,7 +4526,7 @@ public class Dragonfly {
 				Logger.getInstance().add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
 			}
 			Logger.getInstance().add("data_EnvironmentURL: strFilePathTestData = " + strFilePathTestData);
-			JSONObjectExtended objJsonObjectFile = new JSONObjectExtended();
+			JSON objJsonObjectFile = new JSON();
 			objJsonObjectFile.replaceAllFromFile(strFilePathTestData);
 			Logger.getInstance().add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
 			strURL = objJsonObjectFile.getString(strApplication_Environment);
@@ -4983,7 +4963,7 @@ public class Dragonfly {
 		return strValueToFindKeyword;
 	}
 
-	private String ReplaceHtmlArrows(String strText) {
+	private static String ReplaceHtmlArrows(String strText) {
 		Logger.getInstance().add("ReplaceHtmlArrows: strText = " + strText);
 		Logger.getInstance().add("ReplaceHtmlArrows: strText.replaceAll = " + strText.replaceAll("<", "&lt;").replaceAll(">", "&gt;"));
 		return strText.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
@@ -5345,7 +5325,7 @@ public class Dragonfly {
 		StepNames objStepNames = new StepNames();
 		StringBuilder objStringBuilder = new StringBuilder();
 		String strValue = "";
-		JSONObjectExtended objStepReport = new JSONObjectExtended();
+		JSON objStepReport = new JSON();
 		switch (strStepHeader) {
 		case "original":
 			arrKeys = objStepNames.getOriginal();
@@ -5400,7 +5380,7 @@ public class Dragonfly {
 		long lngStartTime = System.currentTimeMillis();
 		Logger.getInstance().add("  ==start==>WriteReportToHtml " + new DateTimestamp().get());
 		Logger.getInstance().add("WriteReportToHtml: strFile = " + strFile);
-		JSONObjectExtended objJsonObjectReportStep = new JSONObjectExtended();
+		JSON objJsonObjectReportStep = new JSON();
 		String strScreenshotFilePath = "";
 		String strStatus = "";
 		String strStatusIcon = "";

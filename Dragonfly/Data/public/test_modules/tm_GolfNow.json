@@ -132,7 +132,7 @@
 			"strTagName": "select",
 			"strAttributeNames": "id",
 			"strAttributeValues": "ctl00_TemplateContainer_ctl03_ddlFacilites",
-			"strInputValue": "Disney's Oak Trail",
+			"strInputValue": "",
 			"strLogicalName": "Coarse",
 			"intMillisecondsToWait": "",
 			"blnOptional": "",

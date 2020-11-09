@@ -12,14 +12,14 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 //@SuppressWarnings("unchecked")
-class JSONObjectExtended {
+class JSON {
 	//private static final long serialVersionUID = 1L;
 	JSONObject jSONObject = null;
 
-	JSONObjectExtended() {
+	JSON() {
 	}
 
-	JSONObjectExtended(JSONObject parent) {
+	JSON(JSONObject parent) {
 		this.jSONObject.putAll(parent);
 	}
 
@@ -81,30 +81,8 @@ class JSONObjectExtended {
 		return (int) this.jSONObject.get(strKeyName).toString().trim().length();
 	}
 
-	//		public void parseFileReader(FileReader filereader) throws IOException, ParseException {
-	//			this.jSONObject = (JSONObject) new JSONParser().parse(filereader);
-	//		}
 	void parseString(String stringToParse) throws ParseException {
 		this.jSONObject = (JSONObject) new JSONParser().parse(stringToParse);
-	}
-	//public String toJSONStringPrety() {
-	//return this.jSONObject.toString(4);
-	//	}
-
-	void putAll(JSONObject objJsonObjectEach) {
-		this.jSONObject.putAll((Map<String, String>) objJsonObjectEach);
-	}
-
-	void putInt(String strKeyName, int intKeyValue) {
-		this.jSONObject.put(strKeyName, Integer.toString(intKeyValue));
-	}
-
-	void putLong(String strKeyName, Long lngKeyValue) {
-		this.jSONObject.put(strKeyName, Long.toString(lngKeyValue));
-	}
-
-	void putString(String strKeyName, String strKeyValue) {
-		this.jSONObject.put(strKeyName, strKeyValue);
 	}
 
 	void putValue(String strKeyName, String strKeyValue) {
@@ -113,7 +91,6 @@ class JSONObjectExtended {
 
 	void replaceAllFromFile(String pathFileToParse) throws ParseException, FileNotFoundException, IOException {
 		//this.jSONObject.clear();
-		//this.jSONObject.putAll((Map<String, String>) new JSONParser().parse(new FileReader(pathFileToParse)));
 		this.jSONObject = (JSONObject) new JSONParser().parse(new FileReader(pathFileToParse));
 	}
 
@@ -123,7 +100,7 @@ class JSONObjectExtended {
 	}
 
 	void replaceAllFromMap(Map<String, String> map) {
-		this.jSONObject.clear();
+		//this.jSONObject.clear();
 		this.jSONObject.putAll((Map<String, String>) map);
 	}
 

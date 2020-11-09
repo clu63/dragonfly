@@ -44,10 +44,10 @@
 		},
 
 		{
-			"strAction": "get",
-			"strTagName": "h1",
-			"strAttributeNames": "text",
-			"strAttributeValues": "Block 4",
+			"strAction": "set",
+			"strTagName": "a",
+			"strAttributeNames": "id",
+			"strAttributeValues": "drag_drop",
 			"strInputValue": "",
 			"strLogicalName": "",
 			"intMillisecondsToWait": "",
@@ -65,10 +65,10 @@
 		},
 
 		{
-			"strAction": "get",
-			"strTagName": "div",
-			"strAttributeNames": "id",
-			"strAttributeValues": "column-2",
+			"strAction": "sync_visible",
+			"strTagName": "b",
+			"strAttributeNames": "text",
+			"strAttributeValues": "Drag and Drop",
 			"strInputValue": "",
 			"strLogicalName": "",
 			"intMillisecondsToWait": "",
@@ -87,9 +87,9 @@
 
 		{
 			"strAction": "drag",
-			"strTagName": "h1",
-			"strAttributeNames": "text",
-			"strAttributeValues": "Block 4",
+			"strTagName": "img",
+			"strAttributeNames": "id",
+			"strAttributeValues": "drag1",
 			"strInputValue": "",
 			"strLogicalName": "",
 			"intMillisecondsToWait": "",
@@ -110,7 +110,7 @@
 			"strAction": "drop",
 			"strTagName": "div",
 			"strAttributeNames": "id",
-			"strAttributeValues": "column-2",
+			"strAttributeValues": "div2",
 			"strInputValue": "",
 			"strLogicalName": "",
 			"intMillisecondsToWait": "",

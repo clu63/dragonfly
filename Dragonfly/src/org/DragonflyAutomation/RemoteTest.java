@@ -35,12 +35,11 @@ class RemoteTest {
 		internetExplorerOptions.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, false);
 		internetExplorerOptions.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
 		//
-		WebDriver driver = new RemoteWebDriver(hubURL, chromeOptions);
+		WebDriver driver = new RemoteWebDriver(hubURL, internetExplorerOptions);
 		driver.get("http://www.google.com");
 		WebElement element = driver.findElement(By.name("q"));
 		element.sendKeys("Cheese!");
 		System.out.println("Cheese");
-		element.submit();
-		//driver.quit();
+		driver.quit();
 	}
 }
