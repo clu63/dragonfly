@@ -55,138 +55,138 @@ class DialogLocal extends JDialog implements ActionListener {
 			intColumnWidth1 = 200, intColumnWidth2 = 200, intColumnWidth3 = 220;
 
 	DialogLocal() {
-			this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			this.setModalityType(DEFAULT_MODALITY_TYPE);
-			this.setSize(750, 500);
-			Toolkit tk = Toolkit.getDefaultToolkit();
-			java.awt.Dimension dim = tk.getScreenSize();
-			int xPos = (dim.width / 2) - (this.getWidth() / 2);
-			int yPos = (dim.height / 2) - (this.getHeight() / 2);
-			this.setLocation(xPos, yPos);
-			setAlwaysOnTop(true);
-			setTitle("Dragonfly Local Test Runner");
-			getContentPane().setLayout(null);
-			//SelectTheTestArea Group radio buttons.
-			lblSelectTheTestArea.setHorizontalAlignment(SwingConstants.LEFT);
-			lblSelectTheTestArea.setFont(fntDialog);
-			lblSelectTheTestArea.setBounds(intColumn1, 15, intColumnWidth1, 35);
-			getContentPane().add(lblSelectTheTestArea);
-			rdoLocal.setFont(fntDialog);
-			rdoLocal.setBounds(intColumn1, 45, intColumnWidth1, 25);
-			rdoLocal.addActionListener(this);
-			getContentPane().add(rdoLocal);
-			rdoPublic.setFont(fntDialog);
-			rdoPublic.setBounds(intColumn1, 70, intColumnWidth1, 25);
-			rdoPublic.addActionListener(this);
-			getContentPane().add(rdoPublic);
-			rdoInternal.setFont(fntDialog);
-			rdoInternal.setBounds(intColumn1, 95, intColumnWidth1, 25);
-			rdoInternal.addActionListener(this);
-			getContentPane().add(rdoInternal);
-			grpTestArea.add(rdoLocal);
-			grpTestArea.add(rdoPublic);
-			grpTestArea.add(rdoInternal);
-			//SelectTheBrowser Group radio buttons.
-			lblSelectTheBrowser.setHorizontalAlignment(SwingConstants.LEFT);
-			lblSelectTheBrowser.setFont(fntDialog);
-			lblSelectTheBrowser.setBounds(intColumn2, 15, intColumnWidth2, 35);
-			getContentPane().add(lblSelectTheBrowser);
-			rdoTestValue.setFont(fntDialog);
-			rdoTestValue.setBounds(intColumn2, 45, intColumnWidth2, 25);
-			rdoTestValue.addActionListener(this);
-			getContentPane().add(rdoTestValue);
-			rdoIE.setFont(fntDialog);
-			rdoIE.setBounds(intColumn2, 70, intColumnWidth2, 25);
-			rdoIE.addActionListener(this);
-			getContentPane().add(rdoIE);
-			rdoChrome.setFont(fntDialog);
-			rdoChrome.setBounds(intColumn2, 95, intColumnWidth2, 25);
-			rdoChrome.addActionListener(this);
-			getContentPane().add(rdoChrome);
-			rdoFirefox.setFont(fntDialog);
-			rdoFirefox.setBounds(intColumn2, 120, intColumnWidth2, 25);
-			getContentPane().add(rdoFirefox);
-			rdoFirefox.addActionListener(this);
-			grpBrowser.add(rdoTestValue);
-			grpBrowser.add(rdoIE);
-			grpBrowser.add(rdoChrome);
-			grpBrowser.add(rdoFirefox);
-			//SelectTheEnvironment Group radio buttons.
-			lblSelectTheEnvironment.setHorizontalAlignment(SwingConstants.LEFT);
-			lblSelectTheEnvironment.setFont(fntDialog);
-			lblSelectTheEnvironment.setBounds(intColumn3, 15, intColumnWidth3, 35);
-			getContentPane().add(lblSelectTheEnvironment);
-			rdoEnvTestValue.setFont(fntDialog);
-			rdoEnvTestValue.setBounds(intColumn3, 45, intColumnWidth3, 25);
-			rdoEnvTestValue.addActionListener(this);
-			getContentPane().add(rdoEnvTestValue);
-			rdoEnv1.setFont(fntDialog);
-			rdoEnv1.setBounds(intColumn3, 70, intColumnWidth3, 25);
-			rdoEnv1.addActionListener(this);
-			getContentPane().add(rdoEnv1);
-			rdoEnv2.setFont(fntDialog);
-			rdoEnv2.setBounds(intColumn3, 95, intColumnWidth3, 25);
-			rdoEnv2.addActionListener(this);
-			getContentPane().add(rdoEnv2);
-			rdoEnv3.setFont(fntDialog);
-			rdoEnv3.setBounds(intColumn3, 120, intColumnWidth3, 25);
-			rdoEnv3.addActionListener(this);
-			getContentPane().add(rdoEnv3);
-			rdoEnv4.setFont(fntDialog);
-			rdoEnv4.setBounds(intColumn3, 145, intColumnWidth3, 25);
-			rdoEnv4.addActionListener(this);
-			getContentPane().add(rdoEnv4);
-			rdoEnv5.setFont(fntDialog);
-			rdoEnv5.setBounds(intColumn3, 170, intColumnWidth3, 25);
-			rdoEnv5.addActionListener(this);
-			getContentPane().add(rdoEnv5);
-			rdoEnv6.setFont(fntDialog);
-			rdoEnv6.setBounds(intColumn3, 195, intColumnWidth3, 25);
-			rdoEnv6.addActionListener(this);
-			getContentPane().add(rdoEnv6);
-			grpEnvironment.add(rdoEnvTestValue);
-			grpEnvironment.add(rdoEnv1);
-			grpEnvironment.add(rdoEnv2);
-			grpEnvironment.add(rdoEnv3);
-			grpEnvironment.add(rdoEnv4);
-			grpEnvironment.add(rdoEnv5);
-			grpEnvironment.add(rdoEnv6);
-			//lblSelectTheApplication
-			lblSelectTheApplication.setFont(fntDialog);
-			lblSelectTheApplication.setHorizontalAlignment(SwingConstants.LEFT);
-			lblSelectTheApplication.setBounds(12, 141, 398, 35);
-			getContentPane().add(lblSelectTheApplication);
-			cboApplication.setFont(fntDialog);
-			cboApplication.setToolTipText("Tip the tool");
-			cboApplication.setBounds(12, 175, 410, 40);
-			cboApplication.setEnabled(false);
-			cboApplication.addActionListener(this);
-			getContentPane().add(cboApplication);
-			//lblSelectTheTest
-			lblSelectTheTest.setHorizontalAlignment(SwingConstants.LEFT);
-			lblSelectTheTest.setFont(fntDialog);
-			lblSelectTheTest.setBounds(12, 252, 398, 35);
-			getContentPane().add(lblSelectTheTest);
-			cboTest.setToolTipText("Tip the tool");
-			cboTest.setFont(fntDialog);
-			cboTest.setBounds(12, 283, 708, 40);
-			cboTest.setEnabled(false);
-			cboTest.addActionListener(this);
-			getContentPane().add(cboTest);
-			btnRun.setFont(fntDialog);
-			btnRun.setBounds(12, 373, 310, 55);
-			btnRun.setEnabled(false);
-			btnRun.addActionListener(this);
-			getContentPane().add(btnRun);
-			btnCancel.setFont(fntDialog);
-			btnCancel.setBounds(410, 373, 310, 55);
-			btnCancel.addActionListener(this);
-			getContentPane().add(btnCancel);
-			gstrBrowserSelection = "value in test";
-			//mstrTestEnvironment = "test value";
-			gstrEnvironment = "test value";
-			this.setVisible(true);
-		}
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		this.setModalityType(DEFAULT_MODALITY_TYPE);
+		this.setSize(750, 500);
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		java.awt.Dimension dim = tk.getScreenSize();
+		int xPos = (dim.width / 2) - (this.getWidth() / 2);
+		int yPos = (dim.height / 2) - (this.getHeight() / 2);
+		this.setLocation(xPos, yPos);
+		setAlwaysOnTop(true);
+		setTitle("Dragonfly Local Test Runner");
+		getContentPane().setLayout(null);
+		//SelectTheTestArea Group radio buttons.
+		lblSelectTheTestArea.setHorizontalAlignment(SwingConstants.LEFT);
+		lblSelectTheTestArea.setFont(fntDialog);
+		lblSelectTheTestArea.setBounds(intColumn1, 15, intColumnWidth1, 35);
+		getContentPane().add(lblSelectTheTestArea);
+		rdoLocal.setFont(fntDialog);
+		rdoLocal.setBounds(intColumn1, 45, intColumnWidth1, 25);
+		rdoLocal.addActionListener(this);
+		getContentPane().add(rdoLocal);
+		rdoPublic.setFont(fntDialog);
+		rdoPublic.setBounds(intColumn1, 70, intColumnWidth1, 25);
+		rdoPublic.addActionListener(this);
+		getContentPane().add(rdoPublic);
+		rdoInternal.setFont(fntDialog);
+		rdoInternal.setBounds(intColumn1, 95, intColumnWidth1, 25);
+		rdoInternal.addActionListener(this);
+		getContentPane().add(rdoInternal);
+		grpTestArea.add(rdoLocal);
+		grpTestArea.add(rdoPublic);
+		grpTestArea.add(rdoInternal);
+		//SelectTheBrowser Group radio buttons.
+		lblSelectTheBrowser.setHorizontalAlignment(SwingConstants.LEFT);
+		lblSelectTheBrowser.setFont(fntDialog);
+		lblSelectTheBrowser.setBounds(intColumn2, 15, intColumnWidth2, 35);
+		getContentPane().add(lblSelectTheBrowser);
+		rdoTestValue.setFont(fntDialog);
+		rdoTestValue.setBounds(intColumn2, 45, intColumnWidth2, 25);
+		rdoTestValue.addActionListener(this);
+		getContentPane().add(rdoTestValue);
+		rdoIE.setFont(fntDialog);
+		rdoIE.setBounds(intColumn2, 70, intColumnWidth2, 25);
+		rdoIE.addActionListener(this);
+		getContentPane().add(rdoIE);
+		rdoChrome.setFont(fntDialog);
+		rdoChrome.setBounds(intColumn2, 95, intColumnWidth2, 25);
+		rdoChrome.addActionListener(this);
+		getContentPane().add(rdoChrome);
+		rdoFirefox.setFont(fntDialog);
+		rdoFirefox.setBounds(intColumn2, 120, intColumnWidth2, 25);
+		getContentPane().add(rdoFirefox);
+		rdoFirefox.addActionListener(this);
+		grpBrowser.add(rdoTestValue);
+		grpBrowser.add(rdoIE);
+		grpBrowser.add(rdoChrome);
+		grpBrowser.add(rdoFirefox);
+		//SelectTheEnvironment Group radio buttons.
+		lblSelectTheEnvironment.setHorizontalAlignment(SwingConstants.LEFT);
+		lblSelectTheEnvironment.setFont(fntDialog);
+		lblSelectTheEnvironment.setBounds(intColumn3, 15, intColumnWidth3, 35);
+		getContentPane().add(lblSelectTheEnvironment);
+		rdoEnvTestValue.setFont(fntDialog);
+		rdoEnvTestValue.setBounds(intColumn3, 45, intColumnWidth3, 25);
+		rdoEnvTestValue.addActionListener(this);
+		getContentPane().add(rdoEnvTestValue);
+		rdoEnv1.setFont(fntDialog);
+		rdoEnv1.setBounds(intColumn3, 70, intColumnWidth3, 25);
+		rdoEnv1.addActionListener(this);
+		getContentPane().add(rdoEnv1);
+		rdoEnv2.setFont(fntDialog);
+		rdoEnv2.setBounds(intColumn3, 95, intColumnWidth3, 25);
+		rdoEnv2.addActionListener(this);
+		getContentPane().add(rdoEnv2);
+		rdoEnv3.setFont(fntDialog);
+		rdoEnv3.setBounds(intColumn3, 120, intColumnWidth3, 25);
+		rdoEnv3.addActionListener(this);
+		getContentPane().add(rdoEnv3);
+		rdoEnv4.setFont(fntDialog);
+		rdoEnv4.setBounds(intColumn3, 145, intColumnWidth3, 25);
+		rdoEnv4.addActionListener(this);
+		getContentPane().add(rdoEnv4);
+		rdoEnv5.setFont(fntDialog);
+		rdoEnv5.setBounds(intColumn3, 170, intColumnWidth3, 25);
+		rdoEnv5.addActionListener(this);
+		getContentPane().add(rdoEnv5);
+		rdoEnv6.setFont(fntDialog);
+		rdoEnv6.setBounds(intColumn3, 195, intColumnWidth3, 25);
+		rdoEnv6.addActionListener(this);
+		getContentPane().add(rdoEnv6);
+		grpEnvironment.add(rdoEnvTestValue);
+		grpEnvironment.add(rdoEnv1);
+		grpEnvironment.add(rdoEnv2);
+		grpEnvironment.add(rdoEnv3);
+		grpEnvironment.add(rdoEnv4);
+		grpEnvironment.add(rdoEnv5);
+		grpEnvironment.add(rdoEnv6);
+		//lblSelectTheApplication
+		lblSelectTheApplication.setFont(fntDialog);
+		lblSelectTheApplication.setHorizontalAlignment(SwingConstants.LEFT);
+		lblSelectTheApplication.setBounds(12, 141, 398, 35);
+		getContentPane().add(lblSelectTheApplication);
+		cboApplication.setFont(fntDialog);
+		cboApplication.setToolTipText("Tip the tool");
+		cboApplication.setBounds(12, 175, 410, 40);
+		cboApplication.setEnabled(false);
+		cboApplication.addActionListener(this);
+		getContentPane().add(cboApplication);
+		//lblSelectTheTest
+		lblSelectTheTest.setHorizontalAlignment(SwingConstants.LEFT);
+		lblSelectTheTest.setFont(fntDialog);
+		lblSelectTheTest.setBounds(12, 252, 398, 35);
+		getContentPane().add(lblSelectTheTest);
+		cboTest.setToolTipText("Tip the tool");
+		cboTest.setFont(fntDialog);
+		cboTest.setBounds(12, 283, 708, 40);
+		cboTest.setEnabled(false);
+		cboTest.addActionListener(this);
+		getContentPane().add(cboTest);
+		btnRun.setFont(fntDialog);
+		btnRun.setBounds(12, 373, 310, 55);
+		btnRun.setEnabled(false);
+		btnRun.addActionListener(this);
+		getContentPane().add(btnRun);
+		btnCancel.setFont(fntDialog);
+		btnCancel.setBounds(410, 373, 310, 55);
+		btnCancel.addActionListener(this);
+		getContentPane().add(btnCancel);
+		Config.getInstance().browserSelection = "value in test";
+		//mstrTestEnvironment = "test value";
+		Config.getInstance().environment = "test value";
+		this.setVisible(true);
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent objActionEvent) {
@@ -200,18 +200,18 @@ class DialogLocal extends JDialog implements ActionListener {
 			strRadioButtonText = objJRadioButton.getText();
 			if (grpSelectedGroup.equals(grpTestArea)) {
 				this.mstrTestArea = strRadioButtonText;
-				Paths.getInstance().testArea = strRadioButtonText;
-				Paths.getInstance().setDirectory(strRadioButtonText);
-				Logger.getInstance().add("data_EnvironmentURL: Paths.getInstance().pathTestData = " + Paths.getInstance().pathTestData);
-				mstrPath = (Paths.getInstance().pathSystemUserDir + "/" + Paths.getInstance().pathTestConfiguration).replaceAll("\\\\", "/");
+				Config.getInstance().testArea = strRadioButtonText;
+				Path.getInstance().setDirectory(strRadioButtonText);
+				Logger.getInstance().add("data_EnvironmentURL: Paths.getInstance().pathTestData = " + Path.getInstance().testData);
+				mstrPath = (Path.getInstance().systemUserDir + "/" + Path.getInstance().testConfiguration).replaceAll("\\\\", "/");
 				Logger.getInstance().add("DialogLaunch:actionPerformed mstrPath = " + mstrPath);
 				this.getApplications();
 			} else if (grpSelectedGroup.equals(grpBrowser)) {
-				gstrBrowserSelection = strRadioButtonText;
+				Config.getInstance().browserSelection = strRadioButtonText;
 			} else if (grpSelectedGroup.equals(grpEnvironment)) {
-				Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
-				gstrEnvironment = strRadioButtonText;
-				Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
+				Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + Config.getInstance().environment);
+				Config.getInstance().environment = strRadioButtonText;
+				Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + Config.getInstance().environment);
 			}
 		}
 		if (objActionEvent.getSource() == cboApplication) {
@@ -221,17 +221,17 @@ class DialogLocal extends JDialog implements ActionListener {
 			btnRun.setEnabled(true);
 		}
 		if (objActionEvent.getSource() == btnRun) {
-			Paths.getInstance().nameTest = (String) cboTest.getSelectedItem();
-			if (!gstrEnvironment.equals("test value")) {
-				Logger.getInstance().add("DialogLaunch:actionPerformed Paths.getInstance().pathTestData = " + Paths.getInstance().pathTestData);
-				String strFilePathTestData = Paths.getInstance().pathTestData + "Environments.json";
+			Config.getInstance().testName = (String) cboTest.getSelectedItem();
+			if (!Config.getInstance().environment.equals("test value")) {
+				Logger.getInstance().add("DialogLaunch:actionPerformed Paths.getInstance().pathTestData = " + Path.getInstance().testData);
+				String strFilePathTestData = Path.getInstance().testData + "Environments.json";
 				Logger.getInstance().add("DialogLaunch:actionPerformed strFilePathTestData = " + strFilePathTestData);
 				try {
 					JSON objJsonObjectFile = new JSON();
 					objJsonObjectFile.replaceAllFromFile(strFilePathTestData);
-					Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
-					gstrEnvironment = objJsonObjectFile.getString(gstrEnvironment);
-					Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
+					Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + Config.getInstance().environment);
+					Config.getInstance().environment = objJsonObjectFile.getString(Config.getInstance().environment);
+					Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + Config.getInstance().environment);
 				} catch (Exception e) {
 					Logger.getInstance().add("DialogLaunch:actionPerformed Exception = " + e.toString());
 				}

@@ -124,27 +124,14 @@ import autoitx4java.AutoItX;
 public class Dragonfly {
 	// System.exit(0);
 	private AutoItSetObject objAutoItSetObject = new AutoItSetObject();
-	private Boolean gblnSyncAlert = false;
-	private Boolean gblnSyncAngularJs = false;
-	private Boolean gblnSyncDoPostBack = false;
-	private Boolean gblnSyncJQueryAjax = false;
-	private Boolean gblnSyncJQueryAnimation = false;
-	private Boolean gblnSyncPleaseWait = false;
-	private Boolean gblnSyncWaitForReadyState = false;
-	private Double gdblDevicePixelRatio = (double) 1;
 	private JSONArray gobjJsonArrayTestInstances = null;
 	private JSONArray gobjJsonArrayTestSteps = null;
-	private OperatingSystem gobjOperatingSystem = new OperatingSystem();
-	private String gstrBrowserSelection;
-	private String gstrEnvironment;
-	static String gstrOriginalAttributes;
-	static String gstrOriginalInputValue;
 	private TestConfigurationSetup objTestConfigurationSetup = new TestConfigurationSetup();
-	private WebDriver gobjWebDriver = null;
+	//private WebDriver BrowserDriver.getInstance().browserDriver = null;
 	private WebElement gobjWebElement = null;
-	private WebElement gobjWebElementDrag = null;
+	//private WebElement gobjWebElementDrag = null;
 	private WebElement gobjWebElementDrop = null;
-	private WebElement gobjWebElementPleaseWait = null;
+	//private WebElement gobjWebElementPleaseWaitSync = null;
 	static JSON gobjectElement = new JSON();
 	static JSON gobjectLinks = new JSON();
 	private JSON gobjectProcessing = new JSON();
@@ -157,7 +144,7 @@ public class Dragonfly {
 			Logger.getInstance().add("  ==start==>AlertFind " + new DateTimestamp().get());
 			long lngStartTime = System.currentTimeMillis();
 			try {
-				String strAlertPresent = gobjWebDriver.switchTo().alert().getText();
+				String strAlertPresent = BrowserDriver.getInstance().browserDriver.switchTo().alert().getText();
 				Logger.getInstance().add("AlertFind: alert found:  " + strAlertPresent);
 				return true;
 			} catch (UnhandledAlertException e) {
@@ -203,8 +190,8 @@ public class Dragonfly {
 
 	private class BrowserClose {
 		private BrowserClose() {
-			gobjWebDriver.close();
-			gobjWebDriver.quit();
+			BrowserDriver.getInstance().browserDriver.close();
+			BrowserDriver.getInstance().browserDriver.quit();
 			gobjectStep.putValue("strStatus", "pass");
 			new CoordinateHighlightScreenshot(gobjectStep);
 		}
@@ -226,20 +213,20 @@ public class Dragonfly {
 			Logger.getInstance().add("  ==start==>BrowserLaunch " + new DateTimestamp().get());
 			DesiredCapabilities objDesiredCapabilities = null;
 			Long lngTimeStart = System.currentTimeMillis();
-			Logger.getInstance().add("objVariablesCommon.gstrBrowserSelection = " + gstrBrowserSelection);
-			if (gstrBrowserSelection != "value in test") {
-				gobjectStep.putValue("strTagName", gstrBrowserSelection);
+			Logger.getInstance().add("objVariablesCommon.gstrBrowserSelection = " + Config.getInstance().browserSelection);
+			if (Config.getInstance().browserSelection != "value in test") {
+				gobjectStep.putValue("strTagName", Config.getInstance().browserSelection);
 			} else {
-				gstrBrowserSelection = gobjectStep.getString("strTagName");
+				Config.getInstance().browserSelection = gobjectStep.getString("strTagName");
 			}
 			try {
 				gobjectStep.putValue("strStatus", "pass");
 				switch (gobjectStep.getString("strTagName")) {
 				case "firefox":
-					gobjWebDriver = new FirefoxDriver();
-					gobjWebDriver.get(gobjectStep.getString("strInputValue"));
-					gobjWebDriver.manage().window().maximize();
-					Actions myAction = new Actions(gobjWebDriver);
+					BrowserDriver.getInstance().browserDriver = new FirefoxDriver();
+					BrowserDriver.getInstance().browserDriver.get(gobjectStep.getString("strInputValue"));
+					BrowserDriver.getInstance().browserDriver.manage().window().maximize();
+					Actions myAction = new Actions(BrowserDriver.getInstance().browserDriver);
 					myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL).build().perform();
 					break;
 				case "ie_64":
@@ -252,8 +239,8 @@ public class Dragonfly {
 					objDesiredCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, false);
 					objDesiredCapabilities.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
 					//if (blnAttach == false) {
-					System.setProperty("webdriver.ie.driver", Paths.getInstance().pathSystemUserDir + "\\Drivers\\IEDriverServer_64.exe");
-					gobjWebDriver = new InternetExplorerDriver(new InternetExplorerOptions().merge(objDesiredCapabilities));
+					System.setProperty("webdriver.ie.driver", Path.getInstance().systemUserDir + "\\Drivers\\IEDriverServer_64.exe");
+					BrowserDriver.getInstance().browserDriver = new InternetExplorerDriver(new InternetExplorerOptions().merge(objDesiredCapabilities));
 					//}
 					break;
 				case "ie":
@@ -272,31 +259,31 @@ public class Dragonfly {
 					objDesiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
 					Logger.getInstance().add("BrowserLaunch: INITIAL_BROWSER_URL");
 					objDesiredCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
-					Logger.getInstance().add("BrowserLaunch: webdriver.ie.driver" + Paths.getInstance().pathSystemUserDir + "\\Drivers\\IEDriverServer_32.exe");
-					System.setProperty("webdriver.ie.driver", Paths.getInstance().pathSystemUserDir + "\\Drivers\\IEDriverServer_32.exe");
+					Logger.getInstance().add("BrowserLaunch: webdriver.ie.driver" + Path.getInstance().systemUserDir + "\\Drivers\\IEDriverServer_32.exe");
+					System.setProperty("webdriver.ie.driver", Path.getInstance().systemUserDir + "\\Drivers\\IEDriverServer_32.exe");
 					System.setProperty("webdriver.ie.driver.loglevel", "DEBUG");
 					//System.setProperty("webdriver.ie.driver.logfile", "C:\\temp\\IEDriverLog.log");
-					System.setProperty("webdriver.ie.driver.logfile", Paths.getInstance().pathResults + "IEDriverLog.log");
+					System.setProperty("webdriver.ie.driver.logfile", Path.getInstance().results + "IEDriverLog.log");
 					// System.setProperty("webdriver.ie.driver.host","5555");
 					Logger.getInstance().add("BrowserLaunch: new InternetExplorerDriver(desiredCapabilities)");
-					gobjWebDriver = new InternetExplorerDriver(objDesiredCapabilities);
-					//					gobjWebDriver.manage().getCookieNamed("JSESSIONID");
+					BrowserDriver.getInstance().browserDriver = new InternetExplorerDriver(objDesiredCapabilities);
+					//					BrowserDriver.getInstance().browserDriver.manage().getCookieNamed("JSESSIONID");
 					try {
-						System.out.println("BrowserLaunch: getCookieNamed JSESSIONID " + gobjWebDriver.manage().getCookies().toString());
-						//System.out.println("BrowserLaunch: getCookieNamed JSESSIONID " +gobjWebDriver.manage().getCookieNamed("JSESSIONID").toString());
+						System.out.println("BrowserLaunch: getCookieNamed JSESSIONID " + BrowserDriver.getInstance().browserDriver.manage().getCookies().toString());
+						//System.out.println("BrowserLaunch: getCookieNamed JSESSIONID " +BrowserDriver.getInstance().browserDriver.manage().getCookieNamed("JSESSIONID").toString());
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						Logger.getInstance().add("BrowserLaunch: Exception getCookieNamed " + e.toString());
 					}
-					// gobjWebDriver.manage().deleteCookieNamed("JSESSIONID");
+					// BrowserDriver.getInstance().browserDriver.manage().deleteCookieNamed("JSESSIONID");
 					Logger.getInstance().add("BrowserLaunch: gobjectStep.getString(strInputValue)  = " + gobjectStep.getString("strInputValue"));
-					gobjWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-					//gobjWebDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
-					gobjWebDriver.manage().timeouts().setScriptTimeout(0, TimeUnit.SECONDS);
-					gobjWebDriver.get(gobjectStep.getString("strInputValue"));
-					// Logger.getInstance().add("browserLaunch: getCookieNamed(JSESSIONID) = " + gobjWebDriver.manage().getCookieNamed("JSESSIONID").toString());
-					Logger.getInstance().add("BrowserLaunch: gobjWebDriver.manage().window().maximize()");
-					gobjWebDriver.manage().window().maximize();
+					BrowserDriver.getInstance().browserDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+					//BrowserDriver.getInstance().browserDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
+					BrowserDriver.getInstance().browserDriver.manage().timeouts().setScriptTimeout(0, TimeUnit.SECONDS);
+					BrowserDriver.getInstance().browserDriver.get(gobjectStep.getString("strInputValue"));
+					// Logger.getInstance().add("browserLaunch: getCookieNamed(JSESSIONID) = " + BrowserDriver.getInstance().browserDriver.manage().getCookieNamed("JSESSIONID").toString());
+					Logger.getInstance().add("BrowserLaunch: BrowserDriver.getInstance().browserDriver.manage().window().maximize()");
+					BrowserDriver.getInstance().browserDriver.manage().window().maximize();
 					//Capabilities getCapabilities();
 					break;
 				//var myOptions = new InternetExplorerOptions()
@@ -324,9 +311,9 @@ public class Dragonfly {
 					DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 					capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 					//WebDriver driver = new ChromeDriver(capabilities);
-					switch (gobjOperatingSystem.strOS) {
+					switch (OperatingSystem.get()) {
 					case "Windows":
-						System.setProperty("webdriver.chrome.driver", Paths.getInstance().pathSystemUserDir + "\\Drivers\\chromedriver.exe");
+						System.setProperty("webdriver.chrome.driver", Path.getInstance().systemUserDir + "\\Drivers\\chromedriver.exe");
 						break;
 					case "Mac":
 						System.setProperty("webdriver.chrome.driver", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome");
@@ -335,14 +322,14 @@ public class Dragonfly {
 						// TODO need to raise an error and log
 						break;
 					}
-					gobjWebDriver = new ChromeDriver(capabilities);
-					gobjWebDriver.get(gobjectStep.getString("strInputValue"));
-					gobjWebDriver.manage().window().maximize();
+					BrowserDriver.getInstance().browserDriver = new ChromeDriver(capabilities);
+					BrowserDriver.getInstance().browserDriver.get(gobjectStep.getString("strInputValue"));
+					BrowserDriver.getInstance().browserDriver.manage().window().maximize();
 					break;
 				case "safari":
-					gobjWebDriver = new SafariDriver();
-					gobjWebDriver.get(gobjectStep.getString("strInputValue"));
-					gobjWebDriver.manage().window().maximize();
+					BrowserDriver.getInstance().browserDriver = new SafariDriver();
+					BrowserDriver.getInstance().browserDriver.get(gobjectStep.getString("strInputValue"));
+					BrowserDriver.getInstance().browserDriver.manage().window().maximize();
 					break;
 				case "opera":
 					// TODO OperaDriver setup latest driver and test desiredCapabilities = DesiredCapabilities.internetExplorer();
@@ -350,18 +337,18 @@ public class Dragonfly {
 					// 		WebDriver driver = new OperaDriver();
 					// 		driver.get("https://duckduckgo.com/");
 					// desiredCapabilities.setJavascriptEnabled(true);
-					//gobjWebDriver = new OperaDriver();
-					//setGobjWebDriver(new OperaDriver());
-					gobjWebDriver = new OperaDriver();
-					gobjWebDriver.get(gobjectStep.getString("strInputValue"));
-					// gobjWebDriver.manage().window().maximize();
-					// gobjWebDriver.manage().window().setPosition(new Point(0, 0));
+					//BrowserDriver.getInstance().browserDriver = new OperaDriver();
+					//setBrowserDriver.getInstance().browserDriver(new OperaDriver());
+					BrowserDriver.getInstance().browserDriver = new OperaDriver();
+					BrowserDriver.getInstance().browserDriver.get(gobjectStep.getString("strInputValue"));
+					// BrowserDriver.getInstance().browserDriver.manage().window().maximize();
+					// BrowserDriver.getInstance().browserDriver.manage().window().setPosition(new Point(0, 0));
 					// Dimension dim = new Dimension(1382, 754);
-					// gobjWebDriver.manage().window().setSize(dim);
+					// BrowserDriver.getInstance().browserDriver.manage().window().setSize(dim);
 					// Selenium selenium;
-					// gobjWebDriver = new OperaDriver();
-					// selenium = new WebDriverBackedSelenium(gobjWebDriver, "https://www.google.com/");
-					// return gobjWebDriver;
+					// BrowserDriver.getInstance().browserDriver = new OperaDriver();
+					// selenium = new WebDriverBackedSelenium(BrowserDriver.getInstance().browserDriver, "https://www.google.com/");
+					// return BrowserDriver.getInstance().browserDriver;
 					break;
 				default:
 					gobjectStep.putValue("strStatus", "fail");
@@ -370,7 +357,7 @@ public class Dragonfly {
 			} catch (Exception e) {
 				Logger.getInstance().add("BrowserLaunch: Exception" + e.toString());
 			} finally {
-				gobjectStep.putValue("strCurrentWindowHandle", gobjWebDriver.getWindowHandle());
+				gobjectStep.putValue("strCurrentWindowHandle", BrowserDriver.getInstance().browserDriver.getWindowHandle());
 			}
 		}
 	}
@@ -401,7 +388,7 @@ public class Dragonfly {
 	private class BrowserRefresh {
 		private BrowserRefresh() {
 			Logger.getInstance().add("  ==start==>BrowserRefresh " + new DateTimestamp().get());
-			gobjWebDriver.navigate().refresh();
+			BrowserDriver.getInstance().browserDriver.navigate().refresh();
 		}
 	}
 
@@ -529,7 +516,7 @@ public class Dragonfly {
 				try {
 					new RectangleAreaByName(0, gobjectStep.getString("strScreenshotArea"), objHighlightArea);
 					BufferedImage objScreenShot = new Robot().createScreenCapture(objHighlightArea);
-					strScreenshotFilePath = Paths.getInstance().pathImages + "Screenshot_" + new DateTimestamp().get() + ".jpg";
+					strScreenshotFilePath = Path.getInstance().images + "Screenshot_" + new DateTimestamp().get() + ".jpg";
 					Thread objThread = new Thread(new ThreadSaveImage(objScreenShot, "jpg", strScreenshotFilePath));
 					objThread.start();
 					gobjectStep.putValue("strScreenshotFilePath", strScreenshotFilePath);
@@ -636,34 +623,34 @@ public class Dragonfly {
 			long lngBrowserInnerWidth = 0;
 			long lngBrowserInnerHeight = 0;
 			try {
-				switch (gstrBrowserSelection.toLowerCase()) {
+				switch (Config.getInstance().browserSelection.toLowerCase()) {
 				case "ie":
 				case "internet explorer":
 					Logger.getInstance().add("CoordinatesBrowserInner: ie");
-					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.screenLeft;");
-					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.screenTop;");
+					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return window.screenLeft;");
+					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return window.screenTop;");
 					gobjectStep.putValue("intBrowserInnerWidth", Long.toString(lngBrowserInnerWidth));
 					gobjectStep.putValue("intBrowserInnerHeight", Long.toString(lngBrowserInnerHeight));
 					break;
 				case "firefox":
 					Logger.getInstance().add("CoordinatesBrowserInner: firefox");
-					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return Math.round(window.mozInnerScreenX * window.devicePixelRatio);");
-					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return Math.round(window.mozInnerScreenY * window.devicePixelRatio);");
+					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return Math.round(window.mozInnerScreenX * window.devicePixelRatio);");
+					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return Math.round(window.mozInnerScreenY * window.devicePixelRatio);");
 					gobjectStep.putValue("intBrowserInnerWidth", Long.toString(lngBrowserInnerWidth));
 					gobjectStep.putValue("intBrowserInnerHeight", Long.toString(lngBrowserInnerHeight));
-					gdblDevicePixelRatio = (Double) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.devicePixelRatio;");
-					Logger.getInstance().add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + gdblDevicePixelRatio.toString());
+					Config.getInstance().devicePixelRatio = (Double) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return window.devicePixelRatio;");
+					Logger.getInstance().add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + Config.getInstance().devicePixelRatio.toString());
 					Logger.getInstance().add("CoordinatesBrowserInner: lngBrowserInnerWidth = " + lngBrowserInnerWidth);
 					Logger.getInstance().add("CoordinatesBrowserInner: intBrowserInnerHeight = " + lngBrowserInnerHeight);
 					break;
 				case "chrome":
-					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
-					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
-					Long lngDevicePixelRatio = (Long) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.devicePixelRatio;");
+					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return  Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);");
+					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return  Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);");
+					Long lngDevicePixelRatio = (Long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return window.devicePixelRatio;");
 					Logger.getInstance().add("CoordinatesBrowserInner: lngDevicePixelRatio = " + lngDevicePixelRatio.toString());
-					//gdblDevicePixelRatio = (Double) ((JavascriptExecutor) gobjWebDriver).executeScript("return window.devicePixelRatio;");
-					gdblDevicePixelRatio = Double.parseDouble(lngDevicePixelRatio.toString());
-					Logger.getInstance().add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + gdblDevicePixelRatio.toString());
+					//gdblDevicePixelRatio = (Double) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return window.devicePixelRatio;");
+					Config.getInstance().devicePixelRatio = Double.parseDouble(lngDevicePixelRatio.toString());
+					Logger.getInstance().add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + Config.getInstance().devicePixelRatio.toString());
 					gobjectStep.putValue("intBrowserInnerWidth", Long.toString(lngBrowserInnerWidth));
 					gobjectStep.putValue("intBrowserInnerHeight", Long.toString(lngBrowserInnerHeight));
 					break;
@@ -702,15 +689,15 @@ public class Dragonfly {
 					Point objElementPoint = objElementCoordinates.inViewPort();
 					System.out.println("before objElementDimension");
 					Dimension objElementDimension = gobjWebElement.getSize();
-					gobjectStep.putValue("intElementX", Integer.toString((int) Math.round(objElementPoint.x * gdblDevicePixelRatio)));
-					gobjectStep.putValue("intElementY", Integer.toString((int) Math.round(objElementPoint.y * gdblDevicePixelRatio)));
-					gobjectStep.putValue("intElementWidth", Integer.toString((int) Math.round(objElementDimension.width * gdblDevicePixelRatio)));
-					gobjectStep.putValue("intElementHeight", Integer.toString((int) Math.round(objElementDimension.height * gdblDevicePixelRatio)));
+					gobjectStep.putValue("intElementX", Integer.toString((int) Math.round(objElementPoint.x * Config.getInstance().devicePixelRatio)));
+					gobjectStep.putValue("intElementY", Integer.toString((int) Math.round(objElementPoint.y * Config.getInstance().devicePixelRatio)));
+					gobjectStep.putValue("intElementWidth", Integer.toString((int) Math.round(objElementDimension.width * Config.getInstance().devicePixelRatio)));
+					gobjectStep.putValue("intElementHeight", Integer.toString((int) Math.round(objElementDimension.height * Config.getInstance().devicePixelRatio)));
 					Logger.getInstance().add("  ==end==>CoordinatesElement objElementPoint.x " + objElementPoint.x);
 					Logger.getInstance().add("  ==end==>CoordinatesElement objElementPoint.y " + objElementPoint.y);
 					Logger.getInstance().add("  ==end==>CoordinatesElement objElementDimension.width " + objElementDimension.width);
 					Logger.getInstance().add("  ==end==>CoordinatesElement objElementDimension.height " + objElementDimension.height);
-					Logger.getInstance().add("  ==end==>CoordinatesElement gdblDevicePixelRatio " + gdblDevicePixelRatio.toString());
+					Logger.getInstance().add("  ==end==>CoordinatesElement gdblDevicePixelRatio " + Config.getInstance().devicePixelRatio.toString());
 				}
 				System.out.println("before intElementX");
 				int intElementX = gobjectStep.getInt("intElementX");
@@ -893,9 +880,9 @@ public class Dragonfly {
 			btnCancel.setBounds(410, 373, 310, 55);
 			btnCancel.addActionListener(this);
 			getContentPane().add(btnCancel);
-			gstrBrowserSelection = "value in test";
+			Config.getInstance().browserSelection = "value in test";
 			//mstrTestEnvironment = "test value";
-			gstrEnvironment = "test value";
+			Config.getInstance().environment = "test value";
 			this.setVisible(true);
 		}
 
@@ -911,18 +898,18 @@ public class Dragonfly {
 				strRadioButtonText = objJRadioButton.getText();
 				if (grpSelectedGroup.equals(grpTestArea)) {
 					this.mstrTestArea = strRadioButtonText;
-					Paths.getInstance().testArea = strRadioButtonText;
-					Paths.getInstance().setDirectory(strRadioButtonText);
-					Logger.getInstance().add("data_EnvironmentURL: Paths.getInstance().pathTestData = " + Paths.getInstance().pathTestData);
-					mstrPath = (Paths.getInstance().pathSystemUserDir + "/" + Paths.getInstance().pathTestConfiguration).replaceAll("\\\\", "/");
+					Config.getInstance().testArea = strRadioButtonText;
+					Path.getInstance().setDirectory(strRadioButtonText);
+					Logger.getInstance().add("data_EnvironmentURL: Paths.getInstance().pathTestData = " + Path.getInstance().testData);
+					mstrPath = (Path.getInstance().systemUserDir + "/" + Path.getInstance().testConfiguration).replaceAll("\\\\", "/");
 					Logger.getInstance().add("DialogLaunch:actionPerformed mstrPath = " + mstrPath);
 					this.getApplications();
 				} else if (grpSelectedGroup.equals(grpBrowser)) {
-					gstrBrowserSelection = strRadioButtonText;
+					Config.getInstance().browserSelection = strRadioButtonText;
 				} else if (grpSelectedGroup.equals(grpEnvironment)) {
-					Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
-					gstrEnvironment = strRadioButtonText;
-					Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
+					Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + Config.getInstance().environment);
+					Config.getInstance().environment = strRadioButtonText;
+					Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + Config.getInstance().environment);
 				}
 			}
 			if (objActionEvent.getSource() == cboApplication) {
@@ -932,17 +919,17 @@ public class Dragonfly {
 				btnRun.setEnabled(true);
 			}
 			if (objActionEvent.getSource() == btnRun) {
-				Paths.getInstance().nameTest = (String) cboTest.getSelectedItem();
-				if (!gstrEnvironment.equals("test value")) {
-					Logger.getInstance().add("DialogLaunch:actionPerformed Paths.getInstance().pathTestData = " + Paths.getInstance().pathTestData);
-					String strFilePathTestData = Paths.getInstance().pathTestData + "Environments.json";
+				Config.getInstance().testName = (String) cboTest.getSelectedItem();
+				if (!Config.getInstance().environment.equals("test value")) {
+					Logger.getInstance().add("DialogLaunch:actionPerformed Paths.getInstance().pathTestData = " + Path.getInstance().testData);
+					String strFilePathTestData = Path.getInstance().testData + "Environments.json";
 					Logger.getInstance().add("DialogLaunch:actionPerformed strFilePathTestData = " + strFilePathTestData);
 					try {
 						JSON objJsonObjectFile = new JSON();
 						objJsonObjectFile.replaceAllFromFile(strFilePathTestData);
-						Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
-						gstrEnvironment = objJsonObjectFile.getString(gstrEnvironment);
-						Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + gstrEnvironment);
+						Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + Config.getInstance().environment);
+						Config.getInstance().environment = objJsonObjectFile.getString(Config.getInstance().environment);
+						Logger.getInstance().add("DialogLaunch:actionPerformed gstrEnvironment = " + Config.getInstance().environment);
 					} catch (Exception e) {
 						Logger.getInstance().add("DialogLaunch:actionPerformed Exception = " + e.toString());
 					}
@@ -1127,7 +1114,7 @@ public class Dragonfly {
 						new ElementEnabled();
 						blnEnabled = true;
 					}
-					gobjWebElementDrag = gobjWebElement;
+					ElementDrag.getInstance().elementDrag = gobjWebElement;
 					blnStatus = true;
 				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 					blnFound = false;
@@ -1181,15 +1168,15 @@ public class Dragonfly {
 						blnEnabled = true;
 					}
 					gobjWebElementDrop = gobjWebElement;
-					//Actions actions = new Actions(gobjWebDriver);
+					//Actions actions = new Actions(BrowserDriver.getInstance().browserDriver);
 					//actions.dragAndDrop(gobjWebElementDrag, gobjWebElementDrop).perform();
-					// 	Actions action = new Actions(gobjWebDriver);
+					// 	Actions action = new Actions(BrowserDriver.getInstance().browserDriver);
 					// 	Action dragDrop = action.dragAndDrop(gobjWebElementDrag, gobjWebElementDrop).build();
 					// 	dragDrop.perform();
-					Actions objActions = new Actions(gobjWebDriver);
-					Action objDragAndDrop = objActions.clickAndHold(gobjWebElementDrag).moveToElement(gobjWebElementDrop).release(gobjWebElementDrop).build();
+					Actions objActions = new Actions(BrowserDriver.getInstance().browserDriver);
+					Action objDragAndDrop = objActions.clickAndHold(ElementDrag.getInstance().elementDrag).moveToElement(gobjWebElementDrop).release(gobjWebElementDrop).build();
 					objDragAndDrop.perform();
-					// 	Actions action = new Actions(gobjWebDriver);
+					// 	Actions action = new Actions(BrowserDriver.getInstance().browserDriver);
 					// 	action.dragAndDrop(gobjWebElementDrag, gobjWebElementDrop).build().perform();
 					new SleepMilliseconds(10000);
 					blnStatus = true;
@@ -1306,7 +1293,7 @@ public class Dragonfly {
 				return;
 			}
 			String strWindowHandle = "";
-			Object[] arrHandles = gobjWebDriver.getWindowHandles().toArray();
+			Object[] arrHandles = BrowserDriver.getInstance().browserDriver.getWindowHandles().toArray();
 			Collections.reverse(Arrays.asList(arrHandles));
 			for (Object objWindowHandlesEach : arrHandles) {
 				Logger.getInstance().add("ElementFind: objWindowHandlesEach.toString() = " + objWindowHandlesEach.toString());
@@ -1314,17 +1301,17 @@ public class Dragonfly {
 			for (Object objWindowHandlesEach : arrHandles) {
 				try {
 					strWindowHandle = objWindowHandlesEach.toString();
-					gobjWebDriver.switchTo().window(strWindowHandle);
+					BrowserDriver.getInstance().browserDriver.switchTo().window(strWindowHandle);
 					new CoordinatesBrowserInner();
 					List<Integer> arrRouteOriginal = new ArrayList<Integer>();
 					new ElementFindFramesSearch().run(arrRouteOriginal);
 					if (gobjWebElement != null) {
-						// Logger.getInstance().add("elementFind: gobjWebDriver.switchTo().window(strWindowHandle) = " + strWindowHandle);
-						// Logger.getInstance().add("elementFind: gobjWebDriver.getTitle = " + gobjWebDriver.getTitle());
-						// Logger.getInstance().add("ElementFindFramesSearch: gobjWebDriver.getTitle = " + gobjWebDriver.getTitle());
-						// Logger.getInstance().add("ElementFindFramesSearch: gobjWebDriver.getCurrentUrl = " + gobjWebDriver.getCurrentUrl());
-						// Logger.getInstance().add("ElementFindFramesSearch: gobjWebDriver.getWindowHandle = " + gobjWebDriver.getWindowHandle());
-						// Logger.getInstance().add("ElementFindFramesSearch gobjWebDriver.getPageSource = " + gobjWebDriver.getPageSource());
+						// Logger.getInstance().add("elementFind: BrowserDriver.getInstance().browserDriver.switchTo().window(strWindowHandle) = " + strWindowHandle);
+						// Logger.getInstance().add("elementFind: BrowserDriver.getInstance().browserDriver.getTitle = " + BrowserDriver.getInstance().browserDriver.getTitle());
+						// Logger.getInstance().add("ElementFindFramesSearch: BrowserDriver.getInstance().browserDriver.getTitle = " + BrowserDriver.getInstance().browserDriver.getTitle());
+						// Logger.getInstance().add("ElementFindFramesSearch: BrowserDriver.getInstance().browserDriver.getCurrentUrl = " + BrowserDriver.getInstance().browserDriver.getCurrentUrl());
+						// Logger.getInstance().add("ElementFindFramesSearch: BrowserDriver.getInstance().browserDriver.getWindowHandle = " + BrowserDriver.getInstance().browserDriver.getWindowHandle());
+						// Logger.getInstance().add("ElementFindFramesSearch BrowserDriver.getInstance().browserDriver.getPageSource = " + BrowserDriver.getInstance().browserDriver.getPageSource());
 						return;
 					}
 				} catch (Exception e) {
@@ -1354,16 +1341,16 @@ public class Dragonfly {
 			}
 			if (strAttributeNames.toLowerCase().equals("xpath") && blnRegularExpression.equals(false)) {
 				Logger.getInstance().add("ElementFindBy: xpath  " + strAttributeNames + " = " + strAttributeValues);
-				objWebElementCollection = gobjWebDriver.findElements(By.xpath(strAttributeValues));
+				objWebElementCollection = BrowserDriver.getInstance().browserDriver.findElements(By.xpath(strAttributeValues));
 			} else if (strAttributeNames.toLowerCase().equals("id") && blnRegularExpression.equals(false)) {
 				Logger.getInstance().add("ElementFindBy: id  " + strAttributeNames + " = " + strAttributeValues);
-				objWebElementCollection = gobjWebDriver.findElements(By.id(strAttributeValues));
+				objWebElementCollection = BrowserDriver.getInstance().browserDriver.findElements(By.id(strAttributeValues));
 			} else if (strAttributeNames.toLowerCase().equals("name") && blnRegularExpression.equals(false)) {
 				Logger.getInstance().add("ElementFindBy: name  " + strAttributeNames + " = " + strAttributeValues);
-				objWebElementCollection = gobjWebDriver.findElements(By.name(strAttributeValues));
+				objWebElementCollection = BrowserDriver.getInstance().browserDriver.findElements(By.name(strAttributeValues));
 			} else if (strAttributeNames.toLowerCase().equals("class") && blnRegularExpression.equals(false)) {
 				Logger.getInstance().add("ElementFindBy: class  " + strAttributeNames + " = " + strAttributeValues);
-				objWebElementCollection = gobjWebDriver.findElements(By.className(strAttributeValues));
+				objWebElementCollection = BrowserDriver.getInstance().browserDriver.findElements(By.className(strAttributeValues));
 			} else {
 				for (intAttributeEach = 0; intAttributeEach < arrAttributeNames.length; intAttributeEach++) {
 					strXpathAttributesTemp = "";
@@ -1424,7 +1411,7 @@ public class Dragonfly {
 				}
 				strXpath = "(//" + strTagName + strXpathAttributes + ")" + strIndex;
 				Logger.getInstance().add("ElementFindBy: strXpath = " + strXpath);
-				objWebElementCollection = gobjWebDriver.findElements(By.xpath(strXpath));
+				objWebElementCollection = BrowserDriver.getInstance().browserDriver.findElements(By.xpath(strXpath));
 			}
 			switch (objWebElementCollection.size()) {
 			case 0:
@@ -1463,7 +1450,7 @@ public class Dragonfly {
 			String strAttributeValues = gobjectStep.getString("strAttributeValues");
 			try {
 				new ElementFindBy(strAttributeNames, strAttributeValues, strTagName);
-				gobjectStep.putValue("strCurrentWindowHandle", gobjWebDriver.getWindowHandle());
+				gobjectStep.putValue("strCurrentWindowHandle", BrowserDriver.getInstance().browserDriver.getWindowHandle());
 				if (gobjectStep.verifyEquals("strTagName", "input")) {
 					if (gobjectStep.getString("strType").length() == 0) {
 						gobjectStep.putValue("strType", gobjWebElement.getAttribute("type"));
@@ -1479,19 +1466,19 @@ public class Dragonfly {
 				Logger.getInstance().add("ElementFindFramesSearch: Exception = " + e.toString());
 			}
 			if (arrFramePath.size() < intMaximumDepth) {
-				int intFramesCount = gobjWebDriver.findElements(By.tagName("frame")).size();
+				int intFramesCount = BrowserDriver.getInstance().browserDriver.findElements(By.tagName("frame")).size();
 				for (int intFramesEach = 0; intFramesEach < intFramesCount; intFramesEach++) {
 					try {
-						gobjWebDriver.switchTo().frame(intFramesEach);
+						BrowserDriver.getInstance().browserDriver.switchTo().frame(intFramesEach);
 						List<Integer> arrFramePathNew = new ArrayList<Integer>(arrFramePath);
 						arrFramePathNew.add(intFramesEach);
 						blnReturn = new ElementFindFramesSearch().run(arrFramePathNew);
 						if (blnReturn == true) {
 							return true;
 						}
-						gobjWebDriver.switchTo().defaultContent();
+						BrowserDriver.getInstance().browserDriver.switchTo().defaultContent();
 						for (int intFramesPathEach : arrFramePath)
-							gobjWebDriver.switchTo().frame(intFramesPathEach);
+							BrowserDriver.getInstance().browserDriver.switchTo().frame(intFramesPathEach);
 					} catch (NoSuchFrameException error) {
 						blnReturn = false;
 						Logger.getInstance().add("ElementFindFramesSearch: NoSuchFrameException = " + error.toString());
@@ -1511,7 +1498,7 @@ public class Dragonfly {
 			AutoItX objAutoIt = objAutoItSetObject.getObject();
 			switch (gobjectStep.getLowerCase("strTagType")) {
 			case "title":
-				return gobjWebDriver.getTitle();
+				return BrowserDriver.getInstance().browserDriver.getTitle();
 			case "img":
 				return gobjWebElement.getAttribute("src");
 			case "input_button":
@@ -1554,7 +1541,7 @@ public class Dragonfly {
 				// 	WebElement option = ((Select) gobjWebElement).getFirstSelectedOption();
 				// 	Logger.getInstance().add("ElementGet: option.getText() = " + option.getText());
 				//return ((Select) gobjWebElement).getFirstSelectedOption().getText().replaceAll("\\s{2,}", " ");
-				JavascriptExecutor objExecutor = (JavascriptExecutor) gobjWebDriver;
+				JavascriptExecutor objExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
 				return ((String) objExecutor.executeScript("var select = arguments[0];var selection=select.options[select.selectedIndex].text;return selection;", gobjWebElement)).trim();
 			case "table":
 				return gobjWebElement.getText();
@@ -1562,7 +1549,7 @@ public class Dragonfly {
 				if (gobjectStep.verifyEquals("strAttributeValues", "title")) {
 					return objAutoIt.winGetTitle("[ACTIVE]");
 				} else {
-					return gobjWebDriver.switchTo().alert().getText();
+					return BrowserDriver.getInstance().browserDriver.switchTo().alert().getText();
 				}
 			default:
 				throw new ExceptionElementTagNameNotSupported("Element tag not supported");
@@ -1711,7 +1698,7 @@ public class Dragonfly {
 		private String run() {
 			return null;
 			//long lngStartTimegetElementsByTagName2 = System.currentTimeMillis();
-			//List<WebElement> objCollectionJS2 = (List<WebElement>) ((JavascriptExecutor) gobjWebDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
+			//List<WebElement> objCollectionJS2 = (List<WebElement>) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
 			// Logger.getInstance().add("ElementJavascriptExecutorGetElementsByTagName objCollectionJS2 = " + objCollectionJS2.size() + " strTagName = " + strTagName + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName2));
 			//if (objCollectionJS2.size() > 0) {
 			//	long lngStartTimeByXpath = System.currentTimeMillis();
@@ -1722,21 +1709,21 @@ public class Dragonfly {
 	private class ElementJavascriptExecutorXPath {
 		private String run() {
 			Logger.getInstance().add("  ==start==>ElementJavascriptExecutorXPath " + new DateTimestamp().get());
-			return (String) ((JavascriptExecutor) gobjWebDriver).executeScript("gPt=function(c){if(c.id!==''){return'id(\"'+c.id+'\")'}if(c===document.body){return c.tagName}var a=0;var e=c.parentNode.childNodes;for(var b=0;b<e.length;b++){var d=e[b];if(d===c){return gPt(c.parentNode)+'/'+c.tagName+'['+(a+1)+']'}if(d.nodeType===1&&d.tagName===c.tagName){a++}}};return gPt(arguments[0]).toLowerCase();", gobjWebElement);
+			return (String) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("gPt=function(c){if(c.id!==''){return'id(\"'+c.id+'\")'}if(c===document.body){return c.tagName}var a=0;var e=c.parentNode.childNodes;for(var b=0;b<e.length;b++){var d=e[b];if(d===c){return gPt(c.parentNode)+'/'+c.tagName+'['+(a+1)+']'}if(d.nodeType===1&&d.tagName===c.tagName){a++}}};return gPt(arguments[0]).toLowerCase();", gobjWebElement);
 		}
 	}
 
 	private class ElementOnMouseOut {
 		private ElementOnMouseOut() {
 			Logger.getInstance().add("  ==start==>ElementOnMouseOut " + new DateTimestamp().get());
-			Actions objActions = new Actions(gobjWebDriver);
+			Actions objActions = new Actions(BrowserDriver.getInstance().browserDriver);
 			// Dimension objWebDriverDimension = gobjWebElement.getSize();
 			// int intElementWidth = objWebDriverDimension.width;
 			// int intElementHeight = objWebDriverDimension.height;
 			int intElementWidth = gobjectStep.getInt("intElementWidth");
 			int intElementHeight = gobjectStep.getInt("intElementHeight");
 			objActions.moveByOffset(-((intElementWidth / 2) + 1), -((intElementHeight / 2) + 1)).build().perform();
-			JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) gobjWebDriver;
+			JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
 			objJavascriptExecutor.executeScript("arguments[0].onmouseout();", gobjWebElement);
 		}
 	}
@@ -1800,10 +1787,10 @@ public class Dragonfly {
 	private class ElementOnMouseOver {
 		private ElementOnMouseOver() {
 			Logger.getInstance().add("  ==start==>ElementOnMouseOver " + new DateTimestamp().get());
-			Actions objActions = new Actions(gobjWebDriver);
+			Actions objActions = new Actions(BrowserDriver.getInstance().browserDriver);
 			objActions.moveToElement(gobjWebElement).build().perform();
 			JavascriptExecutor objJavascriptExecutor = null;
-			objJavascriptExecutor = (JavascriptExecutor) gobjWebDriver;
+			objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
 			objJavascriptExecutor.executeScript("arguments[0].onmouseover();", gobjWebElement);
 		}
 	}
@@ -1864,9 +1851,9 @@ public class Dragonfly {
 		}
 	}
 
-	private class ElementPleaseWait {
-		private ElementPleaseWait() throws ExceptionElementNotHidden {
-			Logger.getInstance().add("  ==start==>ElementPleaseWait " + new DateTimestamp().get());
+	private class ElementPleaseWaitSync {
+		private ElementPleaseWaitSync() throws ExceptionElementNotHidden {
+			Logger.getInstance().add("  ==start==>ElementPleaseWaitSync " + new DateTimestamp().get());
 			long lngStartTime = System.currentTimeMillis();
 			Boolean blnPleaseWait = Boolean.parseBoolean(gobjectStep.getString("blnPleaseWait"));
 			Integer intPleaseWaitEach;
@@ -1877,8 +1864,8 @@ public class Dragonfly {
 			String strMessage = "";
 			JSON objJsonObjectPleaseWaitNode = new JSON();
 			try {
-				gobjWebElementPleaseWait = gobjWebElement;
-				Logger.getInstance().add("ElementPleaseWait: objectProcessing.size() = " + gobjectProcessing.size());
+				ElementPleaseWait.getInstance().elementPleaseWait = gobjWebElement;
+				Logger.getInstance().add("ElementPleaseWaitSync: objectProcessing.size() = " + gobjectProcessing.size());
 				if (blnPleaseWait == true) {
 					for (intPleaseWaitEach = 1; intPleaseWaitEach < gobjectProcessing.size(); intPleaseWaitEach++) {
 						objJsonObjectPleaseWaitNode.replaceAllFromJSONObject(gobjectProcessing.getNode("PleaseWait_" + intPleaseWaitEach));
@@ -1886,10 +1873,10 @@ public class Dragonfly {
 							strAttributeNames = objJsonObjectPleaseWaitNode.getValue("strAttributeNames", "");
 							strAttributeValues = objJsonObjectPleaseWaitNode.getValue("strAttributeValues", "");
 							strTagName = objJsonObjectPleaseWaitNode.getValue("strTagName", "");
-							Logger.getInstance().add("ElementPleaseWait: variables = " + strAttributeNames + " " + strAttributeValues + " " + strTagName);
+							Logger.getInstance().add("ElementPleaseWaitSync: variables = " + strAttributeNames + " " + strAttributeValues + " " + strTagName);
 						} catch (ExceptionJSONKeyNotPresent e1) {
 							// TODO Auto-generated catch block
-							Logger.getInstance().add("ElementPleaseWait: ExceptionJSONKeyNotPresent = " + e1.toString());
+							Logger.getInstance().add("ElementPleaseWaitSync: ExceptionJSONKeyNotPresent = " + e1.toString());
 						}
 						try {
 							new ElementFindBy(strAttributeNames, strAttributeValues, strTagName);
@@ -1897,21 +1884,21 @@ public class Dragonfly {
 							strMessage = "Element found.";
 						} catch (ExceptionElementNotFound e) {
 							blnFound = false;
-							Logger.getInstance().add("ElementPleaseWait: ElementFindBy = blnFound = false Milliseconds Waited = " + (System.currentTimeMillis()));
+							Logger.getInstance().add("ElementPleaseWaitSync: ElementFindBy = blnFound = false Milliseconds Waited = " + (System.currentTimeMillis()));
 						} catch (ExceptionMultipleElementsFound e) {
 							blnFound = true;
 							strMessage = "Multiple elements found.";
-							Logger.getInstance().add("ElementPleaseWait: ElementFindBy = blnFound = true Milliseconds Waited = " + (System.currentTimeMillis()));
+							Logger.getInstance().add("ElementPleaseWaitSync: ElementFindBy = blnFound = true Milliseconds Waited = " + (System.currentTimeMillis()));
 						}
 						if (blnFound == true) {
 							if (gobjWebElement.isDisplayed() == true) {
-								Logger.getInstance().add("ElementPleaseWait: gobjWebElement.isDisplayed() = return true Milliseconds Waited = " + (System.currentTimeMillis()));
+								Logger.getInstance().add("ElementPleaseWaitSync: gobjWebElement.isDisplayed() = return true Milliseconds Waited = " + (System.currentTimeMillis()));
 								//throw new ExceptionElementNotHidden("Element is displayed.");
 								blnFound = true;
 								strMessage = "Element is displayed.";
 							} else {
 								blnFound = false;
-								Logger.getInstance().add("ElementPleaseWait: gobjWebElement.isDisplayed() = return false Milliseconds Waited = " + (System.currentTimeMillis()));
+								Logger.getInstance().add("ElementPleaseWaitSync: gobjWebElement.isDisplayed() = return false Milliseconds Waited = " + (System.currentTimeMillis()));
 							}
 						}
 						if (blnFound == true) {
@@ -1920,8 +1907,8 @@ public class Dragonfly {
 					}
 				}
 			} finally {
-				Logger.getInstance().add("ElementPleaseWait: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-				gobjWebElement = gobjWebElementPleaseWait;
+				Logger.getInstance().add("ElementPleaseWaitSync: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+				gobjWebElement = ElementPleaseWait.getInstance().elementPleaseWait;
 				if (blnFound == true) {
 					throw new ExceptionElementNotHidden(strMessage);
 				}
@@ -1932,7 +1919,7 @@ public class Dragonfly {
 	//TODO start here alpabetically to check new step Actual
 	private class ElementScroll {
 		private ElementScroll() {
-			JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) gobjWebDriver;
+			JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
 			objJavascriptExecutor.executeScript("arguments[0].scrollIntoView(false);", gobjWebElement);
 		}
 	}
@@ -1958,7 +1945,7 @@ public class Dragonfly {
 						blnVisible = true;
 					}
 					new ElementScroll();
-					// 		JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) gobjWebDriver;
+					// 		JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
 					// 		objJavascriptExecutor.executeScript("arguments[0].scrollIntoView(false);", gobjWebElement);
 					blnStatus = true;
 					Logger.getInstance().add("ElementScrollSync: blnStatus = true");
@@ -2025,15 +2012,15 @@ public class Dragonfly {
 						strStepExpected = "click";
 						break;
 					case "<doubleclick>":
-						objActions = new Actions(gobjWebDriver);
+						objActions = new Actions(BrowserDriver.getInstance().browserDriver);
 						objActions.moveToElement(gobjWebElement).doubleClick().build().perform();
 						strStepExpected = "double_click";
 						break;
 					case "<rightclick>":
 						//ToDo add right click code
-						objActions = new Actions(gobjWebDriver);
+						objActions = new Actions(BrowserDriver.getInstance().browserDriver);
 						objActions.contextClick(gobjWebElement).build().perform();
-						// 			Actions action= new Actions(gobjWebDriver);
+						// 			Actions action= new Actions(BrowserDriver.getInstance().browserDriver);
 						// 			action.contextClick(gobjWebElement).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.RETURN).build().perform();
 						strStepExpected = "right_click";
 						break;
@@ -2192,15 +2179,15 @@ public class Dragonfly {
 				case "alert":
 					switch (strAttributeValues) {
 					case "edit":
-						gobjWebDriver.switchTo().alert().sendKeys(strInputValue);
+						BrowserDriver.getInstance().browserDriver.switchTo().alert().sendKeys(strInputValue);
 						strStepExpected = "set";
 						break;
 					case "accept":
-						gobjWebDriver.switchTo().alert().accept();
+						BrowserDriver.getInstance().browserDriver.switchTo().alert().accept();
 						strStepExpected = "click";
 						break;
 					case "dismiss":
-						gobjWebDriver.switchTo().alert().dismiss();
+						BrowserDriver.getInstance().browserDriver.switchTo().alert().dismiss();
 						strStepExpected = "click";
 						break;
 					default:
@@ -2227,7 +2214,7 @@ public class Dragonfly {
 			String strAttributeValues = gobjectStep.getLowerCase("strAttributeValues");
 			String strTagType = gobjectStep.getLowerCase("strTagType");
 			JavascriptExecutor objJavascriptExecutor = null;
-			objJavascriptExecutor = (JavascriptExecutor) gobjWebDriver;
+			objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
 			try {
 				switch (strTagType) {
 				case "a":
@@ -2258,14 +2245,14 @@ public class Dragonfly {
 						objJavascriptExecutor.executeScript("arguments[0].blur();", gobjWebElement);
 						break;
 					case "<doubleclick>":
-						Actions objAction = new Actions(gobjWebDriver);
+						Actions objAction = new Actions(BrowserDriver.getInstance().browserDriver);
 						objAction.moveToElement(gobjWebElement).doubleClick().build().perform();
 						break;
 					case "<rightclick>":
 						//ToDo add right click code javascript
-						Actions action = new Actions(gobjWebDriver);
+						Actions action = new Actions(BrowserDriver.getInstance().browserDriver);
 						action.contextClick(gobjWebElement).build().perform();
-						// 			Actions action= new Actions(gobjWebDriver);
+						// 			Actions action= new Actions(BrowserDriver.getInstance().browserDriver);
 						// 			action.contextClick(gobjWebElement).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.RETURN).build().perform();
 						break;
 					default:
@@ -2691,40 +2678,40 @@ public class Dragonfly {
 			Logger.getInstance().add("  ==start==>ElementSetSyncComplete " + new DateTimestamp().get());
 			long lngTimeStart = System.currentTimeMillis();
 			try {
-				if (gblnSyncPleaseWait == false) {
+				if (Config.getInstance().syncPleaseWait == false) {
 					///SyncPleaseWait
 					new SyncPleaseWait();
-					gblnSyncPleaseWait = true;
+					Config.getInstance().syncPleaseWait = true;
 				}
-				// 	if (gblnSyncAlert == false) {
+				// 	if (Config.getInstance().syncAlert == false) {
 				// 		///SyncAlert
 				// 		new SyncAlert();
-				// 		gblnSyncAlert = true;
+				// 		Config.getInstance().syncAlert = true;
 				// 	}
-				if (gblnSyncWaitForReadyState == false) {
+				if (Config.getInstance().syncWaitForReadyState == false) {
 					///SyncWaitForReadyState
 					new SyncWaitForReadyState();
-					gblnSyncWaitForReadyState = true;
+					Config.getInstance().syncWaitForReadyState = true;
 				}
-				if (gblnSyncDoPostBack == false) {
+				if (Config.getInstance().syncDoPostBack == false) {
 					///SyncDoPostBack
 					new SyncDoPostBack(strOuterHTML);
-					gblnSyncDoPostBack = true;
+					Config.getInstance().syncDoPostBack = true;
 				}
-				if (gblnSyncJQueryAjax == false) {
+				if (Config.getInstance().syncJQueryAjax == false) {
 					///SyncJQueryAjax
 					new SyncJQueryAjax();
-					gblnSyncJQueryAjax = true;
+					Config.getInstance().syncJQueryAjax = true;
 				}
-				if (gblnSyncJQueryAnimation == false) {
+				if (Config.getInstance().syncJQueryAnimation == false) {
 					///SyncJQueryAnimation
 					new SyncJQueryAnimation();
-					gblnSyncJQueryAnimation = true;
+					Config.getInstance().syncJQueryAnimation = true;
 				}
-				if (gblnSyncAngularJs == false) {
+				if (Config.getInstance().syncAngularJs == false) {
 					///SyncAngularJs
 					new SyncAngularJs();
-					gblnSyncAngularJs = true;
+					Config.getInstance().syncAngularJs = true;
 				}
 			} finally {
 				Logger.getInstance().add("ElementSetSyncComplete: finally Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngTimeStart));
@@ -2798,7 +2785,7 @@ public class Dragonfly {
 			System.out.println("winGetPosX = " + objAutoItSetObject.objAutoIt.winGetPosX(strHandle));
 			System.out.println("winGetPosY = " + objAutoItSetObject.objAutoIt.winGetPosY(strHandle));
 			System.exit(0);
-			Actions ToolTip1 = new Actions(gobjWebDriver);
+			Actions ToolTip1 = new Actions(BrowserDriver.getInstance().browserDriver);
 			ToolTip1.moveToElement(gobjWebElement).build().perform();
 			for (int intKeysEach = 0; intKeysEach < 10; intKeysEach++) {
 				System.out.println("winGetState = " + objAutoItSetObject.objAutoIt.winGetState("[CLASS:tooltips_class32]"));
@@ -3202,10 +3189,10 @@ public class Dragonfly {
 	}
 
 	//https://howtodoinjava.com/java/exception-handling/best-practices-for-for-exception-handling/
-	private class ExceptionAlertNotComplete extends Exception {
-		private static final long serialVersionUID = 1L;
+	 class ExceptionAlertNotComplete extends Exception {
+		 static final long serialVersionUID = 1L;
 
-		private ExceptionAlertNotComplete(String message) {
+		 ExceptionAlertNotComplete(String message) {
 			super(message);
 		}
 	}
@@ -3412,16 +3399,16 @@ public class Dragonfly {
 			new SleepMilliseconds(1000);
 			desiredCapabilities = DesiredCapabilities.internetExplorer();
 			desiredCapabilities.setJavascriptEnabled(true);
-			System.setProperty("webdriver.ie.driver", Paths.getInstance().pathSystemUserDir + "\\Drivers\\IEDriverServer_32.exe");
-			gobjWebDriver = new InternetExplorerDriver(desiredCapabilities);
-			gobjWebDriver.get("about:blank");
-			gobjWebDriver.manage().deleteCookieNamed("JSESSIONID");
-			// gobjWebDriver.navigate().to(gobjectStep.get("strInputValue").toString());
-			// gobjWebDriver.manage().window().maximize();
-			// gobjWebDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-			// // gobjWebDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
-			gobjWebDriver.close();
-			gobjWebDriver.quit();
+			System.setProperty("webdriver.ie.driver", Path.getInstance().systemUserDir + "\\Drivers\\IEDriverServer_32.exe");
+			BrowserDriver.getInstance().browserDriver = new InternetExplorerDriver(desiredCapabilities);
+			BrowserDriver.getInstance().browserDriver.get("about:blank");
+			BrowserDriver.getInstance().browserDriver.manage().deleteCookieNamed("JSESSIONID");
+			// BrowserDriver.getInstance().browserDriver.navigate().to(gobjectStep.get("strInputValue").toString());
+			// BrowserDriver.getInstance().browserDriver.manage().window().maximize();
+			// BrowserDriver.getInstance().browserDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+			// // BrowserDriver.getInstance().browserDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
+			BrowserDriver.getInstance().browserDriver.close();
+			BrowserDriver.getInstance().browserDriver.quit();
 			new WindowsProcessKill("taskkill /F /IM iexplore.exe");
 			new SleepMilliseconds(1000);
 			new WindowsProcessKill("taskkill /F /IM IEDriverServer_32.exe");
@@ -3505,7 +3492,7 @@ public class Dragonfly {
 			String[] arrKeys = new StepNames().getOriginal();
 			boolean blnValid = false;
 			String[] arrKeywordsValid;
-			gstrOriginalAttributes = createObjectName();
+			Config.getInstance().originalAttributes = createObjectName();
 			for (String strKey : arrKeys) {
 				switch (strKey) {
 				case "strAction":
@@ -3574,7 +3561,7 @@ public class Dragonfly {
 					gobjectStep.putValue("strAttributeValues", strKeywordValueCombined);
 					break;
 				case "strInputValue":
-					gstrOriginalInputValue = gobjectStep.getString(strKey);
+					Config.getInstance().originalInputValue = gobjectStep.getString(strKey);
 					this.getKeywordsAndValue(gobjectStep.getString(strKey));
 					for (String strResultsEach : arrResults) {
 						for (String strKeywordsValidEach : arrKV_strInputValue) {
@@ -3665,26 +3652,25 @@ public class Dragonfly {
 		}
 	}
 
-	private class OperatingSystem {
-		private String strOS = "";
-
-		private OperatingSystem() {
-			Logger.getInstance().add("  ==start==>OperatingSystem " + new DateTimestamp().get());
-			strOS = System.getProperty("os.name").toLowerCase();
-			if (strOS.contains("win")) {
-				strOS = "Windows";
-			} else if (strOS.contains("nux") || strOS.contains("nix")) {
-				strOS = "Linux";
-			} else if (strOS.contains("mac")) {
-				strOS = "Mac";
-			} else if (strOS.contains("sunos")) {
-				strOS = "Solaris";
-			} else {
-				strOS = "Other";
-			}
-		}
-	}
-
+	//	private class OperatingSystem {
+	//		private String strOS = "";
+	//
+	//		private OperatingSystem() {
+	//			Logger.getInstance().add("  ==start==>OperatingSystem " + new DateTimestamp().get());
+	//			strOS = System.getProperty("os.name").toLowerCase();
+	//			if (strOS.contains("win")) {
+	//				strOS = "Windows";
+	//			} else if (strOS.contains("nux") || strOS.contains("nix")) {
+	//				strOS = "Linux";
+	//			} else if (strOS.contains("mac")) {
+	//				strOS = "Mac";
+	//			} else if (strOS.contains("sunos")) {
+	//				strOS = "Solaris";
+	//			} else {
+	//				strOS = "Other";
+	//			}
+	//		}
+	//	}
 	class ProcessKillInternetExplorer {
 		void run() {
 			Logger.getInstance().add("  ==start==>ProcessKillInternetExplorer " + new DateTimestamp().get());
@@ -3704,7 +3690,7 @@ public class Dragonfly {
 			int intWidth = 0;
 			int intHeight = 0;
 			if (strAreaObjectName.equals("")) {
-				if (gobjWebDriver == null) {
+				if (BrowserDriver.getInstance().browserDriver == null) {
 					strAreaObjectName = "screen";
 				}
 				if (gobjWebElement == null) {
@@ -3737,7 +3723,7 @@ public class Dragonfly {
 					break;
 				case "page":
 					// TODO change this to get absolute screen coordinates
-					WebElement objWebElementPage = gobjWebDriver.findElement(By.xpath("//body"));
+					WebElement objWebElementPage = BrowserDriver.getInstance().browserDriver.findElement(By.xpath("//body"));
 					intX = objWebElementPage.getLocation().getX() - intThickness;
 					intY = objWebElementPage.getLocation().getY() - intThickness;
 					intWidth = objWebElementPage.getSize().width + (2 * intThickness);
@@ -3794,7 +3780,7 @@ public class Dragonfly {
 		private ScrollToBottom() {
 			Logger.getInstance().add("  ==start==>ScrollToBottom " + new DateTimestamp().get());
 			// TODO debug all browser types, should use instanceof from windowFocus???? should combine into 1 line?
-			JavascriptExecutor executor = (JavascriptExecutor) gobjWebDriver;
+			JavascriptExecutor executor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
 			executor.executeScript("window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
 		}
 	}
@@ -3933,9 +3919,9 @@ public class Dragonfly {
 			boolean blnAngularJs = false;
 			long lngAngularJsInjectorActive = 0;
 			try {
-				blnAngularJs = (boolean) ((JavascriptExecutor) gobjWebDriver).executeScript("return (window.angular != null);");
+				blnAngularJs = (boolean) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return (window.angular != null);");
 				Logger.getInstance().add("SyncAngularJs: = " + blnAngularJs);
-				lngAngularJsInjectorActive = (long) ((JavascriptExecutor) gobjWebDriver).executeScript("return (angular.element(document).injector().get(‘$http’).pendingRequests.length);");
+				lngAngularJsInjectorActive = (long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return (angular.element(document).injector().get(‘$http’).pendingRequests.length);");
 				if (lngAngularJsInjectorActive > 0) {
 					throw new ExceptionAngularJsNotComplete("");
 				}
@@ -3954,8 +3940,8 @@ public class Dragonfly {
 			boolean blnEventTarget = false;
 			if (strOuterHTML.contains("__doPostBack")) {
 				try {
-					Logger.getInstance().add("SyncDoPostBack: __EVENTTARGET value = " + gobjWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
-					blnEventTarget = !gobjWebDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value").equals("");
+					Logger.getInstance().add("SyncDoPostBack: __EVENTTARGET value = " + BrowserDriver.getInstance().browserDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
+					blnEventTarget = !BrowserDriver.getInstance().browserDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value").equals("");
 					if (blnEventTarget == true) {
 						throw new ExceptionDoPostBackNotComplete("");
 					}
@@ -3975,9 +3961,9 @@ public class Dragonfly {
 			boolean blnJquery = false;
 			long lngJqueryActive = 0;
 			try {
-				blnJquery = (boolean) ((JavascriptExecutor) gobjWebDriver).executeScript("return (window.jQuery != null);");
+				blnJquery = (boolean) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return (window.jQuery != null);");
 				if (blnJquery == true) {
-					lngJqueryActive = (long) ((JavascriptExecutor) gobjWebDriver).executeScript("return (jQuery.active);");
+					lngJqueryActive = (long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return (jQuery.active);");
 					Logger.getInstance().add("SyncJQueryAjax: lngJqueryActive = " + lngJqueryActive);
 					if (lngJqueryActive > 0) {
 						throw new ExceptionJQueryAjaxNotComplete("");
@@ -3998,9 +3984,9 @@ public class Dragonfly {
 			long lngElementsAnimated = 0;
 			boolean blnJqueryExist = false;
 			try {
-				blnJqueryExist = (boolean) ((JavascriptExecutor) gobjWebDriver).executeScript("return (window.jQuery != null);");
+				blnJqueryExist = (boolean) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return (window.jQuery != null);");
 				if (blnJqueryExist == true) {
-					lngElementsAnimated = (long) ((JavascriptExecutor) gobjWebDriver).executeScript("return $(\":animated\").length");
+					lngElementsAnimated = (long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return $(\":animated\").length");
 				}
 				if (lngElementsAnimated > 0) {
 					throw new ExceptionJQueryAnimationNotComplete("");
@@ -4018,7 +4004,7 @@ public class Dragonfly {
 			long lngStartTime = System.currentTimeMillis();
 			Logger.getInstance().add("  ==start==>SyncPleaseWait " + new DateTimestamp().get());
 			try {
-				new ElementPleaseWait();
+				new ElementPleaseWaitSync();
 			} catch (ExceptionElementNotHidden e1) {
 				Logger.getInstance().add("SyncPleaseWait: ExceptionElementNotHidden = " + e1.toString());
 				throw new ExceptionDoPostBackNotComplete("");
@@ -4154,35 +4140,35 @@ public class Dragonfly {
 			long lngStartTime = System.currentTimeMillis();
 			String strFilePathTestConfiguration = "";
 			try {
-				strFilePathTestConfiguration = Paths.getInstance().pathTestConfiguration + strFileNameTestConfiguration;
+				strFilePathTestConfiguration = Path.getInstance().testConfiguration + strFileNameTestConfiguration;
 				Logger.getInstance().add("TestConfigurationSetup: strPathTestConfiguration = " + strFilePathTestConfiguration);
 				objJsonObjectTestConfigurationFile.replaceAllFromFile(strFilePathTestConfiguration);
 				Logger.getInstance().add("TestConfigurationSetup: objJsonObjectTestConfigurationFile = " + objJsonObjectTestConfigurationFile.toJSONString());
 				// test_instances
 				Logger.getInstance().add("TestConfigurationSetup: test_instances");
-				if (this.putAllArrays("test_instances", "test_instances", Paths.getInstance().pathTestInstances) == null) {
+				if (this.putAllArrays("test_instances", "test_instances", Path.getInstance().testInstances) == null) {
 					gobjJsonArrayTestInstances = null;
 					intTestInstanceSize = 0;
 				} else {
-					gobjJsonArrayTestInstances = this.putAllArrays("test_instances", "test_instances", Paths.getInstance().pathTestInstances);
+					gobjJsonArrayTestInstances = this.putAllArrays("test_instances", "test_instances", Path.getInstance().testInstances);
 					intTestInstanceSize = gobjJsonArrayTestInstances.size();
 				}
 				// test_elements
 				Logger.getInstance().add("TestConfigurationSetup: test_elements");
-				gobjectElement = this.putAllObjects("test_elements", "elements", Paths.getInstance().pathTestElements);
+				gobjectElement = this.putAllObjects("test_elements", "elements", Path.getInstance().testElements);
 				// processing
 				Logger.getInstance().add("TestConfigurationSetup: processing");
-				gobjectProcessing = this.putAllObjects("test_elements", "processing", Paths.getInstance().pathTestElements);
+				gobjectProcessing = this.putAllObjects("test_elements", "processing", Path.getInstance().testElements);
 				// test_modules
 				Logger.getInstance().add("TestConfigurationSetup: test_modules");
-				gobjJsonArrayTestSteps = this.putAllArrays("test_modules", "steps", Paths.getInstance().pathTestModules);
+				gobjJsonArrayTestSteps = this.putAllArrays("test_modules", "steps", Path.getInstance().testModules);
 				Logger.getInstance().add("TestConfigurationSetup: gobjJsonArrayTestSteps.toString = " + gobjJsonArrayTestSteps.toString());
 				// TODO add error handling, report no test modules and fail
 				// test_links
 				gobjectLinks.parseString("{\"link\":[{}]}");
 				// test_data
 				Logger.getInstance().add("TestConfigurationSetup: test_data");
-				gobjectTestData = this.putAllObjects("test_data", "test_data", Paths.getInstance().pathTestData);
+				gobjectTestData = this.putAllObjects("test_data", "test_data", Path.getInstance().testData);
 			} catch (Exception e) {
 				Logger.getInstance().add("TestConfigurationSetup: Exception = " + e.toString());
 			} finally {
@@ -4262,7 +4248,7 @@ public class Dragonfly {
 	private class WaitForReadyState {
 		private boolean run() {
 			Logger.getInstance().add("  ==start==>WaitForReadyState " + new DateTimestamp().get());
-			Logger.getInstance().add("waitForReadyState: document.readyState Milliseconds Waited = " + ((JavascriptExecutor) gobjWebDriver).executeScript("return document.readyState"));
+			Logger.getInstance().add("waitForReadyState: document.readyState Milliseconds Waited = " + ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return document.readyState"));
 			return false;
 		}
 	}
@@ -4304,7 +4290,7 @@ public class Dragonfly {
 			if (strTagName.toLowerCase().startsWith("input_")) {
 				strTagName = "input";
 			}
-			List<WebElement> objWebElementCollection = gobjWebDriver.findElements(By.tagName(strTagName));
+			List<WebElement> objWebElementCollection = BrowserDriver.getInstance().browserDriver.findElements(By.tagName(strTagName));
 			Iterator<WebElement> objWebElementEach = ((Collection<WebElement>) objWebElementCollection).iterator();
 			while (objWebElementEach.hasNext()) {
 				WebElement row = objWebElementEach.next();
@@ -4348,23 +4334,23 @@ public class Dragonfly {
 				strTagName = "input";
 			}
 			Logger.getInstance().add("WebElementCollectionTable: strTagName = " + strTagName);
-			Logger.getInstance().add("WebElementCollectionTable: lngStartTimeSwitchTo = " + gobjWebDriver.getTitle());
-			gobjWebDriver.switchTo().defaultContent();
-			for (String winHandle : gobjWebDriver.getWindowHandles()) {
+			Logger.getInstance().add("WebElementCollectionTable: lngStartTimeSwitchTo = " + BrowserDriver.getInstance().browserDriver.getTitle());
+			BrowserDriver.getInstance().browserDriver.switchTo().defaultContent();
+			for (String winHandle : BrowserDriver.getInstance().browserDriver.getWindowHandles()) {
 				intCount = 0;
 				//  Logger.getInstance().add("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
 				Logger.getInstance().add("WebElementCollectionTable: winHandle = " + winHandle);
 				long lngStartTimeSwitchTo = System.currentTimeMillis();
 				// if (strCurrentWindowHandle.equals(winHandle)) {
 				// } else {
-				gobjWebDriver.switchTo().window(winHandle);
+				BrowserDriver.getInstance().browserDriver.switchTo().window(winHandle);
 				Logger.getInstance().add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 				Logger.getInstance().add("WebElementCollectionTable: lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
 				// }
-				Logger.getInstance().add("WebElementCollectionTable: gobjWebDriver.getTitle = " + gobjWebDriver.getTitle());
-				// Logger.getInstance().add("webElementCollectionTable gobjWebDriver.getPageSource = " + gobjWebDriver.getPageSource());
+				Logger.getInstance().add("WebElementCollectionTable: BrowserDriver.getInstance().browserDriver.getTitle = " + BrowserDriver.getInstance().browserDriver.getTitle());
+				// Logger.getInstance().add("webElementCollectionTable BrowserDriver.getInstance().browserDriver.getPageSource = " + BrowserDriver.getInstance().browserDriver.getPageSource());
 				Logger.getInstance().add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-				List<WebElement> objWebElementCollection = gobjWebDriver.findElements(By.tagName(strTagName));
+				List<WebElement> objWebElementCollection = BrowserDriver.getInstance().browserDriver.findElements(By.tagName(strTagName));
 				Iterator<WebElement> objWebElementEach = ((Collection<WebElement>) objWebElementCollection).iterator();
 				while (objWebElementEach.hasNext()) {
 					WebElement row = objWebElementEach.next();
@@ -4410,7 +4396,7 @@ public class Dragonfly {
 					// if (objCollectionJS.size() > 0) {
 					//
 					// JavascriptExecutor objJavascriptExecutor = null;
-					// objJavascriptExecutor = (JavascriptExecutor) gobjWebDriver;
+					// objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
 					// long lngStartTimeJS = System.currentTimeMillis();
 					//  Logger.getInstance().add("JS value = " +
 					// objJavascriptExecutor.executeScript("return arguments[0].value;",
@@ -4444,9 +4430,9 @@ public class Dragonfly {
 	private class WindowFocus {
 		private WindowFocus() {
 			Logger.getInstance().add("  ==start==>WindowFocus " + new DateTimestamp().get());
-			// TODO debug gobjWebDriver instanceof JavascriptExecutor, what does it do and is it needed and debug all browser types
-			if (gobjWebDriver instanceof JavascriptExecutor) {
-				((JavascriptExecutor) gobjWebDriver).executeScript("window.focus();");
+			// TODO debug BrowserDriver.getInstance().browserDriver instanceof JavascriptExecutor, what does it do and is it needed and debug all browser types
+			if (BrowserDriver.getInstance().browserDriver instanceof JavascriptExecutor) {
+				((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("window.focus();");
 			}
 		}
 	}
@@ -4511,18 +4497,18 @@ public class Dragonfly {
 	}
 
 	public String data_EnvironmentURL(String strApplication_Environment) {
-		Logger.getInstance().add("data_EnvironmentURL: gstrEnvironment = " + gstrEnvironment);
+		Logger.getInstance().add("data_EnvironmentURL: gstrEnvironment = " + Config.getInstance().environment);
 		Logger.getInstance().add("  ==start==>data_EnvironmentURL " + new DateTimestamp().get());
 		String strURL = "";
-		Logger.getInstance().add("data_EnvironmentURL: Paths.getInstance().pathTestData = " + Paths.getInstance().pathTestData);
-		String strFilePathTestData = Paths.getInstance().pathTestData + "Environment.json";
+		Logger.getInstance().add("data_EnvironmentURL: Paths.getInstance().pathTestData = " + Path.getInstance().testData);
+		String strFilePathTestData = Path.getInstance().testData + "Environment.json";
 		//gstrEnvironment
 		Logger.getInstance().add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
 		try {
-			Logger.getInstance().add("data_EnvironmentURL: gstrEnvironment = " + gstrEnvironment);
-			if (!gstrEnvironment.equals("test value")) {
+			Logger.getInstance().add("data_EnvironmentURL: gstrEnvironment = " + Config.getInstance().environment);
+			if (!Config.getInstance().environment.equals("test value")) {
 				String[] arrApplication_Environment = strApplication_Environment.split("_");
-				strApplication_Environment = arrApplication_Environment[0] + "_" + gstrEnvironment;
+				strApplication_Environment = arrApplication_Environment[0] + "_" + Config.getInstance().environment;
 				Logger.getInstance().add("data_EnvironmentURL: strApplication_Environment = " + strApplication_Environment);
 			}
 			Logger.getInstance().add("data_EnvironmentURL: strFilePathTestData = " + strFilePathTestData);
@@ -4539,7 +4525,7 @@ public class Dragonfly {
 
 	public String data_localWebsiteFilePath(String strWebsite) {
 		Logger.getInstance().add("  ==start==>data_localWebsiteFilePath " + new DateTimestamp().get());
-		String strLocalWebsiteFilePath = "file:///" + Paths.getInstance().pathSystemUserDir.replaceAll("\\\\", "/") + "/Websites/" + strWebsite;
+		String strLocalWebsiteFilePath = "file:///" + Path.getInstance().systemUserDir.replaceAll("\\\\", "/") + "/Websites/" + strWebsite;
 		Logger.getInstance().add("data_localWebsiteFilePath: strLocalWebsiteFilePath = " + strLocalWebsiteFilePath);
 		return strLocalWebsiteFilePath;
 	}
@@ -4635,7 +4621,7 @@ public class Dragonfly {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		strNameTestConfiguration = Paths.getInstance().nameTest;
+		strNameTestConfiguration = Config.getInstance().testName;
 		System.out.println("strNameTestConfiguration = " + strNameTestConfiguration);
 		if (strNameTestConfiguration == null) {
 			System.exit(0);
@@ -4672,13 +4658,13 @@ public class Dragonfly {
 				intLoopStep = 0;
 				strCurrentWindowHandle = "";
 				strTestStatus = "pass";
-				Paths.getInstance().setPathResults(intTestInstanceSize, strNameTestConfiguration);
+				Path.getInstance().setPathResults(intTestInstanceSize, strNameTestConfiguration);
 				objJsonArrayTestSteps = (JSONArray) objJsonParser.parse(strTestStepsCombinedOriginal);
 				if (intTestInstanceSize > 0) {
 					gobjectTestInstancesEach.replaceAllFromMap((Map<String, String>) gobjJsonArrayTestInstances.get(intTestInstanceEach));
 				}
-				strFileTestSteps = Paths.getInstance().pathTestSteps + strNameTestConfiguration.replace(".json", ".html");
-				writeJsonStepsToHtml(Paths.getInstance().pathResults, "original", objJsonArrayTestSteps, "StepsOriginal.html");
+				strFileTestSteps = Path.getInstance().testSteps + strNameTestConfiguration.replace(".json", ".html");
+				writeJsonStepsToHtml(Path.getInstance().results, "original", objJsonArrayTestSteps, "StepsOriginal.html");
 				for (intStep = 0; intStep < objJsonArrayTestSteps.size(); intStep++) {
 					Logger.getInstance().add("mainDragonfly: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
 					gobjWebElement = null;
@@ -4870,15 +4856,15 @@ public class Dragonfly {
 			} catch (Exception e) {
 				Logger.getInstance().add("mainDragonfly: Exception " + e.toString());
 			} finally {
-				writeFile(Paths.getInstance().pathResults + "StepsAfterRun.json", objJsonArrayTestStepsRun.toString());
-				writeFile(Paths.getInstance().pathResults + "StepsWithDefaults.json", gobjJsonArrayTestSteps.toString());
-				writeJsonStepsToHtml(Paths.getInstance().pathResults, "original", objJsonArrayTestStepsRun, "StepsWithDefaults.html");
-				writeJsonStepsToHtml(Paths.getInstance().pathResults, "complete", objJsonArrayTestStepsRun, "StepsAfterRun.html");
-				writeReportToHtml(Paths.getInstance().pathResults + "Report.html", objJsonArrayTestStepsRun, strFileTestSteps, strNameTestConfiguration.replace(".json", ""));
-				writeFile(Paths.getInstance().pathResults + "Dragonfly.log", Logger.getInstance().getLog());
-				writeFile(Paths.getInstance().pathResults + "StepsManual.txt", StepsManual.getInstance().get());
-				Paths.getInstance().changeDirectoryNameStatus(strTestStatus);
-				if (gobjWebDriver.toString().contains("InternetExplorerDriver")) {
+				writeFile(Path.getInstance().results + "StepsAfterRun.json", objJsonArrayTestStepsRun.toString());
+				writeFile(Path.getInstance().results + "StepsWithDefaults.json", gobjJsonArrayTestSteps.toString());
+				writeJsonStepsToHtml(Path.getInstance().results, "original", objJsonArrayTestStepsRun, "StepsWithDefaults.html");
+				writeJsonStepsToHtml(Path.getInstance().results, "complete", objJsonArrayTestStepsRun, "StepsAfterRun.html");
+				writeReportToHtml(Path.getInstance().results + "Report.html", objJsonArrayTestStepsRun, strFileTestSteps, strNameTestConfiguration.replace(".json", ""));
+				writeFile(Path.getInstance().results + "Dragonfly.log", Logger.getInstance().getLog());
+				writeFile(Path.getInstance().results + "StepsManual.txt", StepsManual.getInstance().get());
+				Path.getInstance().changeDirectoryNameStatus(strTestStatus);
+				if (BrowserDriver.getInstance().browserDriver.toString().contains("InternetExplorerDriver")) {
 					//	new WindowsProcessKill("taskkill /F /IM IEDriverServer_32.exe");
 				}
 			}
@@ -5137,9 +5123,9 @@ public class Dragonfly {
 		Logger.getInstance().add("  ==start==>StepCreateExpected " + new DateTimestamp().get());
 		String strStepExpected = "";
 		String strAction = "";
-		String strInputValue = gstrOriginalInputValue;
+		String strInputValue = Config.getInstance().originalInputValue;
 		String strMillisecondsToWait = gobjectStep.getString("intMillisecondsToWait");
-		String strObjectName = gstrOriginalAttributes;
+		String strObjectName = Config.getInstance().originalAttributes;
 		String strTagName = gobjectStep.getString("strTagName");
 		String strAssert = gobjectStep.getString("strAssert");
 		String strMillisecondsToWaitHtml = " within {<b>" + strMillisecondsToWait + "</b>} milliseconds.";
@@ -5287,7 +5273,7 @@ public class Dragonfly {
 	private void windowsMinimizeAll() {
 		Logger.getInstance().add("  ==start==>WindowsMinimizeAll " + new DateTimestamp().get());
 		Robot objRobot = null;
-		switch (gobjOperatingSystem.strOS) {
+		switch (OperatingSystem.get()) {
 		case "Windows":
 			try {
 				objRobot = new Robot();
@@ -5301,7 +5287,7 @@ public class Dragonfly {
 			}
 			break;
 		default:
-			Logger.getInstance().add("WindowsMinimizeAll: the operating system not supported at this time " + gobjOperatingSystem.strOS);
+			Logger.getInstance().add("WindowsMinimizeAll: the operating system not supported at this time " + OperatingSystem.get());
 		}
 	}
 
