@@ -124,20 +124,20 @@ import autoitx4java.AutoItX;
 public class Dragonfly {
 	// System.exit(0);
 	private AutoItSetObject objAutoItSetObject = new AutoItSetObject();
-	private JSONArray gobjJsonArrayTestInstances = null;
-	private JSONArray gobjJsonArrayTestSteps = null;
+	//private JSONArray gobjJsonArrayTestInstances = null;
+	//private JSONArray gobjJsonArrayTestSteps = null;
 	private TestConfigurationSetup objTestConfigurationSetup = new TestConfigurationSetup();
 	//private WebDriver BrowserDriver.getInstance().browserDriver = null;
 	//private WebElement gobjWebElement = null;
 	//private WebElement gobjWebElementDrag = null;
 	//private WebElement gobjWebElementDrop = null;
 	//private WebElement gobjWebElementPleaseWaitSync = null;
-	static JSON gobjectElement = new JSON();
-	static JSON gobjectLinks = new JSON();
-	private JSON gobjectProcessing = new JSON();
-	static JSON gobjectStep = new JSON();
-	static JSON gobjectTestData = new JSON();
-	static JSON gobjectTestInstancesEach = new JSON();
+	//static JSON gobjectElement = new JSON();
+	//static JSON gobjectLinks = new JSON();
+	//private JSON gobjectProcessing = new JSON();
+	//static JSON gobjectStep = new JSON();
+	//static JSON gobjectTestData = new JSON();
+	//static JSON gobjectTestInstancesEach = new JSON();
 
 	private class AlertFind {
 		private boolean run() {
@@ -192,8 +192,8 @@ public class Dragonfly {
 		private BrowserClose() {
 			BrowserDriver.getInstance().browserDriver.close();
 			BrowserDriver.getInstance().browserDriver.quit();
-			gobjectStep.putValue("strStatus", "pass");
-			new CoordinateHighlightScreenshot(gobjectStep);
+			JSONS.getInstance().step.putValue("strStatus", "pass");
+			new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 		}
 	}
 
@@ -201,7 +201,7 @@ public class Dragonfly {
 		private BrowserCloseSync() {
 			// TODO create a browserCloseSync to manage reporting and sync close
 			long lngStartTime = System.currentTimeMillis();
-			gobjectStep.putValue("strStepActual", "browser_close");
+			JSONS.getInstance().step.putValue("strStepActual", "browser_close");
 			stepDuration("BrowserCloseSync", lngStartTime, "browser_close");
 		}
 	}
@@ -215,16 +215,16 @@ public class Dragonfly {
 			Long lngTimeStart = System.currentTimeMillis();
 			Logger.getInstance().add("objVariablesCommon.gstrBrowserSelection = " + Config.getInstance().browserSelection);
 			if (Config.getInstance().browserSelection != "value in test") {
-				gobjectStep.putValue("strTagName", Config.getInstance().browserSelection);
+				JSONS.getInstance().step.putValue("strTagName", Config.getInstance().browserSelection);
 			} else {
-				Config.getInstance().browserSelection = gobjectStep.getString("strTagName");
+				Config.getInstance().browserSelection = JSONS.getInstance().step.getString("strTagName");
 			}
 			try {
-				gobjectStep.putValue("strStatus", "pass");
-				switch (gobjectStep.getString("strTagName")) {
+				JSONS.getInstance().step.putValue("strStatus", "pass");
+				switch (JSONS.getInstance().step.getString("strTagName")) {
 				case "firefox":
 					BrowserDriver.getInstance().browserDriver = new FirefoxDriver();
-					BrowserDriver.getInstance().browserDriver.get(gobjectStep.getString("strInputValue"));
+					BrowserDriver.getInstance().browserDriver.get(JSONS.getInstance().step.getString("strInputValue"));
 					BrowserDriver.getInstance().browserDriver.manage().window().maximize();
 					Actions myAction = new Actions(BrowserDriver.getInstance().browserDriver);
 					myAction.sendKeys(Keys.CONTROL, Keys.DIVIDE, Keys.CONTROL).build().perform();
@@ -276,11 +276,11 @@ public class Dragonfly {
 						Logger.getInstance().add("BrowserLaunch: Exception getCookieNamed " + e.toString());
 					}
 					// BrowserDriver.getInstance().browserDriver.manage().deleteCookieNamed("JSESSIONID");
-					Logger.getInstance().add("BrowserLaunch: gobjectStep.getString(strInputValue)  = " + gobjectStep.getString("strInputValue"));
+					Logger.getInstance().add("BrowserLaunch: JSONS.getInstance().step.getString(strInputValue)  = " + JSONS.getInstance().step.getString("strInputValue"));
 					BrowserDriver.getInstance().browserDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
 					//BrowserDriver.getInstance().browserDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
 					BrowserDriver.getInstance().browserDriver.manage().timeouts().setScriptTimeout(0, TimeUnit.SECONDS);
-					BrowserDriver.getInstance().browserDriver.get(gobjectStep.getString("strInputValue"));
+					BrowserDriver.getInstance().browserDriver.get(JSONS.getInstance().step.getString("strInputValue"));
 					// Logger.getInstance().add("browserLaunch: getCookieNamed(JSESSIONID) = " + BrowserDriver.getInstance().browserDriver.manage().getCookieNamed("JSESSIONID").toString());
 					Logger.getInstance().add("BrowserLaunch: BrowserDriver.getInstance().browserDriver.manage().window().maximize()");
 					BrowserDriver.getInstance().browserDriver.manage().window().maximize();
@@ -323,12 +323,12 @@ public class Dragonfly {
 						break;
 					}
 					BrowserDriver.getInstance().browserDriver = new ChromeDriver(capabilities);
-					BrowserDriver.getInstance().browserDriver.get(gobjectStep.getString("strInputValue"));
+					BrowserDriver.getInstance().browserDriver.get(JSONS.getInstance().step.getString("strInputValue"));
 					BrowserDriver.getInstance().browserDriver.manage().window().maximize();
 					break;
 				case "safari":
 					BrowserDriver.getInstance().browserDriver = new SafariDriver();
-					BrowserDriver.getInstance().browserDriver.get(gobjectStep.getString("strInputValue"));
+					BrowserDriver.getInstance().browserDriver.get(JSONS.getInstance().step.getString("strInputValue"));
 					BrowserDriver.getInstance().browserDriver.manage().window().maximize();
 					break;
 				case "opera":
@@ -340,7 +340,7 @@ public class Dragonfly {
 					//BrowserDriver.getInstance().browserDriver = new OperaDriver();
 					//setBrowserDriver.getInstance().browserDriver(new OperaDriver());
 					BrowserDriver.getInstance().browserDriver = new OperaDriver();
-					BrowserDriver.getInstance().browserDriver.get(gobjectStep.getString("strInputValue"));
+					BrowserDriver.getInstance().browserDriver.get(JSONS.getInstance().step.getString("strInputValue"));
 					// BrowserDriver.getInstance().browserDriver.manage().window().maximize();
 					// BrowserDriver.getInstance().browserDriver.manage().window().setPosition(new Point(0, 0));
 					// Dimension dim = new Dimension(1382, 754);
@@ -351,13 +351,13 @@ public class Dragonfly {
 					// return BrowserDriver.getInstance().browserDriver;
 					break;
 				default:
-					gobjectStep.putValue("strStatus", "fail");
-					throw new ExceptionBrowserDriverNotSupported("Browser '" + gobjectStep.getString("strTagName") + "' not supported");
+					JSONS.getInstance().step.putValue("strStatus", "fail");
+					throw new ExceptionBrowserDriverNotSupported("Browser '" + JSONS.getInstance().step.getString("strTagName") + "' not supported");
 				}
 			} catch (Exception e) {
 				Logger.getInstance().add("BrowserLaunch: Exception" + e.toString());
 			} finally {
-				gobjectStep.putValue("strCurrentWindowHandle", BrowserDriver.getInstance().browserDriver.getWindowHandle());
+				JSONS.getInstance().step.putValue("strCurrentWindowHandle", BrowserDriver.getInstance().browserDriver.getWindowHandle());
 			}
 		}
 	}
@@ -377,8 +377,8 @@ public class Dragonfly {
 			} finally {
 				// TODO create a BrowserLaunchSync to manage reporting and sync
 				new CoordinatesElement();
-				new CoordinateHighlightScreenshot(gobjectStep);
-				gobjectStep.putValue("strStepActual", "browser_launch");
+				new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+				JSONS.getInstance().step.putValue("strStepActual", "browser_launch");
 				stepDuration("BrowserLaunchSync", lngStartTime, "browser_launch");
 				Logger.getInstance().add("BrowserLaunchSync: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
@@ -396,7 +396,7 @@ public class Dragonfly {
 		private BrowserRefreshSync() {
 			long lngStartTime = System.currentTimeMillis();
 			new BrowserRefresh();
-			gobjectStep.putValue("strStepActual", "browser_refresh");
+			JSONS.getInstance().step.putValue("strStepActual", "browser_refresh");
 			stepDuration("BrowserRefreshSync", lngStartTime, "browser_refresh");
 		}
 	}
@@ -499,8 +499,8 @@ public class Dragonfly {
 							objHighlightColor = Color.MAGENTA;
 							break;
 						}
-						Logger.getInstance().add("CoordinateHighlightScreenshot: strHighlightArea = " + gobjectStep.getString("strHighlightArea"));
-						new RectangleAreaByName(intThickness, gobjectStep.getString("strHighlightArea"), objHighlightArea);
+						Logger.getInstance().add("CoordinateHighlightScreenshot: strHighlightArea = " + JSONS.getInstance().step.getString("strHighlightArea"));
+						new RectangleAreaByName(intThickness, JSONS.getInstance().step.getString("strHighlightArea"), objHighlightArea);
 						setBounds(objHighlightArea.x, objHighlightArea.y, objHighlightArea.width, objHighlightArea.height);
 						setUndecorated(true);
 						setBackground(new Color(0, 0, 0, 0));
@@ -510,21 +510,21 @@ public class Dragonfly {
 				}
 			};
 			int intSleepMilliseconds = 0;
-			if (gobjectStep.getBoolean("blnScreenshot") == true) {
+			if (JSONS.getInstance().step.getBoolean("blnScreenshot") == true) {
 				Rectangle objHighlightArea = new Rectangle(0, 0, 0, 0);
 				String strScreenshotFilePath = "";
 				try {
-					new RectangleAreaByName(0, gobjectStep.getString("strScreenshotArea"), objHighlightArea);
+					new RectangleAreaByName(0, JSONS.getInstance().step.getString("strScreenshotArea"), objHighlightArea);
 					BufferedImage objScreenShot = new Robot().createScreenCapture(objHighlightArea);
 					strScreenshotFilePath = Path.getInstance().images + "Screenshot_" + new DateTimestamp().get() + ".jpg";
 					Thread objThread = new Thread(new ThreadSaveImage(objScreenShot, "jpg", strScreenshotFilePath));
 					objThread.start();
-					gobjectStep.putValue("strScreenshotFilePath", strScreenshotFilePath);
+					JSONS.getInstance().step.putValue("strScreenshotFilePath", strScreenshotFilePath);
 				} catch (Exception e) {
 					Logger.getInstance().add("CoordinateHighlightScreenshot: Exception " + e.toString());
 				}
 			}
-			if (gobjectStep.getBoolean("blnHighlight") == true) {
+			if (JSONS.getInstance().step.getBoolean("blnHighlight") == true) {
 				try {
 					Thread.sleep(intSleepMilliseconds);
 				} catch (InterruptedException e) {
@@ -556,7 +556,7 @@ public class Dragonfly {
 			String strText = "";
 			String strWinTitle = objAutoIt.winGetTitle("[ACTIVE]");
 			try {
-				switch (gobjectStep.getLowerCase("strAttributeValues")) {
+				switch (JSONS.getInstance().step.getLowerCase("strAttributeValues")) {
 				case "accept":
 					strText = "OK";
 					strControlID = "[CLASS:Button]";
@@ -578,7 +578,7 @@ public class Dragonfly {
 					strControlID = "[CLASS:Edit; INSTANCE:1]";
 					break;
 				}
-				switch (gobjectStep.getLowerCase("strAttributeValues")) {
+				switch (JSONS.getInstance().step.getLowerCase("strAttributeValues")) {
 				case "accept":
 				case "dismiss":
 				case "edit":
@@ -604,10 +604,10 @@ public class Dragonfly {
 					intWinPosHeight = ((intWinPosHeight - intClientSizeHeight) - ((intWinPosWidth - intClientSizeWidth) / 2));
 					break;
 				}
-				gobjectStep.putValue("intElementScreenX", Integer.toString(intWinPosX));
-				gobjectStep.putValue("intElementScreenY", Integer.toString(intWinPosY));
-				gobjectStep.putValue("intElementWidth", Integer.toString(intWinPosWidth));
-				gobjectStep.putValue("intElementHeight", Integer.toString(intWinPosHeight));
+				JSONS.getInstance().step.putValue("intElementScreenX", Integer.toString(intWinPosX));
+				JSONS.getInstance().step.putValue("intElementScreenY", Integer.toString(intWinPosY));
+				JSONS.getInstance().step.putValue("intElementWidth", Integer.toString(intWinPosWidth));
+				JSONS.getInstance().step.putValue("intElementHeight", Integer.toString(intWinPosHeight));
 			} catch (Exception e) {
 				Logger.getInstance().add("CoordinatesAlert: Exception = " + e.toString());
 			} finally {
@@ -629,15 +629,15 @@ public class Dragonfly {
 					Logger.getInstance().add("CoordinatesBrowserInner: ie");
 					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return window.screenLeft;");
 					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return window.screenTop;");
-					gobjectStep.putValue("intBrowserInnerWidth", Long.toString(lngBrowserInnerWidth));
-					gobjectStep.putValue("intBrowserInnerHeight", Long.toString(lngBrowserInnerHeight));
+					JSONS.getInstance().step.putValue("intBrowserInnerWidth", Long.toString(lngBrowserInnerWidth));
+					JSONS.getInstance().step.putValue("intBrowserInnerHeight", Long.toString(lngBrowserInnerHeight));
 					break;
 				case "firefox":
 					Logger.getInstance().add("CoordinatesBrowserInner: firefox");
 					lngBrowserInnerWidth = (Long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return Math.round(window.mozInnerScreenX * window.devicePixelRatio);");
 					lngBrowserInnerHeight = (Long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return Math.round(window.mozInnerScreenY * window.devicePixelRatio);");
-					gobjectStep.putValue("intBrowserInnerWidth", Long.toString(lngBrowserInnerWidth));
-					gobjectStep.putValue("intBrowserInnerHeight", Long.toString(lngBrowserInnerHeight));
+					JSONS.getInstance().step.putValue("intBrowserInnerWidth", Long.toString(lngBrowserInnerWidth));
+					JSONS.getInstance().step.putValue("intBrowserInnerHeight", Long.toString(lngBrowserInnerHeight));
 					Config.getInstance().devicePixelRatio = (Double) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return window.devicePixelRatio;");
 					Logger.getInstance().add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + Config.getInstance().devicePixelRatio.toString());
 					Logger.getInstance().add("CoordinatesBrowserInner: lngBrowserInnerWidth = " + lngBrowserInnerWidth);
@@ -651,8 +651,8 @@ public class Dragonfly {
 					//gdblDevicePixelRatio = (Double) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return window.devicePixelRatio;");
 					Config.getInstance().devicePixelRatio = Double.parseDouble(lngDevicePixelRatio.toString());
 					Logger.getInstance().add("CoordinatesBrowserInner: gdblDevicePixelRatio = " + Config.getInstance().devicePixelRatio.toString());
-					gobjectStep.putValue("intBrowserInnerWidth", Long.toString(lngBrowserInnerWidth));
-					gobjectStep.putValue("intBrowserInnerHeight", Long.toString(lngBrowserInnerHeight));
+					JSONS.getInstance().step.putValue("intBrowserInnerWidth", Long.toString(lngBrowserInnerWidth));
+					JSONS.getInstance().step.putValue("intBrowserInnerHeight", Long.toString(lngBrowserInnerHeight));
 					break;
 				}
 			} catch (Exception e) {
@@ -671,8 +671,8 @@ public class Dragonfly {
 				Rectangle rect = new Rectangle(0, 0, -1, -1);
 				//	WinDef.RECT rect = returnIECLientScreenXY();
 				//WinDef.RECT rect = new WinDef.RECT();
-				rect.height = gobjectStep.getInt("intBrowserInnerHeight");
-				rect.width = gobjectStep.getInt("intBrowserInnerWidth");
+				rect.height = JSONS.getInstance().step.getInt("intBrowserInnerHeight");
+				rect.width = JSONS.getInstance().step.getInt("intBrowserInnerWidth");
 				rect.x = 0;
 				rect.y = 0;
 				System.out.println("Solution = " + rect.getBounds().toString());
@@ -689,10 +689,10 @@ public class Dragonfly {
 					Point objElementPoint = objElementCoordinates.inViewPort();
 					System.out.println("before objElementDimension");
 					Dimension objElementDimension = Element.getInstance().element.getSize();
-					gobjectStep.putValue("intElementX", Integer.toString((int) Math.round(objElementPoint.x * Config.getInstance().devicePixelRatio)));
-					gobjectStep.putValue("intElementY", Integer.toString((int) Math.round(objElementPoint.y * Config.getInstance().devicePixelRatio)));
-					gobjectStep.putValue("intElementWidth", Integer.toString((int) Math.round(objElementDimension.width * Config.getInstance().devicePixelRatio)));
-					gobjectStep.putValue("intElementHeight", Integer.toString((int) Math.round(objElementDimension.height * Config.getInstance().devicePixelRatio)));
+					JSONS.getInstance().step.putValue("intElementX", Integer.toString((int) Math.round(objElementPoint.x * Config.getInstance().devicePixelRatio)));
+					JSONS.getInstance().step.putValue("intElementY", Integer.toString((int) Math.round(objElementPoint.y * Config.getInstance().devicePixelRatio)));
+					JSONS.getInstance().step.putValue("intElementWidth", Integer.toString((int) Math.round(objElementDimension.width * Config.getInstance().devicePixelRatio)));
+					JSONS.getInstance().step.putValue("intElementHeight", Integer.toString((int) Math.round(objElementDimension.height * Config.getInstance().devicePixelRatio)));
 					Logger.getInstance().add("  ==end==>CoordinatesElement objElementPoint.x " + objElementPoint.x);
 					Logger.getInstance().add("  ==end==>CoordinatesElement objElementPoint.y " + objElementPoint.y);
 					Logger.getInstance().add("  ==end==>CoordinatesElement objElementDimension.width " + objElementDimension.width);
@@ -700,13 +700,13 @@ public class Dragonfly {
 					Logger.getInstance().add("  ==end==>CoordinatesElement gdblDevicePixelRatio " + Config.getInstance().devicePixelRatio.toString());
 				}
 				System.out.println("before intElementX");
-				int intElementX = gobjectStep.getInt("intElementX");
-				int intElementY = gobjectStep.getInt("intElementY");
+				int intElementX = JSONS.getInstance().step.getInt("intElementX");
+				int intElementY = JSONS.getInstance().step.getInt("intElementY");
 				int intElementScreenX = rect.width + intElementX;
 				int intElementScreenY = rect.height + intElementY;
 				System.out.println("before putInt");
-				gobjectStep.putValue("intElementScreenX", Integer.toString(intElementScreenX));
-				gobjectStep.putValue("intElementScreenY", Integer.toString(intElementScreenY));
+				JSONS.getInstance().step.putValue("intElementScreenX", Integer.toString(intElementScreenX));
+				JSONS.getInstance().step.putValue("intElementScreenY", Integer.toString(intElementScreenY));
 			} catch (Exception e) {
 				Logger.getInstance().add("CoordinatesElement: Exception = " + e.toString());
 			} finally {
@@ -1071,9 +1071,9 @@ public class Dragonfly {
 					strActualResult = "not_disabled";
 					Logger.getInstance().add("ElementDisabledSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					gobjectStep.putValue("strStepActual", strActualResult);
+					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementDisabledSync", "syncdisabled", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(gobjectStep);
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						return;
 					} else {
 						blnDisabled = false;
@@ -1127,7 +1127,7 @@ public class Dragonfly {
 					Logger.getInstance().add("ElementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementDragSync", "drag", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(gobjectStep);
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						return;
 					} else {
 					}
@@ -1191,7 +1191,7 @@ public class Dragonfly {
 					Logger.getInstance().add("ElementDropSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementDropSync", "drop", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(gobjectStep);
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						return;
 					}
 				}
@@ -1204,7 +1204,7 @@ public class Dragonfly {
 			Logger.getInstance().add("  ==start==>ElementEnabled " + new DateTimestamp().get());
 			long lngStartTime = System.currentTimeMillis();
 			try {
-				if (gobjectStep.verifyEquals("strTagName", "alert")) {
+				if (JSONS.getInstance().step.verifyEquals("strTagName", "alert")) {
 					if (new AlertFind().run() == true) {
 						return;
 					} else {
@@ -1263,9 +1263,9 @@ public class Dragonfly {
 					strActualResult = "not_enabled";
 					Logger.getInstance().add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					gobjectStep.putValue("strStepActual", strActualResult);
+					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementEnabledSync", "syncenabled", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(gobjectStep);
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						return;
 					} else {
 						blnEnabled = false;
@@ -1278,18 +1278,18 @@ public class Dragonfly {
 	private class ElementFind {
 		private ElementFind() throws ExceptionElementNotFound, ExceptionMultipleElementsFound {
 			Logger.getInstance().add("  ==start==>ElementFind " + new DateTimestamp().get());
-			if (gobjectStep.verifyEquals("strTagName", "alert")) {
-				gobjectStep.putValue("strTagType", "alert");
+			if (JSONS.getInstance().step.verifyEquals("strTagName", "alert")) {
+				JSONS.getInstance().step.putValue("strTagType", "alert");
 				if (new AlertFind().run() == true) {
-					gobjectStep.putValue("strHighlightArea", "alert");
+					JSONS.getInstance().step.putValue("strHighlightArea", "alert");
 					return;
 				} else {
-					gobjectStep.putValue("strHighlightArea", "screen");
+					JSONS.getInstance().step.putValue("strHighlightArea", "screen");
 					throw new ExceptionElementNotFound("Alert popup not found!");
 				}
 			}
-			if (gobjectStep.getString("strTagName").toLowerCase().equals("title")) {
-				gobjectStep.putValue("strTagType", "title");
+			if (JSONS.getInstance().step.getString("strTagName").toLowerCase().equals("title")) {
+				JSONS.getInstance().step.putValue("strTagType", "title");
 				return;
 			}
 			String strWindowHandle = "";
@@ -1381,7 +1381,7 @@ public class Dragonfly {
 						break;
 					default:
 						if (arrAttributeNames[intAttributeEach].toLowerCase().equals("type")) {
-							gobjectStep.putValue("strType", arrAttributeValues[intAttributeEach]);
+							JSONS.getInstance().step.putValue("strType", arrAttributeValues[intAttributeEach]);
 						}
 						switch (getKeyword(arrAttributeValues[intAttributeEach].toLowerCase())) {
 						case "<contains>":
@@ -1445,19 +1445,19 @@ public class Dragonfly {
 			Logger.getInstance().add("  ==start==>ElementFindFramesSearch " + new DateTimestamp().get());
 			boolean blnReturn;
 			int intMaximumDepth = 100;
-			String strTagName = gobjectStep.getLowerCase("strTagName");
-			String strAttributeNames = gobjectStep.getString("strAttributeNames");
-			String strAttributeValues = gobjectStep.getString("strAttributeValues");
+			String strTagName = JSONS.getInstance().step.getLowerCase("strTagName");
+			String strAttributeNames = JSONS.getInstance().step.getString("strAttributeNames");
+			String strAttributeValues = JSONS.getInstance().step.getString("strAttributeValues");
 			try {
 				new ElementFindBy(strAttributeNames, strAttributeValues, strTagName);
-				gobjectStep.putValue("strCurrentWindowHandle", BrowserDriver.getInstance().browserDriver.getWindowHandle());
-				if (gobjectStep.verifyEquals("strTagName", "input")) {
-					if (gobjectStep.getString("strType").length() == 0) {
-						gobjectStep.putValue("strType", Element.getInstance().element.getAttribute("type"));
+				JSONS.getInstance().step.putValue("strCurrentWindowHandle", BrowserDriver.getInstance().browserDriver.getWindowHandle());
+				if (JSONS.getInstance().step.verifyEquals("strTagName", "input")) {
+					if (JSONS.getInstance().step.getString("strType").length() == 0) {
+						JSONS.getInstance().step.putValue("strType", Element.getInstance().element.getAttribute("type"));
 					}
-					gobjectStep.putValue("strTagType", "input_" + gobjectStep.getString("strType"));
+					JSONS.getInstance().step.putValue("strTagType", "input_" + JSONS.getInstance().step.getString("strType"));
 				} else {
-					gobjectStep.putValue("strTagType", gobjectStep.getString("strTagName"));
+					JSONS.getInstance().step.putValue("strTagType", JSONS.getInstance().step.getString("strTagName"));
 				}
 				Logger.getInstance().add("ElementFindFramesSearch: Element.getInstance().element outerHTML = " + Element.getInstance().element.getAttribute("outerHTML"));
 				return true;
@@ -1496,7 +1496,7 @@ public class Dragonfly {
 		private String run() throws ExceptionElementTagNameNotSupported {
 			Logger.getInstance().add("  ==start==>ElementGet " + new DateTimestamp().get());
 			AutoItX objAutoIt = objAutoItSetObject.getObject();
-			switch (gobjectStep.getLowerCase("strTagType")) {
+			switch (JSONS.getInstance().step.getLowerCase("strTagType")) {
 			case "title":
 				return BrowserDriver.getInstance().browserDriver.getTitle();
 			case "img":
@@ -1546,7 +1546,7 @@ public class Dragonfly {
 			case "table":
 				return Element.getInstance().element.getText();
 			case "alert":
-				if (gobjectStep.verifyEquals("strAttributeValues", "title")) {
+				if (JSONS.getInstance().step.verifyEquals("strAttributeValues", "title")) {
 					return objAutoIt.winGetTitle("[ACTIVE]");
 				} else {
 					return BrowserDriver.getInstance().browserDriver.switchTo().alert().getText();
@@ -1580,7 +1580,7 @@ public class Dragonfly {
 					}
 					if (blnGet == false) {
 						strGetValue = new ElementGet().run();
-						gobjectStep.putValue("strOutputValue", strGetValue);
+						JSONS.getInstance().step.putValue("strOutputValue", strGetValue);
 						blnGet = true;
 					}
 					blnStatus = true;
@@ -1598,9 +1598,9 @@ public class Dragonfly {
 					strActualResult = "not_visible";
 					Logger.getInstance().add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					gobjectStep.putValue("strStepActual", strActualResult);
+					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementGetSync", "get", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(gobjectStep);
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						return;
 					} else {
 						blnVisible = false;
@@ -1616,9 +1616,9 @@ public class Dragonfly {
 			Logger.getInstance().add("  ==start==>ElementHidden " + new DateTimestamp().get());
 			long lngStartTime = System.currentTimeMillis();
 			try {
-				if (gobjectStep.verifyEquals("strTagName", "alert")) {
+				if (JSONS.getInstance().step.verifyEquals("strTagName", "alert")) {
 					if (new AlertFind().run() == false) {
-						gobjectStep.putValue("strHighlightArea", "screen");
+						JSONS.getInstance().step.putValue("strHighlightArea", "screen");
 						return;
 					} else {
 						throw new ExceptionElementNotHidden("Alert popup was not hidden.");
@@ -1682,9 +1682,9 @@ public class Dragonfly {
 					;
 					Logger.getInstance().add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					gobjectStep.putValue("strStepActual", strActualResult);
+					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementHiddenSync", "synchidden", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(gobjectStep);
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						return;
 					} else {
 						blnHidden = false;
@@ -1720,8 +1720,8 @@ public class Dragonfly {
 			// Dimension objWebDriverDimension = Element.getInstance().element.getSize();
 			// int intElementWidth = objWebDriverDimension.width;
 			// int intElementHeight = objWebDriverDimension.height;
-			int intElementWidth = gobjectStep.getInt("intElementWidth");
-			int intElementHeight = gobjectStep.getInt("intElementHeight");
+			int intElementWidth = JSONS.getInstance().step.getInt("intElementWidth");
+			int intElementHeight = JSONS.getInstance().step.getInt("intElementHeight");
 			objActions.moveByOffset(-((intElementWidth / 2) + 1), -((intElementHeight / 2) + 1)).build().perform();
 			JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
 			objJavascriptExecutor.executeScript("arguments[0].onmouseout();", Element.getInstance().element);
@@ -1772,9 +1772,9 @@ public class Dragonfly {
 					strActualResult = "not_enabled";
 					Logger.getInstance().add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					gobjectStep.putValue("strStepActual", strActualResult);
+					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementOnMouseOutSync", "mouse_out", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(gobjectStep);
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						return;
 					} else {
 						blnOnMouseOver = false;
@@ -1839,9 +1839,9 @@ public class Dragonfly {
 					strActualResult = "not_enabled";
 					Logger.getInstance().add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					gobjectStep.putValue("strStepActual", strActualResult);
+					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementOnMouseOverSync", "mouse_over", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(gobjectStep);
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						return;
 					} else {
 						blnOnMouseOver = false;
@@ -1855,7 +1855,7 @@ public class Dragonfly {
 		private ElementPleaseWaitSync() throws ExceptionElementNotHidden {
 			Logger.getInstance().add("  ==start==>ElementPleaseWaitSync " + new DateTimestamp().get());
 			long lngStartTime = System.currentTimeMillis();
-			Boolean blnPleaseWait = Boolean.parseBoolean(gobjectStep.getString("blnPleaseWait"));
+			Boolean blnPleaseWait = Boolean.parseBoolean(JSONS.getInstance().step.getString("blnPleaseWait"));
 			Integer intPleaseWaitEach;
 			String strAttributeNames = null;
 			String strAttributeValues = null;
@@ -1865,10 +1865,10 @@ public class Dragonfly {
 			JSON objJsonObjectPleaseWaitNode = new JSON();
 			try {
 				ElementPleaseWait.getInstance().elementPleaseWait = Element.getInstance().element;
-				Logger.getInstance().add("ElementPleaseWaitSync: objectProcessing.size() = " + gobjectProcessing.size());
+				Logger.getInstance().add("ElementPleaseWaitSync: objectProcessing.size() = " + JSONS.getInstance().processing.size());
 				if (blnPleaseWait == true) {
-					for (intPleaseWaitEach = 1; intPleaseWaitEach < gobjectProcessing.size(); intPleaseWaitEach++) {
-						objJsonObjectPleaseWaitNode.replaceAllFromJSONObject(gobjectProcessing.getNode("PleaseWait_" + intPleaseWaitEach));
+					for (intPleaseWaitEach = 1; intPleaseWaitEach < JSONS.getInstance().processing.size(); intPleaseWaitEach++) {
+						objJsonObjectPleaseWaitNode.replaceAllFromJSONObject(JSONS.getInstance().processing.getNode("PleaseWait_" + intPleaseWaitEach));
 						try {
 							strAttributeNames = objJsonObjectPleaseWaitNode.getValue("strAttributeNames", "");
 							strAttributeValues = objJsonObjectPleaseWaitNode.getValue("strAttributeValues", "");
@@ -1958,9 +1958,9 @@ public class Dragonfly {
 					strActualResult = "not_visible";
 					Logger.getInstance().add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					gobjectStep.putValue("strStepActual", strActualResult);
+					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementScrollSync", "scroll", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(gobjectStep);
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						return;
 					}
 				}
@@ -1971,12 +1971,12 @@ public class Dragonfly {
 	private class ElementSet {
 		private ElementSet(String strOuterHTML) throws ExceptionElementTagNameNotSupported, ExceptionVisibleTextNotInSelectList, ExceptionKeywordNotValid {
 			Logger.getInstance().add("  ==start==>ElementSet " + new DateTimestamp().get());
-			Logger.getInstance().add("ElementSet: " + gobjectStep.getLowerCase("strAttributeValues"));
+			Logger.getInstance().add("ElementSet: " + JSONS.getInstance().step.getLowerCase("strAttributeValues"));
 			long lngStartTime = System.currentTimeMillis();
-			String strInputValue = gobjectStep.getString("strInputValue");
+			String strInputValue = JSONS.getInstance().step.getString("strInputValue");
 			String strValueToSelect = strInputValue;
-			String strAttributeValues = gobjectStep.getLowerCase("strAttributeValues");
-			String strTagType = gobjectStep.getLowerCase("strTagType");
+			String strAttributeValues = JSONS.getInstance().step.getLowerCase("strAttributeValues");
+			String strTagType = JSONS.getInstance().step.getLowerCase("strTagType");
 			String strStepExpected = "";
 			Actions objActions = null;
 			String strOptions = "";
@@ -2007,7 +2007,7 @@ public class Dragonfly {
 					switch (strInputValue.toLowerCase()) {
 					case "":
 					case "<click>":
-						gobjectStep.putValue("strInputValue", "<click>");
+						JSONS.getInstance().step.putValue("strInputValue", "<click>");
 						Element.getInstance().element.click();
 						strStepExpected = "click";
 						break;
@@ -2043,7 +2043,7 @@ public class Dragonfly {
 					switch (strInputValue.toLowerCase()) {
 					case "":
 					case "<on>":
-						gobjectStep.putValue("strInputValue", "<on>");
+						JSONS.getInstance().step.putValue("strInputValue", "<on>");
 						if (Element.getInstance().element.isSelected() == false) {
 							Element.getInstance().element.click();
 						}
@@ -2057,7 +2057,7 @@ public class Dragonfly {
 					switch (strInputValue.toLowerCase()) {
 					case "":
 					case "<on>":
-						gobjectStep.putValue("strInputValue", "<on>");
+						JSONS.getInstance().step.putValue("strInputValue", "<on>");
 						if (Element.getInstance().element.isSelected() == false) {
 							Element.getInstance().element.click();
 						}
@@ -2161,15 +2161,15 @@ public class Dragonfly {
 						break;
 					}
 					Logger.getInstance().add("ElementSet: strValueToSelect " + strValueToSelect);
-					gobjectStep.putValue("strInputValue", strValueToSelect);
+					JSONS.getInstance().step.putValue("strInputValue", strValueToSelect);
 					try {
 						strStepExpected = "select";
 						objSelect.selectByVisibleText(strValueToSelect);
 					} catch (NoSuchElementException e) {
 						//strStepActual = "notinlist";
-						gobjectStep.putValue("strStepActual", "notinlist");
+						JSONS.getInstance().step.putValue("strStepActual", "notinlist");
 						strOptionsList = optionsList(strOptions);
-						gobjectStep.putValue("strOutputValue", strOptionsList);
+						JSONS.getInstance().step.putValue("strOutputValue", strOptionsList);
 						Logger.getInstance().add("ElementSet: options list removeTags = " + strOptionsList);
 						throw new ExceptionVisibleTextNotInSelectList(e.getMessage());
 					}
@@ -2198,7 +2198,7 @@ public class Dragonfly {
 					throw new ExceptionElementTagNameNotSupported("ElementSet: Element tag {" + strTagType + "} not supported");
 				}
 			} finally {
-				gobjectStep.putValue("strStepExpected", strStepExpected);
+				JSONS.getInstance().step.putValue("strStepExpected", strStepExpected);
 				Logger.getInstance().add("ElementSet: finally strStepExpected = " + strStepExpected);
 				Logger.getInstance().add("ElementSet: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 			}
@@ -2209,10 +2209,10 @@ public class Dragonfly {
 		private ElementSetJavascriptExecutor(String strOuterHTML) throws ExceptionElementTagNameNotSupported, ExceptionElementNotSet, ExceptionKeywordNotValid {
 			Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor " + new DateTimestamp().get());
 			long lngStartTime = System.currentTimeMillis();
-			String strInputValue = gobjectStep.getString("strInputValue");
+			String strInputValue = JSONS.getInstance().step.getString("strInputValue");
 			String strValueToSelect = "";
-			String strAttributeValues = gobjectStep.getLowerCase("strAttributeValues");
-			String strTagType = gobjectStep.getLowerCase("strTagType");
+			String strAttributeValues = JSONS.getInstance().step.getLowerCase("strAttributeValues");
+			String strTagType = JSONS.getInstance().step.getLowerCase("strTagType");
 			JavascriptExecutor objJavascriptExecutor = null;
 			objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
 			try {
@@ -2286,7 +2286,7 @@ public class Dragonfly {
 					switch (strInputValue.toLowerCase()) {
 					case "":
 					case "<on>":
-						gobjectStep.putValue("strInputValue", "<on>");
+						JSONS.getInstance().step.putValue("strInputValue", "<on>");
 						if (Element.getInstance().element.isSelected() == false) {
 							objJavascriptExecutor.executeScript("arguments[0].focus();", Element.getInstance().element);
 							objJavascriptExecutor.executeScript("arguments[0].click();", Element.getInstance().element);
@@ -2351,7 +2351,7 @@ public class Dragonfly {
 					// 		arrOptions = strOptions.split("\\|");
 					// 		for (intOptionsEach = 0; intOptionsEach < arrOptions.length; intOptionsEach++) {
 					// 			 Logger.getInstance().add("ElementSetJavascriptExecutor: arrOptions[intOptionsEach].toString() = " + arrOptions[intOptionsEach].toString());
-					// 			if (arrOptions[intOptionsEach].toString().equals(gobjectStep.get("strInputValue").toString())) {
+					// 			if (arrOptions[intOptionsEach].toString().equals(JSONS.getInstance().step.get("strInputValue").toString())) {
 					// 				blnSet = true;
 					// 				Select objSelect = new Select(Element.getInstance().element);
 					// 				objJavascriptExecutor.executeScript("arguments[0].focus();", Element.getInstance().element);
@@ -2478,11 +2478,11 @@ public class Dragonfly {
 						new ElementEnabled();
 						blnEnabled = true;
 					}
-					switch (gobjectStep.getLowerCase("strAssert")) {
+					switch (JSONS.getInstance().step.getLowerCase("strAssert")) {
 					case "off":
-						gobjectStep.putValue("strStatus", "pass");
+						JSONS.getInstance().step.putValue("strStatus", "pass");
 						if (blnSet == false) {
-							new CoordinateHighlightScreenshot(gobjectStep);
+							new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 							if (blnJavascriptExecutor == true) {
 								new ElementSetJavascriptExecutor(strOuterHTML);
 							} else {
@@ -2499,8 +2499,8 @@ public class Dragonfly {
 						break;
 					case "hidden":
 						if (blnSet == false) {
-							gobjectStep.putValue("strStatus", "pass");
-							new CoordinateHighlightScreenshot(gobjectStep);
+							JSONS.getInstance().step.putValue("strStatus", "pass");
+							new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 							if (blnJavascriptExecutor == true) {
 								new ElementSetJavascriptExecutor(strOuterHTML);
 							} else {
@@ -2535,8 +2535,8 @@ public class Dragonfly {
 							new ElementVerifyValue().run();
 							blnAssert = true;
 						}
-						gobjectStep.putValue("strStatus", "pass");
-						new CoordinateHighlightScreenshot(gobjectStep);
+						JSONS.getInstance().step.putValue("strStatus", "pass");
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						blnStatus = true;
 						break;
 					case "visible":
@@ -2556,8 +2556,8 @@ public class Dragonfly {
 							new ElementVisible();
 							blnAssert = true;
 						}
-						gobjectStep.putValue("strStatus", "pass");
-						new CoordinateHighlightScreenshot(gobjectStep);
+						JSONS.getInstance().step.putValue("strStatus", "pass");
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						blnStatus = true;
 						break;
 					case "enabled":
@@ -2578,8 +2578,8 @@ public class Dragonfly {
 							new ElementEnabled();
 							blnAssert = true;
 						}
-						gobjectStep.putValue("strStatus", "pass");
-						new CoordinateHighlightScreenshot(gobjectStep);
+						JSONS.getInstance().step.putValue("strStatus", "pass");
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						blnStatus = true;
 						break;
 					case "disabled":
@@ -2600,8 +2600,8 @@ public class Dragonfly {
 							new ElementDisabled();
 							blnAssert = true;
 						}
-						gobjectStep.putValue("strStatus", "pass");
-						new CoordinateHighlightScreenshot(gobjectStep);
+						JSONS.getInstance().step.putValue("strStatus", "pass");
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						blnStatus = true;
 						break;
 					}
@@ -2656,16 +2656,16 @@ public class Dragonfly {
 					strActualResult = "exception";
 					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					gobjectStep.putValue("strStepActual", strActualResult);
+					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementSetSync", "set", lngTimeStart) == true) {
 						if (blnStatus == false) {
-							new CoordinateHighlightScreenshot(gobjectStep);
+							new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						}
-						Logger.getInstance().add("elementSetSync: strOutputValue = " + gobjectStep.getString("strOutputValue"));
-						if (gobjectStep.verifyEquals("strOutputValue", "")) {
-							gobjectStep.putValue("strOutputValue", gobjectStep.getString("strInputValue"));
+						Logger.getInstance().add("elementSetSync: strOutputValue = " + JSONS.getInstance().step.getString("strOutputValue"));
+						if (JSONS.getInstance().step.verifyEquals("strOutputValue", "")) {
+							JSONS.getInstance().step.putValue("strOutputValue", JSONS.getInstance().step.getString("strInputValue"));
 						}
-						Logger.getInstance().add("elementSetSync: strOutputValue after = " + gobjectStep.getString("strOutputValue"));
+						Logger.getInstance().add("elementSetSync: strOutputValue after = " + JSONS.getInstance().step.getString("strOutputValue"));
 						return;
 					}
 				}
@@ -2911,7 +2911,7 @@ public class Dragonfly {
 					}
 					if (blnGet == false) {
 						strGetValue = new ElementTooltipGet().run();
-						gobjectStep.putValue("strOutputValue", strGetValue);
+						JSONS.getInstance().step.putValue("strOutputValue", strGetValue);
 						blnGet = true;
 					}
 					blnStatus = true;
@@ -2926,7 +2926,7 @@ public class Dragonfly {
 					Logger.getInstance().add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementGetSync", "get", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(gobjectStep);
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						return;
 					} else {
 						blnVisible = false;
@@ -2943,7 +2943,7 @@ public class Dragonfly {
 			long lngStartTime = System.currentTimeMillis();
 			String strActualValue = "";
 			String strGetValue = "";
-			String strValueExpected = gobjectStep.getString("strInputValue");
+			String strValueExpected = JSONS.getInstance().step.getString("strInputValue");
 			try {
 				strGetValue = new ElementGet().run();
 				strActualValue = new VerifyNotMatch().run(strGetValue, strValueExpected);
@@ -3004,9 +3004,9 @@ public class Dragonfly {
 					strActualResult = "exception";
 					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					gobjectStep.putValue("strStepActual", strActualResult);
+					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementVerifyNotValueSync", "verify_not", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(gobjectStep);
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						return;
 					} else {
 						blnVisible = false;
@@ -3023,7 +3023,7 @@ public class Dragonfly {
 			long lngStartTime = System.currentTimeMillis();
 			String strActualValue = "";
 			String strGetValue = "";
-			String strValueExpected = gobjectStep.getString("strInputValue");
+			String strValueExpected = JSONS.getInstance().step.getString("strInputValue");
 			try {
 				strGetValue = new ElementGet().run();
 				strActualValue = new VerifyMatch().run(strGetValue, strValueExpected);
@@ -3084,9 +3084,9 @@ public class Dragonfly {
 					strActualResult = "exception";
 					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					gobjectStep.putValue("strStepActual", strActualResult);
+					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "elementVerifyValueSync", "verify", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(gobjectStep);
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						return;
 					} else {
 						blnVisible = false;
@@ -3105,14 +3105,14 @@ public class Dragonfly {
 			Boolean blnVisible = false;
 			try {
 				// TODO Alert complete
-				if (gobjectStep.verifyEquals("strTagName", "title")) {
+				if (JSONS.getInstance().step.verifyEquals("strTagName", "title")) {
 					blnVisible = true;
 					return;
 				}
-				if (gobjectStep.verifyEquals("strTagName", "alert")) {
+				if (JSONS.getInstance().step.verifyEquals("strTagName", "alert")) {
 					if (new AlertFind().run() == true) {
 						blnVisible = true;
-						gobjectStep.putValue("strHighlightArea", "alert");
+						JSONS.getInstance().step.putValue("strHighlightArea", "alert");
 						new CoordinatesAlert();
 						return;
 					} else {
@@ -3123,9 +3123,9 @@ public class Dragonfly {
 					new CoordinatesElement();
 					blnVisible = true;
 					return;
-					// if (gobjectStep.containsKey("intElementWidth")) {
-					// int intElementWidth = Integer.parseInt(gobjectStep.get("intElementWidth").toString());
-					// int intElementHeight = Integer.parseInt(gobjectStep.get("intElementHeight").toString());
+					// if (JSONS.getInstance().step.containsKey("intElementWidth")) {
+					// int intElementWidth = Integer.parseInt(JSONS.getInstance().step.get("intElementWidth").toString());
+					// int intElementHeight = Integer.parseInt(JSONS.getInstance().step.get("intElementHeight").toString());
 					//  Logger.getInstance().add("elementVisible intElementWidth = " + intElementWidth);
 					//  Logger.getInstance().add("elementVisible intElementHeight = " + intElementHeight);
 					// if (intElementWidth == 0 || intElementHeight == 0) {
@@ -3176,9 +3176,9 @@ public class Dragonfly {
 					strActualResult = "not_visible";
 					Logger.getInstance().add("ElementVisibleSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
 				} finally {
-					gobjectStep.putValue("strStepActual", strActualResult);
+					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
 					if (syncFinally(blnExit, blnStatus, blnFound, "ElementVisibleSync", "syncvisible", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(gobjectStep);
+						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
 						return;
 					} else {
 						blnVisible = false;
@@ -3403,7 +3403,7 @@ public class Dragonfly {
 			BrowserDriver.getInstance().browserDriver = new InternetExplorerDriver(desiredCapabilities);
 			BrowserDriver.getInstance().browserDriver.get("about:blank");
 			BrowserDriver.getInstance().browserDriver.manage().deleteCookieNamed("JSESSIONID");
-			// BrowserDriver.getInstance().browserDriver.navigate().to(gobjectStep.get("strInputValue").toString());
+			// BrowserDriver.getInstance().browserDriver.navigate().to(JSONS.getInstance().step.get("strInputValue").toString());
 			// BrowserDriver.getInstance().browserDriver.manage().window().maximize();
 			// BrowserDriver.getInstance().browserDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
 			// // BrowserDriver.getInstance().browserDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
@@ -3509,23 +3509,23 @@ public class Dragonfly {
 				case "blnScreenshot":
 				case "strAssistiveProperties":
 				case "strOutputValue":
-					this.getKeywordsAndValue(gobjectStep.getString(strKey));
+					this.getKeywordsAndValue(JSONS.getInstance().step.getString(strKey));
 					// 		if (arrResults.length > 0) {
-					// 			gobjectStep.putValue("strStatus", "fail");
-					// 			gobjectStep.putValue("blnExitOnFail", "true");
+					// 			JSONS.getInstance().step.putValue("strStatus", "fail");
+					// 			JSONS.getInstance().step.putValue("blnExitOnFail", "true");
 					// 		}
 					break;
 				case "strLogicalName":
-					this.getKeywordsAndValue(gobjectStep.getString(strKey));
+					this.getKeywordsAndValue(JSONS.getInstance().step.getString(strKey));
 					for (String strResultsEach : arrResults) {
 						for (String strKeywordsValidEach : arrKV_strLogicalName) {
 							if (strResultsEach.equals(strKeywordsValidEach)) {
 								blnValid = true;
-								JSON objJsonObjectElementNode = new JSON(gobjectElement.getNode(strKeywordValue));
+								JSON objJsonObjectElementNode = new JSON(JSONS.getInstance().element.getNode(strKeywordValue));
 								try {
-									gobjectStep.putValue("strTagName", objJsonObjectElementNode.getValue("strTagName", ""));
-									gobjectStep.putValue("strAttributeNames", objJsonObjectElementNode.getValue("strAttributeNames", ""));
-									gobjectStep.putValue("strAttributeValues", objJsonObjectElementNode.getValue("strAttributeValues", ""));
+									JSONS.getInstance().step.putValue("strTagName", objJsonObjectElementNode.getValue("strTagName", ""));
+									JSONS.getInstance().step.putValue("strAttributeNames", objJsonObjectElementNode.getValue("strAttributeNames", ""));
+									JSONS.getInstance().step.putValue("strAttributeValues", objJsonObjectElementNode.getValue("strAttributeValues", ""));
 								} catch (ExceptionJSONKeyNotPresent e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -3537,7 +3537,7 @@ public class Dragonfly {
 					break;
 				case "strAttributeValues":
 					String strKeywordValueCombined = "";
-					String arrAttributeValues[] = gobjectStep.getString(strKey).split("\\|", -1);
+					String arrAttributeValues[] = JSONS.getInstance().step.getString(strKey).split("\\|", -1);
 					for (String strAttributeValuesEach : arrAttributeValues) {
 						this.getKeywordsAndValue(strAttributeValuesEach);
 						for (String strResultsEach : arrResults) {
@@ -3558,11 +3558,11 @@ public class Dragonfly {
 							strKeywordValueCombined = strKeywordValueCombined + "|" + strKeywordValue;
 						}
 					}
-					gobjectStep.putValue("strAttributeValues", strKeywordValueCombined);
+					JSONS.getInstance().step.putValue("strAttributeValues", strKeywordValueCombined);
 					break;
 				case "strInputValue":
-					Config.getInstance().originalInputValue = gobjectStep.getString(strKey);
-					this.getKeywordsAndValue(gobjectStep.getString(strKey));
+					Config.getInstance().originalInputValue = JSONS.getInstance().step.getString(strKey);
+					this.getKeywordsAndValue(JSONS.getInstance().step.getString(strKey));
 					for (String strResultsEach : arrResults) {
 						for (String strKeywordsValidEach : arrKV_strInputValue) {
 							if (strResultsEach.equals(strKeywordsValidEach)) {
@@ -3574,7 +3574,7 @@ public class Dragonfly {
 						}
 					}
 					Logger.getInstance().add("KeywordsValid: blnValid = " + blnValid);
-					gobjectStep.putValue("strInputValue", strKeywordValue);
+					JSONS.getInstance().step.putValue("strInputValue", strKeywordValue);
 					// Logger.getInstance().add("strKeywordValue = " + strKeywordValue);
 					// Logger.getInstance().add("strInputValueFromJson = " + strInputValueFromJson);
 					break;
@@ -3590,13 +3590,13 @@ public class Dragonfly {
 			try {
 				switch (strKeyword) {
 				case "<td>":
-					strInputValueFromJson = gobjectTestData.getValue(strInputValue, "<td>");
+					strInputValueFromJson = JSONS.getInstance().testData.getValue(strInputValue, "<td>");
 					break;
 				case "<ti>":
-					strInputValueFromJson = gobjectTestInstancesEach.getValue(strInputValue, "<ti>");
+					strInputValueFromJson = JSONS.getInstance().testInstancesEach.getValue(strInputValue, "<ti>");
 					break;
 				case "<tl>":
-					strInputValueFromJson = gobjectLinks.getValue(strInputValue, "<tl>");
+					strInputValueFromJson = JSONS.getInstance().links.getValue(strInputValue, "<tl>");
 					break;
 				case "<re>":
 					strInputValueFromJson = strInputValue;
@@ -3694,13 +3694,13 @@ public class Dragonfly {
 					strAreaObjectName = "screen";
 				}
 				if (Element.getInstance().element == null) {
-					if (gobjectStep.verifyEquals("strTagName", "alert")) {
+					if (JSONS.getInstance().step.verifyEquals("strTagName", "alert")) {
 						strAreaObjectName = "element";
 					} else {
 						strAreaObjectName = "screen";
 					}
 				} else {
-					if (gobjectStep.containsKey("intElementScreenX") == false) {
+					if (JSONS.getInstance().step.containsKey("intElementScreenX") == false) {
 						strAreaObjectName = "screen";
 					} else {
 						strAreaObjectName = "element";
@@ -3716,10 +3716,10 @@ public class Dragonfly {
 					intHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 					break;
 				case "window":
-					intX = gobjectStep.getInt("intBrowserOuterX");
-					intY = gobjectStep.getInt("intBrowserOuterY");
-					intWidth = gobjectStep.getInt("intBrowserOuterWidth");
-					intHeight = gobjectStep.getInt("intBrowserOuterHeight");
+					intX = JSONS.getInstance().step.getInt("intBrowserOuterX");
+					intY = JSONS.getInstance().step.getInt("intBrowserOuterY");
+					intWidth = JSONS.getInstance().step.getInt("intBrowserOuterWidth");
+					intHeight = JSONS.getInstance().step.getInt("intBrowserOuterHeight");
 					break;
 				case "page":
 					// TODO change this to get absolute screen coordinates
@@ -3731,10 +3731,10 @@ public class Dragonfly {
 					break;
 				case "element":
 				case "alert":
-					intX = gobjectStep.getInt("intElementScreenX") - intThickness;
-					intY = gobjectStep.getInt("intElementScreenY") - intThickness;
-					intWidth = gobjectStep.getInt("intElementWidth") + (2 * intThickness);
-					intHeight = gobjectStep.getInt("intElementHeight") + (2 * intThickness);
+					intX = JSONS.getInstance().step.getInt("intElementScreenX") - intThickness;
+					intY = JSONS.getInstance().step.getInt("intElementScreenY") - intThickness;
+					intWidth = JSONS.getInstance().step.getInt("intElementWidth") + (2 * intThickness);
+					intHeight = JSONS.getInstance().step.getInt("intElementHeight") + (2 * intThickness);
 					break;
 				default:
 					Logger.getInstance().add("RectangleAreaByName: epected values = screen, window, page and element not " + strAreaObjectName);
@@ -3787,7 +3787,7 @@ public class Dragonfly {
 
 	private class Sleep {
 		private Sleep() {
-			new SleepMilliseconds(gobjectStep.getInt("strInputValue"));
+			new SleepMilliseconds(JSONS.getInstance().step.getInt("strInputValue"));
 		}
 	}
 
@@ -3796,9 +3796,9 @@ public class Dragonfly {
 			// Logger.getInstance().add("  ==start==>SleepMilliseconds " + new DateTimestamp().get());
 			try {
 				TimeUnit.MILLISECONDS.sleep(intMillisecondsToWait);
-				gobjectStep.putValue("strStatus", "pass");
+				JSONS.getInstance().step.putValue("strStatus", "pass");
 			} catch (Exception e) {
-				gobjectStep.putValue("strStatus", "fail");
+				JSONS.getInstance().step.putValue("strStatus", "fail");
 				Logger.getInstance().add("SleepMilliseconds: Exception = " + e.toString());
 			}
 		}
@@ -3808,7 +3808,7 @@ public class Dragonfly {
 		private SleepSync() {
 			Long lngTimeStart = System.currentTimeMillis();
 			new Sleep();
-			gobjectStep.putValue("strStepActual", "sleep");
+			JSONS.getInstance().step.putValue("strStepActual", "sleep");
 			stepDuration("SleepSync", lngTimeStart, "sleep");
 		}
 	}
@@ -3867,7 +3867,7 @@ public class Dragonfly {
 			String[] arrKeys = new StepNames().getRuntime();
 			for (String strKey : arrKeys) {
 				if (!strKey.equals("strTestModuleStep")) {
-					gobjectStep.putValue(strKey, "");
+					JSONS.getInstance().step.putValue(strKey, "");
 				}
 			}
 			new KeywordsValid();
@@ -3888,9 +3888,9 @@ public class Dragonfly {
 				} catch (Exception e) {
 					Logger.getInstance().add("StepSetupDefaults: Exception = " + e.toString());
 				}
-				if (gobjectStep.getValueLength(strKey) == 0) {
+				if (JSONS.getInstance().step.getValueLength(strKey) == 0) {
 					try {
-						gobjectStep.putValue(strKey, (String) objField.get(this));
+						JSONS.getInstance().step.putValue(strKey, (String) objField.get(this));
 					} catch (IllegalArgumentException | IllegalAccessException e) {
 						Logger.getInstance().add("StepSetupDefaults: IllegalArgumentException = " + e.toString());
 						e.printStackTrace();
@@ -3899,7 +3899,7 @@ public class Dragonfly {
 					}
 				}
 			}
-			gobjectStep.putValue("strCurrentWindowHandle", strCurrentWindowHandle);
+			JSONS.getInstance().step.putValue("strCurrentWindowHandle", strCurrentWindowHandle);
 		}
 	}
 
@@ -4147,28 +4147,28 @@ public class Dragonfly {
 				// test_instances
 				Logger.getInstance().add("TestConfigurationSetup: test_instances");
 				if (this.putAllArrays("test_instances", "test_instances", Path.getInstance().testInstances) == null) {
-					gobjJsonArrayTestInstances = null;
+					JSONS.getInstance().testInstances = null;
 					intTestInstanceSize = 0;
 				} else {
-					gobjJsonArrayTestInstances = this.putAllArrays("test_instances", "test_instances", Path.getInstance().testInstances);
-					intTestInstanceSize = gobjJsonArrayTestInstances.size();
+					JSONS.getInstance().testInstances = this.putAllArrays("test_instances", "test_instances", Path.getInstance().testInstances);
+					intTestInstanceSize = JSONS.getInstance().testInstances.size();
 				}
 				// test_elements
 				Logger.getInstance().add("TestConfigurationSetup: test_elements");
-				gobjectElement = this.putAllObjects("test_elements", "elements", Path.getInstance().testElements);
+				JSONS.getInstance().element = this.putAllObjects("test_elements", "elements", Path.getInstance().testElements);
 				// processing
 				Logger.getInstance().add("TestConfigurationSetup: processing");
-				gobjectProcessing = this.putAllObjects("test_elements", "processing", Path.getInstance().testElements);
+				JSONS.getInstance().processing = this.putAllObjects("test_elements", "processing", Path.getInstance().testElements);
 				// test_modules
 				Logger.getInstance().add("TestConfigurationSetup: test_modules");
-				gobjJsonArrayTestSteps = this.putAllArrays("test_modules", "steps", Path.getInstance().testModules);
-				Logger.getInstance().add("TestConfigurationSetup: gobjJsonArrayTestSteps.toString = " + gobjJsonArrayTestSteps.toString());
+				JSONS.getInstance().testSteps = this.putAllArrays("test_modules", "steps", Path.getInstance().testModules);
+				Logger.getInstance().add("TestConfigurationSetup: JSONS.getInstance().testSteps.toString = " + JSONS.getInstance().testSteps.toString());
 				// TODO add error handling, report no test modules and fail
 				// test_links
-				gobjectLinks.parseString("{\"link\":[{}]}");
+				JSONS.getInstance().links.parseString("{\"link\":[{}]}");
 				// test_data
 				Logger.getInstance().add("TestConfigurationSetup: test_data");
-				gobjectTestData = this.putAllObjects("test_data", "test_data", Path.getInstance().testData);
+				JSONS.getInstance().testData = this.putAllObjects("test_data", "test_data", Path.getInstance().testData);
 			} catch (Exception e) {
 				Logger.getInstance().add("TestConfigurationSetup: Exception = " + e.toString());
 			} finally {
@@ -4466,10 +4466,10 @@ public class Dragonfly {
 
 	static String createObjectName() {
 		String strAttributeValue = "";
-		String strAttributeValues = ReplaceHtmlArrows(gobjectStep.getString("strAttributeValues"));
+		String strAttributeValues = ReplaceHtmlArrows(JSONS.getInstance().step.getString("strAttributeValues"));
 		String strObjectsAttributes = "";
 		String strObjectName = "";
-		String strObjectNames = gobjectStep.getString("strAttributeNames");
+		String strObjectNames = JSONS.getInstance().step.getString("strAttributeNames");
 		String[] arrAttributeValues = strAttributeValues.split("\\|");
 		String[] arrObjectNames = strObjectNames.split("\\|");
 		for (int intEach = 0; intEach < arrObjectNames.length; intEach++) {
@@ -4603,7 +4603,7 @@ public class Dragonfly {
 
 	private void logStepDetails() {
 		for (String strKey : new StepNames().getOriginal()) {
-			Logger.getInstance().add("LogStepDetails: " + strKey + " = " + gobjectStep.getString(strKey));
+			Logger.getInstance().add("LogStepDetails: " + strKey + " = " + JSONS.getInstance().step.getString(strKey));
 		}
 	}
 
@@ -4643,14 +4643,14 @@ public class Dragonfly {
 		if (intTestInstanceSize == 0) {
 			intTestInstanceStart = -1;
 		}
-		String strTestStepsCombinedOriginal = gobjJsonArrayTestSteps.toString();
+		String strTestStepsCombinedOriginal = JSONS.getInstance().testSteps.toString();
 		for (intTestInstanceEach = intTestInstanceStart; intTestInstanceEach < intTestInstanceSize; intTestInstanceEach++) {
 			try {
 				if (intTestInstanceEach > 0) {
 					new SleepMilliseconds(100);
 					System.out.println("@@@@@@@@@@@@@The start of Iteration " + intTestInstanceSize);
 				}
-				Logger.getInstance().add(">>>>>>mainDragonfly: gobjectStep " + gobjectStep);
+				Logger.getInstance().add(">>>>>>mainDragonfly: JSONS.getInstance().step " + JSONS.getInstance().step);
 				objJsonArrayTestStepsRun.clear();
 				intStep = 0;
 				intLoopCount = 0;
@@ -4661,29 +4661,29 @@ public class Dragonfly {
 				Path.getInstance().setPathResults(intTestInstanceSize, strNameTestConfiguration);
 				objJsonArrayTestSteps = (JSONArray) objJsonParser.parse(strTestStepsCombinedOriginal);
 				if (intTestInstanceSize > 0) {
-					gobjectTestInstancesEach.replaceAllFromMap((Map<String, String>) gobjJsonArrayTestInstances.get(intTestInstanceEach));
+					JSONS.getInstance().testInstancesEach.replaceAllFromMap((Map<String, String>) JSONS.getInstance().testInstances.get(intTestInstanceEach));
 				}
 				strFileTestSteps = Path.getInstance().testSteps + strNameTestConfiguration.replace(".json", ".html");
 				writeJsonStepsToHtml(Path.getInstance().results, "original", objJsonArrayTestSteps, "StepsOriginal.html");
 				for (intStep = 0; intStep < objJsonArrayTestSteps.size(); intStep++) {
 					Logger.getInstance().add("mainDragonfly: ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Step " + intStep);
 					Element.getInstance().element = null;
-					gobjectStep.replaceAllFromString((String) objJsonArrayTestSteps.get(intStep).toString());
+					JSONS.getInstance().step.replaceAllFromString((String) objJsonArrayTestSteps.get(intStep).toString());
 					new StepSetupDefaults(strCurrentWindowHandle);
-					String strInputValue = gobjectStep.getString("strInputValue");
+					String strInputValue = JSONS.getInstance().step.getString("strInputValue");
 					logStepDetails();
-					if (gobjectStep.getString("strLoopOrIf").trim().length() > 0) {
-						if (gobjectStep.getString("strLoopOrIf").toLowerCase().startsWith("<loopstart>") == true) {
+					if (JSONS.getInstance().step.getString("strLoopOrIf").trim().length() > 0) {
+						if (JSONS.getInstance().step.getString("strLoopOrIf").toLowerCase().startsWith("<loopstart>") == true) {
 							if (intLoopEach == 0) {
-								intLoopCount = Integer.parseInt(gobjectStep.getString("strLoopOrIf").substring(11));
-								gobjectStep.putValue("strLoopOrIf", "");
+								intLoopCount = Integer.parseInt(JSONS.getInstance().step.getString("strLoopOrIf").substring(11));
+								JSONS.getInstance().step.putValue("strLoopOrIf", "");
 								intLoopEach = 1;
 								intLoopStep = intStep;
 							}
 						}
 					}
-					if (!gobjectStep.verifyEquals("strFunction", "")) {
-						String strMethodName = gobjectStep.getString("strFunction");
+					if (!JSONS.getInstance().step.verifyEquals("strFunction", "")) {
+						String strMethodName = JSONS.getInstance().step.getString("strFunction");
 						String strArguments = strInputValue;
 						Class<?> objClass = Class.forName("org.DragonflyAutomation.Dragonfly");
 						Class<?> objParameterTypes[] = new Class[1];
@@ -4694,9 +4694,9 @@ public class Dragonfly {
 						Object objReturn = objMethod.invoke(objDragonfly, arrArgumentList);
 						String strReturnValue = (String) objReturn;
 						strInputValue = strReturnValue.toString();
-						gobjectStep.putValue("strInputValue", strInputValue);
+						JSONS.getInstance().step.putValue("strInputValue", strInputValue);
 					}
-					switch (gobjectStep.returnKeyword("strLoopOrIf")) {
+					switch (JSONS.getInstance().step.returnKeyword("strLoopOrIf")) {
 					case "<elseif>":
 						if (blnIfSet.equals(true)) {
 							blnIf = false;
@@ -4715,13 +4715,13 @@ public class Dragonfly {
 					if (blnIf == true) {
 						Logger.getInstance().add("mainDragonfly: strInputValue = " + strInputValue);
 						if (strInputValue.trim().equalsIgnoreCase("<skip>")) {
-							gobjectStep.putValue("strStepActual", "skip");
+							JSONS.getInstance().step.putValue("strStepActual", "skip");
 							stepDuration("<skip>", System.currentTimeMillis(), "skip");
 						} else {
-							switch (gobjectStep.getLowerCase("strAction")) {
+							switch (JSONS.getInstance().step.getLowerCase("strAction")) {
 							case "break":
 								Logger.getInstance().add("mainDragonfly: switch strAction = break was entered to at this step to stop execution");
-								gobjectStep.putValue("strStepActual", "break");
+								JSONS.getInstance().step.putValue("strStepActual", "break");
 								stepDuration("break", System.currentTimeMillis(), "break");
 								blnExit = true;
 								break;
@@ -4740,7 +4740,7 @@ public class Dragonfly {
 							case "kill_ie":
 								long lngStartTime = System.currentTimeMillis();
 								new ProcessKillInternetExplorer().run();
-								gobjectStep.putValue("strStepActual", "kill_ie");
+								JSONS.getInstance().step.putValue("strStepActual", "kill_ie");
 								stepDuration("kill_ie", lngStartTime, "kill_ie");
 								break;
 							case "launch":
@@ -4789,33 +4789,33 @@ public class Dragonfly {
 								new ElementVerifyNotValueSync();
 								break;
 							default:
-								Logger.getInstance().add("mainDragonfly: switch strAction = " + gobjectStep.getLowerCase("strAction") + "  not supported");
+								Logger.getInstance().add("mainDragonfly: switch strAction = " + JSONS.getInstance().step.getLowerCase("strAction") + "  not supported");
 								stepDuration("action", System.currentTimeMillis(), "action");
 								blnExit = true;
 								break;
 							}
-							strCurrentWindowHandle = gobjectStep.getString("strCurrentWindowHandle");
+							strCurrentWindowHandle = JSONS.getInstance().step.getString("strCurrentWindowHandle");
 						}
-						if (gobjectStep.getString("strOutputLinkName").trim().length() != 0) {
-							gobjectLinks.putValue(gobjectStep.getString("strOutputLinkName"), gobjectStep.getString("strOutputValue"));
+						if (JSONS.getInstance().step.getString("strOutputLinkName").trim().length() != 0) {
+							JSONS.getInstance().links.putValue(JSONS.getInstance().step.getString("strOutputLinkName"), JSONS.getInstance().step.getString("strOutputValue"));
 						}
-						objJsonArrayTestStepsRun.add(gobjectStep.toJSONString());
+						objJsonArrayTestStepsRun.add(JSONS.getInstance().step.toJSONString());
 						Logger.getInstance().add("mainDragonfly: objJsonArrayTestStepsRun - " + objJsonArrayTestStepsRun);
 						if (blnExit == true) {
 							break;
 						}
-						if (gobjectStep.verifyEquals("strStatus", "fail")) {
+						if (JSONS.getInstance().step.verifyEquals("strStatus", "fail")) {
 							strTestStatus = "fail";
-							if (gobjectStep.getBoolean("blnExitOnFail") == true) {
-								new WebElementCollectionTable(gobjectStep.getString("strTagName"));
+							if (JSONS.getInstance().step.getBoolean("blnExitOnFail") == true) {
+								new WebElementCollectionTable(JSONS.getInstance().step.getString("strTagName"));
 								break;
 							}
 						}
 					}
-					switch (gobjectStep.returnKeyword("strLoopOrIf")) {
+					switch (JSONS.getInstance().step.returnKeyword("strLoopOrIf")) {
 					case "<loopexit>":
-						strLoopExitValue = gobjectStep.getString("strLoopOrIf").substring(10);
-						if (gobjectStep.verifyEquals("strOutputValue", strLoopExitValue)) {
+						strLoopExitValue = JSONS.getInstance().step.getString("strLoopOrIf").substring(10);
+						if (JSONS.getInstance().step.verifyEquals("strOutputValue", strLoopExitValue)) {
 							intLoopCount = 0;
 							intLoopEach = 0;
 						}
@@ -4830,7 +4830,7 @@ public class Dragonfly {
 						}
 						break;
 					case "<if>":
-						if (gobjectStep.verifyEquals("strStatus", "pass")) {
+						if (JSONS.getInstance().step.verifyEquals("strStatus", "pass")) {
 							blnIf = true;
 							blnIfSet = true;
 						} else {
@@ -4839,7 +4839,7 @@ public class Dragonfly {
 						break;
 					case "<elseif>":
 						if (blnIfSet.equals(false)) {
-							if (gobjectStep.verifyEquals("strStatus", "pass")) {
+							if (JSONS.getInstance().step.verifyEquals("strStatus", "pass")) {
 								blnIf = true;
 								blnIfSet = true;
 							} else {
@@ -4857,7 +4857,7 @@ public class Dragonfly {
 				Logger.getInstance().add("mainDragonfly: Exception " + e.toString());
 			} finally {
 				writeFile(Path.getInstance().results + "StepsAfterRun.json", objJsonArrayTestStepsRun.toString());
-				writeFile(Path.getInstance().results + "StepsWithDefaults.json", gobjJsonArrayTestSteps.toString());
+				writeFile(Path.getInstance().results + "StepsWithDefaults.json", JSONS.getInstance().testSteps.toString());
 				writeJsonStepsToHtml(Path.getInstance().results, "original", objJsonArrayTestStepsRun, "StepsWithDefaults.html");
 				writeJsonStepsToHtml(Path.getInstance().results, "complete", objJsonArrayTestStepsRun, "StepsAfterRun.html");
 				writeReportToHtml(Path.getInstance().results + "Report.html", objJsonArrayTestStepsRun, strFileTestSteps, strNameTestConfiguration.replace(".json", ""));
@@ -4957,13 +4957,13 @@ public class Dragonfly {
 
 	private void stepCreateActual(String strStepType) {
 		Logger.getInstance().add("  ==start==>stepCreateActual " + new DateTimestamp().get());
-		String intWaited = gobjectStep.getString("strStepDuration");
+		String intWaited = JSONS.getInstance().step.getString("strStepDuration");
 		String strActualHtml = "";
 		String strActualText = "";
-		String strInputValue = gobjectStep.getString("strInputValue");
+		String strInputValue = JSONS.getInstance().step.getString("strInputValue");
 		Logger.getInstance().add("stepCreateActual strStepType.toLowerCase() = " + strStepType.toLowerCase());
-		String strOutputValue = gobjectStep.getString("strOutputValue");
-		String strTagName = gobjectStep.getString("strTagName");
+		String strOutputValue = JSONS.getInstance().step.getString("strOutputValue");
+		String strTagName = JSONS.getInstance().step.getString("strTagName");
 		String strObjectName = this.createObjectName();
 		String strTagAttributesHtml = "The {<b>" + strTagName + "</b>} tag with attributes {<b>" + strObjectName + "</b>}";
 		String strMsWaitedDetailHtml = " after {<b>" + intWaited + "</b>} milliseconds.";
@@ -4973,8 +4973,8 @@ public class Dragonfly {
 		String strInputValueHtmlPass = " value " + strHtmlPassStart + strInputValue + strHtmlEnd;
 		String strOutputValueHtmlPass = " value " + strHtmlPassStart + strOutputValue + strHtmlEnd;
 		String strOutputValueHtmlFail = " " + strHtmlFailStart + strOutputValue + strHtmlEnd;
-		Logger.getInstance().add("stepCreateActual strStepActual = " + gobjectStep.getString("strStepActual"));
-		strStepType = gobjectStep.getString("strStepActual");
+		Logger.getInstance().add("stepCreateActual strStepActual = " + JSONS.getInstance().step.getString("strStepActual"));
+		strStepType = JSONS.getInstance().step.getString("strStepActual");
 		Logger.getInstance().add("stepCreateActual strStepType.toLowerCase() = " + strStepType.toLowerCase());
 		try {
 			switch (strStepType.toLowerCase()) {
@@ -5112,7 +5112,7 @@ public class Dragonfly {
 			strActualHtml = "<DIV align='left'><font size='5'>" + strActualHtml + "</font></DIV>";
 			strActualText = removeTags(strActualHtml);
 			Logger.getInstance().add("StepCreateActual: strActualText = " + strActualText);
-			gobjectStep.putValue("strStepActual", strActualHtml);
+			JSONS.getInstance().step.putValue("strStepActual", strActualHtml);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			Logger.getInstance().add("stepCreateActual:Exception " + e.toString());
@@ -5124,20 +5124,20 @@ public class Dragonfly {
 		String strStepExpected = "";
 		String strAction = "";
 		String strInputValue = Config.getInstance().originalInputValue;
-		String strMillisecondsToWait = gobjectStep.getString("intMillisecondsToWait");
+		String strMillisecondsToWait = JSONS.getInstance().step.getString("intMillisecondsToWait");
 		String strObjectName = Config.getInstance().originalAttributes;
-		String strTagName = gobjectStep.getString("strTagName");
-		String strAssert = gobjectStep.getString("strAssert");
+		String strTagName = JSONS.getInstance().step.getString("strTagName");
+		String strAssert = JSONS.getInstance().step.getString("strAssert");
 		String strMillisecondsToWaitHtml = " within {<b>" + strMillisecondsToWait + "</b>} milliseconds.";
 		String strTagAttributesHtml = " {<b>" + strTagName + "</b>} tag with attributes {<b>" + strObjectName + "</b>}";
 		String strInputValueHtml = " {<b>" + strInputValue + "</b>}";
 		String strAssertHtml = " assert {<b>" + strAssert + "</b>}";
-		Logger.getInstance().add("stepCreateExpected: strStepExpected length = " + gobjectStep.getString("strStepExpected").length());
+		Logger.getInstance().add("stepCreateExpected: strStepExpected length = " + JSONS.getInstance().step.getString("strStepExpected").length());
 		try {
-			if (gobjectStep.getString("strStepExpected").length() != 0) {
-				strAction = gobjectStep.getString("strStepExpected");
+			if (JSONS.getInstance().step.getString("strStepExpected").length() != 0) {
+				strAction = JSONS.getInstance().step.getString("strStepExpected");
 			} else {
-				strAction = gobjectStep.getString("strAction");
+				strAction = JSONS.getInstance().step.getString("strAction");
 			}
 			Logger.getInstance().add("stepCreateExpected: strAction = " + strAction);
 			switch (strAction.toLowerCase()) {
@@ -5221,7 +5221,7 @@ public class Dragonfly {
 			}
 			strStepExpected = "<DIV align='left'><font size='5'>" + strStepExpected + "</font></DIV>";
 			StepsManual.getInstance().set(removeTags(strStepExpected));
-			gobjectStep.putValue("strStepExpected", strStepExpected);
+			JSONS.getInstance().step.putValue("strStepExpected", strStepExpected);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			Logger.getInstance().add("stepCreateExpected:Exception " + e.toString());
@@ -5232,33 +5232,33 @@ public class Dragonfly {
 		Logger.getInstance().add("  ==start==>StepDuration " + new DateTimestamp().get());
 		stepCreateExpected();
 		Long lngTimeEnd = System.currentTimeMillis();
-		gobjectStep.putValue("strStartTimestamp", formatDateTime(lngTimeStart));
-		gobjectStep.putValue("strStepDuration", Long.toString(lngTimeEnd - lngTimeStart));
-		gobjectStep.putValue("strEndTimestamp", formatDateTime(lngTimeEnd));
+		JSONS.getInstance().step.putValue("strStartTimestamp", formatDateTime(lngTimeStart));
+		JSONS.getInstance().step.putValue("strStepDuration", Long.toString(lngTimeEnd - lngTimeStart));
+		JSONS.getInstance().step.putValue("strEndTimestamp", formatDateTime(lngTimeEnd));
 		stepCreateActual(strStepType);
-		Logger.getInstance().add("StepDuration: " + strMethodName + " strStatus = " + gobjectStep.getString("strStatus") + " Milliseconds Waited = " + gobjectStep.getString("strStepDuration"));
+		Logger.getInstance().add("StepDuration: " + strMethodName + " strStatus = " + JSONS.getInstance().step.getString("strStatus") + " Milliseconds Waited = " + JSONS.getInstance().step.getString("strStepDuration"));
 	}
 
 	private Boolean syncFinally(Boolean blnExit, Boolean blnStatus, Boolean blnFound, String strMethodeName, String strAction, Long lngTimeStart) {
 		Logger.getInstance().add("SyncFinally:  blnExit = {" + blnExit + "} blnStatus = {" + blnStatus + "} blnFound = {" + blnFound + "} strMethodeName = {" + strMethodeName + "} strAction = {" + strAction + "}");
 		if (blnExit == true) {
-			gobjectStep.putValue("strStatus", "fail");
-			gobjectStep.putValue("blnExitOnFail", "true");
+			JSONS.getInstance().step.putValue("strStatus", "fail");
+			JSONS.getInstance().step.putValue("blnExitOnFail", "true");
 		} else {
 			if (blnStatus == true) {
-				gobjectStep.putValue("strStatus", "pass");
+				JSONS.getInstance().step.putValue("strStatus", "pass");
 				blnExit = true;
 			} else if (blnStatus == false) {
-				if ((int) (System.currentTimeMillis() - lngTimeStart) <= gobjectStep.getInt("intMillisecondsToWait")) {
+				if ((int) (System.currentTimeMillis() - lngTimeStart) <= JSONS.getInstance().step.getInt("intMillisecondsToWait")) {
 					if (blnFound == false) {
 						blnExit = false;
 					}
 				} else {
-					if (gobjectStep.getBoolean("blnOptional") == true) {
-						gobjectStep.putValue("strStatus", "warning");
+					if (JSONS.getInstance().step.getBoolean("blnOptional") == true) {
+						JSONS.getInstance().step.putValue("strStatus", "warning");
 						blnExit = true;
 					} else {
-						gobjectStep.putValue("strStatus", "fail");
+						JSONS.getInstance().step.putValue("strStatus", "fail");
 						blnExit = true;
 					}
 				}
