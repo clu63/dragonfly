@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
-import org.DragonflyAutomation.Dragonfly.ExceptionJSONKeyNotPresent;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -129,7 +128,7 @@ class JSON {
 
 	void validateKey(String strKeyName) throws ExceptionJSONKeyNotPresent {
 		if (!this.jSONObject.containsKey(strKeyName)) {
-			throw new Dragonfly().new ExceptionJSONKeyNotPresent("JSON Key " + strKeyName + " not present");
+			throw new ExceptionJSONKeyNotPresent("JSON Key " + strKeyName + " not present");
 		}
 	}
 
