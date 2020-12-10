@@ -40,6 +40,7 @@ class RemoteTest {
 		WebElement element = driver.findElement(By.name("q"));
 		element.sendKeys("Cheese!");
 		System.out.println("Cheese");
-		driver.quit();
+		Thread.sleep(20000);
+		//driver.quit();
 	}
 }
