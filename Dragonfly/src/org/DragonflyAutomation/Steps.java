@@ -1,6 +1,5 @@
 package org.DragonflyAutomation;
 
-import org.DragonflyAutomation.Dragonfly.StepSetupDefaults;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -82,20 +81,14 @@ class Steps {
 	}
 
 	void setSteps() {
-		
-		
-		
 	}
-	
-	void setOutPutLink(){
-	//if (gobjectStep.getString("strOutputLinkName").trim().length() != 0) {
-	//	gobjectLinks.putValue(gobjectStep.getString("strOutputLinkName"), gobjectStep.getString("strOutputValue"));
-	//}
+
+	void setOutPutLink() {
+		//if (gobjectStep.getString("strOutputLinkName").trim().length() != 0) {
+		//	gobjectLinks.putValue(gobjectStep.getString("strOutputLinkName"), gobjectStep.getString("strOutputValue"));
+		//}
 		if (this.getValueString("strOutputLinkName").trim().length() != 0) {
 			//gobjectLinks.putValue(gobjectStep.getString("strOutputLinkName"), this.getValueString("strOutputValue"));
 		}
-	
-	
 	}
-	
 }

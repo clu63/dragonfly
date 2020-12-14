@@ -6,7 +6,7 @@ import static java.lang.Math.*;
 
 public class Dragonfly2 {
 	public static void main(String[] args) {
-		Logger.getInstance().add("  ==start==>mainDragonfly " + new DateTimestamp().get());
+		Logger.getInstance().add("  ==start==>mainDragonfly " + Util.getDateTimestamp());
 		if(new Execution().getSource().equals("local")){
 			System.out.println( OperatingSystem.get());
 			

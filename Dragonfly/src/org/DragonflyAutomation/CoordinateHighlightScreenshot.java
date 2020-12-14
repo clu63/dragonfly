@@ -9,7 +9,7 @@ import javax.swing.JDialog;
 
 class CoordinateHighlightScreenshot {
 	CoordinateHighlightScreenshot(final JSON objJsonObjectStepHighlightArea) {
-		Logger.getInstance().add("  ==start==>CoordinateHighlightScreenshot " + new DateTimestamp().get());
+		Logger.getInstance().add("  ==start==>CoordinateHighlightScreenshot " + Util.getDateTimestamp());
 		long lngStartTime = System.currentTimeMillis();
 		JDialog objJDialog = new JDialog() {
 			private static final long serialVersionUID = 1L;
@@ -53,7 +53,7 @@ class CoordinateHighlightScreenshot {
 			try {
 				new RectangleAreaByName(0, JSONS.getInstance().step.getString("strScreenshotArea"), objHighlightArea);
 				BufferedImage objScreenShot = new Robot().createScreenCapture(objHighlightArea);
-				strScreenshotFilePath = Path.getInstance().images + "Screenshot_" + new DateTimestamp().get() + ".jpg";
+				strScreenshotFilePath = Path.getInstance().images + "Screenshot_" + Util.getDateTimestamp() + ".jpg";
 				Thread objThread = new Thread(new ThreadSaveImage(objScreenShot, "jpg", strScreenshotFilePath));
 				objThread.start();
 				JSONS.getInstance().step.putValue("strScreenshotFilePath", strScreenshotFilePath);

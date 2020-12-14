@@ -2,7 +2,7 @@ package org.DragonflyAutomation;
 
 class BrowserLaunchSync {
 	BrowserLaunchSync() {
-		Logger.getInstance().add("  ==start==>BrowserLaunchSync " + new DateTimestamp().get());
+		Logger.getInstance().add("  ==start==>BrowserLaunchSync " + Util.getDateTimestamp());
 		long lngStartTime = System.currentTimeMillis();
 		try {
 			new BrowserLaunch();

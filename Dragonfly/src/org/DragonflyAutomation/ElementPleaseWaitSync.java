@@ -2,7 +2,7 @@ package org.DragonflyAutomation;
 
 class ElementPleaseWaitSync {
 	ElementPleaseWaitSync() throws ExceptionElementNotHidden {
-		Logger.getInstance().add("  ==start==>ElementPleaseWaitSync " + new DateTimestamp().get());
+		Logger.getInstance().add("  ==start==>ElementPleaseWaitSync " + Util.getDateTimestamp());
 		long lngStartTime = System.currentTimeMillis();
 		Boolean blnPleaseWait = Boolean.parseBoolean(JSONS.getInstance().step.getString("blnPleaseWait"));
 		Integer intPleaseWaitEach;

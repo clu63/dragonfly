@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
 
 class RectangleAreaByName {
 	RectangleAreaByName(Integer intThickness, String strAreaObjectName, Rectangle objRectangleArea) {
-		Logger.getInstance().add("  ==start==>RectangleAreaByName " + new DateTimestamp().get());
+		Logger.getInstance().add("  ==start==>RectangleAreaByName " + Util.getDateTimestamp());
 		Logger.getInstance().add("RectangleAreaByName: strAreaObjectName = " + strAreaObjectName);
 		long lngStartTime = System.currentTimeMillis();
 		int intX = 0;

@@ -2,7 +2,7 @@ package org.DragonflyAutomation;
 
 class StepCreateExpected {
 	StepCreateExpected() {
-		Logger.getInstance().add("  ==start==>StepCreateExpected " + new DateTimestamp().get());
+		Logger.getInstance().add("  ==start==>StepCreateExpected " + Util.getDateTimestamp());
 		String strStepExpected = "";
 		String strAction = "";
 		String strInputValue = Config.getInstance().originalInputValue;

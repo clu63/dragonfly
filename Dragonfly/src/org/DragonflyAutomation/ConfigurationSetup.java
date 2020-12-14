@@ -59,7 +59,7 @@
 //
 //		@SuppressWarnings("unchecked")
 //		private JSON putAllObjects(String strJsonArrayName, String strJsonObjectName, String strPath) {
-//			Logger.getInstance().add("  ==start==>putAllObjects " + new DateTimestamp().get());
+//			Logger.getInstance().add("  ==start==>putAllObjects " + Util.getDateTimestamp());
 //			Integer intJsonObjectEach = 0;
 //			JSONArray objJsonArrayList = null;
 //			JSON objJsonObject = new JSON();
@@ -95,7 +95,7 @@
 //
 //		private void run(String strFileNameTestConfiguration) {
 //			// TODO complete TestConfigurationSetup method to create json objects for test
-//			Logger.getInstance().add("  ==start==>TestConfigurationSetup " + new DateTimestamp().get());
+//			Logger.getInstance().add("  ==start==>TestConfigurationSetup " + Util.getDateTimestamp());
 //			long lngStartTime = System.currentTimeMillis();
 //			String strFilePathTestConfiguration = "";
 //			try {

@@ -8,7 +8,7 @@ import org.openqa.selenium.interactions.internal.Locatable;
 
 class CoordinatesElement {
 	CoordinatesElement() {
-		Logger.getInstance().add("  ==start==>CoordinatesElement " + new DateTimestamp().get());
+		Logger.getInstance().add("  ==start==>CoordinatesElement " + Util.getDateTimestamp());
 		long lngStartTime = System.currentTimeMillis();
 		try {
 			Rectangle rect = new Rectangle(0, 0, -1, -1);
@@ -53,7 +53,7 @@ class CoordinatesElement {
 		} catch (Exception e) {
 			Logger.getInstance().add("CoordinatesElement: Exception = " + e.toString());
 		} finally {
-			Logger.getInstance().add("  ==end==>CoordinatesElement " + new DateTimestamp().get());
+			Logger.getInstance().add("  ==end==>CoordinatesElement " + Util.getDateTimestamp());
 			Logger.getInstance().add("CoordinatesElement: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 		}
 	}

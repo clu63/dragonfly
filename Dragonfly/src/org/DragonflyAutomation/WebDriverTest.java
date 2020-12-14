@@ -44,12 +44,12 @@ class WebDriverTest {
 		//	assertTrue(true);
 		//driver.close();
 		//driver.quit();
-		new Dragonfly().new SleepMilliseconds(2000);
+		new SleepMilliseconds(2000);
 		WebElement objWebElement = objWebDriver.findElement(By.id("tooltipID"));
 		Actions ToolTip1 = new Actions(objWebDriver);
 		ToolTip1.moveToElement(objWebElement).build().perform();
 		//ToolTip1.clickAndHold(objWebElement).build().perform();
-		new Dragonfly().new SleepMilliseconds(1000);
+		new SleepMilliseconds(1000);
 		System.out.println(objWebElement.getLocation().getX());
 		System.out.println(objWebElement.getLocation().getY());
 		System.out.println(objWebElement.getSize().width);

@@ -16,7 +16,7 @@ class BrowserLaunch {
 	BrowserLaunch() throws ExceptionBrowserDriverNotSupported {
 		// TODO combine duplicate code
 		// TODO add desiredCapabilities.setJavascriptEnabled(true); to all browsers
-		Logger.getInstance().add("  ==start==>BrowserLaunch " + new DateTimestamp().get());
+		Logger.getInstance().add("  ==start==>BrowserLaunch " + Util.getDateTimestamp());
 		DesiredCapabilities objDesiredCapabilities = null;
 		Long lngTimeStart = System.currentTimeMillis();
 		Logger.getInstance().add("objVariablesCommon.gstrBrowserSelection = " + Config.getInstance().browserSelection);

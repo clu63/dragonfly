@@ -64,7 +64,7 @@ class Path {
 	void setPathResults(int testInstanceSize, String testConfigurationFileName) {
 		Logger.getInstance().add("Path:setPathResults testInstanceSize = " + testInstanceSize);
 		Logger.getInstance().add("Path:setPathResults testConfigurationFileName = " + testConfigurationFileName);
-		String dateTimestamp = new DateTimestamp().get();
+		String dateTimestamp = Util.getDateTimestamp();
 		Logger.getInstance().add("Path:setPathResults dateTimestamp = " + dateTimestamp);
 		Logger.getInstance().add("Path:setPathResults this.images = " + this.images);
 		if (this.images == null) {

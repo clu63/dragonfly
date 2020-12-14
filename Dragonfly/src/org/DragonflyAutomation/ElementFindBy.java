@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 
 class ElementFindBy {
 	ElementFindBy(String strAttributeNames, String strAttributeValues, String strTagName) throws ExceptionElementNotFound, ExceptionMultipleElementsFound {
-		Logger.getInstance().add("  ==start==>ElementFindBy " + new DateTimestamp().get());
+		Logger.getInstance().add("  ==start==>ElementFindBy " + Util.getDateTimestamp());
 		int intAttributeEach = 0;
 		List<WebElement> objWebElementCollection = new ArrayList<WebElement>();
 		String arrAttributeNames[] = strAttributeNames.toString().split("\\|", -1);

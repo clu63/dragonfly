@@ -2,7 +2,7 @@ package org.DragonflyAutomation;
 
 class StepCreateActual {
 	StepCreateActual(String strStepType) {
-		Logger.getInstance().add("  ==start==>stepCreateActual " + new DateTimestamp().get());
+		Logger.getInstance().add("  ==start==>stepCreateActual " + Util.getDateTimestamp());
 		String intWaited = JSONS.getInstance().step.getString("strStepDuration");
 		String strActualHtml = "";
 		String strActualText = "";
