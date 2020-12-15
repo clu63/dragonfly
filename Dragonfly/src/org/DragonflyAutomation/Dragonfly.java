@@ -125,7 +125,6 @@ public class Dragonfly {
 	// System.exit(0);
 	// AutoItSetObject objAutoItSetObject = new AutoItSetObject();
 	TestConfigurationSetup objTestConfigurationSetup = new TestConfigurationSetup();
-
 	//	private class AlertFind {
 	//		private boolean run() {
 	//			Logger.getInstance().add("  ==start==>AlertFind " + Util.getDateTimestamp());
@@ -172,23 +171,22 @@ public class Dragonfly {
 	//			return objAutoIt;
 	//		}
 	//	}
-	private class BrowserClose {
-		private BrowserClose() {
-			BrowserDriver.getInstance().browserDriver.close();
-			BrowserDriver.getInstance().browserDriver.quit();
-			JSONS.getInstance().step.putValue("strStatus", "pass");
-			new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-		}
-	}
-
-	private class BrowserCloseSync {
-		private BrowserCloseSync() {
-			// TODO create a browserCloseSync to manage reporting and sync close
-			long lngStartTime = System.currentTimeMillis();
-			JSONS.getInstance().step.putValue("strStepActual", "browser_close");
-			new StepDuration("BrowserCloseSync", lngStartTime, "browser_close");
-		}
-	}
+	//	private class BrowserClose {
+	//		private BrowserClose() {
+	//			BrowserDriver.getInstance().browserDriver.close();
+	//			BrowserDriver.getInstance().browserDriver.quit();
+	//			JSONS.getInstance().step.putValue("strStatus", "pass");
+	//			new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//		}
+	//	}
+	//	  class BrowserCloseSync {
+	//		  BrowserCloseSync() {
+	//			// TODO create a browserCloseSync to manage reporting and sync close
+	//			long lngStartTime = System.currentTimeMillis();
+	//			JSONS.getInstance().step.putValue("strStepActual", "browser_close");
+	//			new StepDuration("BrowserCloseSync", lngStartTime, "browser_close");
+	//		}
+	//	}
 	//	private class BrowserLaunch {
 	//		private BrowserLaunch() throws ExceptionBrowserDriverNotSupported {
 	//			// TODO combine duplicate code
@@ -344,7 +342,6 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-
 	//	private class BrowserLaunchSync {
 	//		private BrowserLaunchSync() {
 	//			Logger.getInstance().add("  ==start==>BrowserLaunchSync " + Util.getDateTimestamp());
@@ -367,22 +364,21 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-	private class BrowserRefresh {
-		private BrowserRefresh() {
-			Logger.getInstance().add("  ==start==>BrowserRefresh " + Util.getDateTimestamp());
-			BrowserDriver.getInstance().browserDriver.navigate().refresh();
-		}
-	}
+	//	  class BrowserRefresh {
+	//		  BrowserRefresh() {
+	//			Logger.getInstance().add("  ==start==>BrowserRefresh " + Util.getDateTimestamp());
+	//			BrowserDriver.getInstance().browserDriver.navigate().refresh();
+	//		}
+	//	}
 
-	private class BrowserRefreshSync {
-		private BrowserRefreshSync() {
-			long lngStartTime = System.currentTimeMillis();
-			new BrowserRefresh();
-			JSONS.getInstance().step.putValue("strStepActual", "browser_refresh");
-			new StepDuration("BrowserRefreshSync", lngStartTime, "browser_refresh");
-		}
-	}
-
+	//	  class BrowserRefreshSync {
+	//		  BrowserRefreshSync() {
+	//			long lngStartTime = System.currentTimeMillis();
+	//			new BrowserRefresh();
+	//			JSONS.getInstance().step.putValue("strStepActual", "browser_refresh");
+	//			new StepDuration("BrowserRefreshSync", lngStartTime, "browser_refresh");
+	//		}
+	//	}
 	private class ClearMyTracksByProcessCache {
 		private ClearMyTracksByProcessCache() throws Exception {
 			Logger.getInstance().add("  ==start==>ClearMyTracksByProcessCache " + Util.getDateTimestamp());
@@ -640,7 +636,6 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-
 	//	private class CoordinatesElement {
 	//		private CoordinatesElement() {
 	//			Logger.getInstance().add("  ==start==>CoordinatesElement " + Util.getDateTimestamp());
@@ -990,214 +985,210 @@ public class Dragonfly {
 	//			cboTest.setEnabled(true);
 	//		}
 	//	}
-//	 class ElementDisabled {
-//		 ElementDisabled() throws ExceptionElementNotDisabled {
-//			Logger.getInstance().add("  ==start==>ElementDisabled " + Util.getDateTimestamp());
-//			long lngStartTime = System.currentTimeMillis();
-//			try {
-//				if (Element.getInstance().element.isEnabled()) {
-//					throw new ExceptionElementNotDisabled("ElementDisabled - Element is not disabled");
-//				} else {
-//					return;
-//				}
-//			} finally {
-//				Logger.getInstance().add("ElementDisabled: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-//			}
-//		}
-//	}
+	//	 class ElementDisabled {
+	//		 ElementDisabled() throws ExceptionElementNotDisabled {
+	//			Logger.getInstance().add("  ==start==>ElementDisabled " + Util.getDateTimestamp());
+	//			long lngStartTime = System.currentTimeMillis();
+	//			try {
+	//				if (Element.getInstance().element.isEnabled()) {
+	//					throw new ExceptionElementNotDisabled("ElementDisabled - Element is not disabled");
+	//				} else {
+	//					return;
+	//				}
+	//			} finally {
+	//				Logger.getInstance().add("ElementDisabled: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//		}
+	//	}
+	//	 class ElementDisabledSync {
+	//		 ElementDisabledSync() {
+	//			Logger.getInstance().add("  ==start==>ElementDisabledSync " + Util.getDateTimestamp());
+	//			Long lngTimeStart = System.currentTimeMillis();
+	//			Boolean blnDisabled = false;
+	//			Boolean blnExit = false;
+	//			Boolean blnFound = false;
+	//			Boolean blnStatus = false;
+	//			Boolean blnVisible = false;
+	//			String strActualResult = "";
+	//			while (true) {
+	//				try {
+	//					if (blnFound == false) {
+	//						new ElementFind();
+	//						blnFound = true;
+	//					}
+	//					if (blnVisible == false) {
+	//						new ElementVisible();
+	//						blnVisible = true;
+	//					}
+	//					if (blnDisabled == false) {
+	//						new ElementDisabled();
+	//						blnDisabled = true;
+	//					}
+	//					blnStatus = true;
+	//					strActualResult = "sync_disabled";
+	//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
+	//					blnFound = false;
+	//					blnVisible = false;
+	//					blnDisabled = false;
+	//					strActualResult = "not_found";
+	//				} catch (ExceptionElementNotVisible e) {
+	//					blnVisible = false;
+	//					blnDisabled = false;
+	//					strActualResult = "not_visible";
+	//					Logger.getInstance().add("ElementDisabledSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotDisabled e) {
+	//					blnDisabled = false;
+	//					strActualResult = "not_disabled";
+	//					Logger.getInstance().add("ElementDisabledSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} finally {
+	//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
+	//					if (Finally.sync(blnExit, blnStatus, blnFound, "elementDisabledSync", "syncdisabled", lngTimeStart) == true) {
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						return;
+	//					} else {
+	//						blnDisabled = false;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//	  class ElementDragSync {
+	//		  ElementDragSync() {
+	//			Logger.getInstance().add("  ==start==>ElementDragSync " + Util.getDateTimestamp());
+	//			Long lngTimeStart = System.currentTimeMillis();
+	//			Boolean blnEnabled = false;
+	//			Boolean blnExit = false;
+	//			Boolean blnFound = false;
+	//			Boolean blnStatus = false;
+	//			Boolean blnVisible = false;
+	//			String strOuterHTML = "";
+	//			while (true) {
+	//				try {
+	//					if (blnFound == false) {
+	//						new ElementFind();
+	//						Logger.getInstance().add("ElementDragSync: elementFind over");
+	//						if (Element.getInstance().element != null) {
+	//							strOuterHTML = Element.getInstance().element.getAttribute("outerHTML");
+	//							Logger.getInstance().add("ElementDragSync: outerHTML = " + strOuterHTML);
+	//							Logger.getInstance().add("ElementDragSync: outerHTML Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//						}
+	//						Logger.getInstance().add("ElementDragSync: strOuterHTML over");
+	//						blnFound = true;
+	//					}
+	//					if (blnVisible == false) {
+	//						new ElementVisible();
+	//						blnVisible = true;
+	//					}
+	//					if (blnEnabled == false) {
+	//						new ElementEnabled();
+	//						blnEnabled = true;
+	//					}
+	//					ElementDrag.getInstance().elementDrag = Element.getInstance().element;
+	//					blnStatus = true;
+	//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
+	//					blnFound = false;
+	//					Logger.getInstance().add("ElementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotVisible e) {
+	//					blnVisible = false;
+	//					Logger.getInstance().add("ElementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotEnabled e) {
+	//					blnEnabled = false;
+	//					Logger.getInstance().add("ElementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} finally {
+	//					if (Finally.sync(blnExit, blnStatus, blnFound, "elementDragSync", "drag", lngTimeStart) == true) {
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						return;
+	//					} else {
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//	  class ElementDropSync {
+	//		  ElementDropSync() {
+	//			Logger.getInstance().add("  ==start==>ElementDropSync " + Util.getDateTimestamp());
+	//			Long lngTimeStart = System.currentTimeMillis();
+	//			Boolean blnEnabled = false;
+	//			Boolean blnExit = false;
+	//			Boolean blnFound = false;
+	//			Boolean blnStatus = false;
+	//			Boolean blnVisible = false;
+	//			String strOuterHTML = "";
+	//			while (true) {
+	//				try {
+	//					if (blnFound == false) {
+	//						new ElementFind();
+	//						Logger.getInstance().add("ElementDropSync: elementFind over");
+	//						if (Element.getInstance().element != null) {
+	//							strOuterHTML = Element.getInstance().element.getAttribute("outerHTML");
+	//							Logger.getInstance().add("ElementDropSync: outerHTML = " + strOuterHTML);
+	//							Logger.getInstance().add("ElementDropSync: outerHTML Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//						}
+	//						Logger.getInstance().add("ElementDropSync: strOuterHTML over");
+	//						blnFound = true;
+	//					}
+	//					if (blnVisible == false) {
+	//						new ElementVisible();
+	//						blnVisible = true;
+	//					}
+	//					if (blnEnabled == false) {
+	//						new ElementEnabled();
+	//						blnEnabled = true;
+	//					}
+	//					ElementDrop.getInstance().elementDrop = Element.getInstance().element;
+	//					//Actions actions = new Actions(BrowserDriver.getInstance().browserDriver);
+	//					//actions.dragAndDrop(gobjWebElementDrag, gobjWebElementDrop).perform();
+	//					// 	Actions action = new Actions(BrowserDriver.getInstance().browserDriver);
+	//					// 	Action dragDrop = action.dragAndDrop(gobjWebElementDrag, gobjWebElementDrop).build();
+	//					// 	dragDrop.perform();
+	//					Actions objActions = new Actions(BrowserDriver.getInstance().browserDriver);
+	//					Action objDragAndDrop = objActions.clickAndHold(ElementDrag.getInstance().elementDrag).moveToElement(ElementDrop.getInstance().elementDrop).release(ElementDrop.getInstance().elementDrop).build();
+	//					objDragAndDrop.perform();
+	//					// 	Actions action = new Actions(BrowserDriver.getInstance().browserDriver);
+	//					// 	action.dragAndDrop(gobjWebElementDrag, gobjWebElementDrop).build().perform();
+	//					new SleepMilliseconds(10000);
+	//					blnStatus = true;
+	//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
+	//					blnFound = false;
+	//					Logger.getInstance().add("ElementDropSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotVisible e) {
+	//					blnVisible = false;
+	//					Logger.getInstance().add("ElementDropSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotEnabled e) {
+	//					blnEnabled = false;
+	//					Logger.getInstance().add("ElementDropSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} finally {
+	//					if (Finally.sync(blnExit, blnStatus, blnFound, "elementDropSync", "drop", lngTimeStart) == true) {
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						return;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
 
-//	 class ElementDisabledSync {
-//		 ElementDisabledSync() {
-//			Logger.getInstance().add("  ==start==>ElementDisabledSync " + Util.getDateTimestamp());
-//			Long lngTimeStart = System.currentTimeMillis();
-//			Boolean blnDisabled = false;
-//			Boolean blnExit = false;
-//			Boolean blnFound = false;
-//			Boolean blnStatus = false;
-//			Boolean blnVisible = false;
-//			String strActualResult = "";
-//			while (true) {
-//				try {
-//					if (blnFound == false) {
-//						new ElementFind();
-//						blnFound = true;
-//					}
-//					if (blnVisible == false) {
-//						new ElementVisible();
-//						blnVisible = true;
-//					}
-//					if (blnDisabled == false) {
-//						new ElementDisabled();
-//						blnDisabled = true;
-//					}
-//					blnStatus = true;
-//					strActualResult = "sync_disabled";
-//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
-//					blnFound = false;
-//					blnVisible = false;
-//					blnDisabled = false;
-//					strActualResult = "not_found";
-//				} catch (ExceptionElementNotVisible e) {
-//					blnVisible = false;
-//					blnDisabled = false;
-//					strActualResult = "not_visible";
-//					Logger.getInstance().add("ElementDisabledSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} catch (ExceptionElementNotDisabled e) {
-//					blnDisabled = false;
-//					strActualResult = "not_disabled";
-//					Logger.getInstance().add("ElementDisabledSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} finally {
-//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
-//					if (Finally.sync(blnExit, blnStatus, blnFound, "elementDisabledSync", "syncdisabled", lngTimeStart) == true) {
-//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-//						return;
-//					} else {
-//						blnDisabled = false;
-//					}
-//				}
-//			}
-//		}
-//	}
-
-//	  class ElementDragSync {
-//		  ElementDragSync() {
-//			Logger.getInstance().add("  ==start==>ElementDragSync " + Util.getDateTimestamp());
-//			Long lngTimeStart = System.currentTimeMillis();
-//			Boolean blnEnabled = false;
-//			Boolean blnExit = false;
-//			Boolean blnFound = false;
-//			Boolean blnStatus = false;
-//			Boolean blnVisible = false;
-//			String strOuterHTML = "";
-//			while (true) {
-//				try {
-//					if (blnFound == false) {
-//						new ElementFind();
-//						Logger.getInstance().add("ElementDragSync: elementFind over");
-//						if (Element.getInstance().element != null) {
-//							strOuterHTML = Element.getInstance().element.getAttribute("outerHTML");
-//							Logger.getInstance().add("ElementDragSync: outerHTML = " + strOuterHTML);
-//							Logger.getInstance().add("ElementDragSync: outerHTML Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//						}
-//						Logger.getInstance().add("ElementDragSync: strOuterHTML over");
-//						blnFound = true;
-//					}
-//					if (blnVisible == false) {
-//						new ElementVisible();
-//						blnVisible = true;
-//					}
-//					if (blnEnabled == false) {
-//						new ElementEnabled();
-//						blnEnabled = true;
-//					}
-//					ElementDrag.getInstance().elementDrag = Element.getInstance().element;
-//					blnStatus = true;
-//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
-//					blnFound = false;
-//					Logger.getInstance().add("ElementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} catch (ExceptionElementNotVisible e) {
-//					blnVisible = false;
-//					Logger.getInstance().add("ElementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} catch (ExceptionElementNotEnabled e) {
-//					blnEnabled = false;
-//					Logger.getInstance().add("ElementDragSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} finally {
-//					if (Finally.sync(blnExit, blnStatus, blnFound, "elementDragSync", "drag", lngTimeStart) == true) {
-//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-//						return;
-//					} else {
-//					}
-//				}
-//			}
-//		}
-//	}
-
-	private class ElementDropSync {
-		private ElementDropSync() {
-			Logger.getInstance().add("  ==start==>ElementDropSync " + Util.getDateTimestamp());
-			Long lngTimeStart = System.currentTimeMillis();
-			Boolean blnEnabled = false;
-			Boolean blnExit = false;
-			Boolean blnFound = false;
-			Boolean blnStatus = false;
-			Boolean blnVisible = false;
-			String strOuterHTML = "";
-			while (true) {
-				try {
-					if (blnFound == false) {
-						new ElementFind();
-						Logger.getInstance().add("ElementDropSync: elementFind over");
-						if (Element.getInstance().element != null) {
-							strOuterHTML = Element.getInstance().element.getAttribute("outerHTML");
-							Logger.getInstance().add("ElementDropSync: outerHTML = " + strOuterHTML);
-							Logger.getInstance().add("ElementDropSync: outerHTML Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-						}
-						Logger.getInstance().add("ElementDropSync: strOuterHTML over");
-						blnFound = true;
-					}
-					if (blnVisible == false) {
-						new ElementVisible();
-						blnVisible = true;
-					}
-					if (blnEnabled == false) {
-						new ElementEnabled();
-						blnEnabled = true;
-					}
-					ElementDrop.getInstance().elementDrop = Element.getInstance().element;
-					//Actions actions = new Actions(BrowserDriver.getInstance().browserDriver);
-					//actions.dragAndDrop(gobjWebElementDrag, gobjWebElementDrop).perform();
-					// 	Actions action = new Actions(BrowserDriver.getInstance().browserDriver);
-					// 	Action dragDrop = action.dragAndDrop(gobjWebElementDrag, gobjWebElementDrop).build();
-					// 	dragDrop.perform();
-					Actions objActions = new Actions(BrowserDriver.getInstance().browserDriver);
-					Action objDragAndDrop = objActions.clickAndHold(ElementDrag.getInstance().elementDrag).moveToElement(ElementDrop.getInstance().elementDrop).release(ElementDrop.getInstance().elementDrop).build();
-					objDragAndDrop.perform();
-					// 	Actions action = new Actions(BrowserDriver.getInstance().browserDriver);
-					// 	action.dragAndDrop(gobjWebElementDrag, gobjWebElementDrop).build().perform();
-					new SleepMilliseconds(10000);
-					blnStatus = true;
-				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
-					blnFound = false;
-					Logger.getInstance().add("ElementDropSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionElementNotVisible e) {
-					blnVisible = false;
-					Logger.getInstance().add("ElementDropSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionElementNotEnabled e) {
-					blnEnabled = false;
-					Logger.getInstance().add("ElementDropSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} finally {
-					if (Finally.sync(blnExit, blnStatus, blnFound, "elementDropSync", "drop", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-						return;
-					}
-				}
-			}
-		}
-	}
-
-//	 class ElementEnabled {
-//		 ElementEnabled() throws ExceptionElementNotEnabled {
-//			Logger.getInstance().add("  ==start==>ElementEnabled " + Util.getDateTimestamp());
-//			long lngStartTime = System.currentTimeMillis();
-//			try {
-//				if (JSONS.getInstance().step.verifyEquals("strTagName", "alert")) {
-//					if (new AlertFind().run() == true) {
-//						return;
-//					} else {
-//						throw new ExceptionElementNotEnabled("Alert popup was not found.");
-//					}
-//				}
-//				if (Element.getInstance().element.isEnabled()) {
-//					return;
-//				} else {
-//					throw new ExceptionElementNotEnabled("ElementEnabled - Element is not enabled");
-//				}
-//			} finally {
-//				Logger.getInstance().add("ElementEnabled: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-//			}
-//		}
-//	}
-
+	//	 class ElementEnabled {
+	//		 ElementEnabled() throws ExceptionElementNotEnabled {
+	//			Logger.getInstance().add("  ==start==>ElementEnabled " + Util.getDateTimestamp());
+	//			long lngStartTime = System.currentTimeMillis();
+	//			try {
+	//				if (JSONS.getInstance().step.verifyEquals("strTagName", "alert")) {
+	//					if (new AlertFind().run() == true) {
+	//						return;
+	//					} else {
+	//						throw new ExceptionElementNotEnabled("Alert popup was not found.");
+	//					}
+	//				}
+	//				if (Element.getInstance().element.isEnabled()) {
+	//					return;
+	//				} else {
+	//					throw new ExceptionElementNotEnabled("ElementEnabled - Element is not enabled");
+	//				}
+	//			} finally {
+	//				Logger.getInstance().add("ElementEnabled: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//		}
+	//	}
 	private class ElementEnabledSync {
 		private ElementEnabledSync() {
 			Logger.getInstance().add("  ==start==>ElementEnabledSync " + Util.getDateTimestamp());
@@ -1296,7 +1287,6 @@ public class Dragonfly {
 	//			throw new ExceptionElementNotFound("Element properties did not return an element, try refining attributes");
 	//		}
 	//	}
-
 	//	 class ElementFindBy {
 	//		 ElementFindBy(String strAttributeNames, String strAttributeValues, String strTagName) throws ExceptionElementNotFound, ExceptionMultipleElementsFound {
 	//			Logger.getInstance().add("  ==start==>ElementFindBy " + Util.getDateTimestamp());
@@ -1465,154 +1455,152 @@ public class Dragonfly {
 	//			return blnReturn;
 	//		}
 	//	}
-	private class ElementGet {
-		private String run() throws ExceptionElementTagNameNotSupported {
-			Logger.getInstance().add("  ==start==>ElementGet " + Util.getDateTimestamp());
-			//AutoItX objAutoIt = objAutoItSetObject.getObject();
-			AutoItX objAutoIt = new AutoItSetObject().createObject();
-			switch (JSONS.getInstance().step.getLowerCase("strTagType")) {
-			case "title":
-				return BrowserDriver.getInstance().browserDriver.getTitle();
-			case "img":
-				return Element.getInstance().element.getAttribute("src");
-			case "input_button":
-			case "input_submit":
-			case "input_reset":
-			case "input_image":
-			case "button":
-				return Element.getInstance().element.getAttribute("value").trim();
-			case "a":
-			case "th":
-			case "tr":
-			case "td":
-			case "div":
-			case "span":
-			case "h1":
-			case "h2":
-			case "h3":
-			case "h4":
-			case "h5":
-			case "h6":
-			case "p":
-			case "li":
-				return Element.getInstance().element.getText();
-			case "input_text":
-			case "input_password":
-			case "textarea":
-			case "input_email":
-			case "input_textarea":
-				return Element.getInstance().element.getAttribute("value");
-			case "input_radio":
-			case "input_checkbox":
-				if (Element.getInstance().element.isSelected() == false) {
-					return "<off>";
-				} else {
-					return "<on>";
-				}
-			case "select":
-				// 	Select objSelect = new Select(Element.getInstance().element);
-				// 	objSelect.getOptions();
-				// 	WebElement option = ((Select) Element.getInstance().element).getFirstSelectedOption();
-				// 	Logger.getInstance().add("ElementGet: option.getText() = " + option.getText());
-				//return ((Select) Element.getInstance().element).getFirstSelectedOption().getText().replaceAll("\\s{2,}", " ");
-				JavascriptExecutor objExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
-				return ((String) objExecutor.executeScript("var select = arguments[0];var selection=select.options[select.selectedIndex].text;return selection;", Element.getInstance().element)).trim();
-			case "table":
-				return Element.getInstance().element.getText();
-			case "alert":
-				if (JSONS.getInstance().step.verifyEquals("strAttributeValues", "title")) {
-					return objAutoIt.winGetTitle("[ACTIVE]");
-				} else {
-					return BrowserDriver.getInstance().browserDriver.switchTo().alert().getText();
-				}
-			default:
-				throw new ExceptionElementTagNameNotSupported("Element tag not supported");
-			}
-		}
-	}
+	//	public class ElementGet {
+	//		 String run() throws ExceptionElementTagNameNotSupported {
+	//			Logger.getInstance().add("  ==start==>ElementGet " + Util.getDateTimestamp());
+	//			//AutoItX objAutoIt = objAutoItSetObject.getObject();
+	//			AutoItX objAutoIt = new AutoItSetObject().createObject();
+	//			switch (JSONS.getInstance().step.getLowerCase("strTagType")) {
+	//			case "title":
+	//				return BrowserDriver.getInstance().browserDriver.getTitle();
+	//			case "img":
+	//				return Element.getInstance().element.getAttribute("src");
+	//			case "input_button":
+	//			case "input_submit":
+	//			case "input_reset":
+	//			case "input_image":
+	//			case "button":
+	//				return Element.getInstance().element.getAttribute("value").trim();
+	//			case "a":
+	//			case "th":
+	//			case "tr":
+	//			case "td":
+	//			case "div":
+	//			case "span":
+	//			case "h1":
+	//			case "h2":
+	//			case "h3":
+	//			case "h4":
+	//			case "h5":
+	//			case "h6":
+	//			case "p":
+	//			case "li":
+	//				return Element.getInstance().element.getText();
+	//			case "input_text":
+	//			case "input_password":
+	//			case "textarea":
+	//			case "input_email":
+	//			case "input_textarea":
+	//				return Element.getInstance().element.getAttribute("value");
+	//			case "input_radio":
+	//			case "input_checkbox":
+	//				if (Element.getInstance().element.isSelected() == false) {
+	//					return "<off>";
+	//				} else {
+	//					return "<on>";
+	//				}
+	//			case "select":
+	//				// 	Select objSelect = new Select(Element.getInstance().element);
+	//				// 	objSelect.getOptions();
+	//				// 	WebElement option = ((Select) Element.getInstance().element).getFirstSelectedOption();
+	//				// 	Logger.getInstance().add("ElementGet: option.getText() = " + option.getText());
+	//				//return ((Select) Element.getInstance().element).getFirstSelectedOption().getText().replaceAll("\\s{2,}", " ");
+	//				JavascriptExecutor objExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
+	//				return ((String) objExecutor.executeScript("var select = arguments[0];var selection=select.options[select.selectedIndex].text;return selection;", Element.getInstance().element)).trim();
+	//			case "table":
+	//				return Element.getInstance().element.getText();
+	//			case "alert":
+	//				if (JSONS.getInstance().step.verifyEquals("strAttributeValues", "title")) {
+	//					return objAutoIt.winGetTitle("[ACTIVE]");
+	//				} else {
+	//					return BrowserDriver.getInstance().browserDriver.switchTo().alert().getText();
+	//				}
+	//			default:
+	//				throw new ExceptionElementTagNameNotSupported("Element tag not supported");
+	//			}
+	//		}
+	//	}
+	//	 class ElementGetSync {
+	//		 ElementGetSync() {
+	//			Logger.getInstance().add("  ==start==>ElementGetSync " + Util.getDateTimestamp());
+	//			Long lngTimeStart = System.currentTimeMillis();
+	//			Boolean blnExit = false;
+	//			Boolean blnFound = false;
+	//			Boolean blnGet = false;
+	//			Boolean blnStatus = false;
+	//			Boolean blnVisible = false;
+	//			String strGetValue = "";
+	//			String strActualResult = "";
+	//			while (true) {
+	//				try {
+	//					if (blnFound == false) {
+	//						new ElementFind();
+	//						blnFound = true;
+	//					}
+	//					if (blnVisible == false) {
+	//						new ElementVisible();
+	//						blnVisible = true;
+	//					}
+	//					if (blnGet == false) {
+	//						strGetValue = new ElementGet().run();
+	//						JSONS.getInstance().step.putValue("strOutputValue", strGetValue);
+	//						blnGet = true;
+	//					}
+	//					blnStatus = true;
+	//					strActualResult = "get";
+	//				} catch (ExceptionElementTagNameNotSupported e) {
+	//					blnExit = true;
+	//					strActualResult = "tag_not_supported";
+	//					Logger.getInstance().add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
+	//					blnFound = false;
+	//					strActualResult = "not_found";
+	//					Logger.getInstance().add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotVisible e) {
+	//					blnVisible = false;
+	//					strActualResult = "not_visible";
+	//					Logger.getInstance().add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} finally {
+	//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
+	//					if (Finally.sync(blnExit, blnStatus, blnFound, "ElementGetSync", "get", lngTimeStart) == true) {
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						return;
+	//					} else {
+	//						blnVisible = false;
+	//						blnGet = false;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
 
-	private class ElementGetSync {
-		private ElementGetSync() {
-			Logger.getInstance().add("  ==start==>ElementGetSync " + Util.getDateTimestamp());
-			Long lngTimeStart = System.currentTimeMillis();
-			Boolean blnExit = false;
-			Boolean blnFound = false;
-			Boolean blnGet = false;
-			Boolean blnStatus = false;
-			Boolean blnVisible = false;
-			String strGetValue = "";
-			String strActualResult = "";
-			while (true) {
-				try {
-					if (blnFound == false) {
-						new ElementFind();
-						blnFound = true;
-					}
-					if (blnVisible == false) {
-						new ElementVisible();
-						blnVisible = true;
-					}
-					if (blnGet == false) {
-						strGetValue = new ElementGet().run();
-						JSONS.getInstance().step.putValue("strOutputValue", strGetValue);
-						blnGet = true;
-					}
-					blnStatus = true;
-					strActualResult = "get";
-				} catch (ExceptionElementTagNameNotSupported e) {
-					blnExit = true;
-					strActualResult = "tag_not_supported";
-					Logger.getInstance().add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
-					blnFound = false;
-					strActualResult = "not_found";
-					Logger.getInstance().add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionElementNotVisible e) {
-					blnVisible = false;
-					strActualResult = "not_visible";
-					Logger.getInstance().add("ElementGetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} finally {
-					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
-					if (Finally.sync(blnExit, blnStatus, blnFound, "ElementGetSync", "get", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-						return;
-					} else {
-						blnVisible = false;
-						blnGet = false;
-					}
-				}
-			}
-		}
-	}
-
-//	 class ElementHidden {
-//		 ElementHidden() throws ExceptionElementNotHidden {
-//			Logger.getInstance().add("  ==start==>ElementHidden " + Util.getDateTimestamp());
-//			long lngStartTime = System.currentTimeMillis();
-//			try {
-//				if (JSONS.getInstance().step.verifyEquals("strTagName", "alert")) {
-//					if (new AlertFind().run() == false) {
-//						JSONS.getInstance().step.putValue("strHighlightArea", "screen");
-//						return;
-//					} else {
-//						throw new ExceptionElementNotHidden("Alert popup was not hidden.");
-//					}
-//				}
-//				if (Element.getInstance().element.isDisplayed() == false) {
-//					return;
-//				} else {
-//					Logger.getInstance().add("ElementHidden: Element.getInstance().element.isDisplayed() = return true Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-//					throw new ExceptionElementNotHidden("Element is displayed.");
-//				}
-//			} catch (NullPointerException | WebDriverException e) {
-//				Logger.getInstance().add("ElementHidden: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-//				return;
-//			} finally {
-//				Logger.getInstance().add("ElementHidden: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-//			}
-//		}
-//	}
-
+	//	 class ElementHidden {
+	//		 ElementHidden() throws ExceptionElementNotHidden {
+	//			Logger.getInstance().add("  ==start==>ElementHidden " + Util.getDateTimestamp());
+	//			long lngStartTime = System.currentTimeMillis();
+	//			try {
+	//				if (JSONS.getInstance().step.verifyEquals("strTagName", "alert")) {
+	//					if (new AlertFind().run() == false) {
+	//						JSONS.getInstance().step.putValue("strHighlightArea", "screen");
+	//						return;
+	//					} else {
+	//						throw new ExceptionElementNotHidden("Alert popup was not hidden.");
+	//					}
+	//				}
+	//				if (Element.getInstance().element.isDisplayed() == false) {
+	//					return;
+	//				} else {
+	//					Logger.getInstance().add("ElementHidden: Element.getInstance().element.isDisplayed() = return true Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//					throw new ExceptionElementNotHidden("Element is displayed.");
+	//				}
+	//			} catch (NullPointerException | WebDriverException e) {
+	//				Logger.getInstance().add("ElementHidden: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//				return;
+	//			} finally {
+	//				Logger.getInstance().add("ElementHidden: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//		}
+	//	}
 	private class ElementHiddenSync {
 		private ElementHiddenSync() {
 			Logger.getInstance().add("  ==start==>ElementHiddenSync " + Util.getDateTimestamp());
@@ -2952,7 +2940,7 @@ public class Dragonfly {
 			String strValueExpected = JSONS.getInstance().step.getString("strInputValue");
 			try {
 				strGetValue = new ElementGet().run();
-				strActualValue = new VerifyNotMatch().run(strGetValue, strValueExpected);
+				strActualValue = Compare.verifyNotMatch(strGetValue, strValueExpected);
 				Logger.getInstance().add("ElementVerifyNotValue: after VerifyNotMatch");
 			} catch (ExceptionValueMatched e) {
 				Logger.getInstance().add("ElementVerifyNotValue: " + e.toString());
@@ -3022,86 +3010,84 @@ public class Dragonfly {
 			}
 		}
 	}
-
-	private class ElementVerifyValue {
-		private String run() throws ExceptionValueNotMatched, ExceptionElementTagNameNotSupported {
-			Logger.getInstance().add("  ==start==>ElementVerifyValue " + Util.getDateTimestamp());
-			long lngStartTime = System.currentTimeMillis();
-			String strActualValue = "";
-			String strGetValue = "";
-			String strValueExpected = JSONS.getInstance().step.getString("strInputValue");
-			try {
-				strGetValue = new ElementGet().run();
-				strActualValue = new VerifyMatch().run(strGetValue, strValueExpected);
-			} finally {
-				Logger.getInstance().add("ElementVerifyValue: finally strGetValue = {" + strGetValue + "} strValueExpected = {" + strValueExpected + "} strActualValue = {" + strActualValue + "} Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngStartTime));
-			}
-			return strActualValue;
-		}
-	}
-
-	private class ElementVerifyValueSync {
-		private ElementVerifyValueSync() {
-			Logger.getInstance().add("  ==start==>ElementVerifyValueSync " + Util.getDateTimestamp());
-			Long lngTimeStart = System.currentTimeMillis();
-			Boolean blnExit = false;
-			Boolean blnFound = false;
-			Boolean blnStatus = false;
-			Boolean blnVerified = false;
-			Boolean blnVisible = false;
-			String strActualValue = "";
-			String strActualResult = "";
-			while (true) {
-				try {
-					if (blnFound == false) {
-						new ElementFind();
-						blnFound = true;
-					}
-					if (blnVisible == false) {
-						new ElementVisible();
-						blnVisible = true;
-					}
-					if (blnVerified == false) {
-						strActualValue = new ElementVerifyValue().run();
-						blnVerified = true;
-					}
-					blnStatus = true;
-					strActualResult = "verify_value";
-				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
-					blnFound = false;
-					blnVisible = false;
-					blnVerified = false;
-					strActualResult = "not_found";
-					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionElementNotVisible e) {
-					blnVisible = false;
-					strActualResult = "not_visible";
-					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionElementTagNameNotSupported e) {
-					blnExit = true;
-					strActualResult = "tag_not_supported";
-					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionValueNotMatched e) {
-					blnVerified = false;
-					strActualResult = "not_verified";
-					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (Exception e) {
-					blnVerified = false;
-					strActualResult = "exception";
-					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
-				} finally {
-					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
-					if (Finally.sync(blnExit, blnStatus, blnFound, "elementVerifyValueSync", "verify", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-						return;
-					} else {
-						blnVisible = false;
-						blnVerified = false;
-					}
-				}
-			}
-		}
-	}
+	//	private class ElementVerifyValue {
+	//		 String run() throws ExceptionValueNotMatched, ExceptionElementTagNameNotSupported {
+	//			Logger.getInstance().add("  ==start==>ElementVerifyValue " + Util.getDateTimestamp());
+	//			long lngStartTime = System.currentTimeMillis();
+	//			String strActualValue = "";
+	//			String strGetValue = "";
+	//			String strValueExpected = JSONS.getInstance().step.getString("strInputValue");
+	//			try {
+	//				strGetValue = new ElementGet().run();
+	//				strActualValue = Compare.verifyMatch(strGetValue, strValueExpected);
+	//			} finally {
+	//				Logger.getInstance().add("ElementVerifyValue: finally strGetValue = {" + strGetValue + "} strValueExpected = {" + strValueExpected + "} strActualValue = {" + strActualValue + "} Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//			return strActualValue;
+	//		}
+	//	}
+	//	private class ElementVerifyValueSync {
+	//		private ElementVerifyValueSync() {
+	//			Logger.getInstance().add("  ==start==>ElementVerifyValueSync " + Util.getDateTimestamp());
+	//			Long lngTimeStart = System.currentTimeMillis();
+	//			Boolean blnExit = false;
+	//			Boolean blnFound = false;
+	//			Boolean blnStatus = false;
+	//			Boolean blnVerified = false;
+	//			Boolean blnVisible = false;
+	//			String strActualValue = "";
+	//			String strActualResult = "";
+	//			while (true) {
+	//				try {
+	//					if (blnFound == false) {
+	//						new ElementFind();
+	//						blnFound = true;
+	//					}
+	//					if (blnVisible == false) {
+	//						new ElementVisible();
+	//						blnVisible = true;
+	//					}
+	//					if (blnVerified == false) {
+	//						strActualValue = new ElementVerifyValue().run();
+	//						blnVerified = true;
+	//					}
+	//					blnStatus = true;
+	//					strActualResult = "verify_value";
+	//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
+	//					blnFound = false;
+	//					blnVisible = false;
+	//					blnVerified = false;
+	//					strActualResult = "not_found";
+	//					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotVisible e) {
+	//					blnVisible = false;
+	//					strActualResult = "not_visible";
+	//					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementTagNameNotSupported e) {
+	//					blnExit = true;
+	//					strActualResult = "tag_not_supported";
+	//					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionValueNotMatched e) {
+	//					blnVerified = false;
+	//					strActualResult = "not_verified";
+	//					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (Exception e) {
+	//					blnVerified = false;
+	//					strActualResult = "exception";
+	//					Logger.getInstance().add("ElementVerifyValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} finally {
+	//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
+	//					if (Finally.sync(blnExit, blnStatus, blnFound, "elementVerifyValueSync", "verify", lngTimeStart) == true) {
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						return;
+	//					} else {
+	//						blnVisible = false;
+	//						blnVerified = false;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
 
 	//	 class ElementVisible {
 	//		 ElementVisible() throws ExceptionElementNotVisible {
@@ -3733,27 +3719,26 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-	private class RegularExpressionMatch {
-		private String run(String strPattern, String strActualValue) throws ExceptionValueNotMatched {
-			Boolean blnMatched = false;
-			Long lngStartTime = System.currentTimeMillis();
-			Logger.getInstance().add("  ==start==>RegularExpressionMatch " + Util.getDateTimestamp());
-			String strMatchedString = "";
-			try {
-				Matcher objMatcher = Pattern.compile(strPattern).matcher(strActualValue);
-				objMatcher.matches();
-				strMatchedString = objMatcher.group(0);
-				blnMatched = true;
-				return strMatchedString;
-			} catch (Exception e) {
-				Logger.getInstance().add("RegularExpressionMatch: Exception " + e.toString());
-				throw new ExceptionValueNotMatched("RegularExpressionMatch: Exception " + e.toString());
-			} finally {
-				Logger.getInstance().add("RegularExpressionMatch: finally Matched = {" + blnMatched + "} strMatchedString = {" + strMatchedString + "} strPattern = {" + strPattern + "} strActualValue = {" + strActualValue + "} Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-			}
-		}
-	}
-
+	//	  class RegularExpressionMatch {
+	//		  String run(String strPattern, String strActualValue) throws ExceptionValueNotMatched {
+	//			Boolean blnMatched = false;
+	//			Long lngStartTime = System.currentTimeMillis();
+	//			Logger.getInstance().add("  ==start==>RegularExpressionMatch " + Util.getDateTimestamp());
+	//			String strMatchedString = "";
+	//			try {
+	//				Matcher objMatcher = Pattern.compile(strPattern).matcher(strActualValue);
+	//				objMatcher.matches();
+	//				strMatchedString = objMatcher.group(0);
+	//				blnMatched = true;
+	//				return strMatchedString;
+	//			} catch (Exception e) {
+	//				Logger.getInstance().add("RegularExpressionMatch: Exception " + e.toString());
+	//				throw new ExceptionValueNotMatched("RegularExpressionMatch: Exception " + e.toString());
+	//			} finally {
+	//				Logger.getInstance().add("RegularExpressionMatch: finally Matched = {" + blnMatched + "} strMatchedString = {" + strMatchedString + "} strPattern = {" + strPattern + "} strActualValue = {" + strActualValue + "} Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//		}
+	//	}
 	private class ScrollToBottom {
 		private ScrollToBottom() {
 			Logger.getInstance().add("  ==start==>ScrollToBottom " + Util.getDateTimestamp());
@@ -3827,58 +3812,59 @@ public class Dragonfly {
 	//		}
 	//	}
 	//
-		@SuppressWarnings("unused")
-		public class StepSetupDefaults {
-			String strDefault_blnExitOnFail = "true";
-			String strDefault_blnHighlight = "true";
-			String strDefault_blnOptional = "false";
-			String strDefault_blnPleaseWait = "true";
-			String strDefault_blnScreenshot = "true";
-			String strDefault_intMillisecondsToWait = "120000";
-			String strDefault_strAssert = "off";
-			String strDefault_strScreenshotArea = "screen";
-			String strDefault_strStatus = "info";
-	
-			private StepSetupDefaults(String strCurrentWindowHandle) {
-				String[] arrDefaultKeys = new StepNames().getDefault();
-				String[] arrKeys = new StepNames().getRuntime();
-				for (String strKey : arrKeys) {
-					if (!strKey.equals("strTestModuleStep")) {
-						JSONS.getInstance().step.putValue(strKey, "");
-					}
+	@SuppressWarnings("unused")
+	public class StepSetupDefaults {
+		String strDefault_blnExitOnFail = "true";
+		String strDefault_blnHighlight = "true";
+		String strDefault_blnOptional = "false";
+		String strDefault_blnPleaseWait = "true";
+		String strDefault_blnScreenshot = "true";
+		String strDefault_intMillisecondsToWait = "120000";
+		String strDefault_strAssert = "off";
+		String strDefault_strScreenshotArea = "screen";
+		String strDefault_strStatus = "info";
+
+		private StepSetupDefaults(String strCurrentWindowHandle) {
+			String[] arrDefaultKeys = new StepNames().getDefault();
+			String[] arrKeys = new StepNames().getRuntime();
+			for (String strKey : arrKeys) {
+				if (!strKey.equals("strTestModuleStep")) {
+					JSONS.getInstance().step.putValue(strKey, "");
 				}
-				new KeywordsValid();
-				Class<?> objClass = null;
+			}
+			new KeywordsValid();
+			Class<?> objClass = null;
+			try {
+				objClass = Class.forName("org.DragonflyAutomation.Dragonfly$StepSetupDefaults");
+			} catch (ClassNotFoundException e) {
+				Logger.getInstance().add("StepSetupDefaults: ClassNotFoundException = " + e.toString());
+			} catch (Exception e) {
+				Logger.getInstance().add("StepSetupDefaults: Class.forName Exception = " + e.toString());
+			}
+			for (String strKey : arrDefaultKeys) {
+				Field objField = null;
 				try {
-					objClass = Class.forName("org.DragonflyAutomation.Dragonfly$StepSetupDefaults");
-				} catch (ClassNotFoundException e) {
-					Logger.getInstance().add("StepSetupDefaults: ClassNotFoundException = " + e.toString());
+					objField = objClass.getDeclaredField("strDefault_" + strKey);
+				} catch (NoSuchFieldException | SecurityException e) {
+					Logger.getInstance().add("StepSetupDefaults: NoSuchFieldException = " + e.toString());
 				} catch (Exception e) {
-					Logger.getInstance().add("StepSetupDefaults: Class.forName Exception = " + e.toString());
+					Logger.getInstance().add("StepSetupDefaults: Exception = " + e.toString());
 				}
-				for (String strKey : arrDefaultKeys) {
-					Field objField = null;
+				if (JSONS.getInstance().step.getValueLength(strKey) == 0) {
 					try {
-						objField = objClass.getDeclaredField("strDefault_" + strKey);
-					} catch (NoSuchFieldException | SecurityException e) {
-						Logger.getInstance().add("StepSetupDefaults: NoSuchFieldException = " + e.toString());
+						JSONS.getInstance().step.putValue(strKey, (String) objField.get(this));
+					} catch (IllegalArgumentException | IllegalAccessException e) {
+						Logger.getInstance().add("StepSetupDefaults: IllegalArgumentException = " + e.toString());
+						e.printStackTrace();
 					} catch (Exception e) {
 						Logger.getInstance().add("StepSetupDefaults: Exception = " + e.toString());
 					}
-					if (JSONS.getInstance().step.getValueLength(strKey) == 0) {
-						try {
-							JSONS.getInstance().step.putValue(strKey, (String) objField.get(this));
-						} catch (IllegalArgumentException | IllegalAccessException e) {
-							Logger.getInstance().add("StepSetupDefaults: IllegalArgumentException = " + e.toString());
-							e.printStackTrace();
-						} catch (Exception e) {
-							Logger.getInstance().add("StepSetupDefaults: Exception = " + e.toString());
-						}
-					}
 				}
-				JSONS.getInstance().step.putValue("strCurrentWindowHandle", strCurrentWindowHandle);
 			}
+			JSONS.getInstance().step.putValue("strCurrentWindowHandle", strCurrentWindowHandle);
 		}
+	}
+
 	private class SyncAlert {
 		private SyncAlert() throws ExceptionAlertNotComplete {
 			Logger.getInstance().add("  ==start==>SyncAlert " + Util.getDateTimestamp());
@@ -4022,7 +4008,6 @@ public class Dragonfly {
 			}
 		}
 	}
-
 	//	private class TestConfigurationSetup {
 	//		private int intTestInstanceSize;
 	//		private JSON objJsonObjectTestConfigurationFile = new JSON();
@@ -4152,67 +4137,66 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-	private class VerifyMatch {
-		private String run(String strActual, String strExpected) throws ExceptionValueNotMatched {
-			Logger.getInstance().add("  ==start==>VerifyMatch " + Util.getDateTimestamp());
-			Logger.getInstance().add("VerifyMatch strActual = " + strActual);
-			Boolean blnMatched = false;
-			long lngStartTime = System.currentTimeMillis();
-			try {
-				if (strExpected.toLowerCase().startsWith("<re>")) {
-					String strPattern = strExpected.substring(4);
-					blnMatched = true;
-					return new RegularExpressionMatch().run(strPattern, strActual);
-				} else {
-					if (strExpected.equals(strActual)) {
-						blnMatched = true;
-						return strActual;
-					} else {
-						throw new ExceptionValueNotMatched("VerifyMatch did not match strActual = {" + strActual + "} strExpected = {" + strExpected + "}");
-					}
-				}
-			} catch (Exception e) {
-				Logger.getInstance().add("VerifyMatch: Exception " + e.toString());
-				throw new ExceptionValueNotMatched("VerifyMatch: Exception " + e.toString());
-			} finally {
-				Logger.getInstance().add("VerifyMatch: finally Matched = {" + blnMatched + "} strActual = {" + strActual + "} strExpected = {" + strExpected + "} Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-			}
-		}
-	}
+	//	  class VerifyMatch {
+	//		  String run(String strActual, String strExpected) throws ExceptionValueNotMatched {
+	//			Logger.getInstance().add("  ==start==>VerifyMatch " + Util.getDateTimestamp());
+	//			Logger.getInstance().add("VerifyMatch strActual = " + strActual);
+	//			Boolean blnMatched = false;
+	//			long lngStartTime = System.currentTimeMillis();
+	//			try {
+	//				if (strExpected.toLowerCase().startsWith("<re>")) {
+	//					String strPattern = strExpected.substring(4);
+	//					blnMatched = true;
+	//					return new RegularExpressionMatch().run(strPattern, strActual);
+	//				} else {
+	//					if (strExpected.equals(strActual)) {
+	//						blnMatched = true;
+	//						return strActual;
+	//					} else {
+	//						throw new ExceptionValueNotMatched("VerifyMatch did not match strActual = {" + strActual + "} strExpected = {" + strExpected + "}");
+	//					}
+	//				}
+	//			} catch (Exception e) {
+	//				Logger.getInstance().add("VerifyMatch: Exception " + e.toString());
+	//				throw new ExceptionValueNotMatched("VerifyMatch: Exception " + e.toString());
+	//			} finally {
+	//				Logger.getInstance().add("VerifyMatch: finally Matched = {" + blnMatched + "} strActual = {" + strActual + "} strExpected = {" + strExpected + "} Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//		}
+	//	}
 
-	private class VerifyNotMatch {
-		private String run(String strActual, String strExpected) throws ExceptionValueMatched {
-			Logger.getInstance().add("  ==start==>VerifyNotMatch " + Util.getDateTimestamp());
-			Boolean blnMatched = false;
-			long lngStartTime = System.currentTimeMillis();
-			String strMatchedValue = "";
-			try {
-				if (strExpected.toLowerCase().startsWith("<re>")) {
-					String strPattern = strExpected.substring(4);
-					try {
-						strMatchedValue = new RegularExpressionMatch().run(strPattern, strActual);
-					} catch (Exception e) {
-						Logger.getInstance().add("VerifyNotMatch: Exception " + e.toString());
-						return strMatchedValue;
-					}
-					blnMatched = true;
-					Logger.getInstance().add("VerifyNotMatch: before throw blnMatched = " + blnMatched);
-					throw new ExceptionValueMatched("VerifyNotMatch: Exception strMatchedValue = {" + strMatchedValue + "}");
-				} else {
-					if (strExpected.equals(strActual)) {
-						strMatchedValue = strActual;
-						blnMatched = true;
-						throw new ExceptionValueMatched("VerifyNotMatch did not match strExpected = {" + strExpected + "} strActual = {" + strActual + "}");
-					} else {
-						return strMatchedValue;
-					}
-				}
-			} finally {
-				Logger.getInstance().add("VerifyNotMatch: finally Matched = {" + blnMatched + "} strExpected = {" + strExpected + "} strActual = {" + strActual + "} strMatchedValue = {" + strMatchedValue + "} Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-			}
-		}
-	}
-
+	//	private class VerifyNotMatch {
+	//		private String run(String strActual, String strExpected) throws ExceptionValueMatched {
+	//			Logger.getInstance().add("  ==start==>VerifyNotMatch " + Util.getDateTimestamp());
+	//			Boolean blnMatched = false;
+	//			long lngStartTime = System.currentTimeMillis();
+	//			String strMatchedValue = "";
+	//			try {
+	//				if (strExpected.toLowerCase().startsWith("<re>")) {
+	//					String strPattern = strExpected.substring(4);
+	//					try {
+	//						strMatchedValue = new RegularExpressionMatch().run(strPattern, strActual);
+	//					} catch (Exception e) {
+	//						Logger.getInstance().add("VerifyNotMatch: Exception " + e.toString());
+	//						return strMatchedValue;
+	//					}
+	//					blnMatched = true;
+	//					Logger.getInstance().add("VerifyNotMatch: before throw blnMatched = " + blnMatched);
+	//					throw new ExceptionValueMatched("VerifyNotMatch: Exception strMatchedValue = {" + strMatchedValue + "}");
+	//				} else {
+	//					if (strExpected.equals(strActual)) {
+	//						strMatchedValue = strActual;
+	//						blnMatched = true;
+	//						throw new ExceptionValueMatched("VerifyNotMatch did not match strExpected = {" + strExpected + "} strActual = {" + strActual + "}");
+	//					} else {
+	//						return strMatchedValue;
+	//					}
+	//				}
+	//			} finally {
+	//				Logger.getInstance().add("VerifyNotMatch: finally Matched = {" + blnMatched + "} strExpected = {" + strExpected + "} strActual = {" + strActual + "} strMatchedValue = {" + strMatchedValue + "} Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//		}
+	//	}
 	private class WaitForAngularRequestsToFinish {
 		private WaitForAngularRequestsToFinish(JavascriptExecutor objDriver) {
 			Logger.getInstance().add("  ==start==>WaitForAngularRequestsToFinish " + Util.getDateTimestamp());
