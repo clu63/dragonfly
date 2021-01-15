@@ -2,6 +2,7 @@ package org.DragonflyAutomation;
 
 import java.net.URL;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -35,12 +36,20 @@ class RemoteTest {
 		internetExplorerOptions.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, false);
 		internetExplorerOptions.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
 		//
-		WebDriver driver = new RemoteWebDriver(hubURL, internetExplorerOptions);
+		WebDriver driver = new RemoteWebDriver(hubURL, chromeOptions);
 		driver.get("http://www.google.com");
 		WebElement element = driver.findElement(By.name("q"));
-		element.sendKeys("Cheese!");
-		System.out.println("Cheese");
-		Thread.sleep(20000);
+		element.sendKeys("mouse!");
+		System.out.println("mouse");
+		Thread.sleep(30000);
+		JavascriptExecutor objJavascriptExecutor = null;
+		objJavascriptExecutor = (JavascriptExecutor) driver;
+		objJavascriptExecutor.executeScript("arguments[0].focus();", element);
+		objJavascriptExecutor.executeScript("arguments[0].value = '';", element);
+		objJavascriptExecutor.executeScript("arguments[0].value = '" + "trap" + "';", element);
+		objJavascriptExecutor.executeScript("arguments[0].blur();", element);
+		Thread.sleep(300000);
 		//driver.quit();
+		System.out.println("done");
 	}
 }

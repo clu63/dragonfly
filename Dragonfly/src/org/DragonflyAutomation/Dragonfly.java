@@ -2201,245 +2201,245 @@ public class Dragonfly {
 	//			return strOptionsList.substring(0, strOptionsList.length());
 	//		}
 	//	}
-	private class ElementSetJavascriptExecutor {
-		private ElementSetJavascriptExecutor(String strOuterHTML) throws ExceptionElementTagNameNotSupported, ExceptionElementNotSet, ExceptionKeywordNotValid {
-			Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor " + Util.getDateTimestamp());
-			long lngStartTime = System.currentTimeMillis();
-			String strInputValue = JSONS.getInstance().step.getString("strInputValue");
-			String strValueToSelect = "";
-			String strAttributeValues = JSONS.getInstance().step.getLowerCase("strAttributeValues");
-			String strTagType = JSONS.getInstance().step.getLowerCase("strTagType");
-			JavascriptExecutor objJavascriptExecutor = null;
-			objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
-			try {
-				switch (strTagType) {
-				case "a":
-				case "button":
-				case "div":
-				case "h1":
-				case "h2":
-				case "h3":
-				case "h4":
-				case "h5":
-				case "h6":
-				case "img":
-				case "input_button":
-				case "input_image":
-				case "input_reset":
-				case "input_submit":
-				case "li":
-				case "p":
-				case "span":
-				case "td":
-				case "th":
-				case "tr":
-					switch (strInputValue.toLowerCase()) {
-					case "":
-					case "<click>":
-						objJavascriptExecutor.executeScript("arguments[0].focus();", Element.getInstance().element);
-						objJavascriptExecutor.executeScript("arguments[0].click();", Element.getInstance().element);
-						objJavascriptExecutor.executeScript("arguments[0].blur();", Element.getInstance().element);
-						break;
-					case "<doubleclick>":
-						Actions objAction = new Actions(BrowserDriver.getInstance().browserDriver);
-						objAction.moveToElement(Element.getInstance().element).doubleClick().build().perform();
-						break;
-					case "<rightclick>":
-						//ToDo add right click code javascript
-						Actions action = new Actions(BrowserDriver.getInstance().browserDriver);
-						action.contextClick(Element.getInstance().element).build().perform();
-						// 			Actions action= new Actions(BrowserDriver.getInstance().browserDriver);
-						// 			action.contextClick(Element.getInstance().element).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.RETURN).build().perform();
-						break;
-					default:
-						throw new ExceptionKeywordNotValid("The keyword " + strInputValue + " for the click event is not valid! Please us one of the following <click>, <doubleclick>, <rightclick>");
-					}
-					break;
-				case "input_text":
-				case "input_password":
-				case "textarea":
-				case "input_email":
-				case "input_textarea":
-					// Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor inputtext" + Util.getDateTimestamp());
-					objJavascriptExecutor.executeScript("arguments[0].focus();", Element.getInstance().element);
-					// Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor focus" + Util.getDateTimestamp());
-					objJavascriptExecutor.executeScript("arguments[0].value = '';", Element.getInstance().element);
-					// Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor value" + Util.getDateTimestamp());
-					objJavascriptExecutor.executeScript("arguments[0].value = '" + strInputValue + "';", Element.getInstance().element);
-					// Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor value" + Util.getDateTimestamp());
-					objJavascriptExecutor.executeScript("arguments[0].blur();", Element.getInstance().element);
-					// Logger.getInstance().add("onchange blur");
-					if (strOuterHTML.toLowerCase().contains("onchange")) {
-						try {
-							// Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor strOuterHTML" + Util.getDateTimestamp());
-							objJavascriptExecutor.executeScript("arguments[0].onchange();", Element.getInstance().element);
-						} catch (WebDriverException e) {
-							Logger.getInstance().add("ElementSetJavascriptExecutor = WebDriverException: " + e.toString());
-						}
-					}
-					break;
-				case "input_radio":
-					switch (strInputValue.toLowerCase()) {
-					case "":
-					case "<on>":
-						JSONS.getInstance().step.putValue("strInputValue", "<on>");
-						if (Element.getInstance().element.isSelected() == false) {
-							objJavascriptExecutor.executeScript("arguments[0].focus();", Element.getInstance().element);
-							objJavascriptExecutor.executeScript("arguments[0].click();", Element.getInstance().element);
-							objJavascriptExecutor.executeScript("arguments[0].blur();", Element.getInstance().element);
-							if (strOuterHTML.toLowerCase().contains("onchange")) {
-								try {
-									objJavascriptExecutor.executeScript("arguments[0].onchange();", Element.getInstance().element);
-								} catch (WebDriverException e) {
-									Logger.getInstance().add("ElementSetJavascriptExecutor = " + e.toString());
-								}
-							}
-						}
-						break;
-					default:
-						throw new ExceptionKeywordNotValid("The keyword " + strInputValue + " for the click event is not valid! Please use <on>");
-					}
-					break;
-				case "input_checkbox":
-					switch (strInputValue.toLowerCase()) {
-					case "<on>":
-						if (Element.getInstance().element.isSelected() == false) {
-							objJavascriptExecutor.executeScript("arguments[0].focus();", Element.getInstance().element);
-							objJavascriptExecutor.executeScript("arguments[0].click();", Element.getInstance().element);
-							objJavascriptExecutor.executeScript("arguments[0].blur();", Element.getInstance().element);
-							if (strOuterHTML.toLowerCase().contains("onchange")) {
-								try {
-									objJavascriptExecutor.executeScript("arguments[0].onchange();", Element.getInstance().element);
-								} catch (WebDriverException e) {
-									Logger.getInstance().add("ElementSetJavascriptExecutor = " + e.toString());
-								}
-							}
-						}
-						break;
-					case "<off>":
-						if (Element.getInstance().element.isSelected() == true) {
-							objJavascriptExecutor.executeScript("arguments[0].focus();", Element.getInstance().element);
-							objJavascriptExecutor.executeScript("arguments[0].click();", Element.getInstance().element);
-							objJavascriptExecutor.executeScript("arguments[0].blur();", Element.getInstance().element);
-							if (strOuterHTML.toLowerCase().contains("onchange")) {
-								try {
-									objJavascriptExecutor.executeScript("arguments[0].onchange();", Element.getInstance().element);
-								} catch (WebDriverException e) {
-									Logger.getInstance().add("ElementSetJavascriptExecutor = " + e.toString());
-								}
-							}
-						}
-						break;
-					default:
-						throw new ExceptionKeywordNotValid("The keyword " + strInputValue + " for the click event is not valid! Please us one of the following <on> or <off>");
-					}
-					break;
-				case "select":
-					Select objSelect = new Select(Element.getInstance().element);
-					objSelect.getOptions();
-					objSelect.selectByVisibleText(strInputValue);
-					// set_js
-					// 		int intOptionsEach;
-					// 		String strOptions = "";
-					// 		String[] arrOptions;
-					// 		strOptions = (String) objJavascriptExecutor.executeScript("var txt = '';var x = arguments[0];var i;for (i = 0; i < x.length; i++)" + "{txt = txt + '|' + x.options[i].text;}" + "return txt;", Element.getInstance().element);
-					// 		strOptions = strOptions.substring(1);
-					// 		arrOptions = strOptions.split("\\|");
-					// 		for (intOptionsEach = 0; intOptionsEach < arrOptions.length; intOptionsEach++) {
-					// 			 Logger.getInstance().add("ElementSetJavascriptExecutor: arrOptions[intOptionsEach].toString() = " + arrOptions[intOptionsEach].toString());
-					// 			if (arrOptions[intOptionsEach].toString().equals(JSONS.getInstance().step.get("strInputValue").toString())) {
-					// 				blnSet = true;
-					// 				Select objSelect = new Select(Element.getInstance().element);
-					// 				objJavascriptExecutor.executeScript("arguments[0].focus();", Element.getInstance().element);
-					// 				objSelect.selectByIndex(intOptionsEach);
-					// 				objJavascriptExecutor.executeScript("arguments[0].blur();", Element.getInstance().element);
-					// 				// objJavascriptExecutor.executeScript("arguments[0].selectedIndex=" + intOptionsEach + ";", Element.getInstance().element);
-					// 				// if (strOuterHTML.toLowerCase().contains("onchange")) {
-					// 				// try {
-					// 				// objJavascriptExecutor.executeScript("arguments[0].onchange();", Element.getInstance().element);
-					// 				// } catch (WebDriverException e) {
-					// 				//  Logger.getInstance().add("ElementSetJavascriptExecutor = " + e.toString());
-					// 				// }
-					// 				// }
-					// 				break;
-					// 			}
-					// 		}
-					// 		intOptionsLength = objObject.Object.Options.All.Length
-					// 		        ' switch based on keyword input
-					// 		        Select Case LCase(strValueToSelect)
-					// 		        Case "<blank>"
-					// 		            strValueToSelect = ""
-					// 		        Case "<first>"
-					// 		            strValueToSelect = objObject.Object.Options.All.Item(0).Innertext
-					// 		        Case "<second>"
-					// 		            strValueToSelect = objObject.Object.Options.All.Item(1).Innertext
-					// 		        Case "<third>"
-					// 		            strValueToSelect = objObject.Object.Options.All.Item(2).Innertext
-					// 		        Case "<last>"
-					// 		            strValueToSelect = objObject.Object.Options.All.Item(intOptionsLength - 1).Innertext
-					// 		        Case "<random>"
-					// 		            intRandom = GenerateRandomNumberBetween(0, intOptionsLength - 1)
-					// 		            strValueToSelect = objObject.Object.Options.All.Item(intRandom).Innertext
-					// 		        End Select
-					// 		        '  check if item is in the list
-					// 		        '  loop until object value exists in the list or the intMillisecondsWaited value is exceeded
-					// 		        Do Until CDbl(intMillisecondsWaited) > CDbl(intDefaultTimeOutMilliseconds)
-					// 		            '            strAllItems = ""
-					// 		            strAllItems = objObject.GetROProperty("all items")
-					// 		            ' refresh object each loop if can be refreshed
-					// 		            If blnShouldRefreshObject = True Then
-					// 		                objObject.RefreshObject
-					// 		            End If
-					// 		            For intOptionsEach = 0 To intOptionsLength - 1
-					// 		                If CStr(objObject.Object.Options.All.Item(intOptionsEach).Innertext) = CStr(strValueToSelect) Then
-					// 		                    blnItemFound = True
-					// 		                    gdtmStartTimeStep = Now
-					// 		                    objObject.Select strValueToSelect
-					// 		                    Exit For
-					// 		                    '                    If strAllItems = "" Then
-					// 		                    '                        strAllItems = objObject.Object.Options.All.Item(intOptionsEach).Innertext
-					// 		                    '                    Else
-					// 		                    '                        strAllItems = strAllItems & ";" & objObject.Object.Options.All.Item(intOptionsEach).Innertext
-					// 		                    '                    End If
-					// 		                End If
-					// 		            Next
-					// 		            If blnItemFound = True Then
-					// 		                Exit Do
-					// 		            End If
-					// 		            ' wait within the loop 100 milliseconds to allow loop to check 10 times per second if object does not exist
-					// 		            Wait 0, 100
-					// 		            '  sets the intMillisecondsWaited variable to the number of milliseconds waited from the point when the intTimerStart was set
-					// 		            intMilliseconds Waited = CDbl((Timer - intStartTime) * 1000)
-					// 		        Loop
-					// 		    End If    '===>   '   If blnEnabled = True Then
-					// 		    '  report pass or fail based on the boolean variables set above
-					// 		    If blnItemFound = True Then
-					// 		        WebListSelect = True
-					// 		        ReporterEventScreenShot micPass, strStep, "The selection of the  {" & strObjectToString & "} object with path {" & strObjectPath & "} item value {" & strValueToSelect & "} after {" & intMillisecondsWaited & "} milliseconds."
-					// 		    ElseIf blnVisible = False Then
-					// 		        WebListSelect = False
-					// 		        ReporterEventScreenShot micFail, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is hidden."
-					// 		        ReporterEventScreenShot micInfo, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is hidden after {" & intMillisecondsWaited & "} milliseconds."
-					// 		    ElseIf blnEnabled = False Then
-					// 		        WebListSelect = False
-					// 		        ReporterEventScreenShot micFail, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is disabled."
-					// 		        ReporterEventScreenShot micInfo, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is disabled after {" & intMillisecondsWaited & "} milliseconds."
-					// 		    ElseIf blnItemFound = False Then
-					// 		        WebListSelect = False
-					// 		        ReporterEventScreenShot micFail, strStep, "The selection of the {" & strValueToSelect & "} object with path {" & strObjectPath & "} failed due to item not found in list.  The following is a list of all items: {" & strAllItems & "}"
-					// 		        ReporterEventScreenShot micInfo, strStep, "The selection of the {" & strValueToSelect & "} object with path {" & strObjectPath & "} failed due to item not found in list.  The following is a list of all items: {" & strAllItems & "} after {" & intMillisecondsWaited & "} milliseconds."
-					// 		    End If
-					break;
-				case "table":
-					break;
-				default:
-					throw new ExceptionElementTagNameNotSupported("ElementSetJavascriptExecutor: Element tag {" + strTagType + "} not supported");
-				}
-			} finally {
-				Logger.getInstance().add("ElementSetJavascriptExecutor: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-			}
-		}
-	}
+	//	private class ElementSetJavascriptExecutor {
+	//		private ElementSetJavascriptExecutor(String strOuterHTML) throws ExceptionElementTagNameNotSupported, ExceptionElementNotSet, ExceptionKeywordNotValid {
+	//			Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor " + Util.getDateTimestamp());
+	//			long lngStartTime = System.currentTimeMillis();
+	//			String strInputValue = JSONS.getInstance().step.getString("strInputValue");
+	//			String strValueToSelect = "";
+	//			String strAttributeValues = JSONS.getInstance().step.getLowerCase("strAttributeValues");
+	//			String strTagType = JSONS.getInstance().step.getLowerCase("strTagType");
+	//			JavascriptExecutor objJavascriptExecutor = null;
+	//			objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
+	//			try {
+	//				switch (strTagType) {
+	//				case "a":
+	//				case "button":
+	//				case "div":
+	//				case "h1":
+	//				case "h2":
+	//				case "h3":
+	//				case "h4":
+	//				case "h5":
+	//				case "h6":
+	//				case "img":
+	//				case "input_button":
+	//				case "input_image":
+	//				case "input_reset":
+	//				case "input_submit":
+	//				case "li":
+	//				case "p":
+	//				case "span":
+	//				case "td":
+	//				case "th":
+	//				case "tr":
+	//					switch (strInputValue.toLowerCase()) {
+	//					case "":
+	//					case "<click>":
+	//						objJavascriptExecutor.executeScript("arguments[0].focus();", Element.getInstance().element);
+	//						objJavascriptExecutor.executeScript("arguments[0].click();", Element.getInstance().element);
+	//						objJavascriptExecutor.executeScript("arguments[0].blur();", Element.getInstance().element);
+	//						break;
+	//					case "<doubleclick>":
+	//						Actions objAction = new Actions(BrowserDriver.getInstance().browserDriver);
+	//						objAction.moveToElement(Element.getInstance().element).doubleClick().build().perform();
+	//						break;
+	//					case "<rightclick>":
+	//						//ToDo add right click code javascript
+	//						Actions action = new Actions(BrowserDriver.getInstance().browserDriver);
+	//						action.contextClick(Element.getInstance().element).build().perform();
+	//						// 			Actions action= new Actions(BrowserDriver.getInstance().browserDriver);
+	//						// 			action.contextClick(Element.getInstance().element).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.ARROW_DOWN).sendKeys(Keys.RETURN).build().perform();
+	//						break;
+	//					default:
+	//						throw new ExceptionKeywordNotValid("The keyword " + strInputValue + " for the click event is not valid! Please us one of the following <click>, <doubleclick>, <rightclick>");
+	//					}
+	//					break;
+	//				case "input_text":
+	//				case "input_password":
+	//				case "textarea":
+	//				case "input_email":
+	//				case "input_textarea":
+	//					// Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor inputtext" + Util.getDateTimestamp());
+	//					objJavascriptExecutor.executeScript("arguments[0].focus();", Element.getInstance().element);
+	//					// Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor focus" + Util.getDateTimestamp());
+	//					objJavascriptExecutor.executeScript("arguments[0].value = '';", Element.getInstance().element);
+	//					// Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor value" + Util.getDateTimestamp());
+	//					objJavascriptExecutor.executeScript("arguments[0].value = '" + strInputValue + "';", Element.getInstance().element);
+	//					// Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor value" + Util.getDateTimestamp());
+	//					objJavascriptExecutor.executeScript("arguments[0].blur();", Element.getInstance().element);
+	//					// Logger.getInstance().add("onchange blur");
+	//					if (strOuterHTML.toLowerCase().contains("onchange")) {
+	//						try {
+	//							// Logger.getInstance().add("  ==start==>ElementSetJavascriptExecutor strOuterHTML" + Util.getDateTimestamp());
+	//							objJavascriptExecutor.executeScript("arguments[0].onchange();", Element.getInstance().element);
+	//						} catch (WebDriverException e) {
+	//							Logger.getInstance().add("ElementSetJavascriptExecutor = WebDriverException: " + e.toString());
+	//						}
+	//					}
+	//					break;
+	//				case "input_radio":
+	//					switch (strInputValue.toLowerCase()) {
+	//					case "":
+	//					case "<on>":
+	//						JSONS.getInstance().step.putValue("strInputValue", "<on>");
+	//						if (Element.getInstance().element.isSelected() == false) {
+	//							objJavascriptExecutor.executeScript("arguments[0].focus();", Element.getInstance().element);
+	//							objJavascriptExecutor.executeScript("arguments[0].click();", Element.getInstance().element);
+	//							objJavascriptExecutor.executeScript("arguments[0].blur();", Element.getInstance().element);
+	//							if (strOuterHTML.toLowerCase().contains("onchange")) {
+	//								try {
+	//									objJavascriptExecutor.executeScript("arguments[0].onchange();", Element.getInstance().element);
+	//								} catch (WebDriverException e) {
+	//									Logger.getInstance().add("ElementSetJavascriptExecutor = " + e.toString());
+	//								}
+	//							}
+	//						}
+	//						break;
+	//					default:
+	//						throw new ExceptionKeywordNotValid("The keyword " + strInputValue + " for the click event is not valid! Please use <on>");
+	//					}
+	//					break;
+	//				case "input_checkbox":
+	//					switch (strInputValue.toLowerCase()) {
+	//					case "<on>":
+	//						if (Element.getInstance().element.isSelected() == false) {
+	//							objJavascriptExecutor.executeScript("arguments[0].focus();", Element.getInstance().element);
+	//							objJavascriptExecutor.executeScript("arguments[0].click();", Element.getInstance().element);
+	//							objJavascriptExecutor.executeScript("arguments[0].blur();", Element.getInstance().element);
+	//							if (strOuterHTML.toLowerCase().contains("onchange")) {
+	//								try {
+	//									objJavascriptExecutor.executeScript("arguments[0].onchange();", Element.getInstance().element);
+	//								} catch (WebDriverException e) {
+	//									Logger.getInstance().add("ElementSetJavascriptExecutor = " + e.toString());
+	//								}
+	//							}
+	//						}
+	//						break;
+	//					case "<off>":
+	//						if (Element.getInstance().element.isSelected() == true) {
+	//							objJavascriptExecutor.executeScript("arguments[0].focus();", Element.getInstance().element);
+	//							objJavascriptExecutor.executeScript("arguments[0].click();", Element.getInstance().element);
+	//							objJavascriptExecutor.executeScript("arguments[0].blur();", Element.getInstance().element);
+	//							if (strOuterHTML.toLowerCase().contains("onchange")) {
+	//								try {
+	//									objJavascriptExecutor.executeScript("arguments[0].onchange();", Element.getInstance().element);
+	//								} catch (WebDriverException e) {
+	//									Logger.getInstance().add("ElementSetJavascriptExecutor = " + e.toString());
+	//								}
+	//							}
+	//						}
+	//						break;
+	//					default:
+	//						throw new ExceptionKeywordNotValid("The keyword " + strInputValue + " for the click event is not valid! Please us one of the following <on> or <off>");
+	//					}
+	//					break;
+	//				case "select":
+	//					Select objSelect = new Select(Element.getInstance().element);
+	//					objSelect.getOptions();
+	//					objSelect.selectByVisibleText(strInputValue);
+	//					// set_js
+	//					// 		int intOptionsEach;
+	//					// 		String strOptions = "";
+	//					// 		String[] arrOptions;
+	//					// 		strOptions = (String) objJavascriptExecutor.executeScript("var txt = '';var x = arguments[0];var i;for (i = 0; i < x.length; i++)" + "{txt = txt + '|' + x.options[i].text;}" + "return txt;", Element.getInstance().element);
+	//					// 		strOptions = strOptions.substring(1);
+	//					// 		arrOptions = strOptions.split("\\|");
+	//					// 		for (intOptionsEach = 0; intOptionsEach < arrOptions.length; intOptionsEach++) {
+	//					// 			 Logger.getInstance().add("ElementSetJavascriptExecutor: arrOptions[intOptionsEach].toString() = " + arrOptions[intOptionsEach].toString());
+	//					// 			if (arrOptions[intOptionsEach].toString().equals(JSONS.getInstance().step.get("strInputValue").toString())) {
+	//					// 				blnSet = true;
+	//					// 				Select objSelect = new Select(Element.getInstance().element);
+	//					// 				objJavascriptExecutor.executeScript("arguments[0].focus();", Element.getInstance().element);
+	//					// 				objSelect.selectByIndex(intOptionsEach);
+	//					// 				objJavascriptExecutor.executeScript("arguments[0].blur();", Element.getInstance().element);
+	//					// 				// objJavascriptExecutor.executeScript("arguments[0].selectedIndex=" + intOptionsEach + ";", Element.getInstance().element);
+	//					// 				// if (strOuterHTML.toLowerCase().contains("onchange")) {
+	//					// 				// try {
+	//					// 				// objJavascriptExecutor.executeScript("arguments[0].onchange();", Element.getInstance().element);
+	//					// 				// } catch (WebDriverException e) {
+	//					// 				//  Logger.getInstance().add("ElementSetJavascriptExecutor = " + e.toString());
+	//					// 				// }
+	//					// 				// }
+	//					// 				break;
+	//					// 			}
+	//					// 		}
+	//					// 		intOptionsLength = objObject.Object.Options.All.Length
+	//					// 		        ' switch based on keyword input
+	//					// 		        Select Case LCase(strValueToSelect)
+	//					// 		        Case "<blank>"
+	//					// 		            strValueToSelect = ""
+	//					// 		        Case "<first>"
+	//					// 		            strValueToSelect = objObject.Object.Options.All.Item(0).Innertext
+	//					// 		        Case "<second>"
+	//					// 		            strValueToSelect = objObject.Object.Options.All.Item(1).Innertext
+	//					// 		        Case "<third>"
+	//					// 		            strValueToSelect = objObject.Object.Options.All.Item(2).Innertext
+	//					// 		        Case "<last>"
+	//					// 		            strValueToSelect = objObject.Object.Options.All.Item(intOptionsLength - 1).Innertext
+	//					// 		        Case "<random>"
+	//					// 		            intRandom = GenerateRandomNumberBetween(0, intOptionsLength - 1)
+	//					// 		            strValueToSelect = objObject.Object.Options.All.Item(intRandom).Innertext
+	//					// 		        End Select
+	//					// 		        '  check if item is in the list
+	//					// 		        '  loop until object value exists in the list or the intMillisecondsWaited value is exceeded
+	//					// 		        Do Until CDbl(intMillisecondsWaited) > CDbl(intDefaultTimeOutMilliseconds)
+	//					// 		            '            strAllItems = ""
+	//					// 		            strAllItems = objObject.GetROProperty("all items")
+	//					// 		            ' refresh object each loop if can be refreshed
+	//					// 		            If blnShouldRefreshObject = True Then
+	//					// 		                objObject.RefreshObject
+	//					// 		            End If
+	//					// 		            For intOptionsEach = 0 To intOptionsLength - 1
+	//					// 		                If CStr(objObject.Object.Options.All.Item(intOptionsEach).Innertext) = CStr(strValueToSelect) Then
+	//					// 		                    blnItemFound = True
+	//					// 		                    gdtmStartTimeStep = Now
+	//					// 		                    objObject.Select strValueToSelect
+	//					// 		                    Exit For
+	//					// 		                    '                    If strAllItems = "" Then
+	//					// 		                    '                        strAllItems = objObject.Object.Options.All.Item(intOptionsEach).Innertext
+	//					// 		                    '                    Else
+	//					// 		                    '                        strAllItems = strAllItems & ";" & objObject.Object.Options.All.Item(intOptionsEach).Innertext
+	//					// 		                    '                    End If
+	//					// 		                End If
+	//					// 		            Next
+	//					// 		            If blnItemFound = True Then
+	//					// 		                Exit Do
+	//					// 		            End If
+	//					// 		            ' wait within the loop 100 milliseconds to allow loop to check 10 times per second if object does not exist
+	//					// 		            Wait 0, 100
+	//					// 		            '  sets the intMillisecondsWaited variable to the number of milliseconds waited from the point when the intTimerStart was set
+	//					// 		            intMilliseconds Waited = CDbl((Timer - intStartTime) * 1000)
+	//					// 		        Loop
+	//					// 		    End If    '===>   '   If blnEnabled = True Then
+	//					// 		    '  report pass or fail based on the boolean variables set above
+	//					// 		    If blnItemFound = True Then
+	//					// 		        WebListSelect = True
+	//					// 		        ReporterEventScreenShot micPass, strStep, "The selection of the  {" & strObjectToString & "} object with path {" & strObjectPath & "} item value {" & strValueToSelect & "} after {" & intMillisecondsWaited & "} milliseconds."
+	//					// 		    ElseIf blnVisible = False Then
+	//					// 		        WebListSelect = False
+	//					// 		        ReporterEventScreenShot micFail, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is hidden."
+	//					// 		        ReporterEventScreenShot micInfo, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is hidden after {" & intMillisecondsWaited & "} milliseconds."
+	//					// 		    ElseIf blnEnabled = False Then
+	//					// 		        WebListSelect = False
+	//					// 		        ReporterEventScreenShot micFail, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is disabled."
+	//					// 		        ReporterEventScreenShot micInfo, strStep, "The {" & strObjectToString & "} object with path {" & strObjectPath & "} is disabled after {" & intMillisecondsWaited & "} milliseconds."
+	//					// 		    ElseIf blnItemFound = False Then
+	//					// 		        WebListSelect = False
+	//					// 		        ReporterEventScreenShot micFail, strStep, "The selection of the {" & strValueToSelect & "} object with path {" & strObjectPath & "} failed due to item not found in list.  The following is a list of all items: {" & strAllItems & "}"
+	//					// 		        ReporterEventScreenShot micInfo, strStep, "The selection of the {" & strValueToSelect & "} object with path {" & strObjectPath & "} failed due to item not found in list.  The following is a list of all items: {" & strAllItems & "} after {" & intMillisecondsWaited & "} milliseconds."
+	//					// 		    End If
+	//					break;
+	//				case "table":
+	//					break;
+	//				default:
+	//					throw new ExceptionElementTagNameNotSupported("ElementSetJavascriptExecutor: Element tag {" + strTagType + "} not supported");
+	//				}
+	//			} finally {
+	//				Logger.getInstance().add("ElementSetJavascriptExecutor: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//		}
+	//	}
 
 	private class ElementSetSync {
 		private ElementSetSync(boolean blnJavascriptExecutor) {
@@ -4212,179 +4212,179 @@ public class Dragonfly {
 		}
 	}
 
-	private class WebElementAttributes {
-		private WebElementAttributes() {
-			Logger.getInstance().add("  ==start==>WebElementAttributes " + Util.getDateTimestamp());
-			Logger.getInstance().add("text:=  " + Element.getInstance().element.getTagName());
-			Logger.getInstance().add("tag_type:=  " + Element.getInstance().element.getTagName() + "_" + Element.getInstance().element.getAttribute("type"));
-			Logger.getInstance().add("TagName:=  " + Element.getInstance().element.getAttribute("TagName"));
-			Logger.getInstance().add("type:=  " + Element.getInstance().element.getAttribute("type"));
-			Logger.getInstance().add("id:=  " + Element.getInstance().element.getAttribute("id"));
-			Logger.getInstance().add("name:=  " + Element.getInstance().element.getAttribute("name"));
-			Logger.getInstance().add("text:=  " + Element.getInstance().element.getAttribute("text"));
-			Logger.getInstance().add("innerText:=  " + Element.getInstance().element.getAttribute("innerText"));
-			Logger.getInstance().add("outerText:=  " + Element.getInstance().element.getAttribute("outerText"));
-			Logger.getInstance().add("innerHTML:=  " + Element.getInstance().element.getAttribute("innerHTML"));
-			Logger.getInstance().add("outerHTML:=  " + Element.getInstance().element.getAttribute("outerHTML"));
-			Logger.getInstance().add("uniqueID:=  " + Element.getInstance().element.getAttribute("uniqueID"));
-			Logger.getInstance().add("class:=  " + Element.getInstance().element.getAttribute("class"));
-			Logger.getInstance().add("type:=  " + Element.getInstance().element.getAttribute("type"));
-			Logger.getInstance().add("TYPE:=  " + Element.getInstance().element.getAttribute("TYPE"));
-			Logger.getInstance().add("href:=  " + Element.getInstance().element.getAttribute("href"));
-			Logger.getInstance().add("NameProp:=  " + Element.getInstance().element.getAttribute("NameProp"));
-			Logger.getInstance().add("isDisplayed:=  " + Element.getInstance().element.isDisplayed());
-			Logger.getInstance().add("name:=  " + Element.getInstance().element.isEnabled());
-			Logger.getInstance().add("getLocation().x:=  " + Element.getInstance().element.getLocation().x);
-			Logger.getInstance().add("getLocation().y:=  " + Element.getInstance().element.getLocation().y);
-			Logger.getInstance().add("getSize().height:=  " + Element.getInstance().element.getSize().height);
-			Logger.getInstance().add("getLocation().y:=  " + Element.getInstance().element.getSize().width);
-			Logger.getInstance().add("src:=  " + Element.getInstance().element.getAttribute("src"));
-		}
-	}
+//	private class WebElementAttributes {
+//		private WebElementAttributes() {
+//			Logger.getInstance().add("  ==start==>WebElementAttributes " + Util.getDateTimestamp());
+//			Logger.getInstance().add("text:=  " + Element.getInstance().element.getTagName());
+//			Logger.getInstance().add("tag_type:=  " + Element.getInstance().element.getTagName() + "_" + Element.getInstance().element.getAttribute("type"));
+//			Logger.getInstance().add("TagName:=  " + Element.getInstance().element.getAttribute("TagName"));
+//			Logger.getInstance().add("type:=  " + Element.getInstance().element.getAttribute("type"));
+//			Logger.getInstance().add("id:=  " + Element.getInstance().element.getAttribute("id"));
+//			Logger.getInstance().add("name:=  " + Element.getInstance().element.getAttribute("name"));
+//			Logger.getInstance().add("text:=  " + Element.getInstance().element.getAttribute("text"));
+//			Logger.getInstance().add("innerText:=  " + Element.getInstance().element.getAttribute("innerText"));
+//			Logger.getInstance().add("outerText:=  " + Element.getInstance().element.getAttribute("outerText"));
+//			Logger.getInstance().add("innerHTML:=  " + Element.getInstance().element.getAttribute("innerHTML"));
+//			Logger.getInstance().add("outerHTML:=  " + Element.getInstance().element.getAttribute("outerHTML"));
+//			Logger.getInstance().add("uniqueID:=  " + Element.getInstance().element.getAttribute("uniqueID"));
+//			Logger.getInstance().add("class:=  " + Element.getInstance().element.getAttribute("class"));
+//			Logger.getInstance().add("type:=  " + Element.getInstance().element.getAttribute("type"));
+//			Logger.getInstance().add("TYPE:=  " + Element.getInstance().element.getAttribute("TYPE"));
+//			Logger.getInstance().add("href:=  " + Element.getInstance().element.getAttribute("href"));
+//			Logger.getInstance().add("NameProp:=  " + Element.getInstance().element.getAttribute("NameProp"));
+//			Logger.getInstance().add("isDisplayed:=  " + Element.getInstance().element.isDisplayed());
+//			Logger.getInstance().add("name:=  " + Element.getInstance().element.isEnabled());
+//			Logger.getInstance().add("getLocation().x:=  " + Element.getInstance().element.getLocation().x);
+//			Logger.getInstance().add("getLocation().y:=  " + Element.getInstance().element.getLocation().y);
+//			Logger.getInstance().add("getSize().height:=  " + Element.getInstance().element.getSize().height);
+//			Logger.getInstance().add("getLocation().y:=  " + Element.getInstance().element.getSize().width);
+//			Logger.getInstance().add("src:=  " + Element.getInstance().element.getAttribute("src"));
+//		}
+//	}
 
-	private class WebElementCollectionAttributes {
-		private WebElementCollectionAttributes(String strTagName) {
-			Logger.getInstance().add("  ==start==>WebElementCollectionAttributes " + Util.getDateTimestamp());
-			int intCount = 0;
-			if (strTagName.toLowerCase().startsWith("input_")) {
-				strTagName = "input";
-			}
-			List<WebElement> objWebElementCollection = BrowserDriver.getInstance().browserDriver.findElements(By.tagName(strTagName));
-			Iterator<WebElement> objWebElementEach = ((Collection<WebElement>) objWebElementCollection).iterator();
-			while (objWebElementEach.hasNext()) {
-				WebElement row = objWebElementEach.next();
-				intCount = intCount + 1;
-				Logger.getInstance().add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~WebElementCollectionAttributes " + intCount);
-				Logger.getInstance().add("text:=  " + row.getTagName());
-				Logger.getInstance().add("tag_type:=  " + row.getTagName() + "_" + row.getAttribute("type"));
-				Logger.getInstance().add("TagName:=  " + row.getAttribute("TagName"));
-				Logger.getInstance().add("type:=  " + row.getAttribute("type"));
-				Logger.getInstance().add("id:=  " + row.getAttribute("id"));
-				Logger.getInstance().add("name:=  " + row.getAttribute("name"));
-				Logger.getInstance().add("text:=  " + row.getAttribute("text"));
-				Logger.getInstance().add("innerText:=  " + row.getAttribute("innerText"));
-				Logger.getInstance().add("outerText:=  " + row.getAttribute("outerText"));
-				Logger.getInstance().add("innerHTML:=  " + row.getAttribute("innerHTML"));
-				Logger.getInstance().add("outerHTML:=  " + row.getAttribute("outerHTML"));
-				Logger.getInstance().add("uniqueID:=  " + row.getAttribute("uniqueID"));
-				Logger.getInstance().add("class:=  " + row.getAttribute("class"));
-				Logger.getInstance().add("type:=  " + row.getAttribute("type"));
-				Logger.getInstance().add("TYPE:=  " + row.getAttribute("TYPE"));
-				Logger.getInstance().add("href:=  " + row.getAttribute("href"));
-				Logger.getInstance().add("NameProp:=  " + row.getAttribute("NameProp"));
-				Logger.getInstance().add("isDisplayed:=  " + row.isDisplayed());
-				Logger.getInstance().add("name:=  " + row.isEnabled());
-				Logger.getInstance().add("getLocation().x:=  " + row.getLocation().x);
-				Logger.getInstance().add("getLocation().y:=  " + row.getLocation().y);
-				Logger.getInstance().add("getSize().height:=  " + row.getSize().height);
-				Logger.getInstance().add("getLocation().y:=  " + row.getSize().width);
-				Logger.getInstance().add("src:=  " + row.getAttribute("src"));
-			}
-		}
-	}
+	//	private class WebElementCollectionAttributes {
+	//		private WebElementCollectionAttributes(String strTagName) {
+	//			Logger.getInstance().add("  ==start==>WebElementCollectionAttributes " + Util.getDateTimestamp());
+	//			int intCount = 0;
+	//			if (strTagName.toLowerCase().startsWith("input_")) {
+	//				strTagName = "input";
+	//			}
+	//			List<WebElement> objWebElementCollection = BrowserDriver.getInstance().browserDriver.findElements(By.tagName(strTagName));
+	//			Iterator<WebElement> objWebElementEach = ((Collection<WebElement>) objWebElementCollection).iterator();
+	//			while (objWebElementEach.hasNext()) {
+	//				WebElement row = objWebElementEach.next();
+	//				intCount = intCount + 1;
+	//				Logger.getInstance().add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~WebElementCollectionAttributes " + intCount);
+	//				Logger.getInstance().add("text:=  " + row.getTagName());
+	//				Logger.getInstance().add("tag_type:=  " + row.getTagName() + "_" + row.getAttribute("type"));
+	//				Logger.getInstance().add("TagName:=  " + row.getAttribute("TagName"));
+	//				Logger.getInstance().add("type:=  " + row.getAttribute("type"));
+	//				Logger.getInstance().add("id:=  " + row.getAttribute("id"));
+	//				Logger.getInstance().add("name:=  " + row.getAttribute("name"));
+	//				Logger.getInstance().add("text:=  " + row.getAttribute("text"));
+	//				Logger.getInstance().add("innerText:=  " + row.getAttribute("innerText"));
+	//				Logger.getInstance().add("outerText:=  " + row.getAttribute("outerText"));
+	//				Logger.getInstance().add("innerHTML:=  " + row.getAttribute("innerHTML"));
+	//				Logger.getInstance().add("outerHTML:=  " + row.getAttribute("outerHTML"));
+	//				Logger.getInstance().add("uniqueID:=  " + row.getAttribute("uniqueID"));
+	//				Logger.getInstance().add("class:=  " + row.getAttribute("class"));
+	//				Logger.getInstance().add("type:=  " + row.getAttribute("type"));
+	//				Logger.getInstance().add("TYPE:=  " + row.getAttribute("TYPE"));
+	//				Logger.getInstance().add("href:=  " + row.getAttribute("href"));
+	//				Logger.getInstance().add("NameProp:=  " + row.getAttribute("NameProp"));
+	//				Logger.getInstance().add("isDisplayed:=  " + row.isDisplayed());
+	//				Logger.getInstance().add("name:=  " + row.isEnabled());
+	//				Logger.getInstance().add("getLocation().x:=  " + row.getLocation().x);
+	//				Logger.getInstance().add("getLocation().y:=  " + row.getLocation().y);
+	//				Logger.getInstance().add("getSize().height:=  " + row.getSize().height);
+	//				Logger.getInstance().add("getLocation().y:=  " + row.getSize().width);
+	//				Logger.getInstance().add("src:=  " + row.getAttribute("src"));
+	//			}
+	//		}
+	//	}
 
-	private class WebElementCollectionTable {
-		private WebElementCollectionTable(String strTagName) {
-			boolean blnSkip = false;
-			Logger.getInstance().add("  ==start==>WebElementCollectionTable " + Util.getDateTimestamp());
-			// TODO webElementCollectionTable send output to html file
-			int intCount = 0;
-			if (strTagName.toLowerCase().startsWith("input_")) {
-				strTagName = "input";
-			}
-			Logger.getInstance().add("WebElementCollectionTable: strTagName = " + strTagName);
-			Logger.getInstance().add("WebElementCollectionTable: lngStartTimeSwitchTo = " + BrowserDriver.getInstance().browserDriver.getTitle());
-			BrowserDriver.getInstance().browserDriver.switchTo().defaultContent();
-			for (String winHandle : BrowserDriver.getInstance().browserDriver.getWindowHandles()) {
-				intCount = 0;
-				//  Logger.getInstance().add("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
-				Logger.getInstance().add("WebElementCollectionTable: winHandle = " + winHandle);
-				long lngStartTimeSwitchTo = System.currentTimeMillis();
-				// if (strCurrentWindowHandle.equals(winHandle)) {
-				// } else {
-				BrowserDriver.getInstance().browserDriver.switchTo().window(winHandle);
-				Logger.getInstance().add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-				Logger.getInstance().add("WebElementCollectionTable: lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
-				// }
-				Logger.getInstance().add("WebElementCollectionTable: BrowserDriver.getInstance().browserDriver.getTitle = " + BrowserDriver.getInstance().browserDriver.getTitle());
-				// Logger.getInstance().add("webElementCollectionTable BrowserDriver.getInstance().browserDriver.getPageSource = " + BrowserDriver.getInstance().browserDriver.getPageSource());
-				Logger.getInstance().add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-				List<WebElement> objWebElementCollection = BrowserDriver.getInstance().browserDriver.findElements(By.tagName(strTagName));
-				Iterator<WebElement> objWebElementEach = ((Collection<WebElement>) objWebElementCollection).iterator();
-				while (objWebElementEach.hasNext()) {
-					WebElement row = objWebElementEach.next();
-					// try {
-					// elementVisible(objStepNew, row);
-					intCount = intCount + 1;
-					if (row.isDisplayed() == true) {
-						if (strTagName.equals("input") == true) {
-							if (row.getAttribute("type").toLowerCase().equals("hidden") == true) {
-								blnSkip = true;
-							}
-						}
-						if (blnSkip == false) {
-							Logger.getInstance().add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementCollectionTable " + intCount);
-							Logger.getInstance().add("WebElementCollectionTable: getTagName:= '" + row.getTagName() + "'");
-							Logger.getInstance().add("WebElementCollectionTable: type:= '" + row.getAttribute("type") + "'");
-							Logger.getInstance().add("WebElementCollectionTable: getText:= '" + row.getText() + "'");
-							Logger.getInstance().add("WebElementCollectionTable: outerHTML = '" + row.getAttribute("outerHTML") + "'");
-						}
-					}
-					//  Logger.getInstance().add("text:=  " + objWebElementEach.);
-					//  Logger.getInstance().add("tag_type:= '" + row.getTagName() + "_" + row.getAttribute("type") + "'");
-					//  Logger.getInstance().add("TagName:= '" + row.getAttribute("TagName") + "'");
-					//  Logger.getInstance().add("Type:= '" + row.getAttribute("Type") + "'");
-					//  Logger.getInstance().add("TYPE:= '" + row.getAttribute("TYPE") + "'");
-					//  Logger.getInstance().add("id:= '" + row.getAttribute("id") + "'");
-					//  Logger.getInstance().add("name:= '" + row.getAttribute("name") + "'");
-					//  Logger.getInstance().add("text:= '" + row.getAttribute("text") + "'");
-					//  Logger.getInstance().add("innerText:= '" + row.getAttribute("innerText") + "'");
-					//  Logger.getInstance().add("outerText:= '" + row.getAttribute("outerText") + "'");
-					//  Logger.getInstance().add("innerHTML:= '" + row.getAttribute("innerHTML") + "'");
-					//  Logger.getInstance().add("uniqueID:= '" + row.getAttribute("uniqueID") + "'");
-					//  Logger.getInstance().add("class:= '" + row.getAttribute("class") + "'");
-					//  Logger.getInstance().add("href:= '" + row.getAttribute("href") + "'");
-					//  Logger.getInstance().add("NameProp:= '" + row.getAttribute("NameProp") + "'");
-					//  Logger.getInstance().add("isDisplayed:= '" + row.isDisplayed() + "'");
-					//  Logger.getInstance().add("isEnabled:= '" + row.isEnabled() + "'");
-					//  Logger.getInstance().add("getLocation().x:= '" + row.getLocation().x + "'");
-					//  Logger.getInstance().add("getLocation().y:= '" + row.getLocation().y + "'");
-					//  Logger.getInstance().add("getSize().height:= '" + row.getSize().height + "'");
-					//  Logger.getInstance().add("getSize().width:= '" + row.getSize().width + "'");
-					//  Logger.getInstance().add("src:= '" + row.getAttribute("src") + "'");
-					// if (objCollectionJS.size() > 0) {
-					//
-					// JavascriptExecutor objJavascriptExecutor = null;
-					// objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
-					// long lngStartTimeJS = System.currentTimeMillis();
-					//  Logger.getInstance().add("JS value = " +
-					// objJavascriptExecutor.executeScript("return arguments[0].value;",
-					// objCollectionJS.get(0)) + " Milliseconds Waited = " +
-					// (System.currentTimeMillis() - lngStartTimeJS));
-					// lngStartTimeJS = System.currentTimeMillis();
-					//  Logger.getInstance().add("JS innerText = " +
-					// objJavascriptExecutor.executeScript("return arguments[0].innerText;",
-					// objCollectionJS.get(0)) + " Milliseconds Waited = " +
-					// (System.currentTimeMillis() - lngStartTimeJS));
-					// lngStartTimeJS = System.currentTimeMillis();
-					//  Logger.getInstance().add("JS innerHTML = " +
-					// objJavascriptExecutor.executeScript("return arguments[0].innerHTML;",
-					// objCollectionJS.get(0)) + " Milliseconds Waited = " +
-					// (System.currentTimeMillis() - lngStartTimeJS));
-					// lngStartTimeJS = System.currentTimeMillis();
-					//  Logger.getInstance().add("JS outerHTML = " +
-					// objJavascriptExecutor.executeScript("return arguments[0].outerHTML;",
-					// objCollectionJS.get(0)) + " Milliseconds Waited = " +
-					// (System.currentTimeMillis() - lngStartTimeJS));
-					//
-					// }
-					// } catch (ExceptionElementNotVisible e) {
-					// // e.printStackTrace();
-					// }
-				}
-			}
-		}
-	}
+	//	private class WebElementCollectionTable {
+	//		private WebElementCollectionTable(String strTagName) {
+	//			boolean blnSkip = false;
+	//			Logger.getInstance().add("  ==start==>WebElementCollectionTable " + Util.getDateTimestamp());
+	//			// TODO webElementCollectionTable send output to html file
+	//			int intCount = 0;
+	//			if (strTagName.toLowerCase().startsWith("input_")) {
+	//				strTagName = "input";
+	//			}
+	//			Logger.getInstance().add("WebElementCollectionTable: strTagName = " + strTagName);
+	//			Logger.getInstance().add("WebElementCollectionTable: lngStartTimeSwitchTo = " + BrowserDriver.getInstance().browserDriver.getTitle());
+	//			BrowserDriver.getInstance().browserDriver.switchTo().defaultContent();
+	//			for (String winHandle : BrowserDriver.getInstance().browserDriver.getWindowHandles()) {
+	//				intCount = 0;
+	//				//  Logger.getInstance().add("elementFind strCurrentWindowHandle = " + strCurrentWindowHandle);
+	//				Logger.getInstance().add("WebElementCollectionTable: winHandle = " + winHandle);
+	//				long lngStartTimeSwitchTo = System.currentTimeMillis();
+	//				// if (strCurrentWindowHandle.equals(winHandle)) {
+	//				// } else {
+	//				BrowserDriver.getInstance().browserDriver.switchTo().window(winHandle);
+	//				Logger.getInstance().add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	//				Logger.getInstance().add("WebElementCollectionTable: lngStartTimeSwitchTo = " + (System.currentTimeMillis() - lngStartTimeSwitchTo));
+	//				// }
+	//				Logger.getInstance().add("WebElementCollectionTable: BrowserDriver.getInstance().browserDriver.getTitle = " + BrowserDriver.getInstance().browserDriver.getTitle());
+	//				// Logger.getInstance().add("webElementCollectionTable BrowserDriver.getInstance().browserDriver.getPageSource = " + BrowserDriver.getInstance().browserDriver.getPageSource());
+	//				Logger.getInstance().add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+	//				List<WebElement> objWebElementCollection = BrowserDriver.getInstance().browserDriver.findElements(By.tagName(strTagName));
+	//				Iterator<WebElement> objWebElementEach = ((Collection<WebElement>) objWebElementCollection).iterator();
+	//				while (objWebElementEach.hasNext()) {
+	//					WebElement row = objWebElementEach.next();
+	//					// try {
+	//					// elementVisible(objStepNew, row);
+	//					intCount = intCount + 1;
+	//					if (row.isDisplayed() == true) {
+	//						if (strTagName.equals("input") == true) {
+	//							if (row.getAttribute("type").toLowerCase().equals("hidden") == true) {
+	//								blnSkip = true;
+	//							}
+	//						}
+	//						if (blnSkip == false) {
+	//							Logger.getInstance().add("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~webElementCollectionTable " + intCount);
+	//							Logger.getInstance().add("WebElementCollectionTable: getTagName:= '" + row.getTagName() + "'");
+	//							Logger.getInstance().add("WebElementCollectionTable: type:= '" + row.getAttribute("type") + "'");
+	//							Logger.getInstance().add("WebElementCollectionTable: getText:= '" + row.getText() + "'");
+	//							Logger.getInstance().add("WebElementCollectionTable: outerHTML = '" + row.getAttribute("outerHTML") + "'");
+	//						}
+	//					}
+	//					//  Logger.getInstance().add("text:=  " + objWebElementEach.);
+	//					//  Logger.getInstance().add("tag_type:= '" + row.getTagName() + "_" + row.getAttribute("type") + "'");
+	//					//  Logger.getInstance().add("TagName:= '" + row.getAttribute("TagName") + "'");
+	//					//  Logger.getInstance().add("Type:= '" + row.getAttribute("Type") + "'");
+	//					//  Logger.getInstance().add("TYPE:= '" + row.getAttribute("TYPE") + "'");
+	//					//  Logger.getInstance().add("id:= '" + row.getAttribute("id") + "'");
+	//					//  Logger.getInstance().add("name:= '" + row.getAttribute("name") + "'");
+	//					//  Logger.getInstance().add("text:= '" + row.getAttribute("text") + "'");
+	//					//  Logger.getInstance().add("innerText:= '" + row.getAttribute("innerText") + "'");
+	//					//  Logger.getInstance().add("outerText:= '" + row.getAttribute("outerText") + "'");
+	//					//  Logger.getInstance().add("innerHTML:= '" + row.getAttribute("innerHTML") + "'");
+	//					//  Logger.getInstance().add("uniqueID:= '" + row.getAttribute("uniqueID") + "'");
+	//					//  Logger.getInstance().add("class:= '" + row.getAttribute("class") + "'");
+	//					//  Logger.getInstance().add("href:= '" + row.getAttribute("href") + "'");
+	//					//  Logger.getInstance().add("NameProp:= '" + row.getAttribute("NameProp") + "'");
+	//					//  Logger.getInstance().add("isDisplayed:= '" + row.isDisplayed() + "'");
+	//					//  Logger.getInstance().add("isEnabled:= '" + row.isEnabled() + "'");
+	//					//  Logger.getInstance().add("getLocation().x:= '" + row.getLocation().x + "'");
+	//					//  Logger.getInstance().add("getLocation().y:= '" + row.getLocation().y + "'");
+	//					//  Logger.getInstance().add("getSize().height:= '" + row.getSize().height + "'");
+	//					//  Logger.getInstance().add("getSize().width:= '" + row.getSize().width + "'");
+	//					//  Logger.getInstance().add("src:= '" + row.getAttribute("src") + "'");
+	//					// if (objCollectionJS.size() > 0) {
+	//					//
+	//					// JavascriptExecutor objJavascriptExecutor = null;
+	//					// objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
+	//					// long lngStartTimeJS = System.currentTimeMillis();
+	//					//  Logger.getInstance().add("JS value = " +
+	//					// objJavascriptExecutor.executeScript("return arguments[0].value;",
+	//					// objCollectionJS.get(0)) + " Milliseconds Waited = " +
+	//					// (System.currentTimeMillis() - lngStartTimeJS));
+	//					// lngStartTimeJS = System.currentTimeMillis();
+	//					//  Logger.getInstance().add("JS innerText = " +
+	//					// objJavascriptExecutor.executeScript("return arguments[0].innerText;",
+	//					// objCollectionJS.get(0)) + " Milliseconds Waited = " +
+	//					// (System.currentTimeMillis() - lngStartTimeJS));
+	//					// lngStartTimeJS = System.currentTimeMillis();
+	//					//  Logger.getInstance().add("JS innerHTML = " +
+	//					// objJavascriptExecutor.executeScript("return arguments[0].innerHTML;",
+	//					// objCollectionJS.get(0)) + " Milliseconds Waited = " +
+	//					// (System.currentTimeMillis() - lngStartTimeJS));
+	//					// lngStartTimeJS = System.currentTimeMillis();
+	//					//  Logger.getInstance().add("JS outerHTML = " +
+	//					// objJavascriptExecutor.executeScript("return arguments[0].outerHTML;",
+	//					// objCollectionJS.get(0)) + " Milliseconds Waited = " +
+	//					// (System.currentTimeMillis() - lngStartTimeJS));
+	//					//
+	//					// }
+	//					// } catch (ExceptionElementNotVisible e) {
+	//					// // e.printStackTrace();
+	//					// }
+	//				}
+	//			}
+	//		}
+	//	}
 
 	private class WindowFocus {
 		private WindowFocus() {
