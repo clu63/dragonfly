@@ -9,7 +9,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 class WebDriverTest {
 	WebDriverTest() {
-		new Dragonfly().new ProcessKillInternetExplorer().run();
+		UtilProcess.killInternetExplorer();
 		System.setProperty("webdriver.ie.driver", System.getProperty("user.dir") + "\\Drivers\\IEDriverServer_32.exe");
 		DesiredCapabilities objDesiredCapabilities = null;
 		// Logger.getInstance().add("BrowserLaunch: DesiredCapabilities");

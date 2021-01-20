@@ -370,7 +370,6 @@ public class Dragonfly {
 	//			BrowserDriver.getInstance().browserDriver.navigate().refresh();
 	//		}
 	//	}
-
 	//	  class BrowserRefreshSync {
 	//		  BrowserRefreshSync() {
 	//			long lngStartTime = System.currentTimeMillis();
@@ -379,24 +378,22 @@ public class Dragonfly {
 	//			new StepDuration("BrowserRefreshSync", lngStartTime, "browser_refresh");
 	//		}
 	//	}
-	private class ClearMyTracksByProcessCache {
-		private ClearMyTracksByProcessCache() throws Exception {
-			Logger.getInstance().add("  ==start==>ClearMyTracksByProcessCache " + Util.getDateTimestamp());
-			String[] arrCommandLine = { "\"RunDll32.exe\"", "\"InetCpl.cpl,ClearMyTracksByProcess 8\"" };
-			Process objProcess = Runtime.getRuntime().exec(arrCommandLine);
-			objProcess.waitFor();
-		}
-	}
-
-	private class ClearMyTracksByProcessCookies {
-		private ClearMyTracksByProcessCookies() throws Exception {
-			Logger.getInstance().add("  ==start==>ClearMyTracksByProcessCookies " + Util.getDateTimestamp());
-			String[] arrCommandLine = { "\"cmd.exe\"", "\"RunDll32.exe\"", "\"InetCpl.cpl,ClearMyTracksByProcess 2\"" };
-			Process objProcess = Runtime.getRuntime().exec(arrCommandLine);
-			objProcess.waitFor();
-		}
-	}
-
+	//	private class ClearMyTracksByProcessCache {
+	//		private ClearMyTracksByProcessCache() throws Exception {
+	//			Logger.getInstance().add("  ==start==>ClearMyTracksByProcessCache " + Util.getDateTimestamp());
+	//			String[] arrCommandLine = { "\"RunDll32.exe\"", "\"InetCpl.cpl,ClearMyTracksByProcess 8\"" };
+	//			Process objProcess = Runtime.getRuntime().exec(arrCommandLine);
+	//			objProcess.waitFor();
+	//		}
+	//	}
+	//	private class ClearMyTracksByProcessCookies {
+	//		private ClearMyTracksByProcessCookies() throws Exception {
+	//			Logger.getInstance().add("  ==start==>ClearMyTracksByProcessCookies " + Util.getDateTimestamp());
+	//			String[] arrCommandLine = { "\"cmd.exe\"", "\"RunDll32.exe\"", "\"InetCpl.cpl,ClearMyTracksByProcess 2\"" };
+	//			Process objProcess = Runtime.getRuntime().exec(arrCommandLine);
+	//			objProcess.waitFor();
+	//		}
+	//	}
 	//	private class ClipboardGet {
 	//		private String run() {
 	//			Logger.getInstance().add("  ==start==>ClipboardGet " + Util.getDateTimestamp() );
@@ -410,42 +407,41 @@ public class Dragonfly {
 	//			return strClipboardData;
 	//		}
 	//	}
-	private class CommandLineExecution {
-		private CommandLineExecution() throws Exception {
-			Logger.getInstance().add("  ==start==>CommandLineExecution " + Util.getDateTimestamp());
-			Process p = Runtime.getRuntime().exec("taskkill /F /IM iexplore.exe");
-			p.waitFor();
-			Process p5 = Runtime.getRuntime().exec("RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 10");
-			p5.waitFor();
-			String strPathCookiesLow = System.getenv("APPDATA") + "\\Microsoft\\Windows\\Cookies\\Low\\";
-			strPathCookiesLow = strPathCookiesLow.replaceAll("\\\\", "/");
-			Logger.getInstance().add("CommandLineExecution: strPathCookiesLow = " + strPathCookiesLow);
-			FileUtils.deleteDirectory(new File(strPathCookiesLow));
-			String strPathCacheLow = System.getenv("APPDATA") + "Local/Microsoft/Windows/Temporary Internet Files/Low/";
-			strPathCacheLow = strPathCacheLow.replaceAll("\\\\", "/");
-			Logger.getInstance().add("CommandLineExecution: strPathCacheLow = " + strPathCacheLow);
-			FileUtils.deleteDirectory(new File(strPathCacheLow));
-		}
-	}
-
-	private class ConvertPathByOperatingSystem {
-		private void run(String strPath) {
-			// Logger.getInstance().add("main: gstrOperatingSystem = " + gobjOperatingSystem.strOS);
-			// 	switch (gstrOperatingSystem) {
-			// 	case "Windows":
-			// 		strPathResults = gobjPaths.getPathSystemUserDir() + "\\Results\\" + strTestConfigurationFileName.replace(".json", "") + "\\" + gstrPathResults + "\\";
-			// 		strPathImages = "images\\";
-			// 		break;
-			// 	case "Mac":
-			// 		strPathResults = gobjPaths.getPathSystemUserDir() + "/Results/" + strTestConfigurationFileName.replace(".json", "") + "/" + gstrPathResults + "/";
-			// 		strPathImages = "images/";
-			// 		break;
-			// 	default:
-			// 		 Logger.getInstance().add("main: switch gstrOperatingSystem = " + gstrOperatingSystem + "  not supported");
-			// 		return;
-			// 	}
-		}
-	}
+	//	private class CommandLineExecution {
+	//		private CommandLineExecution() throws Exception {
+	//			Logger.getInstance().add("  ==start==>CommandLineExecution " + Util.getDateTimestamp());
+	//			Process p = Runtime.getRuntime().exec("taskkill /F /IM iexplore.exe");
+	//			p.waitFor();
+	//			Process p5 = Runtime.getRuntime().exec("RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 10");
+	//			p5.waitFor();
+	//			String strPathCookiesLow = System.getenv("APPDATA") + "\\Microsoft\\Windows\\Cookies\\Low\\";
+	//			strPathCookiesLow = strPathCookiesLow.replaceAll("\\\\", "/");
+	//			Logger.getInstance().add("CommandLineExecution: strPathCookiesLow = " + strPathCookiesLow);
+	//			FileUtils.deleteDirectory(new File(strPathCookiesLow));
+	//			String strPathCacheLow = System.getenv("APPDATA") + "Local/Microsoft/Windows/Temporary Internet Files/Low/";
+	//			strPathCacheLow = strPathCacheLow.replaceAll("\\\\", "/");
+	//			Logger.getInstance().add("CommandLineExecution: strPathCacheLow = " + strPathCacheLow);
+	//			FileUtils.deleteDirectory(new File(strPathCacheLow));
+	//		}
+	//	}
+	//	private class ConvertPathByOperatingSystem {
+	//		private void run(String strPath) {
+	//			// Logger.getInstance().add("main: gstrOperatingSystem = " + gobjOperatingSystem.strOS);
+	//			// 	switch (gstrOperatingSystem) {
+	//			// 	case "Windows":
+	//			// 		strPathResults = gobjPaths.getPathSystemUserDir() + "\\Results\\" + strTestConfigurationFileName.replace(".json", "") + "\\" + gstrPathResults + "\\";
+	//			// 		strPathImages = "images\\";
+	//			// 		break;
+	//			// 	case "Mac":
+	//			// 		strPathResults = gobjPaths.getPathSystemUserDir() + "/Results/" + strTestConfigurationFileName.replace(".json", "") + "/" + gstrPathResults + "/";
+	//			// 		strPathImages = "images/";
+	//			// 		break;
+	//			// 	default:
+	//			// 		 Logger.getInstance().add("main: switch gstrOperatingSystem = " + gstrOperatingSystem + "  not supported");
+	//			// 		return;
+	//			// 	}
+	//		}
+	//	}
 	//	class CoordinateHighlightScreenshot {
 	//		CoordinateHighlightScreenshot(final JSON objJsonObjectStepHighlightArea) {
 	//			Logger.getInstance().add("  ==start==>CoordinateHighlightScreenshot " + Util.getDateTimestamp());
@@ -1166,7 +1162,6 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-
 	//	 class ElementEnabled {
 	//		 ElementEnabled() throws ExceptionElementNotEnabled {
 	//			Logger.getInstance().add("  ==start==>ElementEnabled " + Util.getDateTimestamp());
@@ -1189,58 +1184,58 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-//	private class ElementEnabledSync {
-//		private ElementEnabledSync() {
-//			Logger.getInstance().add("  ==start==>ElementEnabledSync " + Util.getDateTimestamp());
-//			Long lngTimeStart = System.currentTimeMillis();
-//			Boolean blnEnabled = false;
-//			Boolean blnExit = false;
-//			Boolean blnFound = false;
-//			Boolean blnStatus = false;
-//			Boolean blnVisible = false;
-//			String strActualResult = "";
-//			while (true) {
-//				try {
-//					if (blnFound == false) {
-//						new ElementFind();
-//						blnFound = true;
-//					}
-//					if (blnVisible == false) {
-//						new ElementVisible();
-//						blnVisible = true;
-//					}
-//					if (blnEnabled == false) {
-//						new ElementEnabled();
-//						blnEnabled = true;
-//					}
-//					blnStatus = true;
-//					strActualResult = "sync_enabled";
-//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
-//					blnFound = false;
-//					blnVisible = false;
-//					blnEnabled = false;
-//					strActualResult = "not_found";
-//					Logger.getInstance().add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} catch (ExceptionElementNotVisible e) {
-//					blnVisible = false;
-//					strActualResult = "not_visible";
-//					Logger.getInstance().add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} catch (ExceptionElementNotEnabled e) {
-//					blnEnabled = false;
-//					strActualResult = "not_enabled";
-//					Logger.getInstance().add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} finally {
-//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
-//					if (Finally.sync(blnExit, blnStatus, blnFound, "ElementEnabledSync", "syncenabled", lngTimeStart) == true) {
-//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-//						return;
-//					} else {
-//						blnEnabled = false;
-//					}
-//				}
-//			}
-//		}
-//	}
+	//	private class ElementEnabledSync {
+	//		private ElementEnabledSync() {
+	//			Logger.getInstance().add("  ==start==>ElementEnabledSync " + Util.getDateTimestamp());
+	//			Long lngTimeStart = System.currentTimeMillis();
+	//			Boolean blnEnabled = false;
+	//			Boolean blnExit = false;
+	//			Boolean blnFound = false;
+	//			Boolean blnStatus = false;
+	//			Boolean blnVisible = false;
+	//			String strActualResult = "";
+	//			while (true) {
+	//				try {
+	//					if (blnFound == false) {
+	//						new ElementFind();
+	//						blnFound = true;
+	//					}
+	//					if (blnVisible == false) {
+	//						new ElementVisible();
+	//						blnVisible = true;
+	//					}
+	//					if (blnEnabled == false) {
+	//						new ElementEnabled();
+	//						blnEnabled = true;
+	//					}
+	//					blnStatus = true;
+	//					strActualResult = "sync_enabled";
+	//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
+	//					blnFound = false;
+	//					blnVisible = false;
+	//					blnEnabled = false;
+	//					strActualResult = "not_found";
+	//					Logger.getInstance().add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotVisible e) {
+	//					blnVisible = false;
+	//					strActualResult = "not_visible";
+	//					Logger.getInstance().add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotEnabled e) {
+	//					blnEnabled = false;
+	//					strActualResult = "not_enabled";
+	//					Logger.getInstance().add("ElementEnabledSync: " + e.toString() + " Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} finally {
+	//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
+	//					if (Finally.sync(blnExit, blnStatus, blnFound, "ElementEnabledSync", "syncenabled", lngTimeStart) == true) {
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						return;
+	//					} else {
+	//						blnEnabled = false;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
 	//	private class ElementFind {
 	//		private ElementFind() throws ExceptionElementNotFound, ExceptionMultipleElementsFound {
 	//			Logger.getInstance().add("  ==start==>ElementFind " + Util.getDateTimestamp());
@@ -1573,7 +1568,6 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-
 	//	 class ElementHidden {
 	//		 ElementHidden() throws ExceptionElementNotHidden {
 	//			Logger.getInstance().add("  ==start==>ElementHidden " + Util.getDateTimestamp());
@@ -1601,217 +1595,211 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-//	private class ElementHiddenSync {
-//		private ElementHiddenSync() {
-//			Logger.getInstance().add("  ==start==>ElementHiddenSync " + Util.getDateTimestamp());
-//			Long lngTimeStart = System.currentTimeMillis();
-//			Boolean blnExit = false;
-//			Boolean blnFound = false;
-//			Boolean blnHidden = false;
-//			Boolean blnStatus = false;
-//			String strActualResult = "";
-//			while (true) {
-//				try {
-//					if (blnFound == false) {
-//						new ElementFind();
-//						blnFound = true;
-//					}
-//					if (blnHidden == false) {
-//						new ElementHidden();
-//						blnHidden = true;
-//					}
-//					blnStatus = true;
-//					strActualResult = "sync_hidden";
-//				} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException | ExceptionElementNotFound e) {
-//					blnFound = false;
-//					blnHidden = true;
-//					blnStatus = true;
-//					strActualResult = "sync_hidden";
-//					Logger.getInstance().add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} catch (ExceptionMultipleElementsFound e) {
-//					blnFound = false;
-//					blnHidden = false;
-//					strActualResult = "not_found";
-//					Logger.getInstance().add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} catch (ExceptionElementNotHidden e) {
-//					blnHidden = false;
-//					strActualResult = "not_hidden";
-//					Logger.getInstance().add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} catch (Exception e) {
-//					blnFound = false;
-//					blnHidden = false;
-//					strActualResult = "exception";
-//					;
-//					Logger.getInstance().add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} finally {
-//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
-//					if (Finally.sync(blnExit, blnStatus, blnFound, "ElementHiddenSync", "synchidden", lngTimeStart) == true) {
-//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-//						return;
-//					} else {
-//						blnHidden = false;
-//					}
-//				}
-//			}
-//		}
-//	}
-
-	private class ElementJavascriptExecutorGetElementsByTagName {
-		private String run() {
-			return null;
-			//long lngStartTimegetElementsByTagName2 = System.currentTimeMillis();
-			//List<WebElement> objCollectionJS2 = (List<WebElement>) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
-			// Logger.getInstance().add("ElementJavascriptExecutorGetElementsByTagName objCollectionJS2 = " + objCollectionJS2.size() + " strTagName = " + strTagName + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName2));
-			//if (objCollectionJS2.size() > 0) {
-			//	long lngStartTimeByXpath = System.currentTimeMillis();
-			//}
-		}
-	}
-
-	private class ElementJavascriptExecutorXPath {
-		private String run() {
-			Logger.getInstance().add("  ==start==>ElementJavascriptExecutorXPath " + Util.getDateTimestamp());
-			return (String) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("gPt=function(c){if(c.id!==''){return'id(\"'+c.id+'\")'}if(c===document.body){return c.tagName}var a=0;var e=c.parentNode.childNodes;for(var b=0;b<e.length;b++){var d=e[b];if(d===c){return gPt(c.parentNode)+'/'+c.tagName+'['+(a+1)+']'}if(d.nodeType===1&&d.tagName===c.tagName){a++}}};return gPt(arguments[0]).toLowerCase();", Element.getInstance().element);
-		}
-	}
-
-//	private class ElementOnMouseOut {
-//		private ElementOnMouseOut() {
-//			Logger.getInstance().add("  ==start==>ElementOnMouseOut " + Util.getDateTimestamp());
-//			Actions objActions = new Actions(BrowserDriver.getInstance().browserDriver);
-//			// Dimension objWebDriverDimension = Element.getInstance().element.getSize();
-//			// int intElementWidth = objWebDriverDimension.width;
-//			// int intElementHeight = objWebDriverDimension.height;
-//			int intElementWidth = JSONS.getInstance().step.getInt("intElementWidth");
-//			int intElementHeight = JSONS.getInstance().step.getInt("intElementHeight");
-//			objActions.moveByOffset(-((intElementWidth / 2) + 1), -((intElementHeight / 2) + 1)).build().perform();
-//			JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
-//			objJavascriptExecutor.executeScript("arguments[0].onmouseout();", Element.getInstance().element);
-//		}
-//	}
-
-//	private class ElementOnMouseOutSync {
-//		private ElementOnMouseOutSync() {
-//			Logger.getInstance().add("  ==start==>ElementOnMouseOutSync " + Util.getDateTimestamp());
-//			Long lngTimeStart = System.currentTimeMillis();
-//			Boolean blnEnabled = false;
-//			Boolean blnExit = false;
-//			Boolean blnFound = false;
-//			Boolean blnOnMouseOver = false;
-//			Boolean blnStatus = false;
-//			Boolean blnVisible = false;
-//			String strActualResult = "";
-//			while (true) {
-//				try {
-//					if (blnFound == false) {
-//						new ElementFind();
-//						blnFound = true;
-//					}
-//					if (blnVisible == false) {
-//						new ElementVisible();
-//						blnVisible = true;
-//					}
-//					if (blnEnabled == false) {
-//						new ElementEnabled();
-//						blnEnabled = true;
-//					}
-//					if (blnOnMouseOver == false) {
-//						new ElementOnMouseOut();
-//						blnOnMouseOver = true;
-//					}
-//					blnStatus = true;
-//					strActualResult = "mouse_out";
-//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
-//					blnFound = false;
-//					strActualResult = "not_found";
-//					Logger.getInstance().add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} catch (ExceptionElementNotVisible e) {
-//					blnVisible = false;
-//					strActualResult = "not_visible";
-//					Logger.getInstance().add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} catch (ExceptionElementNotEnabled e) {
-//					blnEnabled = false;
-//					strActualResult = "not_enabled";
-//					Logger.getInstance().add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} finally {
-//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
-//					if (Finally.sync(blnExit, blnStatus, blnFound, "ElementOnMouseOutSync", "mouse_out", lngTimeStart) == true) {
-//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-//						return;
-//					} else {
-//						blnOnMouseOver = false;
-//					}
-//				}
-//			}
-//		}
-//	}
-
-//	private class ElementOnMouseOver {
-//		private ElementOnMouseOver() {
-//			Logger.getInstance().add("  ==start==>ElementOnMouseOver " + Util.getDateTimestamp());
-//			Actions objActions = new Actions(BrowserDriver.getInstance().browserDriver);
-//			objActions.moveToElement(Element.getInstance().element).build().perform();
-//			JavascriptExecutor objJavascriptExecutor = null;
-//			objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
-//			objJavascriptExecutor.executeScript("arguments[0].onmouseover();", Element.getInstance().element);
-//		}
-//	}
-
-//	private class ElementOnMouseOverSync {
-//		private ElementOnMouseOverSync() {
-//			Logger.getInstance().add("  ==start==>ElementOnMouseOverSync " + Util.getDateTimestamp());
-//			Long lngTimeStart = System.currentTimeMillis();
-//			Boolean blnEnabled = false;
-//			Boolean blnExit = false;
-//			Boolean blnFound = false;
-//			Boolean blnOnMouseOver = false;
-//			Boolean blnStatus = false;
-//			Boolean blnVisible = false;
-//			String strActualResult = "";
-//			while (true) {
-//				try {
-//					if (blnFound == false) {
-//						new ElementFind();
-//						blnFound = true;
-//					}
-//					if (blnVisible == false) {
-//						new ElementVisible();
-//						blnVisible = true;
-//					}
-//					if (blnEnabled == false) {
-//						new ElementEnabled();
-//						blnEnabled = true;
-//					}
-//					if (blnOnMouseOver == false) {
-//						new ElementOnMouseOver();
-//						blnOnMouseOver = true;
-//					}
-//					strActualResult = "mouse_over";
-//					blnStatus = true;
-//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
-//					blnFound = false;
-//					strActualResult = "not_found";
-//					Logger.getInstance().add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} catch (ExceptionElementNotVisible e) {
-//					blnVisible = false;
-//					strActualResult = "not_visible";
-//					Logger.getInstance().add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} catch (ExceptionElementNotEnabled e) {
-//					blnEnabled = false;
-//					strActualResult = "not_enabled";
-//					Logger.getInstance().add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-//				} finally {
-//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
-//					if (Finally.sync(blnExit, blnStatus, blnFound, "elementOnMouseOverSync", "mouse_over", lngTimeStart) == true) {
-//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-//						return;
-//					} else {
-//						blnOnMouseOver = false;
-//					}
-//				}
-//			}
-//		}
-//	}
+	//	private class ElementHiddenSync {
+	//		private ElementHiddenSync() {
+	//			Logger.getInstance().add("  ==start==>ElementHiddenSync " + Util.getDateTimestamp());
+	//			Long lngTimeStart = System.currentTimeMillis();
+	//			Boolean blnExit = false;
+	//			Boolean blnFound = false;
+	//			Boolean blnHidden = false;
+	//			Boolean blnStatus = false;
+	//			String strActualResult = "";
+	//			while (true) {
+	//				try {
+	//					if (blnFound == false) {
+	//						new ElementFind();
+	//						blnFound = true;
+	//					}
+	//					if (blnHidden == false) {
+	//						new ElementHidden();
+	//						blnHidden = true;
+	//					}
+	//					blnStatus = true;
+	//					strActualResult = "sync_hidden";
+	//				} catch (NoSuchWindowException | StaleElementReferenceException | NullPointerException | NoSuchElementException | ExceptionElementNotFound e) {
+	//					blnFound = false;
+	//					blnHidden = true;
+	//					blnStatus = true;
+	//					strActualResult = "sync_hidden";
+	//					Logger.getInstance().add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionMultipleElementsFound e) {
+	//					blnFound = false;
+	//					blnHidden = false;
+	//					strActualResult = "not_found";
+	//					Logger.getInstance().add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotHidden e) {
+	//					blnHidden = false;
+	//					strActualResult = "not_hidden";
+	//					Logger.getInstance().add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (Exception e) {
+	//					blnFound = false;
+	//					blnHidden = false;
+	//					strActualResult = "exception";
+	//					;
+	//					Logger.getInstance().add("ElementHiddenSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} finally {
+	//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
+	//					if (Finally.sync(blnExit, blnStatus, blnFound, "ElementHiddenSync", "synchidden", lngTimeStart) == true) {
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						return;
+	//					} else {
+	//						blnHidden = false;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//	private class ElementJavascriptExecutorGetElementsByTagName {
+	//		private String run() {
+	//			return null;
+	//			//long lngStartTimegetElementsByTagName2 = System.currentTimeMillis();
+	//			//List<WebElement> objCollectionJS2 = (List<WebElement>) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return document.getElementsByTagName('" + strTagName + "');");
+	//			// Logger.getInstance().add("ElementJavascriptExecutorGetElementsByTagName objCollectionJS2 = " + objCollectionJS2.size() + " strTagName = " + strTagName + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTimegetElementsByTagName2));
+	//			//if (objCollectionJS2.size() > 0) {
+	//			//	long lngStartTimeByXpath = System.currentTimeMillis();
+	//			//}
+	//		}
+	//	}
+	//	private class ElementJavascriptExecutorXPath {
+	//		private String run() {
+	//			Logger.getInstance().add("  ==start==>ElementJavascriptExecutorXPath " + Util.getDateTimestamp());
+	//			return (String) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("gPt=function(c){if(c.id!==''){return'id(\"'+c.id+'\")'}if(c===document.body){return c.tagName}var a=0;var e=c.parentNode.childNodes;for(var b=0;b<e.length;b++){var d=e[b];if(d===c){return gPt(c.parentNode)+'/'+c.tagName+'['+(a+1)+']'}if(d.nodeType===1&&d.tagName===c.tagName){a++}}};return gPt(arguments[0]).toLowerCase();", Element.getInstance().element);
+	//		}
+	//	}
+	//	private class ElementOnMouseOut {
+	//		private ElementOnMouseOut() {
+	//			Logger.getInstance().add("  ==start==>ElementOnMouseOut " + Util.getDateTimestamp());
+	//			Actions objActions = new Actions(BrowserDriver.getInstance().browserDriver);
+	//			// Dimension objWebDriverDimension = Element.getInstance().element.getSize();
+	//			// int intElementWidth = objWebDriverDimension.width;
+	//			// int intElementHeight = objWebDriverDimension.height;
+	//			int intElementWidth = JSONS.getInstance().step.getInt("intElementWidth");
+	//			int intElementHeight = JSONS.getInstance().step.getInt("intElementHeight");
+	//			objActions.moveByOffset(-((intElementWidth / 2) + 1), -((intElementHeight / 2) + 1)).build().perform();
+	//			JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
+	//			objJavascriptExecutor.executeScript("arguments[0].onmouseout();", Element.getInstance().element);
+	//		}
+	//	}
+	//	private class ElementOnMouseOutSync {
+	//		private ElementOnMouseOutSync() {
+	//			Logger.getInstance().add("  ==start==>ElementOnMouseOutSync " + Util.getDateTimestamp());
+	//			Long lngTimeStart = System.currentTimeMillis();
+	//			Boolean blnEnabled = false;
+	//			Boolean blnExit = false;
+	//			Boolean blnFound = false;
+	//			Boolean blnOnMouseOver = false;
+	//			Boolean blnStatus = false;
+	//			Boolean blnVisible = false;
+	//			String strActualResult = "";
+	//			while (true) {
+	//				try {
+	//					if (blnFound == false) {
+	//						new ElementFind();
+	//						blnFound = true;
+	//					}
+	//					if (blnVisible == false) {
+	//						new ElementVisible();
+	//						blnVisible = true;
+	//					}
+	//					if (blnEnabled == false) {
+	//						new ElementEnabled();
+	//						blnEnabled = true;
+	//					}
+	//					if (blnOnMouseOver == false) {
+	//						new ElementOnMouseOut();
+	//						blnOnMouseOver = true;
+	//					}
+	//					blnStatus = true;
+	//					strActualResult = "mouse_out";
+	//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
+	//					blnFound = false;
+	//					strActualResult = "not_found";
+	//					Logger.getInstance().add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotVisible e) {
+	//					blnVisible = false;
+	//					strActualResult = "not_visible";
+	//					Logger.getInstance().add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotEnabled e) {
+	//					blnEnabled = false;
+	//					strActualResult = "not_enabled";
+	//					Logger.getInstance().add("ElementOnMouseOutSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} finally {
+	//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
+	//					if (Finally.sync(blnExit, blnStatus, blnFound, "ElementOnMouseOutSync", "mouse_out", lngTimeStart) == true) {
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						return;
+	//					} else {
+	//						blnOnMouseOver = false;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//	private class ElementOnMouseOver {
+	//		private ElementOnMouseOver() {
+	//			Logger.getInstance().add("  ==start==>ElementOnMouseOver " + Util.getDateTimestamp());
+	//			Actions objActions = new Actions(BrowserDriver.getInstance().browserDriver);
+	//			objActions.moveToElement(Element.getInstance().element).build().perform();
+	//			JavascriptExecutor objJavascriptExecutor = null;
+	//			objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
+	//			objJavascriptExecutor.executeScript("arguments[0].onmouseover();", Element.getInstance().element);
+	//		}
+	//	}
+	//	private class ElementOnMouseOverSync {
+	//		private ElementOnMouseOverSync() {
+	//			Logger.getInstance().add("  ==start==>ElementOnMouseOverSync " + Util.getDateTimestamp());
+	//			Long lngTimeStart = System.currentTimeMillis();
+	//			Boolean blnEnabled = false;
+	//			Boolean blnExit = false;
+	//			Boolean blnFound = false;
+	//			Boolean blnOnMouseOver = false;
+	//			Boolean blnStatus = false;
+	//			Boolean blnVisible = false;
+	//			String strActualResult = "";
+	//			while (true) {
+	//				try {
+	//					if (blnFound == false) {
+	//						new ElementFind();
+	//						blnFound = true;
+	//					}
+	//					if (blnVisible == false) {
+	//						new ElementVisible();
+	//						blnVisible = true;
+	//					}
+	//					if (blnEnabled == false) {
+	//						new ElementEnabled();
+	//						blnEnabled = true;
+	//					}
+	//					if (blnOnMouseOver == false) {
+	//						new ElementOnMouseOver();
+	//						blnOnMouseOver = true;
+	//					}
+	//					strActualResult = "mouse_over";
+	//					blnStatus = true;
+	//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
+	//					blnFound = false;
+	//					strActualResult = "not_found";
+	//					Logger.getInstance().add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotVisible e) {
+	//					blnVisible = false;
+	//					strActualResult = "not_visible";
+	//					Logger.getInstance().add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotEnabled e) {
+	//					blnEnabled = false;
+	//					strActualResult = "not_enabled";
+	//					Logger.getInstance().add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} finally {
+	//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
+	//					if (Finally.sync(blnExit, blnStatus, blnFound, "elementOnMouseOverSync", "mouse_over", lngTimeStart) == true) {
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						return;
+	//					} else {
+	//						blnOnMouseOver = false;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
 	//	private class ElementPleaseWaitSync {
 	//		private ElementPleaseWaitSync() throws ExceptionElementNotHidden {
 	//			Logger.getInstance().add("  ==start==>ElementPleaseWaitSync " + Util.getDateTimestamp());
@@ -1876,59 +1864,56 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-
-	//TODO start here alpabetically to check new step Actual
-	private class ElementScroll {
-		private ElementScroll() {
-			JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
-			objJavascriptExecutor.executeScript("arguments[0].scrollIntoView(false);", Element.getInstance().element);
-		}
-	}
-
-	private class ElementScrollSync {
-		private ElementScrollSync() {
-			Logger.getInstance().add("  ==start==>ElementScrollSync " + Util.getDateTimestamp());
-			Long lngTimeStart = System.currentTimeMillis();
-			Boolean blnExit = false;
-			Boolean blnFound = false;
-			Boolean blnStatus = false;
-			Boolean blnVisible = false;
-			String strActualResult = "";
-			while (true) {
-				try {
-					if (blnFound == false) {
-						new ElementFind();
-						blnFound = true;
-						Logger.getInstance().add("ElementScrollSync: blnFound = true");
-					}
-					if (blnVisible == false) {
-						new ElementVisible();
-						blnVisible = true;
-					}
-					new ElementScroll();
-					// 		JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
-					// 		objJavascriptExecutor.executeScript("arguments[0].scrollIntoView(false);", Element.getInstance().element);
-					blnStatus = true;
-					Logger.getInstance().add("ElementScrollSync: blnStatus = true");
-				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
-					blnFound = false;
-					strActualResult = "not_found";
-					Logger.getInstance().add("ElementScrollSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionElementNotVisible e) {
-					blnVisible = false;
-					strActualResult = "not_visible";
-					Logger.getInstance().add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} finally {
-					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
-					if (Finally.sync(blnExit, blnStatus, blnFound, "ElementScrollSync", "scroll", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-						return;
-					}
-				}
-			}
-		}
-	}
-
+	//	//TODO start here alpabetically to check new step Actual
+	//	private class ElementScroll {
+	//		private ElementScroll() {
+	//			JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
+	//			objJavascriptExecutor.executeScript("arguments[0].scrollIntoView(false);", Element.getInstance().element);
+	//		}
+	//	}
+	//	private class ElementScrollSync {
+	//		private ElementScrollSync() {
+	//			Logger.getInstance().add("  ==start==>ElementScrollSync " + Util.getDateTimestamp());
+	//			Long lngTimeStart = System.currentTimeMillis();
+	//			Boolean blnExit = false;
+	//			Boolean blnFound = false;
+	//			Boolean blnStatus = false;
+	//			Boolean blnVisible = false;
+	//			String strActualResult = "";
+	//			while (true) {
+	//				try {
+	//					if (blnFound == false) {
+	//						new ElementFind();
+	//						blnFound = true;
+	//						Logger.getInstance().add("ElementScrollSync: blnFound = true");
+	//					}
+	//					if (blnVisible == false) {
+	//						new ElementVisible();
+	//						blnVisible = true;
+	//					}
+	//					new ElementScroll();
+	//					// 		JavascriptExecutor objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
+	//					// 		objJavascriptExecutor.executeScript("arguments[0].scrollIntoView(false);", Element.getInstance().element);
+	//					blnStatus = true;
+	//					Logger.getInstance().add("ElementScrollSync: blnStatus = true");
+	//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
+	//					blnFound = false;
+	//					strActualResult = "not_found";
+	//					Logger.getInstance().add("ElementScrollSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotVisible e) {
+	//					blnVisible = false;
+	//					strActualResult = "not_visible";
+	//					Logger.getInstance().add("ElementOnMouseOverSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} finally {
+	//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
+	//					if (Finally.sync(blnExit, blnStatus, blnFound, "ElementScrollSync", "scroll", lngTimeStart) == true) {
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						return;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
 	//	class ElementSet {
 	//		ElementSet(String strOuterHTML) throws ExceptionElementTagNameNotSupported, ExceptionVisibleTextNotInSelectList, ExceptionKeywordNotValid {
 	//			Logger.getInstance().add("  ==start==>ElementSet " + Util.getDateTimestamp());
@@ -2440,280 +2425,278 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-
-	private class ElementSetSync {
-		private ElementSetSync(boolean blnJavascriptExecutor) {
-			Logger.getInstance().add("  ==start==>ElementSetSync " + Util.getDateTimestamp());
-			Long lngTimeStart = System.currentTimeMillis();
-			Boolean blnAssert = false;
-			Boolean blnEnabled = false;
-			Boolean blnExit = false;
-			Boolean blnFound = false;
-			Boolean blnSet = false;
-			Boolean blnSetSync = false;
-			Boolean blnStatus = false;
-			Boolean blnVisible = false;
-			String strOuterHTML = "";
-			String strActualResult = "";
-			while (true) {
-				try {
-					if (blnFound == false) {
-						new ElementFind();
-						if (Element.getInstance().element != null) {
-							strOuterHTML = Element.getInstance().element.getAttribute("outerHTML");
-							Logger.getInstance().add("ElementSetSync: " + strOuterHTML);
-							Logger.getInstance().add("ElementSetSync: outerHTML Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-						}
-						blnFound = true;
-					}
-					if (blnVisible == false) {
-						new ElementVisible();
-						blnVisible = true;
-					}
-					if (blnEnabled == false) {
-						new ElementEnabled();
-						blnEnabled = true;
-					}
-					switch (JSONS.getInstance().step.getLowerCase("strAssert")) {
-					case "off":
-						JSONS.getInstance().step.putValue("strStatus", "pass");
-						if (blnSet == false) {
-							new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-							if (blnJavascriptExecutor == true) {
-								new ElementSetJavascriptExecutor(strOuterHTML);
-							} else {
-								new ElementSet(strOuterHTML);
-							}
-							blnSet = true;
-							blnAssert = true;
-						}
-						if (blnSetSync == false) {
-							new ElementSetSyncComplete(strOuterHTML);
-							blnSetSync = true;
-						}
-						blnStatus = true;
-						break;
-					case "hidden":
-						if (blnSet == false) {
-							JSONS.getInstance().step.putValue("strStatus", "pass");
-							new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-							if (blnJavascriptExecutor == true) {
-								new ElementSetJavascriptExecutor(strOuterHTML);
-							} else {
-								new ElementSet(strOuterHTML);
-							}
-							blnSet = true;
-						}
-						if (blnSetSync == false) {
-							new ElementSetSyncComplete(strOuterHTML);
-							blnSetSync = true;
-						}
-						if (blnAssert == false) {
-							new ElementHidden();
-							blnAssert = true;
-						}
-						blnStatus = true;
-						break;
-					case "value":
-						if (blnSet == false) {
-							if (blnJavascriptExecutor == true) {
-								new ElementSetJavascriptExecutor(strOuterHTML);
-							} else {
-								new ElementSet(strOuterHTML);
-							}
-							blnSet = true;
-						}
-						if (blnSetSync == false) {
-							new ElementSetSyncComplete(strOuterHTML);
-							blnSetSync = true;
-						}
-						if (blnAssert == false) {
-							new ElementVerifyValue().run();
-							blnAssert = true;
-						}
-						JSONS.getInstance().step.putValue("strStatus", "pass");
-						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-						blnStatus = true;
-						break;
-					case "visible":
-						if (blnSet == false) {
-							if (blnJavascriptExecutor == true) {
-								new ElementSetJavascriptExecutor(strOuterHTML);
-							} else {
-								new ElementSet(strOuterHTML);
-							}
-							blnSet = true;
-						}
-						if (blnSetSync == false) {
-							new ElementSetSyncComplete(strOuterHTML);
-							blnSetSync = true;
-						}
-						if (blnAssert == false) {
-							new ElementVisible();
-							blnAssert = true;
-						}
-						JSONS.getInstance().step.putValue("strStatus", "pass");
-						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-						blnStatus = true;
-						break;
-					case "enabled":
-						if (blnSet == false) {
-							if (blnJavascriptExecutor == true) {
-								new ElementSetJavascriptExecutor(strOuterHTML);
-							} else {
-								new ElementSet(strOuterHTML);
-							}
-							blnSet = true;
-						}
-						if (blnSetSync == false) {
-							new ElementSetSyncComplete(strOuterHTML);
-							blnSetSync = true;
-						}
-						if (blnAssert == false) {
-							new ElementVisible();
-							new ElementEnabled();
-							blnAssert = true;
-						}
-						JSONS.getInstance().step.putValue("strStatus", "pass");
-						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-						blnStatus = true;
-						break;
-					case "disabled":
-						if (blnSet == false) {
-							if (blnJavascriptExecutor == true) {
-								new ElementSetJavascriptExecutor(strOuterHTML);
-							} else {
-								new ElementSet(strOuterHTML);
-							}
-							blnSet = true;
-						}
-						if (blnSetSync == false) {
-							new ElementSetSyncComplete(strOuterHTML);
-							blnSetSync = true;
-						}
-						if (blnAssert == false) {
-							new ElementVisible();
-							new ElementDisabled();
-							blnAssert = true;
-						}
-						JSONS.getInstance().step.putValue("strStatus", "pass");
-						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-						blnStatus = true;
-						break;
-					}
-					strActualResult = "set";
-					blnStatus = true;
-				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
-					blnFound = false;
-					strActualResult = "not_found";
-					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionElementNotVisible e) {
-					blnVisible = false;
-					strActualResult = "not_visible";
-					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionElementNotEnabled e) {
-					blnEnabled = false;
-					strActualResult = "not_enabled";
-					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionElementTagNameNotSupported e) {
-					blnExit = true;
-					strActualResult = "tag_not_supported";
-					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionKeywordNotValid e) {
-					blnExit = true;
-					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionVisibleTextNotInSelectList e) {
-					blnSet = false;
-					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionElementNotHidden e) {
-					blnAssert = false;
-					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionValueNotMatched e) {
-					blnSet = false;
-					blnSetSync = false;
-					blnAssert = false;
-					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionElementNotSet e) {
-					blnSet = false;
-					blnAssert = false;
-				} catch (ExceptionElementNotDisabled e) {
-					blnAssert = false;
-					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionAlertNotComplete | ExceptionDoPostBackNotComplete | ExceptionJQueryAjaxNotComplete | ExceptionJQueryAnimationNotComplete | ExceptionAngularJsNotComplete | ExceptionPleaseWaitNotComplete e) {
-					blnSetSync = false;
-					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (Exception e) {
-					blnAssert = false;
-					blnEnabled = false;
-					blnFound = false;
-					blnSet = false;
-					blnSetSync = false;
-					blnVisible = false;
-					strActualResult = "exception";
-					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} finally {
-					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
-					if (Finally.sync(blnExit, blnStatus, blnFound, "elementSetSync", "set", lngTimeStart) == true) {
-						if (blnStatus == false) {
-							new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-						}
-						Logger.getInstance().add("elementSetSync: strOutputValue = " + JSONS.getInstance().step.getString("strOutputValue"));
-						if (JSONS.getInstance().step.verifyEquals("strOutputValue", "")) {
-							JSONS.getInstance().step.putValue("strOutputValue", JSONS.getInstance().step.getString("strInputValue"));
-						}
-						Logger.getInstance().add("elementSetSync: strOutputValue after = " + JSONS.getInstance().step.getString("strOutputValue"));
-						return;
-					}
-				}
-			}
-		}
-	}
-
-	private class ElementSetSyncComplete {
-		private ElementSetSyncComplete(String strOuterHTML) throws ExceptionAlertNotComplete, ExceptionDoPostBackNotComplete, ExceptionJQueryAjaxNotComplete, ExceptionJQueryAnimationNotComplete, ExceptionAngularJsNotComplete, ExceptionPleaseWaitNotComplete {
-			Logger.getInstance().add("  ==start==>ElementSetSyncComplete " + Util.getDateTimestamp());
-			long lngTimeStart = System.currentTimeMillis();
-			try {
-				if (Config.getInstance().syncPleaseWait == false) {
-					///SyncPleaseWait
-					new SyncPleaseWait();
-					Config.getInstance().syncPleaseWait = true;
-				}
-				// 	if (Config.getInstance().syncAlert == false) {
-				// 		///SyncAlert
-				// 		new SyncAlert();
-				// 		Config.getInstance().syncAlert = true;
-				// 	}
-				if (Config.getInstance().syncWaitForReadyState == false) {
-					///SyncWaitForReadyState
-					new SyncWaitForReadyState();
-					Config.getInstance().syncWaitForReadyState = true;
-				}
-				if (Config.getInstance().syncDoPostBack == false) {
-					///SyncDoPostBack
-					new SyncDoPostBack(strOuterHTML);
-					Config.getInstance().syncDoPostBack = true;
-				}
-				if (Config.getInstance().syncJQueryAjax == false) {
-					///SyncJQueryAjax
-					new SyncJQueryAjax();
-					Config.getInstance().syncJQueryAjax = true;
-				}
-				if (Config.getInstance().syncJQueryAnimation == false) {
-					///SyncJQueryAnimation
-					new SyncJQueryAnimation();
-					Config.getInstance().syncJQueryAnimation = true;
-				}
-				if (Config.getInstance().syncAngularJs == false) {
-					///SyncAngularJs
-					new SyncAngularJs();
-					Config.getInstance().syncAngularJs = true;
-				}
-			} finally {
-				Logger.getInstance().add("ElementSetSyncComplete: finally Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngTimeStart));
-			}
-		}
-	}
+	//	private class ElementSetSync {
+	//		private ElementSetSync(boolean blnJavascriptExecutor) {
+	//			Logger.getInstance().add("  ==start==>ElementSetSync " + Util.getDateTimestamp());
+	//			Long lngTimeStart = System.currentTimeMillis();
+	//			Boolean blnAssert = false;
+	//			Boolean blnEnabled = false;
+	//			Boolean blnExit = false;
+	//			Boolean blnFound = false;
+	//			Boolean blnSet = false;
+	//			Boolean blnSetSync = false;
+	//			Boolean blnStatus = false;
+	//			Boolean blnVisible = false;
+	//			String strOuterHTML = "";
+	//			String strActualResult = "";
+	//			while (true) {
+	//				try {
+	//					if (blnFound == false) {
+	//						new ElementFind();
+	//						if (Element.getInstance().element != null) {
+	//							strOuterHTML = Element.getInstance().element.getAttribute("outerHTML");
+	//							Logger.getInstance().add("ElementSetSync: " + strOuterHTML);
+	//							Logger.getInstance().add("ElementSetSync: outerHTML Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//						}
+	//						blnFound = true;
+	//					}
+	//					if (blnVisible == false) {
+	//						new ElementVisible();
+	//						blnVisible = true;
+	//					}
+	//					if (blnEnabled == false) {
+	//						new ElementEnabled();
+	//						blnEnabled = true;
+	//					}
+	//					switch (JSONS.getInstance().step.getLowerCase("strAssert")) {
+	//					case "off":
+	//						JSONS.getInstance().step.putValue("strStatus", "pass");
+	//						if (blnSet == false) {
+	//							new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//							if (blnJavascriptExecutor == true) {
+	//								new ElementSetJavascriptExecutor(strOuterHTML);
+	//							} else {
+	//								new ElementSet(strOuterHTML);
+	//							}
+	//							blnSet = true;
+	//							blnAssert = true;
+	//						}
+	//						if (blnSetSync == false) {
+	//							new ElementSetSyncComplete(strOuterHTML);
+	//							blnSetSync = true;
+	//						}
+	//						blnStatus = true;
+	//						break;
+	//					case "hidden":
+	//						if (blnSet == false) {
+	//							JSONS.getInstance().step.putValue("strStatus", "pass");
+	//							new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//							if (blnJavascriptExecutor == true) {
+	//								new ElementSetJavascriptExecutor(strOuterHTML);
+	//							} else {
+	//								new ElementSet(strOuterHTML);
+	//							}
+	//							blnSet = true;
+	//						}
+	//						if (blnSetSync == false) {
+	//							new ElementSetSyncComplete(strOuterHTML);
+	//							blnSetSync = true;
+	//						}
+	//						if (blnAssert == false) {
+	//							new ElementHidden();
+	//							blnAssert = true;
+	//						}
+	//						blnStatus = true;
+	//						break;
+	//					case "value":
+	//						if (blnSet == false) {
+	//							if (blnJavascriptExecutor == true) {
+	//								new ElementSetJavascriptExecutor(strOuterHTML);
+	//							} else {
+	//								new ElementSet(strOuterHTML);
+	//							}
+	//							blnSet = true;
+	//						}
+	//						if (blnSetSync == false) {
+	//							new ElementSetSyncComplete(strOuterHTML);
+	//							blnSetSync = true;
+	//						}
+	//						if (blnAssert == false) {
+	//							new ElementVerifyValue().run();
+	//							blnAssert = true;
+	//						}
+	//						JSONS.getInstance().step.putValue("strStatus", "pass");
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						blnStatus = true;
+	//						break;
+	//					case "visible":
+	//						if (blnSet == false) {
+	//							if (blnJavascriptExecutor == true) {
+	//								new ElementSetJavascriptExecutor(strOuterHTML);
+	//							} else {
+	//								new ElementSet(strOuterHTML);
+	//							}
+	//							blnSet = true;
+	//						}
+	//						if (blnSetSync == false) {
+	//							new ElementSetSyncComplete(strOuterHTML);
+	//							blnSetSync = true;
+	//						}
+	//						if (blnAssert == false) {
+	//							new ElementVisible();
+	//							blnAssert = true;
+	//						}
+	//						JSONS.getInstance().step.putValue("strStatus", "pass");
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						blnStatus = true;
+	//						break;
+	//					case "enabled":
+	//						if (blnSet == false) {
+	//							if (blnJavascriptExecutor == true) {
+	//								new ElementSetJavascriptExecutor(strOuterHTML);
+	//							} else {
+	//								new ElementSet(strOuterHTML);
+	//							}
+	//							blnSet = true;
+	//						}
+	//						if (blnSetSync == false) {
+	//							new ElementSetSyncComplete(strOuterHTML);
+	//							blnSetSync = true;
+	//						}
+	//						if (blnAssert == false) {
+	//							new ElementVisible();
+	//							new ElementEnabled();
+	//							blnAssert = true;
+	//						}
+	//						JSONS.getInstance().step.putValue("strStatus", "pass");
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						blnStatus = true;
+	//						break;
+	//					case "disabled":
+	//						if (blnSet == false) {
+	//							if (blnJavascriptExecutor == true) {
+	//								new ElementSetJavascriptExecutor(strOuterHTML);
+	//							} else {
+	//								new ElementSet(strOuterHTML);
+	//							}
+	//							blnSet = true;
+	//						}
+	//						if (blnSetSync == false) {
+	//							new ElementSetSyncComplete(strOuterHTML);
+	//							blnSetSync = true;
+	//						}
+	//						if (blnAssert == false) {
+	//							new ElementVisible();
+	//							new ElementDisabled();
+	//							blnAssert = true;
+	//						}
+	//						JSONS.getInstance().step.putValue("strStatus", "pass");
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						blnStatus = true;
+	//						break;
+	//					}
+	//					strActualResult = "set";
+	//					blnStatus = true;
+	//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
+	//					blnFound = false;
+	//					strActualResult = "not_found";
+	//					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotVisible e) {
+	//					blnVisible = false;
+	//					strActualResult = "not_visible";
+	//					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotEnabled e) {
+	//					blnEnabled = false;
+	//					strActualResult = "not_enabled";
+	//					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementTagNameNotSupported e) {
+	//					blnExit = true;
+	//					strActualResult = "tag_not_supported";
+	//					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionKeywordNotValid e) {
+	//					blnExit = true;
+	//					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionVisibleTextNotInSelectList e) {
+	//					blnSet = false;
+	//					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotHidden e) {
+	//					blnAssert = false;
+	//					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionValueNotMatched e) {
+	//					blnSet = false;
+	//					blnSetSync = false;
+	//					blnAssert = false;
+	//					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotSet e) {
+	//					blnSet = false;
+	//					blnAssert = false;
+	//				} catch (ExceptionElementNotDisabled e) {
+	//					blnAssert = false;
+	//					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionAlertNotComplete | ExceptionDoPostBackNotComplete | ExceptionJQueryAjaxNotComplete | ExceptionJQueryAnimationNotComplete | ExceptionAngularJsNotComplete | ExceptionPleaseWaitNotComplete e) {
+	//					blnSetSync = false;
+	//					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (Exception e) {
+	//					blnAssert = false;
+	//					blnEnabled = false;
+	//					blnFound = false;
+	//					blnSet = false;
+	//					blnSetSync = false;
+	//					blnVisible = false;
+	//					strActualResult = "exception";
+	//					Logger.getInstance().add("elementSetSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} finally {
+	//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
+	//					if (Finally.sync(blnExit, blnStatus, blnFound, "elementSetSync", "set", lngTimeStart) == true) {
+	//						if (blnStatus == false) {
+	//							new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						}
+	//						Logger.getInstance().add("elementSetSync: strOutputValue = " + JSONS.getInstance().step.getString("strOutputValue"));
+	//						if (JSONS.getInstance().step.verifyEquals("strOutputValue", "")) {
+	//							JSONS.getInstance().step.putValue("strOutputValue", JSONS.getInstance().step.getString("strInputValue"));
+	//						}
+	//						Logger.getInstance().add("elementSetSync: strOutputValue after = " + JSONS.getInstance().step.getString("strOutputValue"));
+	//						return;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//	private class ElementSetSyncComplete {
+	//		private ElementSetSyncComplete(String strOuterHTML) throws ExceptionAlertNotComplete, ExceptionDoPostBackNotComplete, ExceptionJQueryAjaxNotComplete, ExceptionJQueryAnimationNotComplete, ExceptionAngularJsNotComplete, ExceptionPleaseWaitNotComplete {
+	//			Logger.getInstance().add("  ==start==>ElementSetSyncComplete " + Util.getDateTimestamp());
+	//			long lngTimeStart = System.currentTimeMillis();
+	//			try {
+	//				if (Config.getInstance().syncPleaseWait == false) {
+	//					///SyncPleaseWait
+	//					new SyncPleaseWait();
+	//					Config.getInstance().syncPleaseWait = true;
+	//				}
+	//				// 	if (Config.getInstance().syncAlert == false) {
+	//				// 		///SyncAlert
+	//				// 		new SyncAlert();
+	//				// 		Config.getInstance().syncAlert = true;
+	//				// 	}
+	//				if (Config.getInstance().syncWaitForReadyState == false) {
+	//					///SyncWaitForReadyState
+	//					new SyncWaitForReadyState();
+	//					Config.getInstance().syncWaitForReadyState = true;
+	//				}
+	//				if (Config.getInstance().syncDoPostBack == false) {
+	//					///SyncDoPostBack
+	//					new SyncDoPostBack(strOuterHTML);
+	//					Config.getInstance().syncDoPostBack = true;
+	//				}
+	//				if (Config.getInstance().syncJQueryAjax == false) {
+	//					///SyncJQueryAjax
+	//					new SyncJQueryAjax();
+	//					Config.getInstance().syncJQueryAjax = true;
+	//				}
+	//				if (Config.getInstance().syncJQueryAnimation == false) {
+	//					///SyncJQueryAnimation
+	//					new SyncJQueryAnimation();
+	//					Config.getInstance().syncJQueryAnimation = true;
+	//				}
+	//				if (Config.getInstance().syncAngularJs == false) {
+	//					///SyncAngularJs
+	//					new SyncAngularJs();
+	//					Config.getInstance().syncAngularJs = true;
+	//				}
+	//			} finally {
+	//				Logger.getInstance().add("ElementSetSyncComplete: finally Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngTimeStart));
+	//			}
+	//		}
+	//	}
 	//	private class ElementTooltipGet {
 	//		private String run() {
 	//			String strHandle = "";
@@ -2883,7 +2866,6 @@ public class Dragonfly {
 	//			return strToolTipAutoItText;
 	//		}
 	//	}
-
 	//	 class ElementTooltipGetSync {
 	//		 ElementTooltipGetSync() {
 	//			Logger.getInstance().add("  ==start==>ElementGetSync " + Util.getDateTimestamp());
@@ -2931,85 +2913,84 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-	private class ElementVerifyNotValue {
-		private String run() throws ExceptionValueMatched, ExceptionElementTagNameNotSupported {
-			Logger.getInstance().add("  ==start==>ElementVerifyNotValue " + Util.getDateTimestamp());
-			long lngStartTime = System.currentTimeMillis();
-			String strActualValue = "";
-			String strGetValue = "";
-			String strValueExpected = JSONS.getInstance().step.getString("strInputValue");
-			try {
-				strGetValue = new ElementGet().run();
-				strActualValue = Compare.verifyNotMatch(strGetValue, strValueExpected);
-				Logger.getInstance().add("ElementVerifyNotValue: after VerifyNotMatch");
-			} catch (ExceptionValueMatched e) {
-				Logger.getInstance().add("ElementVerifyNotValue: " + e.toString());
-				throw new ExceptionValueMatched("ElementVerifyNotValue: Exception strActualValue = {" + strActualValue + "}");
-			} finally {
-				Logger.getInstance().add("ElementVerifyNotValue: finally strGetValue = {" + strGetValue + "} strValueExpected = {" + strValueExpected + "} strActualValue = {" + strActualValue + "} Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngStartTime));
-			}
-			return strActualValue;
-		}
-	}
-
-	private class ElementVerifyNotValueSync {
-		private ElementVerifyNotValueSync() {
-			Logger.getInstance().add("  ==start==>ElementVerifyNotValueSync " + Util.getDateTimestamp());
-			Long lngTimeStart = System.currentTimeMillis();
-			Boolean blnExit = false;
-			Boolean blnFound = false;
-			Boolean blnStatus = false;
-			Boolean blnVerifiedNot = false;
-			Boolean blnVisible = false;
-			String strActualValue = "";
-			String strActualResult = "";
-			while (true) {
-				try {
-					if (blnFound == false) {
-						new ElementFind();
-						blnFound = true;
-					}
-					if (blnVisible == false) {
-						new ElementVisible();
-						blnVisible = true;
-					}
-					if (blnVerifiedNot == false) {
-						strActualValue = new ElementVerifyNotValue().run();
-						blnVerifiedNot = true;
-					}
-					strActualResult = "verify_not";
-					blnStatus = true;
-				} catch (ExceptionElementTagNameNotSupported e) {
-					blnExit = true;
-					strActualResult = "tag_not_supported";
-					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
-					blnFound = false;
-					blnVisible = false;
-					strActualResult = "not_found";
-					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionElementNotVisible e) {
-					strActualResult = "not_visible";
-					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionValueMatched e) {
-					strActualResult = "not_verify_not";
-					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (Exception e) {
-					strActualResult = "exception";
-					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
-				} finally {
-					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
-					if (Finally.sync(blnExit, blnStatus, blnFound, "ElementVerifyNotValueSync", "verify_not", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-						return;
-					} else {
-						blnVisible = false;
-						blnVerifiedNot = false;
-					}
-				}
-			}
-		}
-	}
+	//	private class ElementVerifyNotValue {
+	//		private String run() throws ExceptionValueMatched, ExceptionElementTagNameNotSupported {
+	//			Logger.getInstance().add("  ==start==>ElementVerifyNotValue " + Util.getDateTimestamp());
+	//			long lngStartTime = System.currentTimeMillis();
+	//			String strActualValue = "";
+	//			String strGetValue = "";
+	//			String strValueExpected = JSONS.getInstance().step.getString("strInputValue");
+	//			try {
+	//				strGetValue = new ElementGet().run();
+	//				strActualValue = Compare.verifyNotMatch(strGetValue, strValueExpected);
+	//				Logger.getInstance().add("ElementVerifyNotValue: after VerifyNotMatch");
+	//			} catch (ExceptionValueMatched e) {
+	//				Logger.getInstance().add("ElementVerifyNotValue: " + e.toString());
+	//				throw new ExceptionValueMatched("ElementVerifyNotValue: Exception strActualValue = {" + strActualValue + "}");
+	//			} finally {
+	//				Logger.getInstance().add("ElementVerifyNotValue: finally strGetValue = {" + strGetValue + "} strValueExpected = {" + strValueExpected + "} strActualValue = {" + strActualValue + "} Milliseconds Waited = " + (int) (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//			return strActualValue;
+	//		}
+	//	}
+	//	private class ElementVerifyNotValueSync {
+	//		private ElementVerifyNotValueSync() {
+	//			Logger.getInstance().add("  ==start==>ElementVerifyNotValueSync " + Util.getDateTimestamp());
+	//			Long lngTimeStart = System.currentTimeMillis();
+	//			Boolean blnExit = false;
+	//			Boolean blnFound = false;
+	//			Boolean blnStatus = false;
+	//			Boolean blnVerifiedNot = false;
+	//			Boolean blnVisible = false;
+	//			String strActualValue = "";
+	//			String strActualResult = "";
+	//			while (true) {
+	//				try {
+	//					if (blnFound == false) {
+	//						new ElementFind();
+	//						blnFound = true;
+	//					}
+	//					if (blnVisible == false) {
+	//						new ElementVisible();
+	//						blnVisible = true;
+	//					}
+	//					if (blnVerifiedNot == false) {
+	//						strActualValue = new ElementVerifyNotValue().run();
+	//						blnVerifiedNot = true;
+	//					}
+	//					strActualResult = "verify_not";
+	//					blnStatus = true;
+	//				} catch (ExceptionElementTagNameNotSupported e) {
+	//					blnExit = true;
+	//					strActualResult = "tag_not_supported";
+	//					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
+	//					blnFound = false;
+	//					blnVisible = false;
+	//					strActualResult = "not_found";
+	//					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotVisible e) {
+	//					strActualResult = "not_visible";
+	//					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionValueMatched e) {
+	//					strActualResult = "not_verify_not";
+	//					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (Exception e) {
+	//					strActualResult = "exception";
+	//					Logger.getInstance().add("ElementVerifyNotValueSync: " + e.toString() + "  MillisecondsWaited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} finally {
+	//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
+	//					if (Finally.sync(blnExit, blnStatus, blnFound, "ElementVerifyNotValueSync", "verify_not", lngTimeStart) == true) {
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						return;
+	//					} else {
+	//						blnVisible = false;
+	//						blnVerifiedNot = false;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
 	//	private class ElementVerifyValue {
 	//		 String run() throws ExceptionValueNotMatched, ExceptionElementTagNameNotSupported {
 	//			Logger.getInstance().add("  ==start==>ElementVerifyValue " + Util.getDateTimestamp());
@@ -3088,7 +3069,6 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-
 	//	 class ElementVisible {
 	//		 ElementVisible() throws ExceptionElementNotVisible {
 	//			// TODO elementVisible add check for class and css, commented code needs to be tested
@@ -3136,48 +3116,48 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-	private class ElementVisibleSync {
-		private ElementVisibleSync() {
-			Logger.getInstance().add("  ==start==>ElementVisibleSync " + Util.getDateTimestamp());
-			Long lngTimeStart = System.currentTimeMillis();
-			Boolean blnExit = false;
-			Boolean blnFound = false;
-			Boolean blnStatus = false;
-			Boolean blnVisible = false;
-			String strActualResult = "";
-			while (true) {
-				try {
-					if (blnFound == false) {
-						new ElementFind();
-						blnFound = true;
-					}
-					if (blnVisible == false) {
-						new ElementVisible();
-						blnVisible = true;
-					}
-					blnStatus = true;
-					strActualResult = "sync_visible";
-				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
-					blnFound = false;
-					blnVisible = false;
-					strActualResult = "not_found";
-					Logger.getInstance().add("ElementVisibleSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} catch (ExceptionElementNotVisible e) {
-					blnVisible = false;
-					strActualResult = "not_visible";
-					Logger.getInstance().add("ElementVisibleSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
-				} finally {
-					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
-					if (Finally.sync(blnExit, blnStatus, blnFound, "ElementVisibleSync", "syncvisible", lngTimeStart) == true) {
-						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
-						return;
-					} else {
-						blnVisible = false;
-					}
-				}
-			}
-		}
-	}
+	//	private class ElementVisibleSync {
+	//		private ElementVisibleSync() {
+	//			Logger.getInstance().add("  ==start==>ElementVisibleSync " + Util.getDateTimestamp());
+	//			Long lngTimeStart = System.currentTimeMillis();
+	//			Boolean blnExit = false;
+	//			Boolean blnFound = false;
+	//			Boolean blnStatus = false;
+	//			Boolean blnVisible = false;
+	//			String strActualResult = "";
+	//			while (true) {
+	//				try {
+	//					if (blnFound == false) {
+	//						new ElementFind();
+	//						blnFound = true;
+	//					}
+	//					if (blnVisible == false) {
+	//						new ElementVisible();
+	//						blnVisible = true;
+	//					}
+	//					blnStatus = true;
+	//					strActualResult = "sync_visible";
+	//				} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
+	//					blnFound = false;
+	//					blnVisible = false;
+	//					strActualResult = "not_found";
+	//					Logger.getInstance().add("ElementVisibleSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} catch (ExceptionElementNotVisible e) {
+	//					blnVisible = false;
+	//					strActualResult = "not_visible";
+	//					Logger.getInstance().add("ElementVisibleSync: " + e.toString() + "  Milliseconds Waited = " + (System.currentTimeMillis() - lngTimeStart));
+	//				} finally {
+	//					JSONS.getInstance().step.putValue("strStepActual", strActualResult);
+	//					if (Finally.sync(blnExit, blnStatus, blnFound, "ElementVisibleSync", "syncvisible", lngTimeStart) == true) {
+	//						new CoordinateHighlightScreenshot(JSONS.getInstance().step);
+	//						return;
+	//					} else {
+	//						blnVisible = false;
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
 	//https://howtodoinjava.com/java/exception-handling/best-practices-for-for-exception-handling/
 	//	class ExceptionAlertNotComplete extends Exception {
 	//		static final long serialVersionUID = 1L;
@@ -3359,83 +3339,82 @@ public class Dragonfly {
 	//			return strImageString.toString();
 	//		}
 	//	}
-	private class InternetExplorerProcessKill {
-		private InternetExplorerProcessKill() {
-			Logger.getInstance().add("  ==start==>InternetExplorerProcessKill " + Util.getDateTimestamp());
-			DesiredCapabilities desiredCapabilities = null;
-			new WindowsProcessKill("taskkill /F /IM iexplore.exe");
-			new SleepMilliseconds(1000);
-			desiredCapabilities = DesiredCapabilities.internetExplorer();
-			desiredCapabilities.setJavascriptEnabled(true);
-			System.setProperty("webdriver.ie.driver", Path.getInstance().systemUserDir + "\\Drivers\\IEDriverServer_32.exe");
-			BrowserDriver.getInstance().browserDriver = new InternetExplorerDriver(desiredCapabilities);
-			BrowserDriver.getInstance().browserDriver.get("about:blank");
-			BrowserDriver.getInstance().browserDriver.manage().deleteCookieNamed("JSESSIONID");
-			// BrowserDriver.getInstance().browserDriver.navigate().to(JSONS.getInstance().step.get("strInputValue").toString());
-			// BrowserDriver.getInstance().browserDriver.manage().window().maximize();
-			// BrowserDriver.getInstance().browserDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-			// // BrowserDriver.getInstance().browserDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
-			BrowserDriver.getInstance().browserDriver.close();
-			BrowserDriver.getInstance().browserDriver.quit();
-			new WindowsProcessKill("taskkill /F /IM iexplore.exe");
-			new SleepMilliseconds(1000);
-			new WindowsProcessKill("taskkill /F /IM IEDriverServer_32.exe");
-			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
-			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 2
-			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 1
-			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 16
-			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 32
-			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 255
-			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 4351
-		}
-	}
-
-	private class InternetExplorerVersion {
-		private String strKeyName = "";
-		private Process objProcess;
-		private String strSvcUpdateVersion = "11.0.27";
-		private String strSvcvcVersion = "11.0.9600.18163";
-		private String strSvcvcKBNumber = "KB3124275";
-		private String strExpectedKeyValue = "";
-		private String strActualKeyValue = "";
-
-		private void verify() throws IOException {
-			Logger.getInstance().add("  ==start==>InternetExplorerVersion " + Util.getDateTimestamp());
-			for (int intKeysEach = 0; intKeysEach < 3; intKeysEach++) {
-				switch (intKeysEach) {
-				case 0:
-					strKeyName = "svcUpdateVersion";
-					strExpectedKeyValue = strSvcUpdateVersion;
-					break;
-				case 1:
-					strKeyName = "svcVersion";
-					strExpectedKeyValue = strSvcvcVersion;
-					break;
-				case 2:
-					strKeyName = "svcKBNumber";
-					strExpectedKeyValue = strSvcvcKBNumber;
-					break;
-				}
-				objProcess = Runtime.getRuntime().exec("REG QUERY \"HKLM\\SOFTWARE\\Microsoft\\Internet Explorer\" /v " + strKeyName);
-				StringWriter objStringWriter = new StringWriter();
-				try {
-					int intCount;
-					while ((intCount = objProcess.getInputStream().read()) != -1)
-						objStringWriter.write(intCount);
-				} catch (IOException e) {
-				}
-				String strOutput = objStringWriter.toString();
-				String[] arrParsed = strOutput.split("\t");
-				String strFullRegistryKey = arrParsed[arrParsed.length - 1];
-				String[] arrActualKeyValue = strFullRegistryKey.replaceAll("\\s+", " ").trim().split(" ");
-				strActualKeyValue = arrActualKeyValue[arrActualKeyValue.length - 1];
-				if (strActualKeyValue.equals(strExpectedKeyValue)) {
-					Logger.getInstance().add(strFullRegistryKey.replaceAll("\\s+", " ").trim());
-					Logger.getInstance().add(strActualKeyValue);
-				}
-			}
-		}
-	}
+	//	private class InternetExplorerProcessKill {
+	//		private InternetExplorerProcessKill() {
+	//			Logger.getInstance().add("  ==start==>InternetExplorerProcessKill " + Util.getDateTimestamp());
+	//			DesiredCapabilities desiredCapabilities = null;
+	//			new WindowsProcessKill("taskkill /F /IM iexplore.exe");
+	//			new SleepMilliseconds(1000);
+	//			desiredCapabilities = DesiredCapabilities.internetExplorer();
+	//			desiredCapabilities.setJavascriptEnabled(true);
+	//			System.setProperty("webdriver.ie.driver", Path.getInstance().systemUserDir + "\\Drivers\\IEDriverServer_32.exe");
+	//			BrowserDriver.getInstance().browserDriver = new InternetExplorerDriver(desiredCapabilities);
+	//			BrowserDriver.getInstance().browserDriver.get("about:blank");
+	//			BrowserDriver.getInstance().browserDriver.manage().deleteCookieNamed("JSESSIONID");
+	//			// BrowserDriver.getInstance().browserDriver.navigate().to(JSONS.getInstance().step.get("strInputValue").toString());
+	//			// BrowserDriver.getInstance().browserDriver.manage().window().maximize();
+	//			// BrowserDriver.getInstance().browserDriver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+	//			// // BrowserDriver.getInstance().browserDriver.manage().timeouts().pageLoadTimeout(0, TimeUnit.SECONDS);
+	//			BrowserDriver.getInstance().browserDriver.close();
+	//			BrowserDriver.getInstance().browserDriver.quit();
+	//			new WindowsProcessKill("taskkill /F /IM iexplore.exe");
+	//			new SleepMilliseconds(1000);
+	//			new WindowsProcessKill("taskkill /F /IM IEDriverServer_32.exe");
+	//			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
+	//			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 2
+	//			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 1
+	//			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 16
+	//			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 32
+	//			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 255
+	//			// RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 4351
+	//		}
+	//	}
+	//	private class InternetExplorerVersion {
+	//		private String strKeyName = "";
+	//		private Process objProcess;
+	//		private String strSvcUpdateVersion = "11.0.27";
+	//		private String strSvcvcVersion = "11.0.9600.18163";
+	//		private String strSvcvcKBNumber = "KB3124275";
+	//		private String strExpectedKeyValue = "";
+	//		private String strActualKeyValue = "";
+	//
+	//		private void verify() throws IOException {
+	//			Logger.getInstance().add("  ==start==>InternetExplorerVersion " + Util.getDateTimestamp());
+	//			for (int intKeysEach = 0; intKeysEach < 3; intKeysEach++) {
+	//				switch (intKeysEach) {
+	//				case 0:
+	//					strKeyName = "svcUpdateVersion";
+	//					strExpectedKeyValue = strSvcUpdateVersion;
+	//					break;
+	//				case 1:
+	//					strKeyName = "svcVersion";
+	//					strExpectedKeyValue = strSvcvcVersion;
+	//					break;
+	//				case 2:
+	//					strKeyName = "svcKBNumber";
+	//					strExpectedKeyValue = strSvcvcKBNumber;
+	//					break;
+	//				}
+	//				objProcess = Runtime.getRuntime().exec("REG QUERY \"HKLM\\SOFTWARE\\Microsoft\\Internet Explorer\" /v " + strKeyName);
+	//				StringWriter objStringWriter = new StringWriter();
+	//				try {
+	//					int intCount;
+	//					while ((intCount = objProcess.getInputStream().read()) != -1)
+	//						objStringWriter.write(intCount);
+	//				} catch (IOException e) {
+	//				}
+	//				String strOutput = objStringWriter.toString();
+	//				String[] arrParsed = strOutput.split("\t");
+	//				String strFullRegistryKey = arrParsed[arrParsed.length - 1];
+	//				String[] arrActualKeyValue = strFullRegistryKey.replaceAll("\\s+", " ").trim().split(" ");
+	//				strActualKeyValue = arrActualKeyValue[arrActualKeyValue.length - 1];
+	//				if (strActualKeyValue.equals(strExpectedKeyValue)) {
+	//					Logger.getInstance().add(strFullRegistryKey.replaceAll("\\s+", " ").trim());
+	//					Logger.getInstance().add(strActualKeyValue);
+	//				}
+	//			}
+	//		}
+	//	}
 	//	private class JvmBitVersion {
 	//		private String get() {
 	//			String strJvmBitVersion = System.getProperty("sun.arch.data.model");
@@ -3616,7 +3595,6 @@ public class Dragonfly {
 	//			return new DateFormatSymbols().getMonths()[month];
 	//		}
 	//	}
-
 	//	private class OperatingSystem {
 	//		private String strOS = "";
 	//
@@ -3636,15 +3614,14 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-	class ProcessKillInternetExplorer {
-		void run() {
-			Logger.getInstance().add("  ==start==>ProcessKillInternetExplorer " + Util.getDateTimestamp());
-			new WindowsProcessKill("taskkill /F /IM iexplore.exe");
-			new SleepMilliseconds(1000);
-			new WindowsProcessKill("taskkill /F /IM IEDriverServer_32.exe");
-		}
-	}
-
+	//	class ProcessKillInternetExplorer {
+	//		void run() {
+	//			Logger.getInstance().add("  ==start==>ProcessKillInternetExplorer " + Util.getDateTimestamp());
+	//			new WindowsProcessKill("taskkill /F /IM iexplore.exe");
+	//			new SleepMilliseconds(1000);
+	//			new WindowsProcessKill("taskkill /F /IM IEDriverServer_32.exe");
+	//		}
+	//	}
 	//	private class RectangleAreaByName {
 	//		private RectangleAreaByName(Integer intThickness, String strAreaObjectName, Rectangle objRectangleArea) {
 	//			Logger.getInstance().add("  ==start==>RectangleAreaByName " + Util.getDateTimestamp());
@@ -3739,21 +3716,19 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-	private class ScrollToBottom {
-		private ScrollToBottom() {
-			Logger.getInstance().add("  ==start==>ScrollToBottom " + Util.getDateTimestamp());
-			// TODO debug all browser types, should use instanceof from windowFocus???? should combine into 1 line?
-			JavascriptExecutor executor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
-			executor.executeScript("window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
-		}
-	}
-
-	private class Sleep {
-		private Sleep() {
-			new SleepMilliseconds(JSONS.getInstance().step.getInt("strInputValue"));
-		}
-	}
-
+	//	private class ScrollToBottom {
+	//		private ScrollToBottom() {
+	//			Logger.getInstance().add("  ==start==>ScrollToBottom " + Util.getDateTimestamp());
+	//			// TODO debug all browser types, should use instanceof from windowFocus???? should combine into 1 line?
+	//			JavascriptExecutor executor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
+	//			executor.executeScript("window.scrollTo(0,Math.max(document.documentElement.scrollHeight,document.body.scrollHeight,document.documentElement.clientHeight));");
+	//		}
+	//	}
+	//	private class Sleep {
+	//		private Sleep() {
+	//			new SleepMilliseconds(JSONS.getInstance().step.getInt("strInputValue"));
+	//		}
+	//	}
 	//	class SleepMilliseconds {
 	//		SleepMilliseconds(int intMillisecondsToWait) {
 	//			// Logger.getInstance().add("  ==start==>SleepMilliseconds " + Util.getDateTimestamp());
@@ -3766,15 +3741,14 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-	private class SleepSync {
-		private SleepSync() {
-			Long lngTimeStart = System.currentTimeMillis();
-			new Sleep();
-			JSONS.getInstance().step.putValue("strStepActual", "sleep");
-			new StepDuration("SleepSync", lngTimeStart, "sleep");
-		}
-	}
-
+	//	private class SleepSync {
+	//		private SleepSync() {
+	//			Long lngTimeStart = System.currentTimeMillis();
+	//			new Sleep();
+	//			JSONS.getInstance().step.putValue("strStepActual", "sleep");
+	//			new StepDuration("SleepSync", lngTimeStart, "sleep");
+	//		}
+	//	}
 	//	public class StepNames {
 	//		private String strKeys1 = "strAction|strLogicalName|strTagName|strAttributeNames|strAttributeValues|strInputValue|strAssert|blnOptional|blnExitOnFail";
 	//		private String strKeys2 = "|intMillisecondsToWait|strFunction|strOutputLinkName|strLoopOrIf|blnPleaseWait|blnHighlight|blnScreenshot|strAssistiveProperties|strOutputValue";
@@ -3864,150 +3838,142 @@ public class Dragonfly {
 			JSONS.getInstance().step.putValue("strCurrentWindowHandle", strCurrentWindowHandle);
 		}
 	}
-
-	private class SyncAlert {
-		private SyncAlert() throws ExceptionAlertNotComplete {
-			Logger.getInstance().add("  ==start==>SyncAlert " + Util.getDateTimestamp());
-			if (new AlertFind().run() == true) {
-				throw new ExceptionAlertNotComplete("");
-			}
-		}
-	}
-
-	private class SyncAngularJs {
-		private SyncAngularJs() throws ExceptionAngularJsNotComplete {
-			Logger.getInstance().add("  ==start==>SyncAngularJs " + Util.getDateTimestamp());
-			long lngStartTime = System.currentTimeMillis();
-			boolean blnAngularJs = false;
-			long lngAngularJsInjectorActive = 0;
-			try {
-				blnAngularJs = (boolean) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return (window.angular != null);");
-				Logger.getInstance().add("SyncAngularJs: = " + blnAngularJs);
-				lngAngularJsInjectorActive = (long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return (angular.element(document).injector().get(‘$http’).pendingRequests.length);");
-				if (lngAngularJsInjectorActive > 0) {
-					throw new ExceptionAngularJsNotComplete("");
-				}
-			} catch (Exception e) {
-				Logger.getInstance().add("SyncAngularJs: AngularJS Exception = " + e.toString());
-			} finally {
-				Logger.getInstance().add("SyncAngularJs: lngAngularJsInjectorActive = " + lngAngularJsInjectorActive + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-			}
-		}
-	}
-
-	private class SyncDoPostBack {
-		private SyncDoPostBack(String strOuterHTML) throws ExceptionDoPostBackNotComplete {
-			Logger.getInstance().add("  ==start==>SyncDoPostBack " + Util.getDateTimestamp());
-			long lngStartTime = System.currentTimeMillis();
-			boolean blnEventTarget = false;
-			if (strOuterHTML.contains("__doPostBack")) {
-				try {
-					Logger.getInstance().add("SyncDoPostBack: __EVENTTARGET value = " + BrowserDriver.getInstance().browserDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
-					blnEventTarget = !BrowserDriver.getInstance().browserDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value").equals("");
-					if (blnEventTarget == true) {
-						throw new ExceptionDoPostBackNotComplete("");
-					}
-				} catch (Exception e) {
-					Logger.getInstance().add("SyncDoPostBack: Exception = " + e.toString());
-				} finally {
-					Logger.getInstance().add("SyncDoPostBack: blnEventTarget = " + blnEventTarget + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-				}
-			}
-		}
-	}
-
-	private class SyncJQueryAjax {
-		private SyncJQueryAjax() throws ExceptionJQueryAjaxNotComplete {
-			Logger.getInstance().add("  ==start==>SyncJQueryAjax " + Util.getDateTimestamp());
-			long lngStartTime = System.currentTimeMillis();
-			boolean blnJquery = false;
-			long lngJqueryActive = 0;
-			try {
-				blnJquery = (boolean) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return (window.jQuery != null);");
-				if (blnJquery == true) {
-					lngJqueryActive = (long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return (jQuery.active);");
-					Logger.getInstance().add("SyncJQueryAjax: lngJqueryActive = " + lngJqueryActive);
-					if (lngJqueryActive > 0) {
-						throw new ExceptionJQueryAjaxNotComplete("");
-					}
-				}
-			} catch (Exception e) {
-				Logger.getInstance().add("SyncJQueryAjax: JqueryActive Exception = " + e.toString());
-			} finally {
-				Logger.getInstance().add("SyncJQueryAjax: lngJqueryActive = " + lngJqueryActive + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-			}
-		}
-	}
-
-	private class SyncJQueryAnimation {
-		private SyncJQueryAnimation() throws ExceptionJQueryAnimationNotComplete {
-			Logger.getInstance().add("  ==start==>SyncJQueryAnimation " + Util.getDateTimestamp());
-			long lngStartTime = System.currentTimeMillis();
-			long lngElementsAnimated = 0;
-			boolean blnJqueryExist = false;
-			try {
-				blnJqueryExist = (boolean) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return (window.jQuery != null);");
-				if (blnJqueryExist == true) {
-					lngElementsAnimated = (long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return $(\":animated\").length");
-				}
-				if (lngElementsAnimated > 0) {
-					throw new ExceptionJQueryAnimationNotComplete("");
-				}
-			} catch (Exception e) {
-				Logger.getInstance().add("SyncJQueryAnimation: Exception = " + e.toString());
-			} finally {
-				Logger.getInstance().add("SyncJQueryAnimation: lngElementsAnimated = " + lngElementsAnimated + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-			}
-		}
-	}
-
-	private class SyncPleaseWait {
-		private SyncPleaseWait() throws ExceptionDoPostBackNotComplete {
-			long lngStartTime = System.currentTimeMillis();
-			Logger.getInstance().add("  ==start==>SyncPleaseWait " + Util.getDateTimestamp());
-			try {
-				new ElementPleaseWaitSync();
-			} catch (ExceptionElementNotHidden e1) {
-				Logger.getInstance().add("SyncPleaseWait: ExceptionElementNotHidden = " + e1.toString());
-				throw new ExceptionDoPostBackNotComplete("");
-			} catch (Exception e) {
-				Logger.getInstance().add("SyncPleaseWait: Exception = " + e.toString());
-			} finally {
-				Logger.getInstance().add("SyncPleaseWait: Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-			}
-		}
-	}
-
-	private class SyncTime {
-		private long startTime;
-		private long endTime;
-
-		private long getDuration() {
-			return endTime - startTime;
-		}
-
-		private void start() {
-			startTime = System.currentTimeMillis();
-		}
-
-		private void stop() {
-			endTime = System.currentTimeMillis();
-		}
-	}
-
-	private class SyncWaitForReadyState {
-		private SyncWaitForReadyState() {
-			long lngStartTime = System.currentTimeMillis();
-			Logger.getInstance().add("  ==start==>SyncWaitForReadyState " + Util.getDateTimestamp());
-			try {
-				new WaitForReadyState().run();
-			} catch (Exception e) {
-				Logger.getInstance().add("SyncWaitForReadyState: Exception = " + e.toString());
-			} finally {
-				Logger.getInstance().add("SyncWaitForReadyState: Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
-			}
-		}
-	}
+	//	private class SyncAlert {
+	//		private SyncAlert() throws ExceptionAlertNotComplete {
+	//			Logger.getInstance().add("  ==start==>SyncAlert " + Util.getDateTimestamp());
+	//			if (new AlertFind().run() == true) {
+	//				throw new ExceptionAlertNotComplete("");
+	//			}
+	//		}
+	//	}
+	//	private class SyncAngularJs {
+	//		private SyncAngularJs() throws ExceptionAngularJsNotComplete {
+	//			Logger.getInstance().add("  ==start==>SyncAngularJs " + Util.getDateTimestamp());
+	//			long lngStartTime = System.currentTimeMillis();
+	//			boolean blnAngularJs = false;
+	//			long lngAngularJsInjectorActive = 0;
+	//			try {
+	//				blnAngularJs = (boolean) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return (window.angular != null);");
+	//				Logger.getInstance().add("SyncAngularJs: = " + blnAngularJs);
+	//				lngAngularJsInjectorActive = (long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return (angular.element(document).injector().get(‘$http’).pendingRequests.length);");
+	//				if (lngAngularJsInjectorActive > 0) {
+	//					throw new ExceptionAngularJsNotComplete("");
+	//				}
+	//			} catch (Exception e) {
+	//				Logger.getInstance().add("SyncAngularJs: AngularJS Exception = " + e.toString());
+	//			} finally {
+	//				Logger.getInstance().add("SyncAngularJs: lngAngularJsInjectorActive = " + lngAngularJsInjectorActive + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//		}
+	//	}
+	//	private class SyncDoPostBack {
+	//		private SyncDoPostBack(String strOuterHTML) throws ExceptionDoPostBackNotComplete {
+	//			Logger.getInstance().add("  ==start==>SyncDoPostBack " + Util.getDateTimestamp());
+	//			long lngStartTime = System.currentTimeMillis();
+	//			boolean blnEventTarget = false;
+	//			if (strOuterHTML.contains("__doPostBack")) {
+	//				try {
+	//					Logger.getInstance().add("SyncDoPostBack: __EVENTTARGET value = " + BrowserDriver.getInstance().browserDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value"));
+	//					blnEventTarget = !BrowserDriver.getInstance().browserDriver.findElement(By.id("__EVENTTARGET")).getAttribute("value").equals("");
+	//					if (blnEventTarget == true) {
+	//						throw new ExceptionDoPostBackNotComplete("");
+	//					}
+	//				} catch (Exception e) {
+	//					Logger.getInstance().add("SyncDoPostBack: Exception = " + e.toString());
+	//				} finally {
+	//					Logger.getInstance().add("SyncDoPostBack: blnEventTarget = " + blnEventTarget + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//				}
+	//			}
+	//		}
+	//	}
+	//	private class SyncJQueryAjax {
+	//		private SyncJQueryAjax() throws ExceptionJQueryAjaxNotComplete {
+	//			Logger.getInstance().add("  ==start==>SyncJQueryAjax " + Util.getDateTimestamp());
+	//			long lngStartTime = System.currentTimeMillis();
+	//			boolean blnJquery = false;
+	//			long lngJqueryActive = 0;
+	//			try {
+	//				blnJquery = (boolean) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return (window.jQuery != null);");
+	//				if (blnJquery == true) {
+	//					lngJqueryActive = (long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return (jQuery.active);");
+	//					Logger.getInstance().add("SyncJQueryAjax: lngJqueryActive = " + lngJqueryActive);
+	//					if (lngJqueryActive > 0) {
+	//						throw new ExceptionJQueryAjaxNotComplete("");
+	//					}
+	//				}
+	//			} catch (Exception e) {
+	//				Logger.getInstance().add("SyncJQueryAjax: JqueryActive Exception = " + e.toString());
+	//			} finally {
+	//				Logger.getInstance().add("SyncJQueryAjax: lngJqueryActive = " + lngJqueryActive + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//		}
+	//	}
+	//	private class SyncJQueryAnimation {
+	//		private SyncJQueryAnimation() throws ExceptionJQueryAnimationNotComplete {
+	//			Logger.getInstance().add("  ==start==>SyncJQueryAnimation " + Util.getDateTimestamp());
+	//			long lngStartTime = System.currentTimeMillis();
+	//			long lngElementsAnimated = 0;
+	//			boolean blnJqueryExist = false;
+	//			try {
+	//				blnJqueryExist = (boolean) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return (window.jQuery != null);");
+	//				if (blnJqueryExist == true) {
+	//					lngElementsAnimated = (long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return $(\":animated\").length");
+	//				}
+	//				if (lngElementsAnimated > 0) {
+	//					throw new ExceptionJQueryAnimationNotComplete("");
+	//				}
+	//			} catch (Exception e) {
+	//				Logger.getInstance().add("SyncJQueryAnimation: Exception = " + e.toString());
+	//			} finally {
+	//				Logger.getInstance().add("SyncJQueryAnimation: lngElementsAnimated = " + lngElementsAnimated + " Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//		}
+	//	}
+	//	private class SyncPleaseWait {
+	//		private SyncPleaseWait() throws ExceptionDoPostBackNotComplete {
+	//			long lngStartTime = System.currentTimeMillis();
+	//			Logger.getInstance().add("  ==start==>SyncPleaseWait " + Util.getDateTimestamp());
+	//			try {
+	//				new ElementPleaseWaitSync();
+	//			} catch (ExceptionElementNotHidden e1) {
+	//				Logger.getInstance().add("SyncPleaseWait: ExceptionElementNotHidden = " + e1.toString());
+	//				throw new ExceptionDoPostBackNotComplete("");
+	//			} catch (Exception e) {
+	//				Logger.getInstance().add("SyncPleaseWait: Exception = " + e.toString());
+	//			} finally {
+	//				Logger.getInstance().add("SyncPleaseWait: Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//		}
+	//	}
+	//	private class SyncTime {
+	//		private long startTime;
+	//		private long endTime;
+	//
+	//		private long getDuration() {
+	//			return endTime - startTime;
+	//		}
+	//
+	//		private void start() {
+	//			startTime = System.currentTimeMillis();
+	//		}
+	//
+	//		private void stop() {
+	//			endTime = System.currentTimeMillis();
+	//		}
+	//	}
+	//	private class SyncWaitForReadyState {
+	//		private SyncWaitForReadyState() {
+	//			long lngStartTime = System.currentTimeMillis();
+	//			Logger.getInstance().add("  ==start==>SyncWaitForReadyState " + Util.getDateTimestamp());
+	//			try {
+	//				new WaitForReadyState().run();
+	//			} catch (Exception e) {
+	//				Logger.getInstance().add("SyncWaitForReadyState: Exception = " + e.toString());
+	//			} finally {
+	//				Logger.getInstance().add("SyncWaitForReadyState: Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
+	//			}
+	//		}
+	//	}
 	//	private class TestConfigurationSetup {
 	//		private int intTestInstanceSize;
 	//		private JSON objJsonObjectTestConfigurationFile = new JSON();
@@ -4164,7 +4130,6 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-
 	//	private class VerifyNotMatch {
 	//		private String run(String strActual, String strExpected) throws ExceptionValueMatched {
 	//			Logger.getInstance().add("  ==start==>VerifyNotMatch " + Util.getDateTimestamp());
@@ -4197,51 +4162,48 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-	private class WaitForAngularRequestsToFinish {
-		private WaitForAngularRequestsToFinish(JavascriptExecutor objDriver) {
-			Logger.getInstance().add("  ==start==>WaitForAngularRequestsToFinish " + Util.getDateTimestamp());
-			objDriver.executeAsyncScript("var callback = arguments[arguments.length - 1];" + "angular.element(document.body).injector().get('$browser').notifyWhenNoOutstandingRequests(callback);");
-		}
-	}
-
-	private class WaitForReadyState {
-		private boolean run() {
-			Logger.getInstance().add("  ==start==>WaitForReadyState " + Util.getDateTimestamp());
-			Logger.getInstance().add("waitForReadyState: document.readyState Milliseconds Waited = " + ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return document.readyState"));
-			return false;
-		}
-	}
-
-//	private class WebElementAttributes {
-//		private WebElementAttributes() {
-//			Logger.getInstance().add("  ==start==>WebElementAttributes " + Util.getDateTimestamp());
-//			Logger.getInstance().add("text:=  " + Element.getInstance().element.getTagName());
-//			Logger.getInstance().add("tag_type:=  " + Element.getInstance().element.getTagName() + "_" + Element.getInstance().element.getAttribute("type"));
-//			Logger.getInstance().add("TagName:=  " + Element.getInstance().element.getAttribute("TagName"));
-//			Logger.getInstance().add("type:=  " + Element.getInstance().element.getAttribute("type"));
-//			Logger.getInstance().add("id:=  " + Element.getInstance().element.getAttribute("id"));
-//			Logger.getInstance().add("name:=  " + Element.getInstance().element.getAttribute("name"));
-//			Logger.getInstance().add("text:=  " + Element.getInstance().element.getAttribute("text"));
-//			Logger.getInstance().add("innerText:=  " + Element.getInstance().element.getAttribute("innerText"));
-//			Logger.getInstance().add("outerText:=  " + Element.getInstance().element.getAttribute("outerText"));
-//			Logger.getInstance().add("innerHTML:=  " + Element.getInstance().element.getAttribute("innerHTML"));
-//			Logger.getInstance().add("outerHTML:=  " + Element.getInstance().element.getAttribute("outerHTML"));
-//			Logger.getInstance().add("uniqueID:=  " + Element.getInstance().element.getAttribute("uniqueID"));
-//			Logger.getInstance().add("class:=  " + Element.getInstance().element.getAttribute("class"));
-//			Logger.getInstance().add("type:=  " + Element.getInstance().element.getAttribute("type"));
-//			Logger.getInstance().add("TYPE:=  " + Element.getInstance().element.getAttribute("TYPE"));
-//			Logger.getInstance().add("href:=  " + Element.getInstance().element.getAttribute("href"));
-//			Logger.getInstance().add("NameProp:=  " + Element.getInstance().element.getAttribute("NameProp"));
-//			Logger.getInstance().add("isDisplayed:=  " + Element.getInstance().element.isDisplayed());
-//			Logger.getInstance().add("name:=  " + Element.getInstance().element.isEnabled());
-//			Logger.getInstance().add("getLocation().x:=  " + Element.getInstance().element.getLocation().x);
-//			Logger.getInstance().add("getLocation().y:=  " + Element.getInstance().element.getLocation().y);
-//			Logger.getInstance().add("getSize().height:=  " + Element.getInstance().element.getSize().height);
-//			Logger.getInstance().add("getLocation().y:=  " + Element.getInstance().element.getSize().width);
-//			Logger.getInstance().add("src:=  " + Element.getInstance().element.getAttribute("src"));
-//		}
-//	}
-
+	//	private class WaitForAngularRequestsToFinish {
+	//		private WaitForAngularRequestsToFinish(JavascriptExecutor objDriver) {
+	//			Logger.getInstance().add("  ==start==>WaitForAngularRequestsToFinish " + Util.getDateTimestamp());
+	//			objDriver.executeAsyncScript("var callback = arguments[arguments.length - 1];" + "angular.element(document.body).injector().get('$browser').notifyWhenNoOutstandingRequests(callback);");
+	//		}
+	//	}
+	//	private class WaitForReadyState {
+	//		private boolean run() {
+	//			Logger.getInstance().add("  ==start==>WaitForReadyState " + Util.getDateTimestamp());
+	//			Logger.getInstance().add("waitForReadyState: document.readyState Milliseconds Waited = " + ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return document.readyState"));
+	//			return false;
+	//		}
+	//	}
+	//	private class WebElementAttributes {
+	//		private WebElementAttributes() {
+	//			Logger.getInstance().add("  ==start==>WebElementAttributes " + Util.getDateTimestamp());
+	//			Logger.getInstance().add("text:=  " + Element.getInstance().element.getTagName());
+	//			Logger.getInstance().add("tag_type:=  " + Element.getInstance().element.getTagName() + "_" + Element.getInstance().element.getAttribute("type"));
+	//			Logger.getInstance().add("TagName:=  " + Element.getInstance().element.getAttribute("TagName"));
+	//			Logger.getInstance().add("type:=  " + Element.getInstance().element.getAttribute("type"));
+	//			Logger.getInstance().add("id:=  " + Element.getInstance().element.getAttribute("id"));
+	//			Logger.getInstance().add("name:=  " + Element.getInstance().element.getAttribute("name"));
+	//			Logger.getInstance().add("text:=  " + Element.getInstance().element.getAttribute("text"));
+	//			Logger.getInstance().add("innerText:=  " + Element.getInstance().element.getAttribute("innerText"));
+	//			Logger.getInstance().add("outerText:=  " + Element.getInstance().element.getAttribute("outerText"));
+	//			Logger.getInstance().add("innerHTML:=  " + Element.getInstance().element.getAttribute("innerHTML"));
+	//			Logger.getInstance().add("outerHTML:=  " + Element.getInstance().element.getAttribute("outerHTML"));
+	//			Logger.getInstance().add("uniqueID:=  " + Element.getInstance().element.getAttribute("uniqueID"));
+	//			Logger.getInstance().add("class:=  " + Element.getInstance().element.getAttribute("class"));
+	//			Logger.getInstance().add("type:=  " + Element.getInstance().element.getAttribute("type"));
+	//			Logger.getInstance().add("TYPE:=  " + Element.getInstance().element.getAttribute("TYPE"));
+	//			Logger.getInstance().add("href:=  " + Element.getInstance().element.getAttribute("href"));
+	//			Logger.getInstance().add("NameProp:=  " + Element.getInstance().element.getAttribute("NameProp"));
+	//			Logger.getInstance().add("isDisplayed:=  " + Element.getInstance().element.isDisplayed());
+	//			Logger.getInstance().add("name:=  " + Element.getInstance().element.isEnabled());
+	//			Logger.getInstance().add("getLocation().x:=  " + Element.getInstance().element.getLocation().x);
+	//			Logger.getInstance().add("getLocation().y:=  " + Element.getInstance().element.getLocation().y);
+	//			Logger.getInstance().add("getSize().height:=  " + Element.getInstance().element.getSize().height);
+	//			Logger.getInstance().add("getLocation().y:=  " + Element.getInstance().element.getSize().width);
+	//			Logger.getInstance().add("src:=  " + Element.getInstance().element.getAttribute("src"));
+	//		}
+	//	}
 	//	private class WebElementCollectionAttributes {
 	//		private WebElementCollectionAttributes(String strTagName) {
 	//			Logger.getInstance().add("  ==start==>WebElementCollectionAttributes " + Util.getDateTimestamp());
@@ -4282,7 +4244,6 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-
 	//	private class WebElementCollectionTable {
 	//		private WebElementCollectionTable(String strTagName) {
 	//			boolean blnSkip = false;
@@ -4385,28 +4346,26 @@ public class Dragonfly {
 	//			}
 	//		}
 	//	}
-
-	private class WindowFocus {
-		private WindowFocus() {
-			Logger.getInstance().add("  ==start==>WindowFocus " + Util.getDateTimestamp());
-			// TODO debug BrowserDriver.getInstance().browserDriver instanceof JavascriptExecutor, what does it do and is it needed and debug all browser types
-			if (BrowserDriver.getInstance().browserDriver instanceof JavascriptExecutor) {
-				((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("window.focus();");
-			}
-		}
-	}
-
-	private class WindowsProcessKill {
-		private WindowsProcessKill(String strProcessToKill) {
-			Logger.getInstance().add("  ==start==>WindowsProcessKill " + Util.getDateTimestamp());
-			try {
-				Runtime.getRuntime().exec(strProcessToKill);
-				Logger.getInstance().add("WindowsProcessKill: process killed = " + strProcessToKill);
-			} catch (Exception e) {
-				Logger.getInstance().add("WindowsProcessKill: Exception = " + e.toString());
-			}
-		}
-	}
+	//	private class WindowFocus {
+	//		private WindowFocus() {
+	//			Logger.getInstance().add("  ==start==>WindowFocus " + Util.getDateTimestamp());
+	//			// TODO debug BrowserDriver.getInstance().browserDriver instanceof JavascriptExecutor, what does it do and is it needed and debug all browser types
+	//			if (BrowserDriver.getInstance().browserDriver instanceof JavascriptExecutor) {
+	//				((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("window.focus();");
+	//			}
+	//		}
+	//	}
+	//	private class WindowsProcessKill {
+	//		private WindowsProcessKill(String strProcessToKill) {
+	//			Logger.getInstance().add("  ==start==>WindowsProcessKill " + Util.getDateTimestamp());
+	//			try {
+	//				Runtime.getRuntime().exec(strProcessToKill);
+	//				Logger.getInstance().add("WindowsProcessKill: process killed = " + strProcessToKill);
+	//			} catch (Exception e) {
+	//				Logger.getInstance().add("WindowsProcessKill: Exception = " + e.toString());
+	//			}
+	//		}
+	//	}
 
 	//	public static boolean isNum(String strNum) {
 	//		boolean ret = true;
@@ -4696,7 +4655,7 @@ public class Dragonfly {
 								break;
 							case "kill_ie":
 								long lngStartTime = System.currentTimeMillis();
-								new ProcessKillInternetExplorer().run();
+								UtilProcess.killInternetExplorer();
 								JSONS.getInstance().step.putValue("strStepActual", "kill_ie");
 								new StepDuration("kill_ie", lngStartTime, "kill_ie");
 								break;
