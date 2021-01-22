@@ -37,7 +37,7 @@ class Util {
 		}
 	}
 
-	static String getClipboardGet() {
+	static String getClipboard() {
 		String clipboardData = "";
 		try {
 			clipboardData = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
@@ -50,6 +50,12 @@ class Util {
 
 	static String getDateTimestamp() {
 		return new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(new Date());
+	}
+
+	static String getJvmBitVersion() {
+		String strJvmBitVersion = System.getProperty("sun.arch.data.model");
+		Logger.getInstance().add("JvmBitVersion: System.getProperty(sun.arch.data.model) = " + strJvmBitVersion + " " + Util.getDateTimestamp());
+		return strJvmBitVersion;
 	}
 
 	static String getMonth(int month) {

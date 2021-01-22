@@ -14,10 +14,10 @@ class ObjectName {
 			attributeValue = arrayAttributeValues[intEach].toString();
 			if (intEach == 0) {
 				objectsAttributes = objectName + "=" + attributeValue;
-				Logger.getInstance().add("createObjectName objectAttribute =" + objectsAttributes);
+				Logger.getInstance().add("ObjectName.create objectAttribute =" + objectsAttributes);
 			} else {
 				objectsAttributes = objectsAttributes + "|" + objectName + "=" + attributeValue;
-				Logger.getInstance().add("createObjectName objectAttribute =" + objectsAttributes);
+				Logger.getInstance().add("ObjectName.create objectAttribute =" + objectsAttributes);
 			}
 		}
 		return objectsAttributes;

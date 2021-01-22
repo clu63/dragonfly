@@ -7,6 +7,27 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+//Options for ClearMyTracksByProcessCookies
+//1 = Browsing History
+//2 = Cookies
+//4 = Temporary Internet Files
+//8 = Offline favorites and download history
+//16 = Form Data
+//32 = Passwords
+//64 = Phishing Filter Data
+//128 = Web page Recovery Data
+//256 = Do not Show GUI when running the cache clear
+//512 = Do not use Multi-threading for deletion
+//1024 = Valid only when browser is in private browsing mode
+//2048 = Tracking Data
+//4096 = Data stored by add-ons
+//8192 = Preserves Cached data for Favorite websites
+//Delete only download history
+//RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 16384
+//Add values together to get aggregate functionality. For example '4' is
+//deleting all temporary internet files and '260' is doing the same without
+//the dialog being displayed while it purges.
+//RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 260
 class UtilProcess {
 	static void clearMyTracksCache() throws Exception {
 		Logger.getInstance().add("  ==start==>ClearMyTracksByProcessCache " + Util.getDateTimestamp());
