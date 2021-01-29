@@ -489,13 +489,13 @@ public class Dragonfly {
 			} catch (Exception e) {
 				Logger.getInstance().add("mainDragonfly: Exception " + e.toString());
 			} finally {
-				FileUtil.write(Path.getInstance().results + "StepsAfterRun.json", objJsonArrayTestStepsRun.toString());
-				FileUtil.write(Path.getInstance().results + "StepsWithDefaults.json", JSONS.getInstance().testSteps.toString());
+				UtilFile.write(Path.getInstance().results + "StepsAfterRun.json", objJsonArrayTestStepsRun.toString());
+				UtilFile.write(Path.getInstance().results + "StepsWithDefaults.json", JSONS.getInstance().testSteps.toString());
 				new WriteJsonStepsToHtml(Path.getInstance().results, "original", objJsonArrayTestStepsRun, "StepsWithDefaults.html");
 				new WriteJsonStepsToHtml(Path.getInstance().results, "complete", objJsonArrayTestStepsRun, "StepsAfterRun.html");
 				new WriteReportToHtml(Path.getInstance().results + "Report.html", objJsonArrayTestStepsRun, strFileTestSteps, strNameTestConfiguration.replace(".json", ""));
-				FileUtil.write(Path.getInstance().results + "Dragonfly.log", Logger.getInstance().getLog());
-				FileUtil.write(Path.getInstance().results + "StepsManual.txt", StepsManual.getInstance().get());
+				UtilFile.write(Path.getInstance().results + "Dragonfly.log", Logger.getInstance().getLog());
+				UtilFile.write(Path.getInstance().results + "StepsManual.txt", StepsManual.getInstance().get());
 				Path.getInstance().changeDirectoryNameStatus(strTestStatus);
 				if (BrowserDriver.getInstance().browserDriver.toString().contains("InternetExplorerDriver")) {
 					//	new WindowsProcessKill("taskkill /F /IM IEDriverServer_32.exe");

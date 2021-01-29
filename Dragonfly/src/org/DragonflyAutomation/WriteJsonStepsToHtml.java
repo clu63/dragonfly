@@ -53,7 +53,7 @@ class WriteJsonStepsToHtml {
 			objStringBuilder.append("</h1></body>");
 			objStringBuilder.append("</html>");
 			String html = objStringBuilder.toString();
-			FileUtil.write(strPath + strFileName, html);
+			UtilFile.write(strPath + strFileName, html);
 		} catch (Exception e) {
 			Logger.getInstance().add("WriteJsonStepsToHtml: Exception = " + e.toString());
 			Logger.getInstance().add("WriteJsonStepsToHtml: objStringBuilder.toString() = " + objStringBuilder.toString());

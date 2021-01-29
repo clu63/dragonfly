@@ -128,8 +128,8 @@ class WriteReportToHtml {
 			objStringBuilder.append("</body>");
 			objStringBuilder.append("</html>");
 			String strHTML = objStringBuilder.toString().replace("varImageCount = -1", "varImageCount = " + (intTestStepRow - 1));
-			FileUtil.write(strFile, strHTML);
-			FileUtil.write(strTestStepsFile, strHTML);
+			UtilFile.write(strFile, strHTML);
+			UtilFile.write(strTestStepsFile, strHTML);
 			Logger.getInstance().add("WriteReportToHtml: finally Milliseconds Waited = " + (System.currentTimeMillis() - lngStartTime));
 		}
 	}
