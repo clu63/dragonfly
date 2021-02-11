@@ -1,35 +1,39 @@
 package org.DragonflyAutomation;
 
 class TimeLogger {
+	private long endTime;
 	private long startTime;
 
 	TimeLogger() {
+		start();
+	}
+
+	TimeLogger(String classMethodName) {
 		startTime = System.currentTimeMillis();
-		Logger.getInstance().add("  ==start==> " + Util.formatDateTime(startTime));
+		Logger.getInstance().add("  ==start==>" + classMethodName + " " + Util.formatDateTime(startTime));
 	}
 
-	TimeLogger(String textToDisplay) {
+	long getDuration() {
+		stop();
+		return endTime - startTime;
+	}
+
+	void start() {
 		startTime = System.currentTimeMillis();
-		Logger.getInstance().add("  ==start==>" + textToDisplay + " " + Util.formatDateTime(startTime));
 	}
 
-	void end(String textToDisplay) {
-		Logger.getInstance().add("==end==>" + textToDisplay + ": milliseconds duration = " + this.getDuration());
+	void stop() {
+		endTime = System.currentTimeMillis();
 	}
 
-	private long getDuration() {
-		return System.currentTimeMillis() - startTime;
+	void stopFinallyLogger(String classMethodName) {
+		Logger.getInstance().add(classMethodName + ": finally milliseconds duration = " + this.getDuration());
 	}
 
-	void stamp(String textToDisplay) {
-		Logger.getInstance().add(textToDisplay + ": milliseconds duration = " + this.getDuration());
+	void stopLogger(String classMethodName) {
+		Logger.getInstance().add(classMethodName + ": milliseconds duration = " + (System.currentTimeMillis() - startTime));
 	}
-
-	void stopFinally(String textToDisplay) {
-		Logger.getInstance().add("  ==finally==>" + textToDisplay + ": milliseconds duration = " + this.getDuration());
-	}
-
-	void stop(String textToDisplay) {
-		Logger.getInstance().add(textToDisplay + ": milliseconds duration = " + this.getDuration());
+	void end(String classMethodName) {
+		Logger.getInstance().add("==end==>"+classMethodName + ": milliseconds duration = " + (System.currentTimeMillis() - startTime));
 	}
 }
