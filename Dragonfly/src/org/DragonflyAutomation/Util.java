@@ -18,7 +18,8 @@ import org.xml.sax.InputSource;
 
 class Util {
 	static String formatDateTime(Long lngStartTimeMillis) {
-		return new SimpleDateFormat("MMM dd, yyyy HH:mm:ss:SSS").format(new Date(lngStartTimeMillis));
+		//return new SimpleDateFormat("MMM dd, yyyy HH:mm:ss:SSS").format(new Date(lngStartTimeMillis));
+		return new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss:SSS").format(new Date(lngStartTimeMillis));
 	}
 
 	static String formatXML(String input) {
@@ -49,7 +50,8 @@ class Util {
 	}
 
 	static String getDateTimestamp() {
-		return new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(new Date());
+		//return new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(new Date());
+		return new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss:SSS").format(new Date());
 	}
 
 	static String getJvmBitVersion() {
