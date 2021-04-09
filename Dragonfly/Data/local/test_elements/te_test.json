@@ -1,0 +1,33 @@
+{
+  "testElement": "atw",
+  "element": [
+    {
+      "logicalName": "MouseOverLink",
+      "tagName": "a",
+      "attributeNames": "id",
+      "attributeValues": "onmouseover"
+    },
+    {
+      "logicalName": "SelectDisabled",
+      "tagName": "select",
+      "attributeNames": "id",
+      "attributeValues": "select6"
+    }
+  ],
+  "processing": [
+    {
+      "logicalName": "process",
+      "tagName": "link",
+      "attributeNames": "name",
+      "attributeValues": "processing"
+    }
+  ],
+  "error": [
+    {
+      "logicalName": "error",
+      "tagName": "h1",
+      "attributeNames": "name",
+      "attributeValues": "page2_title"
+    }
+  ]
+}

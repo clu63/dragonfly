@@ -43,10 +43,13 @@ public class ActiveNodeDeterminer {
 		CloseableHttpResponse response = null;
 		try {
 			URL url = new URL("http://" + gridHostName + ":" + gridPort + "/grid/api/testsession?session=" + sessionId);
+			System.out.println(url);
 			BasicHttpEntityEnclosingRequest r = new BasicHttpEntityEnclosingRequest("POST", url.toExternalForm());
 			response = client.execute(new HttpHost(gridHostName, gridPort), r);
+			System.out.println(response.getEntity());
 			JsonObject object = extractJson(response.getEntity());
 			URL tempUrl = new URL(object.get("proxyId").getAsString());
+			System.out.println("tempUrl = " + tempUrl.toString());
 			node = new GridNode(tempUrl.getHost(), tempUrl.getPort());
 		} catch (Exception e) {
 			String errorMsg = "Failed to acquire remote webdriver node and port info. Root cause: " + e.getMessage();
@@ -62,6 +65,7 @@ public class ActiveNodeDeterminer {
 			}
 		}
 		LOGGER.info("Session " + sessionId + " was routed to " + node.toString());
+		System.out.println("Session " + sessionId + " was routed to " + node.toString());
 		return node;
 	}
 
@@ -72,6 +76,8 @@ public class ActiveNodeDeterminer {
 			while ((line = br.readLine()) != null) {
 				builder.append(line);
 			}
+		
+			System.out.println(builder.toString());
 			return new JsonParser().parse(builder.toString()).getAsJsonObject();
 		}
 	}

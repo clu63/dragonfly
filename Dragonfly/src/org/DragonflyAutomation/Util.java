@@ -50,8 +50,8 @@ class Util {
 	}
 
 	static String getDateTimestamp() {
-		//return new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(new Date());
-		return new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss:SSS").format(new Date());
+		return new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(new Date());
+		//return new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss:SSS").format(new Date());
 	}
 
 	static String getJvmBitVersion() {

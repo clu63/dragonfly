@@ -9,7 +9,7 @@ package org.DragonflyAutomation;
 //
 //  public static void main(String[] args) throws Exception {
 //    // Change this to match the location of your server
-//    URL server = new URL("http://127.0.0.1:4444/wd/hub");
+//    URL server = new URL("");
 //
 //    DesiredCapabilities capabilities = new DesiredCapabilities();
 //    capabilities.setBrowserName("firefox");
