@@ -23,7 +23,15 @@ class Logger {
 	}
 
 	void add(String strTextToAdd) {
-		System.out.println(strTextToAdd);
+		//System.out.println(strTextToAdd);
+		String fileNameLineNumber = "(" + Thread.currentThread().getStackTrace()[2].getFileName() + ":" + Thread.currentThread().getStackTrace()[2].getLineNumber() + ") ";
+		System.out.println(fileNameLineNumber + strTextToAdd);
+		//		System.out.println(Thread.currentThread().getStackTrace()[2]);
+		//		System.out.println(Thread.currentThread().getStackTrace()[2].getClassName());
+		//		System.out.println(Thread.currentThread().getStackTrace()[2].getFileName());
+		//		System.out.println(Thread.currentThread().getStackTrace()[2].getLineNumber());
+		//		System.out.println(Thread.currentThread().getStackTrace()[2].getMethodName());
+		//		System.out.println("("+Thread.currentThread().getStackTrace()[2].getFileName()+":"+Thread.currentThread().getStackTrace()[2].getLineNumber()+")");
 		if (this.string.get() == null) {
 			this.string.set(strTextToAdd);
 		} else {

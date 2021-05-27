@@ -22,13 +22,9 @@ public class Dragonfly2 {
 			String body = IOUtils.toString(in, encoding);
 			System.out.println(body);
 		} catch (Exception e2) {
-			
-			
 			// TODO Auto-generated catch block		e2.printStackTrace();
 		}
-		
 		System.exit(0);
-		
 		//		try {
 		//		FileReader jsonFile =	new FileReader("C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_modules\\tm_atw_framestest.json");
 		//		Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
