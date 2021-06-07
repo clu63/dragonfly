@@ -1,5 +1,5 @@
 {
-  "testElement": "atw",
+  "testApplication": "atw",
   "element": [
     {
       "logicalName": "MouseOverLink",

@@ -1,20 +1,35 @@
 package org.DragonflyAutomation;
 
-class TestElement {
-	private Objects[] element;
-	private Objects[] error;
-	private Objects[] processing;
-	private String testApplication;
+import java.util.ArrayList;
+import java.util.List;
 
-	Objects[] getElement() {
-		return element;
+class TestElementList {
+	private List<Objects> element = new ArrayList<Objects>();
+	private List<Objects> error = new ArrayList<Objects>();
+	private List<Objects> processing = new ArrayList<Objects>();
+	private String testApplication;
+	private transient Integer elementEach;
+
+	boolean findElement(String logicalName) {
+		for (elementEach = 0; elementEach < this.element.size(); elementEach++) {
+			if (element.get(elementEach).getLogicalName().equalsIgnoreCase(logicalName)) {
+				System.out.println("findElement true");
+				return true;
+			}
+		}
+		System.out.println("findElement false");
+		return false;
 	}
 
-	Objects[] getError() {
+	Objects getElement() {
+		return element.get(elementEach);
+	}
+
+	List<Objects> getError() {
 		return error;
 	}
 
-	Objects[] getProcessing() {
+	List<Objects> getProcessing() {
 		return processing;
 	}
 
@@ -22,15 +37,15 @@ class TestElement {
 		return this.testApplication;
 	}
 
-	void setElement(Objects[] element) {
+	void setElement(List<Objects> element) {
 		this.element = element;
 	}
 
-	void setError(Objects[] processing) {
+	void setError(List<Objects> processing) {
 		this.processing = processing;
 	}
 
-	void setProcessing(Objects[] element) {
+	void setProcessing(List<Objects> element) {
 		this.element = element;
 	}
 
