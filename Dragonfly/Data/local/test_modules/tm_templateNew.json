@@ -1,0 +1,24 @@
+{
+  "testMoldule":[
+    {
+      "action":"",
+      "logicalName":"",
+      "stagName":"",
+      "attributeNames":"",
+      "attributeValues":"",
+      "inputValue":"",
+      "assert":"",
+      "optional":false,
+      "blnExitOnFail":false,
+      "millisecondsToWait":0,
+      "function":"",
+      "outputLinkName":"",
+      "loopOrIf":"",
+      "pleaseWait":false,
+      "highlight":false,
+      "screenshot":false,
+      "assistiveProperties":"",
+      "outputValue":""
+    }
+  ]
+}

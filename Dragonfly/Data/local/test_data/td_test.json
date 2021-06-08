@@ -1,10 +1,12 @@
-[
-  {
-    "name": "firstName",
-    "value": "Thom"
-  },
-  {
-    "name": "lastName",
-    "value": "Morrow"
-  }
-]
+{
+  "testData":[
+    {
+      "name":"firstName",
+      "value":"Thom"
+    },
+    {
+      "name":"lastName",
+      "value":"Morrow"
+    }
+  ]
+}

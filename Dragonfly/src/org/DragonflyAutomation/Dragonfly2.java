@@ -16,6 +16,53 @@ import com.google.gson.reflect.TypeToken;
 
 public class Dragonfly2 {
 	public static void main(String[] args) {
+		// TestDataList
+		try {
+			FileReader jsonFile = new FileReader("C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_data\\td_test.json");
+			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
+			TestDataList testDataList = gson.fromJson(jsonFile, TestDataList.class);
+			//getTestDataCount
+			System.out.println("getTestDataCount = " + testDataList.getTestDataCount());
+			System.out.println(gson.toJson(testDataList));
+			//getValueByName
+			System.out.println("getValueByName = " + testDataList.getValueByName("firstName"));
+			//setValueByName
+			testDataList.setValueByName("lastName", "lastName");
+			System.out.println(gson.toJson(testDataList));
+			//addTestData
+			testDataList.addTestData("newName", "newValue");
+			System.out.println(gson.toJson(testDataList));
+			//getTestDataCount
+			System.out.println("getTestDataCount = " + testDataList.getTestDataCount());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		System.exit(0);
+		// TestInstancesList
+		try {
+			FileReader jsonFile = new FileReader("C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_instances\\ti_test.json");
+			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
+			TestInstanceList testInstanceList = gson.fromJson(jsonFile, TestInstanceList.class);
+			//getInstanceCount
+			System.out.println("getInstanceCount = " + testInstanceList.getInstanceCount());
+			System.out.println(gson.toJson(testInstanceList));
+			//getInstanceValueByName
+			System.out.println("getInstanceValueByName = " + testInstanceList.getInstanceValueByName(1, "firstName"));
+			//setInstanceValueByName
+			testInstanceList.setInstanceValueByName(0, "lastName", "lastName");
+			System.out.println(gson.toJson(testInstanceList));
+			//addInstanceByNumber
+			testInstanceList.addInstanceByNumber(0, "newName", "newValue");
+			System.out.println(gson.toJson(testInstanceList));
+			// add new instance
+			testInstanceList.addInstance("AddInstanceName", "AddInstanceValue");
+			System.out.println(gson.toJson(testInstanceList));
+			//getInstanceCount
+			System.out.println("getInstanceCount = " + testInstanceList.getInstanceCount());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		System.exit(0);
 		// TestInstancesList
 		try {
 			FileReader jsonFile = new FileReader("C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_instances\\ti_test.json");

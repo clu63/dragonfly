@@ -4,26 +4,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 class TestInstanceList {
-	//List<List<TestData>> testInstanceList = new ArrayList<ArrayList<TestData>>();
-	private List<TestData> testInstanceList = new ArrayList<TestData>();
-	private TestData TestInstanceList = new TestData();
+	private List<List<TestData>> testInstance = new ArrayList<List<TestData>>();
 
-	String getValueByName(Integer instance, String name) {
-		return name;
+	void addInstance(String name, String value) {
+		TestData testData = new TestData();
+		testData.setName(name);
+		testData.setValue(value);
+		List<TestData> testDataList = new ArrayList<TestData>();
+		testDataList.add(testData);
+		this.testInstance.add(testDataList);
 	}
 
-	void setValueByName(Integer instance, String name, String value) {
-		
-//		for (elementEach = 0; elementEach < this..size(); elementEach++) {
-//			if (element.get(elementEach).getLogicalName().equalsIgnoreCase(logicalName)) {
-//				System.out.println("findElement true");
-//				testInstanceList.get(1).get(0).setValue(value);
-//			}
-//		}
-		
-		
+	void addInstanceByNumber(Integer instanceNumber, String name, String value) {
+		TestData testData = new TestData();
+		testData.setName(name);
+		testData.setValue(value);
+		testInstance.get(instanceNumber).add((TestData) testData);
 	}
 
-	void addByInstanceNumber(Integer instance, String name, String value) {
+	Integer getInstanceCount() {
+		return testInstance.size();
+	}
+
+	String getInstanceValueByName(Integer instanceNumber, String name) {
+		for (TestData testData : testInstance.get(instanceNumber)) {
+			if (testData.getName().equalsIgnoreCase(name)) {
+				return testData.getValue();
+			}
+		}
+		return null;
+	}
+
+	void setInstanceValueByName(Integer instanceNumber, String name, String value) {
+		for (TestData testData : testInstance.get(instanceNumber)) {
+			if (testData.getName().equalsIgnoreCase(name)) {
+				testData.setValue(value);
+			}
+		}
 	}
 }

@@ -1,32 +1,24 @@
-[
-  [
-    {
-      "name": "",
-      "value": ""
-    },
-    {
-      "name": "",
-      "value": ""
-    }
-  ],
-  [
-    {
-      "name": "",
-      "value": ""
-    },
-    {
-      "name": "",
-      "value": ""
-    }
-  ],
-  [
-    {
-      "name": "",
-      "value": ""
-    },
-    {
-      "name": "",
-      "value": ""
-    }
+{
+  "testInstance": [
+    [
+      {
+        "name": "",
+        "value": ""
+      },
+      {
+        "name": "",
+        "value": ""
+      }
+    ],
+    [
+      {
+        "name": "",
+        "value": ""
+      },
+      {
+        "name": "",
+        "value": ""
+      }
+    ]
   ]
-]
+}

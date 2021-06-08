@@ -1,32 +1,24 @@
 {
-	"test_elements": "",
-	"elements": 
-	{
-		"": 
-		{
-			"strTagName": "",
-			"strAttributeNames": "",
-			"strAttributeValues": ""
-		}
-	},
-
-	"processing": 
-	{
-		"": 
-		{
-			"strTagName": "",
-			"strAttributeNames": "",
-			"strAttributeValues": ""
-		}
-	},
-
-	"errors": 
-	{
-		"": 
-		{
-			"strTagName": "",
-			"strAttributeNames": "",
-			"strAttributeValues": ""
-		}
-	}
+  "test_elements":"",
+  "elements":{
+    "":{
+      "strTagName":"",
+      "strAttributeNames":"",
+      "strAttributeValues":""
+    }
+  },
+  "processing":{
+    "":{
+      "strTagName":"",
+      "strAttributeNames":"",
+      "strAttributeValues":""
+    }
+  },
+  "errors":{
+    "":{
+      "strTagName":"",
+      "strAttributeNames":"",
+      "strAttributeValues":""
+    }
+  }
 }
