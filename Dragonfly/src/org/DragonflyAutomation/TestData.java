@@ -1,22 +1,57 @@
 package org.DragonflyAutomation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class TestData {
-	private String name;
-	private String value;
+	private List<TestDataDetail> testData = new ArrayList<TestDataDetail>();
 
-	String getName() {
-		return name;
+	Integer getTestDataCount() {
+		return testData.size();
 	}
 
-	String getValue() {
-		return value;
+	void addTestData(String name, String value) {
+		TestDataDetail testData2 = new TestDataDetail();
+		testData2.setName(name);
+		testData2.setValue(value);
+		testData.add(testData2);
 	}
 
-	void setName(String name) {
-		this.name = name;
+	String getValueByName(String name) {
+		for (TestDataDetail testData : testData) {
+			if (testData.getName().equalsIgnoreCase(name)) {
+				return testData.getValue();
+			}
+		}
+		return null;
 	}
 
-	void setValue(String value) {
-		this.value = value;
+	void setValueByName(String name, String value) {
+		for (TestDataDetail testData : testData) {
+			if (testData.getName().equalsIgnoreCase(name)) {
+				testData.setValue(value);
+			}
+		}
+	}
+
+	class TestDataDetail {
+		private String name;
+		private String value;
+
+		String getName() {
+			return name;
+		}
+
+		String getValue() {
+			return value;
+		}
+
+		void setName(String name) {
+			this.name = name;
+		}
+
+		void setValue(String value) {
+			this.value = value;
+		}
 	}
 }

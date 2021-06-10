@@ -1,24 +1,47 @@
 {
-  "test_elements":"",
-  "elements":{
-    "":{
-      "strTagName":"",
-      "strAttributeNames":"",
-      "strAttributeValues":""
-    }
-  },
-  "processing":{
-    "":{
-      "strTagName":"",
-      "strAttributeNames":"",
-      "strAttributeValues":""
-    }
-  },
-  "errors":{
-    "":{
-      "strTagName":"",
-      "strAttributeNames":"",
-      "strAttributeValues":""
-    }
+  "testElement": {
+    "testApplication": "",
+    "element": [
+      {
+        "logicalName": "",
+        "tagName": "",
+        "attributeNames": "",
+        "attributeValues": ""
+      },
+      {
+        "logicalName": "",
+        "tagName": "",
+        "attributeNames": "",
+        "attributeValues": ""
+      }
+    ],
+    "error": [
+      {
+        "logicalName": "",
+        "tagName": "",
+        "attributeNames": "",
+        "attributeValues": ""
+      },
+      {
+        "logicalName": "",
+        "tagName": "",
+        "attributeNames": "",
+        "attributeValues": ""
+      }
+    ],
+    "processing": [
+      {
+        "logicalName": "",
+        "tagName": "",
+        "attributeNames": "",
+        "attributeValues": ""
+      },
+      {
+        "logicalName": "",
+        "tagName": "",
+        "attributeNames": "",
+        "attributeValues": ""
+      }
+    ]
   }
 }

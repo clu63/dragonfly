@@ -1,63 +1,31 @@
 package org.DragonflyAutomation;
 
-class TestElement {
-	private Objects[] element;
-	private Objects[] error;
-	private Objects[] processing;
-	private String testApplication;
+import java.util.ArrayList;
+import java.util.List;
 
-	Objects[] getElement() {
-		return element;
-	}
+public class TestElement {
+	private TestElementDetail testElement;
 
-	Objects[] getError() {
-		return error;
-	}
-
-	Objects[] getProcessing() {
-		return processing;
-	}
-
-	String getTestApplication() {
-		return this.testApplication;
-	}
-
-	void setElement(Objects[] element) {
-		this.element = element;
-	}
-
-	void setError(Objects[] processing) {
-		this.processing = processing;
-	}
-
-	void setProcessing(Objects[] element) {
-		this.element = element;
-	}
-
-	void setTestApplication(String logicalName) {
-		this.testApplication = logicalName;
-	}
-
-	class Objects {
-		private String attributeNames;
-		private String attributeValues;
+	class ObjectDetail {
 		private String logicalName;
 		private String tagName;
+		private String attributeNames;
+		private String attributeValues;
 
 		String getAttributeNames() {
-			return this.attributeNames;
+			return attributeNames;
 		}
 
 		String getAttributeValues() {
-			return this.attributeValues;
+			return attributeValues;
 		}
 
 		String getLogicalName() {
-			return this.logicalName;
+			return logicalName;
 		}
 
 		String getTagName() {
-			return this.tagName;
+			return tagName;
 		}
 
 		void setAttributeNames(String attributeNames) {
@@ -74,6 +42,65 @@ class TestElement {
 
 		void setTagName(String tagName) {
 			this.tagName = tagName;
+		}
+	}
+
+	class TestElementDetail {
+		private String testApplication;
+		private List<ObjectDetail> element = new ArrayList<ObjectDetail>();
+		private List<ObjectDetail> error = new ArrayList<ObjectDetail>();
+		private List<ObjectDetail> processing = new ArrayList<ObjectDetail>();
+		private transient Integer elementEach;
+
+		String getTestApplication() {
+			return this.testApplication;
+		}
+
+		void setTestApplication(String logicalName) {
+			this.testApplication = logicalName;
+		}
+
+		boolean findElement(String logicalName) {
+			for (elementEach = 0; elementEach < this.element.size(); elementEach++) {
+				if (element.get(elementEach).getLogicalName().equalsIgnoreCase(logicalName)) {
+					System.out.println("findElement true");
+					return true;
+				}
+			}
+			System.out.println("findElement false");
+			return false;
+		}
+
+		ObjectDetail getElement() {
+			return element.get(elementEach);
+		}
+
+		//		TestElementList getElementByLogicalName(String logicalName) {
+		//			for (elementEach = 0; elementEach < this.element.size(); elementEach++) {
+		//				if (element.get(elementEach).getLogicalName().equalsIgnoreCase(logicalName)) {
+		//					System.out.println("findElement true");
+		//				}
+		//			}
+		//			return this;
+		//		}
+		List<ObjectDetail> getError() {
+			return error;
+		}
+
+		List<ObjectDetail> getProcessing() {
+			return processing;
+		}
+
+		void setElement(List<ObjectDetail> element) {
+			this.element = element;
+		}
+
+		void setError(List<ObjectDetail> processing) {
+			this.processing = processing;
+		}
+
+		void setProcessing(List<ObjectDetail> element) {
+			this.element = element;
 		}
 	}
 }

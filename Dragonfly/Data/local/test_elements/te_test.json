@@ -1,34 +1,34 @@
 {
-  "testElement":{
-    "testApplication":"atw",
-    "element":[
+  "testElement": {
+    "testApplication": "atw",
+    "element": [
       {
-        "logicalName":"MouseOverLink",
-        "tagName":"a",
-        "attributeNames":"id",
-        "attributeValues":"onmouseover"
+        "logicalName": "MouseOverLink",
+        "tagName": "a",
+        "attributeNames": "id",
+        "attributeValues": "onmouseover"
       },
       {
-        "logicalName":"SelectDisabled",
-        "tagName":"select",
-        "attributeNames":"id",
-        "attributeValues":"select6"
+        "logicalName": "SelectDisabled",
+        "tagName": "select",
+        "attributeNames": "id",
+        "attributeValues": "select6"
       }
     ],
-    "processing":[
+    "error": [
       {
-        "logicalName":"process",
-        "tagName":"link",
-        "attributeNames":"name",
-        "attributeValues":"processing"
+        "logicalName": "error",
+        "tagName": "h1",
+        "attributeNames": "name",
+        "attributeValues": "page2_title"
       }
     ],
-    "error":[
+    "processing": [
       {
-        "logicalName":"error",
-        "tagName":"h1",
-        "attributeNames":"name",
-        "attributeValues":"page2_title"
+        "logicalName": "process",
+        "tagName": "link",
+        "attributeNames": "name",
+        "attributeValues": "processing"
       }
     ]
   }

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.TimeUnit;
+import org.DragonflyAutomation.GsonArrayMember.Department;
 import org.apache.commons.io.IOUtils;
 import com.google.common.base.Stopwatch;
 import com.google.gson.Gson;
@@ -16,169 +17,105 @@ import com.google.gson.reflect.TypeToken;
 
 public class Dragonfly2 {
 	public static void main(String[] args) {
-		// TestDataList
+		//TestConfiguration
 		try {
-			FileReader jsonFile = new FileReader("C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_data\\td_test.json");
+			String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_configuration\\template.json";
+			//String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_configuration\\atw_test.json";
+			FileReader jsonFile = new FileReader(filePath);
 			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
-			TestDataList testDataList = gson.fromJson(jsonFile, TestDataList.class);
+			TestConfiguration testConfiguration = gson.fromJson(jsonFile, TestConfiguration.class);
+			System.out.println(gson.toJson(testConfiguration));
+			UtilFile.write(filePath, gson.toJson(testConfiguration));
+		} catch (FileNotFoundException e2) {
+			e2.printStackTrace();
+		}
+		System.exit(0);
+		// TestData
+		try {
+			//String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_data\\td_template.json";
+			String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_data\\td_test.json";
+			FileReader jsonFile = new FileReader(filePath);
+			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
+			TestData testData = gson.fromJson(jsonFile, TestData.class);
+			//UtilFile.write(filePath, gson.toJson(testData));
 			//getTestDataCount
-			System.out.println("getTestDataCount = " + testDataList.getTestDataCount());
-			System.out.println(gson.toJson(testDataList));
+			System.out.println("getTestDataCount = " + testData.getTestDataCount());
+			System.out.println(gson.toJson(testData));
 			//getValueByName
-			System.out.println("getValueByName = " + testDataList.getValueByName("firstName"));
+			System.out.println("getValueByName = " + testData.getValueByName("firstName"));
 			//setValueByName
-			testDataList.setValueByName("lastName", "lastName");
-			System.out.println(gson.toJson(testDataList));
+			testData.setValueByName("lastName", "lastName");
+			System.out.println(gson.toJson(testData));
 			//addTestData
-			testDataList.addTestData("newName", "newValue");
-			System.out.println(gson.toJson(testDataList));
+			testData.addTestData("newName", "newValue");
+			System.out.println(gson.toJson(testData));
 			//getTestDataCount
-			System.out.println("getTestDataCount = " + testDataList.getTestDataCount());
+			System.out.println("getTestDataCount = " + testData.getTestDataCount());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		System.exit(0);
-		// TestInstancesList
+		//		// TestInstance 
 		try {
 			FileReader jsonFile = new FileReader("C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_instances\\ti_test.json");
+			//FileReader jsonFile = new FileReader("C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_instances\\ti_template.json");
 			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
-			TestInstanceList testInstanceList = gson.fromJson(jsonFile, TestInstanceList.class);
+			TestInstance testInstance = gson.fromJson(jsonFile, TestInstance.class);
+			//UtilFile.write("C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_instances\\ti_template.json", gson.toJson(testInstance));
 			//getInstanceCount
-			System.out.println("getInstanceCount = " + testInstanceList.getInstanceCount());
-			System.out.println(gson.toJson(testInstanceList));
+			System.out.println("getInstanceCount = " + testInstance.getInstanceCount());
+			System.out.println(gson.toJson(testInstance));
 			//getInstanceValueByName
-			System.out.println("getInstanceValueByName = " + testInstanceList.getInstanceValueByName(1, "firstName"));
+			System.out.println("getInstanceValueByName = " + testInstance.getInstanceValueByName(1, "firstName"));
 			//setInstanceValueByName
-			testInstanceList.setInstanceValueByName(0, "lastName", "lastName");
-			System.out.println(gson.toJson(testInstanceList));
+			testInstance.setInstanceValueByName(0, "lastName", "lastName");
+			System.out.println(gson.toJson(testInstance));
 			//addInstanceByNumber
-			testInstanceList.addInstanceByNumber(0, "newName", "newValue");
-			System.out.println(gson.toJson(testInstanceList));
+			testInstance.addInstanceByNumber(0, "newName", "newValue");
+			System.out.println(gson.toJson(testInstance));
 			// add new instance
-			testInstanceList.addInstance("AddInstanceName", "AddInstanceValue");
-			System.out.println(gson.toJson(testInstanceList));
+			testInstance.addInstance("AddInstanceName", "AddInstanceValue");
+			System.out.println(gson.toJson(testInstance));
 			//getInstanceCount
-			System.out.println("getInstanceCount = " + testInstanceList.getInstanceCount());
+			System.out.println("getInstanceCount = " + testInstance.getInstanceCount());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}
-		System.exit(0);
-		// TestInstancesList
-		try {
-			FileReader jsonFile = new FileReader("C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_instances\\ti_test.json");
-			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
-			Type TestInstancesType = new TypeToken<List<ArrayList<TestData>>>() {
-			}.getType();
-			List<List<TestData>> testInstanceList = new Gson().fromJson(jsonFile, TestInstancesType);
-			System.out.println(gson.toJson(testInstanceList));
-			//getValueByName(Integer instance, String name)
-			System.out.println(testInstanceList.get(1).get(0).getName());
-			System.out.println(testInstanceList.get(1).get(0).getValue());
-			//set new values to second instance first object
-			testInstanceList.get(1).get(0).setName("XXXXXXXXXXXXXX");
-			testInstanceList.get(1).get(0).setValue("XXXXXXXXXXXXXX");
-			System.out.println(gson.toJson(testInstanceList));
-			//add object to first instance  
-			TestData testData = new TestData();
-			testData.setName("addName");
-			testData.setValue("addValue");
-			testInstanceList.get(0).add((TestData) testData);
-			System.out.println(gson.toJson(testInstanceList));
-			// add new instance
-			TestData testData2 = new TestData();
-			testData2.setName("AddInstanceName");
-			testData2.setValue("AddInstanceValue");
-			List<TestData> testDataList = new ArrayList<TestData>();
-			testDataList.add(testData2);
-			testInstanceList.add(testDataList);
-			System.out.println(gson.toJson(testInstanceList));
-		} catch (FileNotFoundException e2) {
-			e2.printStackTrace();
-		}
-		System.exit(0);
-		//TestElementList
-		try {
-			FileReader jsonFile = new FileReader("C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_elements\\te_test.json");
-			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
-			TestElementList testElement = gson.fromJson(jsonFile, TestElementList.class);
-			System.out.println(gson.toJson(testElement));
-			System.out.println(gson.toJson(testElement));
-			System.out.println(testElement.getTestApplication());
-			testElement.setTestApplication("test");
-			System.out.println(testElement.getTestApplication());
-			//System.out.println(testElement.getElement().size());
-			//System.out.println(testElement.getElement().get(0).getLogicalName());
-			System.out.println("------");
-			if (testElement.findElement("SelectDisabled")) {
-				System.out.println(testElement.getElement().getAttributeNames());
-				System.out.println(testElement.getElement().getAttributeValues());
-				System.out.println(testElement.getElement().getTagName());
-			}
-			TestElementList te = new TestElementList();
-			TestElementList.Objects objects = te.new Objects();
-			objects.setAttributeNames("newErrorAN");
-			objects.setAttributeValues("newattributeValues");
-			objects.setLogicalName("newlogicalName");
-			objects.setTagName("newtagName");
-			testElement.getError().add(objects);
-			System.out.println(gson.toJson(testElement));
-		} catch (FileNotFoundException e2) {
-			e2.printStackTrace();
 		}
 		System.exit(0);
 		//TestElement
 		try {
-			FileReader jsonFile = new FileReader("C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_elements\\te_test.json");
-			//System.out.println(jsonFile);
+			//String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_elements\\te_template.json";
+			String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_elements\\te_test.json";
+			FileReader jsonFile = new FileReader(filePath);
 			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
 			TestElement testElement = gson.fromJson(jsonFile, TestElement.class);
 			System.out.println(gson.toJson(testElement));
-			System.out.println(testElement.getTestApplication());
-			testElement.setTestApplication("test");
-			System.out.println(testElement.getTestApplication());
-			System.out.println(testElement.getElement()[0].getLogicalName());
-			testElement.getElement()[0].setLogicalName("elementlogicalname");
-			testElement.getError()[0].setLogicalName("errorlogicalname");
-			testElement.getProcessing()[0].setLogicalName("processlogicalname");
-			System.out.println(gson.toJson(testElement));
+			//UtilFile.write(filePath, gson.toJson(testElement));
+			//						System.out.println(gson.toJson(testElement));
+			//						System.out.println(testElement.getTestApplication());
+			//						testElement.setTestApplication("test");
+			//						System.out.println(testElement.getTestApplication());
+			//						//System.out.println(testElement.getElement().size());
+			//						//System.out.println(testElement.getElement().get(0).getLogicalName());
+			//						System.out.println("------");
+			//						if (testElementList.findElement("SelectDisabled")) {
+			//							System.out.println(testElement.getElement().getAttributeNames());
+			//							System.out.println(testElement.getElement().getAttributeValues());
+			//							System.out.println(testElement.getElement().getTagName());
+			//						}
+			//						TestElementList te = new TestElementList();
+			//						TestElementList.ObjectDetail objects = te.new ObjectDetail();
+			//						objects.setAttributeNames("newErrorAN");
+			//						objects.setAttributeValues("newattributeValues");
+			//						objects.setLogicalName("newlogicalName");
+			//						objects.setTagName("newtagName");
+			//						testElementList.getError().add(objects);
+			//						System.out.println(gson.toJson(testElementList));
 		} catch (FileNotFoundException e2) {
 			e2.printStackTrace();
 		}
 		System.exit(0);
-		// TestInstances
-		try {
-			FileReader jsonFile = new FileReader("C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_instances\\ti_test.json");
-			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
-			TestInstance[][] testInstances = gson.fromJson(jsonFile, TestInstance[][].class);
-			System.out.println(gson.toJson(testInstances));
-			System.out.println(gson.toJson(testInstances.length));
-			System.out.println(testInstances[0].length);
-			System.out.println(testInstances[1].length);
-			System.out.println(testInstances[1][1].getName());
-			System.out.println(testInstances[1][1].getValue());
-			System.out.println(testInstances[1][1].getValue());
-		} catch (FileNotFoundException e2) {
-			e2.printStackTrace();
-		}
-		System.exit(0);
-		// TestData 
-		try {
-			FileReader jsonFile = new FileReader("C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_data\\td_template.json");
-			System.out.println(jsonFile);
-			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
-			TestData testData[] = gson.fromJson(jsonFile, TestData[].class);
-			System.out.println(testData);
-			System.out.println(gson.toJson(testData));
-			System.out.println(testData[0].getName());
-			System.out.println(testData[0].getValue());
-			testData[1].setName("setName");
-			testData[1].setValue("setValue");
-			System.out.println(gson.toJson(testData));
-			System.out.println(testData.length);
-		} catch (FileNotFoundException e2) {
-			e2.printStackTrace();
-		}
-		System.exit(0);
+		//URL get response 
 		try {
 			URL url = new URL("");
 			URLConnection con = url.openConnection();
@@ -211,18 +148,7 @@ public class Dragonfly2 {
 		//			// TODO Auto-generated catch block
 		//			e2.printStackTrace();
 		//		}	
-		//		try {
-		//			FileReader jsonFile = new FileReader("C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_elements\\te_test.json");
-		//			//System.out.println(jsonFile);
-		//			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
-		//			//TestElement.Root2 testElement = gson.fromJson(jsonFile, TestElement.Root2.class);
-		//			System.out.println(testElement.getTestElements());
-		//			System.out.println(gson.toJson(testElement));
-		//		} catch (FileNotFoundException e2) {
-		//			// TODO Auto-generated catch block
-		//			e2.printStackTrace();
-		//		}
-		//		System.exit(0);
+
 		Stopwatch.createStarted();
 		//Logger.getInstance().add("  ==start==>mainDragonfly2 " + Util.getDateTimestamp());
 		TimeLogger outside = new TimeLogger("Dragonfly2");

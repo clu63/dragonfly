@@ -1,23 +1,25 @@
 {
-  "test_details":{
-    "test_name":"",
-    "test_description":"",
-    "test_type":""
-  },
-  "test_instances":[
-    ".json",
-    ".json"
-  ],
-  "test_elements":[
-    ".json",
-    ".json"
-  ],
-  "test_modules":[
-    ".json",
-    ".json"
-  ],
-  "test_data":[
-    ".json",
-    ".json"
-  ]
+  "testConfiguration": {
+    "testDetail": {
+      "testName": "",
+      "testDescription": "",
+      "testType": ""
+    },
+    "testInstance": [
+      ".json",
+      ".json"
+    ],
+    "testElement": [
+      ".json",
+      ".json"
+    ],
+    "testModule": [
+      ".json",
+      ".json"
+    ],
+    "testData": [
+      ".json",
+      ".json"
+    ]
+  }
 }

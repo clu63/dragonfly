@@ -1,22 +1,22 @@
 {
-  "testConfiguration":{
-    "testDetail":{
-      "testName":"atw.Frames",
-      "testDescription":"",
-      "testType":"Positive"
+  "testConfiguration": {
+    "testDetail": {
+      "testName": "atw.Frames",
+      "testDescription": "",
+      "testType": "Positive"
     },
-    "testInstance":[
+    "testInstance": [
       "ti_test.json"
     ],
-    "testElement":[
+    "testElement": [
       "te_test.json"
     ],
-    "testModule":[
+    "testModule": [
       "tm_atw_test1.json",
       "tm_atw_test2.json",
       "tm_atw_test3.json"
     ],
-    "testData":[
+    "testData": [
       "td_test.json"
     ]
   }
