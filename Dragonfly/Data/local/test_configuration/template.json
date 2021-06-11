@@ -1,6 +1,6 @@
 {
   "testConfiguration": {
-    "testDetail": {
+    "testDetails": {
       "testName": "",
       "testDescription": "",
       "testType": ""
@@ -9,11 +9,11 @@
       ".json",
       ".json"
     ],
-    "testElement": [
+    "testModule": [
       ".json",
       ".json"
     ],
-    "testModule": [
+    "testElement": [
       ".json",
       ".json"
     ],

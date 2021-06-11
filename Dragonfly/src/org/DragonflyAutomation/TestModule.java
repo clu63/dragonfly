@@ -1,179 +1,173 @@
 package org.DragonflyAutomation;
 
-import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
+import java.util.List;
 
-class TestModule {
-	@SerializedName("strAction")
-	String Action;
-	String strLogicalName;
-	String strTagName;
-	String strAttributeNames;
-	String strAttributeValues;
-	String strInputValue;
-	String strAssert;
-	Boolean blnOptional;
-	String blnExitOnFail;
-	String intMillisecondsToWait;
-	String strFunction;
-	String strOutputLinkName;
-	String strLoopOrIf;
-	String blnPleaseWait;
-	String blnHighlight;
-	String blnScreenshot;
-	String strAssistiveProperties;
-	String strOutputValue;
-	transient Steps[] steps;
-	String AddNull = "value";
+public class TestModule {
+	private List<TestModuleDetails> testModule = new ArrayList<TestModuleDetails>();
 
-	public String getStrAction() {
-		return Action;
-	}
+	class TestModuleDetails {
+		private String action;
+		private String logicalName;
+		private String tagName;
+		private String attributeNames;
+		private String attributeValues;
+		private String inputValue;
+		private String assertSet;
+		private Boolean optional;
+		private Boolean exitOnFail;
+		private Integer millisecondsToWait;
+		private String function;
+		private String outputLinkName;
+		private String loopOrIf;
+		private Boolean pleaseWait;
+		private Boolean highlight;
+		private Boolean screenshot;
+		private String assistiveProperties;
+		private String outputValue;
 
-	public void setStrAction(String strAction) {
-		this.Action = strAction;
-	}
+		String getAction() {
+			return action;
+		}
 
-	public String getStrLogicalName() {
-		return strLogicalName;
-	}
+		String getAssertSet() {
+			return assertSet;
+		}
 
-	public void setStrLogicalName(String strLogicalName) {
-		this.strLogicalName = strLogicalName;
-	}
+		String getAssistiveProperties() {
+			return assistiveProperties;
+		}
 
-	public String getStrTagName() {
-		return strTagName;
-	}
+		String getAttributeNames() {
+			return attributeNames;
+		}
 
-	public void setStrTagName(String strTagName) {
-		this.strTagName = strTagName;
-	}
+		String getAttributeValues() {
+			return attributeValues;
+		}
 
-	public String getStrAttributeNames() {
-		return strAttributeNames;
-	}
+		Boolean getExitOnFail() {
+			return exitOnFail;
+		}
 
-	public void setStrAttributeNames(String strAttributeNames) {
-		this.strAttributeNames = strAttributeNames;
-	}
+		String getFunction() {
+			return function;
+		}
 
-	public String getStrAttributeValues() {
-		return strAttributeValues;
-	}
+		Boolean getHighlight() {
+			return highlight;
+		}
 
-	public void setStrAttributeValues(String strAttributeValues) {
-		this.strAttributeValues = strAttributeValues;
-	}
+		String getInputValue() {
+			return inputValue;
+		}
 
-	public String getStrInputValue() {
-		return strInputValue;
-	}
+		String getLogicalName() {
+			return logicalName;
+		}
 
-	public void setStrInputValue(String strInputValue) {
-		this.strInputValue = strInputValue;
-	}
+		String getLoopOrIf() {
+			return loopOrIf;
+		}
 
-	public String getStrAssert() {
-		return strAssert;
-	}
+		Integer getMillisecondsToWait() {
+			return millisecondsToWait;
+		}
 
-	public void setStrAssert(String strAssert) {
-		this.strAssert = strAssert;
-	}
+		Boolean getOptional() {
+			return optional;
+		}
 
-	public Boolean getBlnOptional() {
-		return blnOptional;
-	}
+		String getOutputLinkName() {
+			return outputLinkName;
+		}
 
-	public void setBlnOptional(Boolean blnOptional) {
-		this.blnOptional = blnOptional;
-	}
+		String getOutputValue() {
+			return outputValue;
+		}
 
-	public String getBlnExitOnFail() {
-		return blnExitOnFail;
-	}
+		Boolean getPleaseWait() {
+			return pleaseWait;
+		}
 
-	public void setBlnExitOnFail(String blnExitOnFail) {
-		this.blnExitOnFail = blnExitOnFail;
-	}
+		Boolean getScreenshot() {
+			return screenshot;
+		}
 
-	public String getIntMillisecondsToWait() {
-		return intMillisecondsToWait;
-	}
+		String getTagName() {
+			return tagName;
+		}
 
-	public void setIntMillisecondsToWait(String intMillisecondsToWait) {
-		this.intMillisecondsToWait = intMillisecondsToWait;
-	}
+		void setAction(String action) {
+			this.action = action;
+		}
 
-	public String getStrFunction() {
-		return strFunction;
-	}
+		void setAssertSet(String assertSet) {
+			this.assertSet = assertSet;
+		}
 
-	public void setStrFunction(String strFunction) {
-		this.strFunction = strFunction;
-	}
+		void setAssistiveProperties(String assistiveProperties) {
+			this.assistiveProperties = assistiveProperties;
+		}
 
-	public String getStrOutputLinkName() {
-		return strOutputLinkName;
-	}
+		void setAttributeNames(String attributeNames) {
+			this.attributeNames = attributeNames;
+		}
 
-	public void setStrOutputLinkName(String strOutputLinkName) {
-		this.strOutputLinkName = strOutputLinkName;
-	}
+		void setAttributeValues(String attributeValues) {
+			this.attributeValues = attributeValues;
+		}
 
-	public String getStrLoopOrIf() {
-		return strLoopOrIf;
-	}
+		void setExitOnFail(Boolean exitOnFail) {
+			this.exitOnFail = exitOnFail;
+		}
 
-	public void setStrLoopOrIf(String strLoopOrIf) {
-		this.strLoopOrIf = strLoopOrIf;
-	}
+		void setFunction(String function) {
+			this.function = function;
+		}
 
-	public String getBlnPleaseWait() {
-		return blnPleaseWait;
-	}
+		void setHighlight(Boolean highlight) {
+			this.highlight = highlight;
+		}
 
-	public void setBlnPleaseWait(String blnPleaseWait) {
-		this.blnPleaseWait = blnPleaseWait;
-	}
+		void setInputValue(String inputValue) {
+			this.inputValue = inputValue;
+		}
 
-	public String getBlnHighlight() {
-		return blnHighlight;
-	}
+		void setLogicalName(String logicalName) {
+			this.logicalName = logicalName;
+		}
 
-	public void setBlnHighlight(String blnHighlight) {
-		this.blnHighlight = blnHighlight;
-	}
+		void setLoopOrIf(String loopOrIf) {
+			this.loopOrIf = loopOrIf;
+		}
 
-	public String getBlnScreenshot() {
-		return blnScreenshot;
-	}
+		void setMillisecondsToWait(Integer millisecondsToWait) {
+			this.millisecondsToWait = millisecondsToWait;
+		}
 
-	public void setBlnScreenshot(String blnScreenshot) {
-		this.blnScreenshot = blnScreenshot;
-	}
+		void setOptional(Boolean optional) {
+			this.optional = optional;
+		}
 
-	public String getStrAssistiveProperties() {
-		return strAssistiveProperties;
-	}
+		void setOutputLinkName(String outputLinkName) {
+			this.outputLinkName = outputLinkName;
+		}
 
-	public void setStrAssistiveProperties(String strAssistiveProperties) {
-		this.strAssistiveProperties = strAssistiveProperties;
-	}
+		void setOutputValue(String outputValue) {
+			this.outputValue = outputValue;
+		}
 
-	public String getStrOutputValue() {
-		return strOutputValue;
-	}
+		void setPleaseWait(Boolean pleaseWait) {
+			this.pleaseWait = pleaseWait;
+		}
 
-	public void setStrOutputValue(String strOutputValue) {
-		this.strOutputValue = strOutputValue;
-	}
+		void setScreenshot(Boolean screenshot) {
+			this.screenshot = screenshot;
+		}
 
-	public Steps[] getSteps() {
-		return steps;
-	}
-
-	public void setSteps(Steps[] steps) {
-		this.steps = steps;
+		void setTagName(String tagName) {
+			this.tagName = tagName;
+		}
 	}
 }

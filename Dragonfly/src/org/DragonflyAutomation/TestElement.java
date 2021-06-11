@@ -52,14 +52,6 @@ public class TestElement {
 		private List<ObjectDetail> processing = new ArrayList<ObjectDetail>();
 		private transient Integer elementEach;
 
-		String getTestApplication() {
-			return this.testApplication;
-		}
-
-		void setTestApplication(String logicalName) {
-			this.testApplication = logicalName;
-		}
-
 		boolean findElement(String logicalName) {
 			for (elementEach = 0; elementEach < this.element.size(); elementEach++) {
 				if (element.get(elementEach).getLogicalName().equalsIgnoreCase(logicalName)) {
@@ -91,6 +83,10 @@ public class TestElement {
 			return processing;
 		}
 
+		String getTestApplication() {
+			return this.testApplication;
+		}
+
 		void setElement(List<ObjectDetail> element) {
 			this.element = element;
 		}
@@ -101,6 +97,10 @@ public class TestElement {
 
 		void setProcessing(List<ObjectDetail> element) {
 			this.element = element;
+		}
+
+		void setTestApplication(String logicalName) {
+			this.testApplication = logicalName;
 		}
 	}
 }

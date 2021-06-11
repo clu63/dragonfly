@@ -17,15 +17,28 @@ import com.google.gson.reflect.TypeToken;
 
 public class Dragonfly2 {
 	public static void main(String[] args) {
+		//TestModule
+		try {
+			//String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_modules\\tm_templateNew.json";
+			String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_modules\\tm_atw_test1.json";
+			FileReader jsonFile = new FileReader(filePath);
+			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
+			TestModule testModule = gson.fromJson(jsonFile, TestModule.class);
+			System.out.println(gson.toJson(testModule));
+			//UtilFile.write(filePath, gson.toJson(testModule));
+		} catch (FileNotFoundException e2) {
+			e2.printStackTrace();
+		}
+		System.exit(0);
 		//TestConfiguration
 		try {
-			String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_configuration\\template.json";
-			//String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_configuration\\atw_test.json";
+			//String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_configuration\\template.json";
+			String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_configuration\\atw_test.json";
 			FileReader jsonFile = new FileReader(filePath);
 			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
 			TestConfiguration testConfiguration = gson.fromJson(jsonFile, TestConfiguration.class);
 			System.out.println(gson.toJson(testConfiguration));
-			UtilFile.write(filePath, gson.toJson(testConfiguration));
+			//UtilFile.write(filePath, gson.toJson(testConfiguration));
 		} catch (FileNotFoundException e2) {
 			e2.printStackTrace();
 		}

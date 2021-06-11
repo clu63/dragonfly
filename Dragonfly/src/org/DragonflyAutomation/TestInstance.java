@@ -6,6 +6,27 @@ import java.util.List;
 class TestInstance {
 	private List<List<TestInstanceDetail>> testInstance = new ArrayList<List<TestInstanceDetail>>();
 
+	class TestInstanceDetail {
+		private String name;
+		private String value;
+
+		String getName() {
+			return name;
+		}
+
+		String getValue() {
+			return value;
+		}
+
+		void setName(String name) {
+			this.name = name;
+		}
+
+		void setValue(String value) {
+			this.value = value;
+		}
+	}
+
 	void addInstance(String name, String value) {
 		TestInstanceDetail testInstanceDetail = new TestInstanceDetail();
 		testInstanceDetail.setName(name);
@@ -40,27 +61,6 @@ class TestInstance {
 			if (testData.getName().equalsIgnoreCase(name)) {
 				testData.setValue(value);
 			}
-		}
-	}
-
-	class TestInstanceDetail {
-		private String name;
-		private String value;
-
-		String getName() {
-			return name;
-		}
-
-		String getValue() {
-			return value;
-		}
-
-		void setName(String name) {
-			this.name = name;
-		}
-
-		void setValue(String value) {
-			this.value = value;
 		}
 	}
 }
