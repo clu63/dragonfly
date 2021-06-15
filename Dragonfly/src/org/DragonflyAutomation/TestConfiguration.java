@@ -1,10 +1,35 @@
 package org.DragonflyAutomation;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import com.google.gson.Gson;
 
-public class TestConfiguration {
+class TestConfiguration {
 	private FileNames testConfiguration;
+
+	//	TestConfiguration(String filePath) throws FileNotFoundException {
+	//		FileReader jsonFile = new FileReader(filePath);
+	//		Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
+	//		this.testConfiguration = gson.fromJson(jsonFile, TestConfiguration.class);
+	//		System.out.println(gson.toJson(testConfiguration));
+	//	}
+	List<String> getTestModule() {
+		return this.testConfiguration.testModule;
+	}
+
+	List<String> getTestInstance() {
+		return this.testConfiguration.testInstance;
+	}
+
+	List<String> getTestElement() {
+		return this.testConfiguration.testElement;
+	}
+
+	List<String> getTestData() {
+		return this.testConfiguration.testData;
+	}
 
 	class FileNames {
 		private TestDetails testDetails;

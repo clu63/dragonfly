@@ -1,5 +1,6 @@
 package org.DragonflyAutomation;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStream;
@@ -17,8 +18,54 @@ import com.google.gson.reflect.TypeToken;
 
 public class Dragonfly2 {
 	public static void main(String[] args) {
+		
+		try {
+			Path.getInstance().setDirectory("local");
+			new ConfigurationSetup("atw_test.json");
+		} catch (FileNotFoundException e3) {
+			// TODO Auto-generated catch block
+			e3.printStackTrace();
+		}
+		
+		System.exit(0);
+		
+		//TestStep
+		try {
+			//Path.getInstance().setDirectory("local");
+			//System.out.println(Path.getInstance().testModules);
+			//File file = new File(Path.getInstance().testModules + "tm_templateNew.json");
+			//System.out.println(file.exists());
+			//System.exit(0);
+			//String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_modules\\tm_templateNew.json";
+			String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_modules\\tm_atw_test1.json";
+			FileReader jsonFile = new FileReader(filePath);
+			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
+			TestStep testStep = gson.fromJson(jsonFile, TestStep.class);
+			System.out.println(gson.toJson(testStep));
+			//UtilFile.write(filePath, gson.toJson(testStep));
+		} catch (FileNotFoundException e2) {
+			e2.printStackTrace();
+		}
+		System.exit(0);
+		//		//TestConfiguration
+		//		try {
+		//			String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_configuration\\template.json";
+		//			//String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_configuration\\atw_test.json";
+		//
+		//			TestConfiguration testConfiguration = new TestConfiguration(filePath);
+		//			//System.out.println(gson.toJson(testConfiguration));
+		//			//UtilFile.write(filePath, gson.toJson(testConfiguration));
+		//		} catch (FileNotFoundException e2) {
+		//			e2.printStackTrace();
+		//		}
+		//		System.exit(0);
 		//TestModule
 		try {
+			Path.getInstance().setDirectory("local");
+			System.out.println(Path.getInstance().testModules);
+			File file = new File(Path.getInstance().testModules + "tm_templateNew.json");
+			System.out.println(file.exists());
+			System.exit(0);
 			//String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_modules\\tm_templateNew.json";
 			String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_modules\\tm_atw_test1.json";
 			FileReader jsonFile = new FileReader(filePath);
@@ -161,7 +208,6 @@ public class Dragonfly2 {
 		//			// TODO Auto-generated catch block
 		//			e2.printStackTrace();
 		//		}	
-
 		Stopwatch.createStarted();
 		//Logger.getInstance().add("  ==start==>mainDragonfly2 " + Util.getDateTimestamp());
 		TimeLogger outside = new TimeLogger("Dragonfly2");

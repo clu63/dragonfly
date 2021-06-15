@@ -1,44 +1,50 @@
-strAction
-strLogicalName
-strTagName
-strAttributeNames
-strAttributeValues
-strInputValue
-strAssert
-blnOptional
-blnExitOnFail
-intMillisecondsToWait
-strFunction
-strOutputLinkName
-strLoopOrIf
-blnPleaseWait
-blnHighlight
-blnScreenshot
-strAssistiveProperties
-strOutputValue
-intBrowserInnerWidth
-intBrowserInnerHeight
-intBrowserOuterX
-intBrowserOuterY
-intBrowserOuterWidth
-intBrowserOuterHeight
-intElementScreenX
-intElementScreenY
-intElementX
-intElementY
-intElementWidth
-intElementHeight
-strTagType
-strType
-strCurrentWindowHandle
-strURL
-strStepExpected
-strStepActual
-strStartTimestamp
-strEndTimestamp
-strStepDuration
-strScreenshotArea
-strHighlightArea
-strScreenshotFilePath
-strStatus
-strTestModuleStep
+{
+  "testModule":[
+    {
+      "action":"",
+      "logicalName":"",
+      "tagName":"",
+      "attributeNames":"",
+      "attributeValues":"",
+      "inputValue":"",
+      "assertSet":"",
+      "optional":false,
+      "exitOnFail":false,
+      "millisecondsToWait":0,
+      "function":"",
+      "outputLinkName":"",
+      "loopOrIf":"",
+      "pleaseWait":false,
+      "highlight":false,
+      "screenshot":false,
+      "assistiveProperties":"",
+      "outputValue":"",
+      "browserInnerWidth":0,
+      "browserInnerHeight":0,
+      "browserOuterX":0,
+      "browserOuterY":0,
+      "browserOuterWidth":0,
+      "browserOuterHeight":0,
+      "elementScreenX":0,
+      "elementScreenY":0,
+      "elementX":0,
+      "elementY":0,
+      "elementWidth":0,
+      "elementHeight":0,
+      "tagType":"",
+      "typeValue":"",
+      "currentWindowHandle":"",
+      "urlValue":"",
+      "stepExpected":"",
+      "stepActual":"",
+      "startTimestamp":"",
+      "endTimestamp":"",
+      "stepDuration":"",
+      "screenshotArea":"",
+      "highlightArea":"",
+      "screenshotFilePath":"",
+      "status":"",
+      "testModuleStep":""
+    }
+  ]
+}

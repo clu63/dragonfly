@@ -3,7 +3,7 @@ package org.DragonflyAutomation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestElement {
+class TestElement {
 	private TestElementDetail testElement;
 
 	class ObjectDetail {
