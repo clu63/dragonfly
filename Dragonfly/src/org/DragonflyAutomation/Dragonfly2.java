@@ -13,12 +13,25 @@ import com.google.common.base.Stopwatch;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import com.google.gson.reflect.TypeToken;
 
 public class Dragonfly2 {
 	public static void main(String[] args) {
 		
+		
+		try {
+			System.out.println(new ClassByName().getReturnString("DataDateDaysOut", "2"));
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException e4) {
+			// TODO Auto-generated catch block
+			e4.printStackTrace();
+		}
+		
+		//DataDateDaysOut dataDateDaysOut = new DataDateDaysOut();
+		//System.out.println(dataDateDaysOut.data_DateDaysOut("1"));
+		
+		//System.exit(0);
 		try {
 			Path.getInstance().setDirectory("local");
 			new ConfigurationSetup("atw_test.json");

@@ -14,10 +14,12 @@
       "tm_atw_test3.json"
     ],
     "testElement": [
-      "te_test.json"
+      "te_test1.json",
+      "te_test2.json"
     ],
     "testData": [
-      "td_test.json"
+      "td_test1.json",
+      "td_test2.json"
     ]
   }
 }

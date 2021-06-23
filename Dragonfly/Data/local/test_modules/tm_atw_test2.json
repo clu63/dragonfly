@@ -11,13 +11,13 @@
       "optional": null,
       "exitOnFail": null,
       "millisecondsToWait": null,
-      "function": null,
+      "classByName": null,
       "outputLinkName": null,
       "loopOrIf": null,
       "pleaseWait": null,
       "highlight": null,
       "screenshot": null,
-      "assistiveProperties": null,
+      "assistiveProperties": "2.1",
       "outputValue": null
     },
     {
@@ -31,13 +31,13 @@
       "optional": null,
       "exitOnFail": null,
       "millisecondsToWait": null,
-      "function": null,
+      "classByName": null,
       "outputLinkName": null,
       "loopOrIf": null,
       "pleaseWait": null,
       "highlight": null,
       "screenshot": null,
-      "assistiveProperties": null,
+      "assistiveProperties": "2.2",
       "outputValue": null
     }
   ]

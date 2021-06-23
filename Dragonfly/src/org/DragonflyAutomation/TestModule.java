@@ -17,7 +17,7 @@ public class TestModule {
 		private Boolean optional;
 		private Boolean exitOnFail;
 		private Integer millisecondsToWait;
-		private String function;
+		private String classByName;
 		private String outputLinkName;
 		private String loopOrIf;
 		private Boolean pleaseWait;
@@ -51,7 +51,7 @@ public class TestModule {
 		}
 
 		String getFunction() {
-			return function;
+			return classByName;
 		}
 
 		Boolean getHighlight() {
@@ -122,8 +122,8 @@ public class TestModule {
 			this.exitOnFail = exitOnFail;
 		}
 
-		void setFunction(String function) {
-			this.function = function;
+		void setFunction(String classByName) {
+			this.classByName = classByName;
 		}
 
 		void setHighlight(Boolean highlight) {

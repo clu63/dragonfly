@@ -4,52 +4,56 @@ import java.util.ArrayList;
 import java.util.List;
 
 class TestStep {
-	public List<TestStepDetails> testModule = new ArrayList<TestStepDetails>();
+	List<TestStepDetails> testModule = new ArrayList<TestStepDetails>();
 
-	public class TestStepDetails {
-		public String action;
-		public String logicalName;
-		public String tagName;
-		public String attributeNames;
-		public String attributeValues;
-		public String inputValue;
-		public String assertSet;
-		public boolean optional;
-		public boolean exitOnFail;
-		public int millisecondsToWait;
-		public String function;
-		public String outputLinkName;
-		public String loopOrIf;
-		public boolean pleaseWait;
-		public boolean highlight;
-		public boolean screenshot;
-		public String assistiveProperties;
-		public String outputValue;
-		public int browserInnerWidth;
-		public int browserInnerHeight;
-		public int browserOuterX;
-		public int browserOuterY;
-		public int browserOuterWidth;
-		public int browserOuterHeight;
-		public int elementScreenX;
-		public int elementScreenY;
-		public int elementX;
-		public int elementY;
-		public int elementWidth;
-		public int elementHeight;
-		public String tagType;
-		public String typeValue;
-		public String currentWindowHandle;
-		public String urlValue;
-		public String stepExpected;
-		public String stepActual;
-		public String startTimestamp;
-		public String endTimestamp;
-		public String stepDuration;
-		public String screenshotArea;
-		public String highlightArea;
-		public String screenshotFilePath;
-		public String status;
-		public String testModuleStep;
+	List<TestStepDetails> getTestModule() {
+		return this.testModule;
+	}
+
+	class TestStepDetails {
+		private String action;
+		private String logicalName;
+		private String tagName;
+		private String attributeNames;
+		private String attributeValues;
+		private String inputValue;
+		private String assertSet;
+		private Boolean optional;
+		private Boolean exitOnFail;
+		private Integer millisecondsToWait;
+		private String classByName;
+		private String outputLinkName;
+		private String loopOrIf;
+		private Boolean pleaseWait;
+		private Boolean highlight;
+		private Boolean screenshot;
+		private String assistiveProperties;
+		private String outputValue;
+		private Integer browserInnerWidth;
+		private Integer browserInnerHeight;
+		private Integer browserOuterX;
+		private Integer browserOuterY;
+		private Integer browserOuterWidth;
+		private Integer browserOuterHeight;
+		private Integer elementScreenX;
+		private Integer elementScreenY;
+		private Integer elementX;
+		private Integer elementY;
+		private Integer elementWidth;
+		private Integer elementHeight;
+		private String tagType;
+		private String typeValue;
+		private String currentWindowHandle;
+		private String urlValue;
+		private String stepExpected;
+		private String stepActual;
+		private String startTimestamp;
+		private String endTimestamp;
+		private String stepDuration;
+		private String screenshotArea;
+		private String highlightArea;
+		private String screenshotFilePath;
+		private String status;
+		private String testModuleStep;
 	}
 }

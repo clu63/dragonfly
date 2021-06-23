@@ -1,0 +1,15 @@
+{
+  "testModule": [
+    {
+      "assertSet": "off",
+      "optional": false,
+      "exitOnFail": true,
+      "millisecondsToWait": 120000,
+      "pleaseWait": true,
+      "highlight": true,
+      "screenshot": true,
+      "screenshotArea": "screen",
+      "status": "info"
+    }
+  ]
+}
