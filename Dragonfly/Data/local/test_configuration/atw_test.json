@@ -2,7 +2,7 @@
   "testConfiguration": {
     "testDetails": {
       "testName": "atw.Frames",
-      "testDescription": "",
+      "testDescription": "testing frames in ATW",
       "testType": "Positive"
     },
     "testInstance": [

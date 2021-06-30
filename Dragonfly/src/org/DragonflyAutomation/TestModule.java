@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestModule {
-	private List<TestModuleDetails> testModule = new ArrayList<TestModuleDetails>();
+	private List<TestModuleFields> testModule = new ArrayList<TestModuleFields>();
 
-	class TestModuleDetails {
+	class TestModuleFields {
 		private String action;
 		private String logicalName;
 		private String tagName;

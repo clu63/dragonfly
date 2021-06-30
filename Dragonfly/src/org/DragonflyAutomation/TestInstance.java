@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 class TestInstance {
-	private List<List<TestInstanceDetail>> testInstance = new ArrayList<List<TestInstanceDetail>>();
+	private List<List<TestInstanceFields>> testInstance = new ArrayList<List<TestInstanceFields>>();
 
-	class TestInstanceDetail {
+	class TestInstanceFields {
 		private String name;
 		private String value;
 
@@ -28,19 +28,19 @@ class TestInstance {
 	}
 
 	void addInstance(String name, String value) {
-		TestInstanceDetail testInstanceDetail = new TestInstanceDetail();
-		testInstanceDetail.setName(name);
-		testInstanceDetail.setValue(value);
-		List<TestInstanceDetail> testDataList = new ArrayList<TestInstanceDetail>();
-		testDataList.add(testInstanceDetail);
+		TestInstanceFields testInstanceFields = new TestInstanceFields();
+		testInstanceFields.setName(name);
+		testInstanceFields.setValue(value);
+		List<TestInstanceFields> testDataList = new ArrayList<TestInstanceFields>();
+		testDataList.add(testInstanceFields);
 		testInstance.add(testDataList);
 	}
 
 	void addInstanceByNumber(Integer instanceNumber, String name, String value) {
-		TestInstanceDetail testData = new TestInstanceDetail();
+		TestInstanceFields testData = new TestInstanceFields();
 		testData.setName(name);
 		testData.setValue(value);
-		testInstance.get(instanceNumber).add((TestInstanceDetail) testData);
+		testInstance.get(instanceNumber).add((TestInstanceFields) testData);
 	}
 
 	Integer getInstanceCount() {
@@ -48,7 +48,7 @@ class TestInstance {
 	}
 
 	String getInstanceValueByName(Integer instanceNumber, String name) {
-		for (TestInstanceDetail testData : testInstance.get(instanceNumber)) {
+		for (TestInstanceFields testData : testInstance.get(instanceNumber)) {
 			if (testData.getName().equalsIgnoreCase(name)) {
 				return testData.getValue();
 			}
@@ -57,7 +57,7 @@ class TestInstance {
 	}
 
 	void setInstanceValueByName(Integer instanceNumber, String name, String value) {
-		for (TestInstanceDetail testData : testInstance.get(instanceNumber)) {
+		for (TestInstanceFields testData : testInstance.get(instanceNumber)) {
 			if (testData.getName().equalsIgnoreCase(name)) {
 				testData.setValue(value);
 			}

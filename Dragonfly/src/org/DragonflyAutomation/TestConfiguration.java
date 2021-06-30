@@ -1,70 +1,109 @@
 package org.DragonflyAutomation;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.Gson;
 
 class TestConfiguration {
-	private FileNames testConfiguration;
+	private TestConfigurationtestDetails testConfiguration;
 
-	//	TestConfiguration(String filePath) throws FileNotFoundException {
-	//		FileReader jsonFile = new FileReader(filePath);
-	//		Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
-	//		this.testConfiguration = gson.fromJson(jsonFile, TestConfiguration.class);
-	//		System.out.println(gson.toJson(testConfiguration));
-	//	}
-	List<String> getTestModule() {
-		return this.testConfiguration.testModule;
+	void addTestData(String testData) {
+		this.testConfiguration.testData.add(testData);
 	}
 
-	List<String> getTestInstance() {
-		return this.testConfiguration.testInstance;
+	void addTestElement(String testElement) {
+		this.testConfiguration.testElement.add(testElement);
 	}
 
-	List<String> getTestElement() {
-		return this.testConfiguration.testElement;
+	void addTestModule(String testModule) {
+		this.testConfiguration.testModule.add(testModule);
 	}
 
 	List<String> getTestData() {
 		return this.testConfiguration.testData;
 	}
 
-	class FileNames {
-		private TestDetails testDetails;
+	String getTestDetailsTestDescription() {
+		return this.testConfiguration.testDetails.getTestDescription();
+	}
+
+	String getTestDetailsTestName() {
+		return this.testConfiguration.testDetails.getTestName();
+	}
+
+	String getTestDetailsTestType() {
+		return this.testConfiguration.testDetails.getTestType();
+	}
+
+	List<String> getTestElement() {
+		return this.testConfiguration.testElement;
+	}
+
+	List<String> getTestInstance() {
+		return this.testConfiguration.testInstance;
+	}
+
+	List<String> getTestModule() {
+		return this.testConfiguration.testModule;
+	}
+
+	Boolean removeTestData(String testData) {
+		return this.testConfiguration.testData.remove(testData);
+	}
+
+	Boolean removeTestElement(String testElement) {
+		return this.testConfiguration.testElement.remove(testElement);
+	}
+
+	Boolean removeTestModule(String testModule) {
+		return this.testConfiguration.testModule.remove(testModule);
+	}
+
+	void setTestDetailsTestDescription(String testDescription) {
+		this.testConfiguration.testDetails.setTestDescription(testDescription);
+	}
+
+	void setTestDetailsTestName(String testName) {
+		this.testConfiguration.testDetails.setTestName(testName);
+	}
+
+	void setTestDetailsTestType(String testType) {
+		this.testConfiguration.testDetails.setTestType(testType);
+	}
+
+	class TestConfigurationtestDetails {
+		private TestDetailsFields testDetails;
 		private List<String> testInstance = new ArrayList<String>();
 		private List<String> testModule = new ArrayList<String>();
 		private List<String> testElement = new ArrayList<String>();
 		private List<String> testData = new ArrayList<String>();
 	}
 
-	class TestDetails {
+	class TestDetailsFields {
 		private String testName;
 		private String testDescription;
 		private String testType;
 
-		String getTestDescription() {
+		private String getTestDescription() {
 			return this.testDescription;
 		}
 
-		String getTestName() {
+		private String getTestName() {
 			return this.testName;
 		}
 
-		String getTestType() {
+		private String getTestType() {
 			return this.testType;
 		}
 
-		void setTestDescription(String testDescription) {
+		private void setTestDescription(String testDescription) {
 			this.testDescription = testDescription;
 		}
 
-		void setTestName(String testName) {
+		private void setTestName(String testName) {
 			this.testName = testName;
 		}
 
-		void setTestType(String testType) {
+		private void setTestType(String testType) {
 			this.testType = testType;
 		}
 	}

@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 class TestData {
-	private List<TestDataDetail> testData = new ArrayList<TestDataDetail>();
+	private List<TestDataFields> testData = new ArrayList<TestDataFields>();
 
-	class TestDataDetail {
+	class TestDataFields {
 		private String name;
 		private String value;
 
@@ -28,7 +28,7 @@ class TestData {
 	}
 
 	void addTestData(String name, String value) {
-		TestDataDetail testData2 = new TestDataDetail();
+		TestDataFields testData2 = new TestDataFields();
 		testData2.setName(name);
 		testData2.setValue(value);
 		testData.add(testData2);
@@ -39,7 +39,7 @@ class TestData {
 	}
 
 	String getValueByName(String name) {
-		for (TestDataDetail testData : testData) {
+		for (TestDataFields testData : testData) {
 			if (testData.getName().equalsIgnoreCase(name)) {
 				return testData.getValue();
 			}
@@ -48,7 +48,7 @@ class TestData {
 	}
 
 	void setValueByName(String name, String value) {
-		for (TestDataDetail testData : testData) {
+		for (TestDataFields testData : testData) {
 			if (testData.getName().equalsIgnoreCase(name)) {
 				testData.setValue(value);
 			}
