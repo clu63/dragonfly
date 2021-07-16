@@ -5,9 +5,7 @@
       "testDescription": "testing frames in ATW",
       "testType": "Positive"
     },
-    "testInstance": [
-      "ti_test.json"
-    ],
+    "testInstance": "ti_test.json",
     "testModule": [
       "tm_atw_test1.json",
       "tm_atw_test2.json",

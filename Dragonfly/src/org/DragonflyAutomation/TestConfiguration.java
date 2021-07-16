@@ -38,7 +38,7 @@ class TestConfiguration {
 		return this.testConfiguration.testElement;
 	}
 
-	List<String> getTestInstance() {
+	String getTestInstance() {
 		return this.testConfiguration.testInstance;
 	}
 
@@ -72,7 +72,7 @@ class TestConfiguration {
 
 	class TestConfigurationtestDetails {
 		private TestDetailsFields testDetails;
-		private List<String> testInstance = new ArrayList<String>();
+		private String testInstance;
 		private List<String> testModule = new ArrayList<String>();
 		private List<String> testElement = new ArrayList<String>();
 		private List<String> testData = new ArrayList<String>();

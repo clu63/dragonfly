@@ -5,10 +5,7 @@
       "testDescription": "",
       "testType": ""
     },
-    "testInstance": [
-      ".json",
-      ".json"
-    ],
+    "testInstance": ".json",
     "testModule": [
       ".json",
       ".json"
