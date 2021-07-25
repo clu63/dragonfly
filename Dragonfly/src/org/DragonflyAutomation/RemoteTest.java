@@ -21,7 +21,7 @@ class RemoteTest {
 	public static void main(String[] args) throws Exception {
 		Integer intTestInstanceEach;
 		Integer intTestInstanceStart = 0;
-		Integer intTestInstanceSize = 1;
+		Integer intTestInstanceSize = 4;
 		for (intTestInstanceEach = intTestInstanceStart; intTestInstanceEach < intTestInstanceSize; intTestInstanceEach++) {
 			RemoteTest remoteTest = new RemoteTest();
 			Thread objThread = new Thread(remoteTest.new RemoteTestRun());
@@ -34,27 +34,15 @@ class RemoteTest {
 		}
 
 		public void run() {
-			//http://localhost:4444/grid/api/testsession?session=<SessionIdGoesHere>
-			//http://localhost:4444/grid/api/proxy?id=<NodeIdGoesHere>
-			//http://localhost:4444/grid/api/hub
-			
-			//			{
-			//				  "inactivityTime": ,
-			//				  "internalKey": "",
-			//				  "msg": "slot found !",
-			//				  "proxyId": "",
-			//				  "session": "",
-			//				  "success": true
-			//				}
-			//
-			
-
-			final String IP = "";//"localhost";
-			final int PORT = 4444;
+			String IP = "";
 			SessionId sessionId;
 			URL hubURL = null;
+			Integer PORT = null;
+			String appURL = "";
+			RemoteWebDriver driver = null;
+			WebElement element = null;
 			try {
-				hubURL = new URL("http://" + IP + ":" + PORT + "//hub");
+				hubURL = new URL("http://" + IP + ":" + PORT + "/hub");
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -70,6 +58,7 @@ class RemoteTest {
 			chromeOptions.addArguments("disable-popup-blocking");
 			chromeOptions.addArguments("disable-infobars");
 			chromeOptions.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.IGNORE);
+			chromeOptions.addArguments("start-maximized");
 			//
 			InternetExplorerOptions internetExplorerOptions = new InternetExplorerOptions();
 			internetExplorerOptions.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, "ignore");
@@ -80,8 +69,8 @@ class RemoteTest {
 			internetExplorerOptions.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, false);
 			internetExplorerOptions.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
 			//
-			//WebDriver driver = new RemoteWebDriver(hubURL, chromeOptions);
-			RemoteWebDriver driver = new RemoteWebDriver(hubURL, internetExplorerOptions);
+			driver = new RemoteWebDriver(hubURL, chromeOptions);
+			//driver = new RemoteWebDriver(hubURL, internetExplorerOptions);
 			//ActiveNodeDeterminer activeNodeDeterminer = new ActiveNodeDeterminer(IP, PORT);
 			sessionId = driver.getSessionId();
 			System.out.println(sessionId);
@@ -96,25 +85,13 @@ class RemoteTest {
 				System.out.println(body);
 			} catch (Exception e2) {
 			}
-			//driver.get("http://www.google.com");
-			driver.get("");
+			driver.get(appURL);
 			try {
-				Thread.sleep(60000);
+				Thread.sleep(5000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			//		WebElement element = driver.findElement(By.name("q"));
-			//		element.sendKeys("mouse!");
-			//		System.out.println("mouse");
-			//		Thread.sleep(30000);
-			//		JavascriptExecutor objJavascriptExecutor = null;
-			//		objJavascriptExecutor = (JavascriptExecutor) driver;
-			//		objJavascriptExecutor.executeScript("arguments[0].focus();", element);
-			//		objJavascriptExecutor.executeScript("arguments[0].value = '';", element);
-			//		objJavascriptExecutor.executeScript("arguments[0].value = '" + "trap" + "';", element);
-			//		objJavascriptExecutor.executeScript("arguments[0].blur();", element);
-			//		Thread.sleep(300000);
 			driver.quit();
 			System.out.println("done");
 		}
