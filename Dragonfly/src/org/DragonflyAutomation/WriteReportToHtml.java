@@ -113,7 +113,7 @@ class WriteReportToHtml {
 					strScreenshotFilePath = objJsonObjectReportStep.getString("strScreenshotFilePath").replaceAll("\\\\\\\\", "\\");
 					try {
 						BufferedImage objBufferedImage = ImageIO.read(new File(strScreenshotFilePath));
-						objStringBuilder.append("<img id=img_" + intTestStepRow + " src=\"data:image/jpg;base64," + new ImageProcessing().encodeToString(objBufferedImage, "jpg") + "\" alt=\"Step " + intTestStepRow + "\" > ");
+						objStringBuilder.append("<img id=img_" + intTestStepRow + " src=\"data:image/png;base64," + new ImageProcessing().encodeToString(objBufferedImage, "png") + "\" alt=\"Step " + intTestStepRow + "\" > ");
 					} catch (Exception e) {
 						Logger.getInstance().add("writeReportToHtml: Exception = " + e.toString());
 					}
