@@ -1,0 +1,34 @@
+{
+  "testSuite": {
+    "millisecondsToWait": 120000,
+    "browser": "chrome",
+    "screenshots": "on",
+    "highlight": "on",
+    "environment": "",
+    "runLocation": "",
+    "host": "",
+    "port": 4444
+  },
+  "testIterations": [
+    [
+      {
+        "testconfiguration": "",
+        "testInstance": ""
+      },
+      {
+        "testconfiguration": "",
+        "testInstance": ""
+      }
+    ],
+    [
+      {
+        "testconfiguration": "",
+        "testInstance": ""
+      },
+      {
+        "testconfiguration": "",
+        "testInstance": ""
+      }
+    ]
+  ]
+}

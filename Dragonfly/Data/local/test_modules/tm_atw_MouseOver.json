@@ -45,10 +45,10 @@
 
 		{
 			"strAction": "set",
-			"strLogicalName": "<te>MouseOverLink",
-			"strTagName": "",
-			"strAttributeNames": "",
-			"strAttributeValues": "",
+			"strLogicalName": "MouseOverLink",
+			"strTagName": "a",
+			"strAttributeNames": "id",
+			"strAttributeValues": "onmouseover",
 			"strInputValue": "",
 			"strAssert": "",
 			"blnOptional": "",
@@ -193,7 +193,7 @@
 		{
 			"strAction": "close",
 			"strLogicalName": "",
-			"strTagName": "ie",
+			"strTagName": "chrome",
 			"strAttributeNames": "",
 			"strAttributeValues": "",
 			"strInputValue": "",
