@@ -36,6 +36,7 @@ class DialogLocal extends JDialog implements ActionListener {
 	private JLabel lblSelectTheTest = new JLabel("Select the test");
 	private JLabel lblSelectTheTestArea = new JLabel("Select the test area");
 	private JRadioButton rdoChrome = new JRadioButton("chrome");
+	private JRadioButton rdoEdge = new JRadioButton("edge");
 	private JRadioButton rdoEnv1 = new JRadioButton("environment 1");
 	private JRadioButton rdoEnv2 = new JRadioButton("environment 2");
 	private JRadioButton rdoEnv3 = new JRadioButton("environment 3");
@@ -51,8 +52,7 @@ class DialogLocal extends JDialog implements ActionListener {
 	private JRadioButton rdoTestValue = new JRadioButton("value in test", true);
 	private String mstrPath = "", mstrNameTest = "", mstrTestArea = "";
 	private String[] arrDropEmpty = new String[0];
-	private int intColumn1 = 12, intColumn2 = 245, intColumn3 = 465,
-			intColumnWidth1 = 200, intColumnWidth2 = 200, intColumnWidth3 = 220;
+	private int intColumn1 = 12, intColumn2 = 245, intColumn3 = 465, intColumnWidth1 = 200, intColumnWidth2 = 200, intColumnWidth3 = 220;
 
 	DialogLocal() {
 		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -105,12 +105,17 @@ class DialogLocal extends JDialog implements ActionListener {
 		getContentPane().add(rdoChrome);
 		rdoFirefox.setFont(fntDialog);
 		rdoFirefox.setBounds(intColumn2, 120, intColumnWidth2, 25);
-		getContentPane().add(rdoFirefox);
 		rdoFirefox.addActionListener(this);
+		getContentPane().add(rdoFirefox);
+		rdoEdge.setFont(fntDialog);
+		rdoEdge.setBounds(intColumn2, 145, intColumnWidth2, 25);
+		rdoEdge.addActionListener(this);
+		getContentPane().add(rdoEdge);
 		grpBrowser.add(rdoTestValue);
 		grpBrowser.add(rdoIE);
 		grpBrowser.add(rdoChrome);
 		grpBrowser.add(rdoFirefox);
+		grpBrowser.add(rdoEdge);
 		//SelectTheEnvironment Group radio buttons.
 		lblSelectTheEnvironment.setHorizontalAlignment(SwingConstants.LEFT);
 		lblSelectTheEnvironment.setFont(fntDialog);
