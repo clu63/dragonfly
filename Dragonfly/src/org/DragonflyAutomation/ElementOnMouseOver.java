@@ -9,6 +9,9 @@ class ElementOnMouseOver {
 	ElementOnMouseOver() {
 		Logger.getInstance().add("  ==start==>ElementOnMouseOver " + Util.getDateTimestamp());
 		Actions actions = new Actions(BrowserDriver.getInstance().browserDriver);
+		actions.moveToElement(Element.getInstance().element, -1, -1).perform();
+		new SleepMilliseconds(5000);
+		actions.moveToElement(Element.getInstance().element).perform();
 		//		Locatable elementLocation = (Locatable) Element.getInstance().element;
 		//		
 		//		System.out.println(Element.getInstance().element.getLocation());
@@ -18,7 +21,6 @@ class ElementOnMouseOver {
 		//		int widthSize = Element.getInstance().element.getSize().getWidth();
 		//		int heightSize = Element.getInstance().element.getSize().getHeight();
 		//		actions.moveByOffset(widthSize / 2 + 1, heightSize / 2 + 1);
-		actions.moveToElement(Element.getInstance().element, -1, -1);
 		//		//actions.moveByOffset(widthSize/2 +1, heightSize/2+1).perform();;
 		//		actions.moveToElement(Element.getInstance().element).perform();
 		//		new SleepMilliseconds(5000);
@@ -54,7 +56,6 @@ class ElementOnMouseOver {
 		//			e.printStackTrace();
 		//		}
 		//		//actions.moveByOffset(0, 0);
-		actions.moveToElement(Element.getInstance().element).perform();
 		//		JavascriptExecutor javascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
 		//		javascriptExecutor.executeScript("arguments[0].onmouseover();", Element.getInstance().element);
 	}

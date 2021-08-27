@@ -1,28 +1,17 @@
 {
-	"test_details": 
-	{
-		"test_name": "atw.MouseOver",
-		"test_description": "",
-		"test_type": "Positive"
-	},
-
-	"test_instances": 
-	[
-		
-	],
-
-	"test_elements": 
-	[
-		"te_atw.json"
-	],
-
-	"test_modules": 
-	[
-		"tm_atw_MouseOver.json"
-	],
-
-	"test_data": 
-	[
-		
-	]
+  "test_details": {
+    "test_name": "atw.MouseOver",
+    "test_description": "",
+    "test_type": "Positive"
+  },
+  "test_instances": [
+  ],
+  "test_elements": [
+    "te_atw.json"
+  ],
+  "test_modules": [
+    "tm_atw_MouseOver.json"
+  ],
+  "test_data": [
+  ]
 }
