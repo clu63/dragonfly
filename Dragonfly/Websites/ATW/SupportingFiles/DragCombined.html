@@ -2,46 +2,97 @@
 <html>
 <head>
 <style>
-#div1, #div2
-{float:left; width:100px; height:35px; margin:10px;padding:10px;border:1px solid #aaaaaa;}
-#div3 {width:350px;height:70px;padding:10px;border:1px solid #aaaaaa;}
+#div1,#div2 {
+     float: left; width: 100px; height: 35px; margin: 10px; padding: 10px; border: 1px solid #aaaaaa;
+}
+
+#div3 {
+     width: 350px; height: 70px; padding: 10px; border: 1px solid #aaaaaa;
+}
 </style>
 <script>
-function allowDrop(ev) {
-    ev.preventDefault();
-}
+	function clearContent() {
+		document.getElementById('dragstartID').textContent = "";
+		document.getElementById('ondragoverID').textContent = "";
+		document.getElementById('dropID').textContent = "";
+		document.getElementById('clickID').textContent = "";
+		document.getElementById('mousedownID').textContent = "";
+		document.getElementById('mouseupID').textContent = "";
+		document.getElementById('x-value').textContent = "";
+		document.getElementById('y-value').textContent = "";
+	}
 
-function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.id);
-}
+	function allowDrop(ev, flower) {
+		ev.preventDefault();
+		document.getElementById('ondragoverID').textContent = flower;
+	}
 
-function drop(ev) {
-    ev.preventDefault();
-    var data = ev.dataTransfer.getData("text");
-    ev.target.appendChild(document.getElementById(data));
-}
+	function drag(ev, flower) {
+		ev.dataTransfer.setData("text", ev.target.id);
+		document.getElementById('dragstartID').textContent = flower;
+	}
+
+	function drop(ev, flower) {
+		ev.preventDefault();
+		var data = ev.dataTransfer.getData("text");
+		ev.target.appendChild(document.getElementById(data));
+		document.getElementById('dropID').textContent = flower;
+	}
+
+	function myClick(flower) {
+		document.getElementById('clickID').textContent = flower;
+	}
+
+	function mouseDown(flower) {
+		document.getElementById('mousedownID').textContent = flower;
+	}
+
+	function mouseUp(flower) {
+		document.getElementById('mouseupID').textContent = flower;
+	}
+
+	window.addEventListener('mousemove', function(e) {
+		document.getElementById('x-value').textContent = e.x;
+		document.getElementById('y-value').textContent = e.y;
+	});
 </script>
 </head>
 <body>
-<font face="Verdana,Tahoma,Helvetica,sans-serif"> <font size="+1"><b>Drag and Drop</b></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:history.go(-1)"> Go Back </a><br> <br>
-	
-<p>Drag the flower image back and forth in the rectangles:</p>
-<div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)">
-  <img id="drag1" src="flower2.jpg" draggable="true" ondragstart="drag(event)" width="88" height="31"></img>
-</div>
-
-<div id="div2" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-
-<p style="clear: left;">	 </p>
-	<hr>
-	<br>
-
-<p>Drag the flower image into the rectangle:</p>
-		<br>
-<div id="div3" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-<br>
-<img id="drag2" src="flower5.png" draggable="true" ondragstart="drag(event)" width="336" height="69"></img>
-	<hr>
-	<br>
+     <p>
+          X: <span id="x-value"></span>
+     </p>
+     <p>
+          Y: <span id="y-value"></span>
+     </p>
+     <p>
+          onMouseDown: <span id="mousedownID"></span>
+     </p>
+     <p>
+          onMouseUp: <span id="mouseupID"></span>
+     </p>
+     <p>
+          onClick: <span id="clickID"></span>
+     </p>
+     <p>
+          ondragstart: <span id="dragstartID"></span>
+     </p>
+     <p>
+          ondragover: <span id="ondragoverID"></span>
+     </p>
+     <p>
+          ondrop: <span id="dropID"></span>
+     </p>
+     <br>
+     <font face="Verdana,Tahoma,Helvetica,sans-serif"> <font size="+1"><b>Drag and Drop</b></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:clearContent()">Clear Events</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:history.go(-1)"> Go Back </a><br> <br>
+          <p>Drag the flower image back and forth in the rectangles:</p>
+          <div id="div1" ondrop="drop(event, 'purple flower')" ondragover="allowDrop(event, 'purple flower')">
+               <img onmousedown="mouseDown('purple flower')" onmouseup="mouseUp('purple flower')" onclick="myClick('purple flower')" id="drag1" src="flower2.jpg" draggable="true" ondragstart="drag(event,'purple flower')" width="88" height="31"></img>
+          </div>
+          <div id="div2" ondrop="drop(event, 'purple flower')" ondragover="allowDrop(event, 'purple flower')"></div>
+          <p style="clear: left;"></p>
+          <hr> <br>
+          <p>Drag the flower image into the rectangle:</p> <br>
+          <div id="div3" ondrop="drop(event, 'orange flower')" ondragover="allowDrop(event, 'orange flower')"></div> <br> <img onmousedown="mouseDown('orange flower')" onmouseup="mouseUp('orange flower')" onclick="myClick('orange flower')" id="drag2" src="flower5.png" draggable="true" ondragstart="drag(event,'orange flower')" width="336" height="69"></img>
+          <hr> <br>
 </body>
 </html>

@@ -2,83 +2,63 @@
 <html>
 <style>
 .tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black;
+     position: relative; display: inline-block; border-bottom: 1px dotted black;
 }
 
 .tooltip .tooltiptext {
-  visibility: hidden;
-  width: 120px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
-  position: absolute;
-  z-index: 1;
-  top: -5px;
-  right: 110%;
+     visibility: hidden; width: 120px; background-color: black; color: #fff; text-align: center; border-radius: 6px; padding: 5px 0; position: absolute; z-index: 1; top: -5px; right: 110%;
 }
 
 .tooltip .tooltiptext::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 100%;
-  margin-top: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent transparent black;
+     content: ""; position: absolute; top: 50%; left: 100%; margin-top: -5px; border-width: 5px; border-style: solid; border-color: transparent transparent transparent black;
 }
+
 .tooltip:hover .tooltiptext {
-  visibility: visible;
+     visibility: visible;
 }
 </style>
-<body style="text-align:center;">
- <h1>Tooltip</h1>
- <br>
- <br>
-<h2 >CSS Left Tooltip w/ Right Arrow</h2>
-
-<div class="tooltip" id="tooltipID1">Hover over me
-  <span class="tooltiptext">Tooltip text</span>
-</div>
-<br>
-<br>
-<div >
-<h2>Title Tooltip</h2>
-
+<body style="text-align: center;">
      <p>
-          <abbr class="tooltip" id="tooltipID2" title="The Doctor">WHO</abbr> was founded in 1963.
+          X: <span id="x-value"></span>
      </p>
-</div>
- <p  class="tooltip" id="tooltipID3" title="This is the tip">Full text tooltip</p>
-
      <p>
-          Newlines in title should be taken into account,like this <abbr 
-		  title="This 
+          Y: <span id="y-value"></span>
+     </p>
+     <h1>Tooltip</h1>
+     <br>
+     <br>
+     <h2>CSS Left Tooltip w/ Right Arrow</h2>
+     <div class="tooltip" id="tooltipID1">
+          Hover over me <span class="tooltiptext">Tooltip text</span>
+     </div>
+     <br>
+     <br>
+     <div>
+          <h2>Title Tooltip</h2>
+          <p>
+               <abbr class="tooltip" id="tooltipID2" title="The Doctor">WHO</abbr> was founded in 1963.
+          </p>
+     </div>
+     <p class="tooltip" id="tooltipID3" title="This is the tip">Full text tooltip</p>
+     <p>
+          Newlines in title should be taken into account,like this <abbr title="This 
 is a 
-		  multiline title" id="tooltipID4" class="tooltip" >example</abbr>.
+		  multiline title" id="tooltipID4" class="tooltip">example</abbr>.
      </p>
-	 <br>
-<br>
-      <h2>Title Tooltip with Image</h2>
+     <br>
+     <br>
+     <h2>Title Tooltip with Image</h2>
      <img id="tooltipID5" src="smiley.gif" alt="Smiley face" title="this will be displayed as a tooltip" width="42" height="42">
-	 
-	 <br>
-<br>
-	 <h2>Image with onmouseevent</h2>
-	 
-	 <p>The function bigImg() is triggered when the user moves the mouse pointer over the image.</p>
+     <br>
+     <br>
+     <h2>Image with onmouseevent</h2>
+     <p>The function bigImg() is triggered when the user moves the mouse pointer over the image.</p>
      <p>The function normalImg() is triggered when the mouse pointer is moved out of the image.</p>
-	 
      <img id="tooltipID6" title="OnMouse Title text" onmouseover="bigImg(this)" onmouseout="normalImg(this)" border="0" src="smiley.gif" alt="Smiley" width="32" height="32">
-
-	 <br>
-<br>
-     <p>This is onmouseover event function call to add title to source, 
- <span class="tooltip" id="tooltipID7" onmouseover="boldAdvise(this)"><b>bold section</b></span> displays tooltip when onmouseover event is fired.
+     <br>
+     <br>
+     <p>
+          This is onmouseover event function call to add title to source, <span class="tooltip" id="tooltipID7" onmouseover="boldAdvise(this)"><b>bold section</b></span> displays tooltip when onmouseover event is fired.
      </p>
      <script type="text/javascript">
 						function boldAdvise(src) {
@@ -94,8 +74,10 @@ is a
 							x.style.height = "32px";
 							x.style.width = "32px";
 						}
+						window.addEventListener('mousemove', function(e) {
+							document.getElementById('x-value').textContent = e.x;
+							document.getElementById('y-value').textContent = e.y;
+						});
 					</script>
-
-
 </body>
 </html>
