@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 class TestConfiguration {
-	private TestConfigurationtestDetails testConfiguration;
+	private TestConfigurationBuild testConfiguration;
 
 	void addTestData(String testData) {
 		this.testConfiguration.testData.add(testData);
@@ -70,15 +70,15 @@ class TestConfiguration {
 		this.testConfiguration.testDetails.setTestType(testType);
 	}
 
-	class TestConfigurationtestDetails {
-		private TestDetailsFields testDetails;
+	class TestConfigurationBuild {
+		private TestDetails testDetails;
 		private String testInstance;
 		private List<String> testModule = new ArrayList<String>();
 		private List<String> testElement = new ArrayList<String>();
 		private List<String> testData = new ArrayList<String>();
 	}
 
-	class TestDetailsFields {
+	class TestDetails {
 		private String testName;
 		private String testDescription;
 		private String testType;

@@ -80,17 +80,12 @@ class ConfigurationSetup {
 			//System.out.println(gson.toJson(testStep.getTestModule()));
 			testStepList.addAll(testStep.getTestModule());
 		}
-		
 		Integer testInstanceCount = testInstance.getInstanceCount();
-	
-		
 		for (int i = 0; i < testInstanceCount; i++) {
 			testSteps.add(testStepList);
 		}
 		System.out.println(gson.toJson(testSteps));
-		
-		System.exit(0);
-		
+		//System.exit(0);
 		for (String testElement : testConfiguration.getTestElement()) {
 			System.out.println(testElement);
 		}
@@ -100,34 +95,33 @@ class ConfigurationSetup {
 		//replace the null values with TestStepDefaults
 		TestStepDefault testStepDefault = gson.fromJson(new FileReader(Path.getInstance().testModules + "tm_default.json"), TestStepDefault.class);
 		System.out.println(gson.toJson(testStepDefault));
-		TestStepDefault.TestStepDefaultFields testStepDefaultFields = testStepDefault.getTestStepDefaultFields();
 		for (TestStep.TestStepFields testStepListEach : testStepList) {
 			if (testStepListEach.getAssertSet() == null) {
-				testStepListEach.setAssertSet(testStepDefaultFields.getAssertSet());
+				testStepListEach.setAssertSet(testStepDefault.getAssertSet());
 			}
 			if (testStepListEach.getOptional() == null) {
-				testStepListEach.setOptional(testStepDefaultFields.getOptional());
+				testStepListEach.setOptional(testStepDefault.getOptional());
 			}
 			if (testStepListEach.getExitOnFail() == null) {
-				testStepListEach.setExitOnFail(testStepDefaultFields.getExitOnFail());
+				testStepListEach.setExitOnFail(testStepDefault.getExitOnFail());
 			}
 			if (testStepListEach.getMillisecondsToWait() == null) {
-				testStepListEach.setMillisecondsToWait(testStepDefaultFields.getMillisecondsToWait());
+				testStepListEach.setMillisecondsToWait(testStepDefault.getMillisecondsToWait());
 			}
 			if (testStepListEach.getPleaseWait() == null) {
-				testStepListEach.setPleaseWait(testStepDefaultFields.getPleaseWait());
+				testStepListEach.setPleaseWait(testStepDefault.getPleaseWait());
 			}
 			if (testStepListEach.getHighlight() == null) {
-				testStepListEach.setHighlight(testStepDefaultFields.getHighlight());
+				testStepListEach.setHighlight(testStepDefault.getHighlight());
 			}
 			if (testStepListEach.getScreenshot() == null) {
-				testStepListEach.setScreenshot(testStepDefaultFields.getScreenshot());
+				testStepListEach.setScreenshot(testStepDefault.getScreenshot());
 			}
 			if (testStepListEach.getScreenshotArea() == null) {
-				testStepListEach.setScreenshotArea(testStepDefaultFields.getScreenshotArea());
+				testStepListEach.setScreenshotArea(testStepDefault.getScreenshotArea());
 			}
 			if (testStepListEach.getStatus() == null) {
-				testStepListEach.setStatus(testStepDefaultFields.getStatus());
+				testStepListEach.setStatus(testStepDefault.getStatus());
 			}
 		}
 		System.out.println(gson.toJson(testStepList));

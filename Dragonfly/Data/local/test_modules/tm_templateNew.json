@@ -8,7 +8,7 @@
       "attributeValues": "",
       "inputValue": "",
       "assertSet": "",
-      "optional": false,
+      "optional": true,
       "exitOnFail": false,
       "millisecondsToWait": 0,
       "function": "",
@@ -18,7 +18,7 @@
       "highlight": false,
       "screenshot": false,
       "assistiveProperties": "",
-      "outputValue": ""
+      "outputValue": null
     },
     {
       "action": "",

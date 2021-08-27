@@ -20,17 +20,53 @@ import com.google.gson.reflect.TypeToken;
 public class Dragonfly2 {
 	public static void main(String[] args) {
 		
+		try {
+			Path.getInstance().setDirectory("local");
+			new ConfigurationSetup("atw_test.json");
+		} catch (FileNotFoundException e3) {
+			// TODO Auto-generated catch block
+			e3.printStackTrace();
+		}
+		System.exit(0);
 		
+		
+//		//TestConfiguration
+//		try {
+//			//String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_configuration\\template.json";
+//			String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_configuration\\atw_test.json";
+//			FileReader jsonFile = new FileReader(filePath);
+//			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
+//			TestConfiguration testConfiguration = gson.fromJson(jsonFile, TestConfiguration.class);
+//			System.out.println(gson.toJson(testConfiguration));
+//			//UtilFile.write(filePath, gson.toJson(testConfiguration));
+//		} catch (FileNotFoundException e2) {
+//			e2.printStackTrace();
+//		}
+//		System.exit(0);
+		//TestSuite
+		try {
+			String filePath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Data\\local\\test_suite\\ts_template.json";
+			FileReader jsonFile = new FileReader(filePath);
+			Gson gson = new Gson().newBuilder().setPrettyPrinting().serializeNulls().create();
+			TestSuite testSuite = gson.fromJson(jsonFile, TestSuite.class);
+			System.out.println(gson.toJson(testSuite.getBrowser()));
+			testSuite.setBrowser("edge");
+			System.out.println(gson.toJson(testSuite.getBrowser()));
+			
+			System.out.println(gson.toJson(testSuite));
+			//UtilFile.write(filePath, gson.toJson(testConfiguration));
+		} catch (FileNotFoundException e2) {
+			e2.printStackTrace();
+		}
+		System.exit(0);
 		try {
 			System.out.println(new ClassByName().getReturnString("DataDateDaysOut", "2"));
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException e4) {
 			// TODO Auto-generated catch block
 			e4.printStackTrace();
 		}
-		
 		//DataDateDaysOut dataDateDaysOut = new DataDateDaysOut();
 		//System.out.println(dataDateDaysOut.data_DateDaysOut("1"));
-		
 		//System.exit(0);
 		try {
 			Path.getInstance().setDirectory("local");
@@ -39,9 +75,7 @@ public class Dragonfly2 {
 			// TODO Auto-generated catch block
 			e3.printStackTrace();
 		}
-		
 		System.exit(0);
-		
 		//TestStep
 		try {
 			//Path.getInstance().setDirectory("local");

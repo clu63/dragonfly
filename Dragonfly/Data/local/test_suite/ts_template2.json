@@ -1,15 +1,13 @@
 {
   "testSuite": {
-    "stepOverrides": {
+    "testSuiteDetails": {
       "millisecondsToWait": 120000,
       "browser": "valueInTest",
       "screenshots": "on",
-      "highlight": "on"
-    },
-    "runSettings": {
+      "highlight": "on",
       "environment": "",
       "threads": 1,
-      "host": "local",
+      "host": "",
       "port": 4444
     },
     "testIterations": [
@@ -17,24 +15,24 @@
         {
           "testconfiguration": "",
           "testInstance": "",
-          "browserOverride": "chrome"
+          "browser": "chrome"
         },
         {
           "testconfiguration": "",
           "testInstance": "",
-          "browserOverride": "ie"
+          "browser": "ie"
         }
       ],
       [
         {
           "testconfiguration": "",
           "testInstance": "",
-          "browserOverride": "firefox"
+          "browser": "firefox"
         },
         {
           "testconfiguration": "",
           "testInstance": "",
-          "browserOverride": "edge"
+          "browser": "edge"
         }
       ]
     ]

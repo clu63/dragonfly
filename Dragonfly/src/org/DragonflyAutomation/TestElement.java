@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 class TestElement {
-	private TestElementDetail testElement;
+	private TestElementBuild testElement;
 
-	class ObjectDetail {
+	class ElementFields {
 		private String logicalName;
 		private String tagName;
 		private String attributeNames;
@@ -45,11 +45,11 @@ class TestElement {
 		}
 	}
 
-	class TestElementDetail {
+	class TestElementBuild {
 		private String testApplication;
-		private List<ObjectDetail> element = new ArrayList<ObjectDetail>();
-		private List<ObjectDetail> error = new ArrayList<ObjectDetail>();
-		private List<ObjectDetail> processing = new ArrayList<ObjectDetail>();
+		private List<ElementFields> element = new ArrayList<ElementFields>();
+		private List<ElementFields> error = new ArrayList<ElementFields>();
+		private List<ElementFields> processing = new ArrayList<ElementFields>();
 		private transient Integer elementEach;
 
 		boolean findElement(String logicalName) {
@@ -63,7 +63,7 @@ class TestElement {
 			return false;
 		}
 
-		ObjectDetail getElement() {
+		ElementFields getElement() {
 			return element.get(elementEach);
 		}
 
@@ -75,11 +75,11 @@ class TestElement {
 		//			}
 		//			return this;
 		//		}
-		List<ObjectDetail> getError() {
+		List<ElementFields> getError() {
 			return error;
 		}
 
-		List<ObjectDetail> getProcessing() {
+		List<ElementFields> getProcessing() {
 			return processing;
 		}
 
@@ -87,15 +87,15 @@ class TestElement {
 			return this.testApplication;
 		}
 
-		void setElement(List<ObjectDetail> element) {
+		void setElement(List<ElementFields> element) {
 			this.element = element;
 		}
 
-		void setError(List<ObjectDetail> processing) {
+		void setError(List<ElementFields> processing) {
 			this.processing = processing;
 		}
 
-		void setProcessing(List<ObjectDetail> element) {
+		void setProcessing(List<ElementFields> element) {
 			this.element = element;
 		}
 
