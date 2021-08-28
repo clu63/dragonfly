@@ -23,15 +23,15 @@ class TestConfiguration {
 	}
 
 	String getTestDetailsTestDescription() {
-		return this.testConfiguration.testDetails.getTestDescription();
+		return this.testConfiguration.testDetails.testDescription;
 	}
 
 	String getTestDetailsTestName() {
-		return this.testConfiguration.testDetails.getTestName();
+		return this.testConfiguration.testDetails.testName;
 	}
 
 	String getTestDetailsTestType() {
-		return this.testConfiguration.testDetails.getTestType();
+		return this.testConfiguration.testDetails.testType;
 	}
 
 	List<String> getTestElement() {
@@ -59,15 +59,15 @@ class TestConfiguration {
 	}
 
 	void setTestDetailsTestDescription(String testDescription) {
-		this.testConfiguration.testDetails.setTestDescription(testDescription);
+		this.testConfiguration.testDetails.testDescription = testDescription;
 	}
 
 	void setTestDetailsTestName(String testName) {
-		this.testConfiguration.testDetails.setTestName(testName);
+		this.testConfiguration.testDetails.testName = testName;
 	}
 
 	void setTestDetailsTestType(String testType) {
-		this.testConfiguration.testDetails.setTestType(testType);
+		this.testConfiguration.testDetails.testType = testType;
 	}
 
 	class TestConfigurationBuild {
@@ -82,29 +82,28 @@ class TestConfiguration {
 		private String testName;
 		private String testDescription;
 		private String testType;
-
-		private String getTestDescription() {
-			return this.testDescription;
-		}
-
-		private String getTestName() {
-			return this.testName;
-		}
-
-		private String getTestType() {
-			return this.testType;
-		}
-
-		private void setTestDescription(String testDescription) {
-			this.testDescription = testDescription;
-		}
-
-		private void setTestName(String testName) {
-			this.testName = testName;
-		}
-
-		private void setTestType(String testType) {
-			this.testType = testType;
-		}
+		//		private String getTestDescription() {
+		//			return this.testDescription;
+		//		}
+		//
+		//		private String getTestName() {
+		//			return this.testName;
+		//		}
+		//
+		//		private String getTestType() {
+		//			return this.testType;
+		//		}
+		//
+		//		private void setTestDescription(String testDescription) {
+		//			this.testDescription = testDescription;
+		//		}
+		//
+		//		private void setTestName(String testName) {
+		//			this.testName = testName;
+		//		}
+		//
+		//		private void setTestType(String testType) {
+		//			this.testType = testType;
+		//		}
 	}
 }
