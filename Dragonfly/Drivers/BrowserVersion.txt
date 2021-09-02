@@ -1,0 +1,4 @@
+chrome version 92.0.4515.159 (Official Build) (64-bit)
+firefox version 78.13.0esr (64-bit)
+edge version 91.0.864.41 (Official build) (64-bit)
+ie11 version 1909 (OS build 18363.1679)
