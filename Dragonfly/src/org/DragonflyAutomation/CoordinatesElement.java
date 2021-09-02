@@ -3,8 +3,10 @@ package org.DragonflyAutomation;
 import java.awt.Rectangle;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.interactions.internal.Coordinates;
-import org.openqa.selenium.interactions.internal.Locatable;
+import org.openqa.selenium.interactions.Coordinates;
+import org.openqa.selenium.interactions.Locatable;
+//import org.openqa.selenium.interactions.internal.Coordinates;
+//import org.openqa.selenium.interactions.internal.Locatable;
 
 class CoordinatesElement {
 	CoordinatesElement() {
@@ -24,6 +26,7 @@ class CoordinatesElement {
 			if (Element.getInstance().element != null) {
 				System.out.println("before objElementCoordinates");
 				Coordinates objElementCoordinates = ((Locatable) Element.getInstance().element).getCoordinates();
+				//	Coordinates objElementCoordinates = ((Locatable) Element.getInstance().element).getCoordinates();
 				System.out.println("objElementCoordinates.toString() = " + objElementCoordinates.toString());
 				System.out.println("objElementCoordinates.onPage() = " + objElementCoordinates.onPage());
 				//System.out.println("objElementCoordinates.onScreen() = " + objElementCoordinates.onScreen());

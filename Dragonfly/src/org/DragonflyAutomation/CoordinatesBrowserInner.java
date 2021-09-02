@@ -15,7 +15,9 @@ class CoordinatesBrowserInner {
 			case "internet explorer":
 				Logger.getInstance().add("CoordinatesBrowserInner: ie");
 				lngBrowserInnerWidth = (Long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return window.screenLeft;");
+				Logger.getInstance().add("CoordinatesBrowserInner: lngBrowserInnerWidth " + lngBrowserInnerWidth);
 				lngBrowserInnerHeight = (Long) ((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript("return window.screenTop;");
+				Logger.getInstance().add("CoordinatesBrowserInner: lngBrowserInnerHeight " + lngBrowserInnerHeight);
 				JSONS.getInstance().step.putValue("intBrowserInnerWidth", Long.toString(lngBrowserInnerWidth));
 				JSONS.getInstance().step.putValue("intBrowserInnerHeight", Long.toString(lngBrowserInnerHeight));
 				break;

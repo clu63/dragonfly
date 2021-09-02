@@ -1,9 +1,6 @@
 package org.DragonflyAutomation;
 
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.interactions.internal.Locatable;
 
 class ElementOnMouseOver {
 	ElementOnMouseOver() {

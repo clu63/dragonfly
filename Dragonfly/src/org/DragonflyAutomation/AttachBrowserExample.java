@@ -2,7 +2,6 @@ package org.DragonflyAutomation;
 
 //import org.openqa.selenium.WebDriver;
 //import org.openqa.selenium.remote.RemoteWebDriver;
-//import org.openqa.selenium.remote.DesiredCapabilities;
 //import java.net.URL;
 //
 //class RemoteTest {
@@ -46,6 +45,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.Command;
 import org.openqa.selenium.remote.CommandExecutor;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -58,7 +58,12 @@ import org.openqa.selenium.remote.http.W3CHttpCommandCodec;
 import org.openqa.selenium.remote.http.W3CHttpResponseCodec;
 import com.google.common.base.Splitter;
 
-class AttachBrowserExample {
+class AttachBrowserExample implements java.io.Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	class FileManagement {
 		File fileToCreate = null;
 
@@ -109,7 +114,6 @@ class AttachBrowserExample {
 	}
 	boolean blnAttach;
 	String browserName = null;
-	DesiredCapabilities desiredCapabilities = new DesiredCapabilities();
 	Map<String, String> desiredCapabilitiesMap;
 	WebDriver objWebDriver = null;
 	String pathCapabilitiesMap = "c:\\temp\\map.txt";
@@ -170,6 +174,7 @@ class AttachBrowserExample {
 		URL url = null;
 		SessionId session_id;
 		String sessionId = "";
+		InternetExplorerOptions internetExplorerOptions = null;
 		switch (browserName) {
 		case "chrome":
 			ChromeOptions chromeOptions = new ChromeOptions();
@@ -181,7 +186,6 @@ class AttachBrowserExample {
 			if (blnAttach == false) {
 				System.setProperty("webdriver.chrome.driver", "C:\\SeleniumTest\\drivers\\chromedriver.exe");
 				objWebDriver = new ChromeDriver(chromeOptions);
-				//desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
 			}
 			break;
 		case "firefox":
@@ -194,31 +198,48 @@ class AttachBrowserExample {
 			}
 			break;
 		case "ie_32":
-			desiredCapabilities = DesiredCapabilities.internetExplorer();
-			desiredCapabilities.setJavascriptEnabled(true);
-			desiredCapabilities.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, "ignore");
-			desiredCapabilities.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
-			desiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
-			desiredCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
-			desiredCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, false);
-			desiredCapabilities.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
+			System.setProperty("webdriver.ie.driver.loglevel", "DEBUG");
+			System.setProperty("webdriver.ie.driver.logfile", Path.getInstance().results + "IEDriverLog.log");
+			internetExplorerOptions = new InternetExplorerOptions();
+			internetExplorerOptions.setCapability(CapabilityType.SUPPORTS_JAVASCRIPT, true);
+			internetExplorerOptions.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
+			internetExplorerOptions.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
+			internetExplorerOptions.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
+			internetExplorerOptions.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, UnexpectedAlertBehaviour.IGNORE);
+			internetExplorerOptions.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
+			internetExplorerOptions.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, false);
 			if (blnAttach == false) {
 				System.setProperty("webdriver.ie.driver", "C:\\SeleniumTest\\drivers\\IEDriverServer_32.exe");
-				objWebDriver = new InternetExplorerDriver(new InternetExplorerOptions().merge(desiredCapabilities));
+				objWebDriver = new InternetExplorerDriver(internetExplorerOptions);
+			}
+			// Serialization 
+			try {
+				//Saving of object in a file
+				FileOutputStream file = new FileOutputStream("c:\\temp\\map.ser");
+				ObjectOutputStream out = new ObjectOutputStream(file);
+				// Method for serialization of object
+				out.writeObject(internetExplorerOptions);
+				out.close();
+				file.close();
+				System.out.println("Object has been serialized");
+			} catch (IOException ex) {
+				System.out.println("IOException is caught");
 			}
 			break;
 		case "ie_64":
-			desiredCapabilities = DesiredCapabilities.internetExplorer();
-			desiredCapabilities.setJavascriptEnabled(true);
-			desiredCapabilities.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, "ignore");
-			desiredCapabilities.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
-			desiredCapabilities.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, false);
-			desiredCapabilities.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
-			desiredCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, false);
-			desiredCapabilities.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
+			System.setProperty("webdriver.ie.driver.loglevel", "DEBUG");
+			System.setProperty("webdriver.ie.driver.logfile", Path.getInstance().results + "IEDriverLog.log");
+			internetExplorerOptions = new InternetExplorerOptions();
+			internetExplorerOptions.setCapability(CapabilityType.SUPPORTS_JAVASCRIPT, true);
+			internetExplorerOptions.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
+			internetExplorerOptions.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
+			internetExplorerOptions.setCapability(InternetExplorerDriver.INITIAL_BROWSER_URL, "about:blank");
+			internetExplorerOptions.setCapability(InternetExplorerDriver.UNEXPECTED_ALERT_BEHAVIOR, UnexpectedAlertBehaviour.IGNORE);
+			internetExplorerOptions.setCapability(InternetExplorerDriver.NATIVE_EVENTS, false);
+			internetExplorerOptions.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, false);
 			if (blnAttach == false) {
 				System.setProperty("webdriver.ie.driver", "C:\\SeleniumTest\\drivers\\IEDriverServer_64.exe");
-				objWebDriver = new InternetExplorerDriver(new InternetExplorerOptions().merge(desiredCapabilities));
+				objWebDriver = new InternetExplorerDriver(internetExplorerOptions);
 			}
 			break;
 		case "opera":
@@ -245,14 +266,14 @@ class AttachBrowserExample {
 			new FileManagement(pathSessionId).write(session_id.toString());
 			String strMapFile = null;
 			Map<String, String> theMap2;
-			theMap2 = (Map<String, String>) ((RemoteWebDriver) objWebDriver).getCapabilities().asMap();
-			for (String key : theMap2.keySet()) {
-				if (strMapFile != null) {
-					strMapFile = strMapFile + "~~~~~~~~~~" + key + "++++++++++" + String.valueOf(theMap2.get(key));
-				} else {
-					strMapFile = key + "++++++++++" + String.valueOf(theMap2.get(key));
-				}
-			}
+			//theMap2 = (Map<String, String>) ((RemoteWebDriver) objWebDriver).getCapabilities().asMap();
+			//			for (String key : theMap2.keySet()) {
+			//				if (strMapFile != null) {
+			//					strMapFile = strMapFile + "~~~~~~~~~~" + key + "++++++++++" + String.valueOf(theMap2.get(key));
+			//				} else {
+			//					strMapFile = key + "++++++++++" + String.valueOf(theMap2.get(key));
+			//				}
+			//			}
 			new FileManagement(pathCapabilitiesMap).write(strMapFile);
 		} else {
 			try {

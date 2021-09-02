@@ -41,57 +41,60 @@ class ElementDropSync {
 					blnEnabled = true;
 				}
 				ElementDrop.getInstance().elementDrop = Element.getInstance().element;
-				Logger.getInstance().add("++++++++++++++ElementDrag: outerHTML = " + ElementDrag.getInstance().elementDrag.getAttribute("outerHTML"));
-				Logger.getInstance().add("++++++++++++++ElementDrop: outerHTML = " + ElementDrop.getInstance().elementDrop.getAttribute("outerHTML"));
-				//
-				WebElement webElementBody = null;
-				webElementBody = BrowserDriver.getInstance().browserDriver.findElement(By.xpath("/html/body"));
-				//
-				int dragX = ElementDrag.getInstance().elementDrag.getLocation().getX();
-				int dragY = ElementDrag.getInstance().elementDrag.getLocation().getY();
-				int dropX = ElementDrop.getInstance().elementDrop.getLocation().getX();
-				int dropY = ElementDrop.getInstance().elementDrop.getLocation().getY();
-				int bodyX = webElementBody.getLocation().getX();
-				int bodyY = webElementBody.getLocation().getY();
-				//
-				int dragHeight = ElementDrag.getInstance().elementDrag.getSize().getHeight();
-				int dragWidth = ElementDrag.getInstance().elementDrag.getSize().getWidth();
-				int dropHeight = ElementDrop.getInstance().elementDrop.getSize().getHeight();
-				int dropWidth = ElementDrop.getInstance().elementDrop.getSize().getWidth();
-				int bodyHeight = webElementBody.getSize().getHeight();
-				int bodyWidth = webElementBody.getSize().getWidth();
-				//
-				int dragMiddleX = dragX + (dragWidth / 2);
-				int dragMiddleY = dragY + (dragHeight / 2);
-				int dropMiddleX = dropX + (dropWidth / 2);
-				int dropMiddleY = dropY + (dropHeight / 2);
-				int bodyMiddleX = dropX + (bodyHeight / 2);
-				int bodyMiddleY = dropY + (bodyWidth / 2);
-				//
-				Logger.getInstance().add("++++++++++++++ElementBody: x,y = " + bodyX + "," + bodyY);
-				Logger.getInstance().add("++++++++++++++ElementBody: Width,Height = " + bodyWidth + "," + bodyHeight);
-				Logger.getInstance().add("++++++++++++++ElementDrag: x,y = " + dragX + "," + dragY);
-				Logger.getInstance().add("++++++++++++++ElementDrag: Width,Height = " + dragWidth + "," + dragHeight);
-				Logger.getInstance().add("++++++++++++++ElementDrop: x,y = " + dropX + "," + dropY);
-				Logger.getInstance().add("++++++++++++++ElementDrop: Width,Height = " + dropWidth + "," + dropHeight);
-				//
-				Actions actions = new Actions(BrowserDriver.getInstance().browserDriver);
-				Logger.getInstance().add("++++++++++++++ElementDrag: moveToElement = " + dragMiddleX + "," + dragMiddleY);
-				actions.moveToElement(ElementDrag.getInstance().elementDrag).perform();
-				new SleepMilliseconds(10000);
-				Logger.getInstance().add("++++++++++++++webElementDrag moveByOffset distance= " + (dropMiddleX - dragMiddleX) + "," + (dropMiddleY - dragMiddleY));
-				Logger.getInstance().add("++++++++++++++webElementDrop middle x,y = " + (dragMiddleX + (dropMiddleX - dragMiddleX)) + "," + (dragMiddleY + (dropMiddleY - dragMiddleY)));
-				actions.moveByOffset((dropMiddleX - dragMiddleX), (dropMiddleY - dragMiddleY)).perform();
-				new SleepMilliseconds(10000);
-				//actions.moveToElement(ElementDrag.getInstance().elementDrag).pause(2000).clickAndHold().pause(2000).moveByOffset((dropMiddleX - dragMiddleX), (dropMiddleY - dragMiddleY)).pause(2000).release().perform();
-				//
-				actions.moveToElement(ElementDrag.getInstance().elementDrag).perform();
-				new SleepMilliseconds(2000);
-				actions.clickAndHold().perform();
-				new SleepMilliseconds(2000);
-				actions.moveByOffset((dropMiddleX - dragMiddleX), (dropMiddleY - dragMiddleY)).perform();
-				new SleepMilliseconds(2000);
-				actions.release().perform();
+				//				Logger.getInstance().add("++++++++++++++ElementDrag: outerHTML = " + ElementDrag.getInstance().elementDrag.getAttribute("outerHTML"));
+				//				Logger.getInstance().add("++++++++++++++ElementDrop: outerHTML = " + ElementDrop.getInstance().elementDrop.getAttribute("outerHTML"));
+				//				//
+				//				WebElement webElementBody = null;
+				//				webElementBody = BrowserDriver.getInstance().browserDriver.findElement(By.xpath("/html/body"));
+				//				//
+				//				int dragX = ElementDrag.getInstance().elementDrag.getLocation().getX();
+				//				int dragY = ElementDrag.getInstance().elementDrag.getLocation().getY();
+				//				int dropX = ElementDrop.getInstance().elementDrop.getLocation().getX();
+				//				int dropY = ElementDrop.getInstance().elementDrop.getLocation().getY();
+				//				int bodyX = webElementBody.getLocation().getX();
+				//				int bodyY = webElementBody.getLocation().getY();
+				//				//
+				//				int dragHeight = ElementDrag.getInstance().elementDrag.getSize().getHeight();
+				//				int dragWidth = ElementDrag.getInstance().elementDrag.getSize().getWidth();
+				//				int dropHeight = ElementDrop.getInstance().elementDrop.getSize().getHeight();
+				//				int dropWidth = ElementDrop.getInstance().elementDrop.getSize().getWidth();
+				//				int bodyHeight = webElementBody.getSize().getHeight();
+				//				int bodyWidth = webElementBody.getSize().getWidth();
+				//				//
+				//				int dragMiddleX = dragX + (dragWidth / 2);
+				//				int dragMiddleY = dragY + (dragHeight / 2);
+				//				int dropMiddleX = dropX + (dropWidth / 2);
+				//				int dropMiddleY = dropY + (dropHeight / 2);
+				//				int bodyMiddleX = dropX + (bodyHeight / 2);
+				//				int bodyMiddleY = dropY + (bodyWidth / 2);
+				//				//
+				//				Logger.getInstance().add("++++++++++++++ElementBody: x,y = " + bodyX + "," + bodyY);
+				//				Logger.getInstance().add("++++++++++++++ElementBody: Width,Height = " + bodyWidth + "," + bodyHeight);
+				//				Logger.getInstance().add("++++++++++++++ElementDrag: x,y = " + dragX + "," + dragY);
+				//				Logger.getInstance().add("++++++++++++++ElementDrag: Width,Height = " + dragWidth + "," + dragHeight);
+				//				Logger.getInstance().add("++++++++++++++ElementDrop: x,y = " + dropX + "," + dropY);
+				//				Logger.getInstance().add("++++++++++++++ElementDrop: Width,Height = " + dropWidth + "," + dropHeight);
+				//				//
+				//				Actions actions = new Actions(BrowserDriver.getInstance().browserDriver);
+				//				Logger.getInstance().add("++++++++++++++ElementDrag: moveToElement = " + dragMiddleX + "," + dragMiddleY);
+				//				actions.moveToElement(ElementDrag.getInstance().elementDrag).perform();
+				//				new SleepMilliseconds(10000);
+				//				Logger.getInstance().add("++++++++++++++webElementDrag moveByOffset distance= " + (dropMiddleX - dragMiddleX) + "," + (dropMiddleY - dragMiddleY));
+				//				Logger.getInstance().add("++++++++++++++webElementDrop middle x,y = " + (dragMiddleX + (dropMiddleX - dragMiddleX)) + "," + (dragMiddleY + (dropMiddleY - dragMiddleY)));
+				//				actions.moveByOffset((dropMiddleX - dragMiddleX), (dropMiddleY - dragMiddleY)).perform();
+				//				new SleepMilliseconds(10000);
+				//				//actions.moveToElement(ElementDrag.getInstance().elementDrag).pause(2000).clickAndHold().pause(2000).moveByOffset((dropMiddleX - dragMiddleX), (dropMiddleY - dragMiddleY)).pause(2000).release().perform();
+				//				//
+				////				actions.moveToElement(ElementDrag.getInstance().elementDrag).perform();
+				////				new SleepMilliseconds(2000);
+				////				actions.clickAndHold().perform();
+				////				new SleepMilliseconds(2000);
+				////				actions.moveByOffset((dropMiddleX - dragMiddleX), (dropMiddleY - dragMiddleY)).perform();
+				////				new SleepMilliseconds(2000);
+				////				actions.release().perform();
+				//				
+				//				//actions.clickAndHold(ElementDrag.getInstance().elementDrag).moveByOffset(-1,-1).moveToElement(ElementDrop.getInstance().elementDrop).release().build().perform();
+				//				actions.clickAndHold(ElementDrag.getInstance().elementDrag).moveByOffset(-1,-1).moveToElement(ElementDrop.getInstance().elementDrop).release().build().perform();
 				//
 				//				//
 				//				Logger.getInstance().add("++++++++++++++Test moves body");
@@ -202,13 +205,12 @@ class ElementDropSync {
 				//				    var dragEndEvent = createEvent('dragend');
 				//				    dispatchEvent(element, dragEndEvent, dropEvent.dataTransfer);
 				//				}
-				//				try {
-				//					//simulateDragAndDrop(ElementDrag.getInstance().elementDrag, ElementDrop.getInstance().elementDrop);
-				//					simulateDragAndDrop();
-				//				} catch (Exception e) {
-				//					// TODO Auto-generated catch block
-				//					e.printStackTrace();
-				//				}
+				try {
+					//simulateDragAndDrop(ElementDrag.getInstance().elementDrag, ElementDrop.getInstance().elementDrop);
+					simulateDragAndDrop();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				//				ElementDrop.getInstance().elementDrop = Element.getInstance().element;
 				//				//Actions actions = new Actions(BrowserDriver.getInstance().browserDriver);
 				//				//actions.dragAndDrop(gobjWebElementDrag, gobjWebElementDrop).perform();
@@ -220,7 +222,7 @@ class ElementDropSync {
 				//				objDragAndDrop.perform();
 				//				// 	Actions action = new Actions(BrowserDriver.getInstance().browserDriver);
 				//				// 	action.dragAndDrop(gobjWebElementDrag, gobjWebElementDrop).build().perform();
-				new SleepMilliseconds(10000);
+				//				new SleepMilliseconds(10000);
 				blnStatus = true;
 			} catch (NoSuchWindowException | StaleElementReferenceException | NoSuchElementException | NullPointerException | ExceptionElementNotFound | ExceptionMultipleElementsFound e) {
 				blnFound = false;
@@ -243,7 +245,7 @@ class ElementDropSync {
 	private void simulateDragAndDrop() throws Exception {
 		//private void simulateDragAndDrop(WebElement elementToDrag, WebElement target) throws Exception {
 		// WebDriver driver = getDriver();
-		JavascriptExecutor javascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
+		//JavascriptExecutor javascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
 		//@formatter:off
 		String javaScript = 
 		  "function createEvent(typeOfEvent) {\n" 
@@ -281,14 +283,12 @@ class ElementDropSync {
 		+ "   dispatchEvent(element, dragEndEvent, dropEvent.dataTransfer);\n" 
 		+ "}\n" 
 		+ "\n" 
-		
-
 		//+ "var elementToDrag = arguments[0];\n"
 		//+ "var target = arguments[1];\n"
 		//+ "simulateHTML5DragAndDrop(elementToDrag, target);";
 		+ "simulateHTML5DragAndDrop(arguments[0], arguments[1]);";
 		//@formatter:on
-		System.out.println(javaScript);
-		javascriptExecutor.executeScript(javaScript, ElementDrag.getInstance().elementDrag, ElementDrop.getInstance().elementDrop);
+		((JavascriptExecutor) BrowserDriver.getInstance().browserDriver).executeScript(javaScript, ElementDrag.getInstance().elementDrag, ElementDrop.getInstance().elementDrop);
+		//javascriptExecutor.executeScript(javaScript, ElementDrag.getInstance().elementDrag, ElementDrop.getInstance().elementDrop);
 	}
 }

@@ -6,7 +6,6 @@ import autoitx4java.AutoItX;
 class ElementGet {
 	String run() throws ExceptionElementTagNameNotSupported {
 		Logger.getInstance().add("  ==start==>ElementGet " + Util.getDateTimestamp());
-		AutoItX autoIt = new AutoItSetObject().createObject();
 		switch (JSONS.getInstance().step.getLowerCase("strTagType")) {
 		case "title":
 			return BrowserDriver.getInstance().browserDriver.getTitle();
@@ -57,6 +56,7 @@ class ElementGet {
 		case "table":
 			return Element.getInstance().element.getText();
 		case "alert":
+			AutoItX autoIt = new AutoItSetObject().createObject();
 			if (JSONS.getInstance().step.verifyEquals("strAttributeValues", "title")) {
 				return autoIt.winGetTitle("[ACTIVE]");
 			} else {

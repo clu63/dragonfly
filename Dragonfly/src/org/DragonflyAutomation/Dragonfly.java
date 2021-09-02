@@ -163,7 +163,7 @@ public class Dragonfly {
 		Boolean blnExit = false;
 		Logger.getInstance().add("  ==start==>mainDragonfly " + Util.getDateTimestamp());
 		//objAutoItSetObject.createObject();
-		Util.windowsMinimizeAll();
+		//Util.windowsMinimizeAll();
 		String strNameTestConfiguration;
 		try {
 			new DialogLaunch();

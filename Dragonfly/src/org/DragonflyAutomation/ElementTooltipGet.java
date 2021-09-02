@@ -1,14 +1,6 @@
 package org.DragonflyAutomation;
 
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.interactions.Mouse;
-import org.openqa.selenium.interactions.internal.Coordinates;
-import org.openqa.selenium.interactions.internal.Locatable;
-import org.openqa.selenium.interactions.HasInputDevices;
 
 class ElementTooltipGet {
 	String run() {
@@ -69,8 +61,8 @@ class ElementTooltipGet {
 		//		 mouse.mouseMove(imageCoordinates);
 		//
 		//Locatable elementLocation = (Locatable) Element.getInstance().element;
-//		int getX = Element.getInstance().element.getLocation().getX() * -1;
-//		int getY = Element.getInstance().element.getLocation().getY() * -1;
+		//		int getX = Element.getInstance().element.getLocation().getX() * -1;
+		//		int getY = Element.getInstance().element.getLocation().getY() * -1;
 		int getX = -1;
 		int getY = -1;
 		System.out.println("arguments[0].fireEvent('onmouseover'); start ");

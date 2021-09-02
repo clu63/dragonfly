@@ -16,16 +16,9 @@ class CoordinateHighlightScreenshot {
 	CoordinateHighlightScreenshot(final JSON objJsonObjectStepHighlightArea) {
 		Logger.getInstance().add("  ==start==>CoordinateHighlightScreenshot " + Util.getDateTimestamp());
 		long lngStartTime = System.currentTimeMillis();
-		//
-		//
-		// if (driver instanceof JavascriptExecutor) {
-		// ((JavascriptExecutor)driver).executeScript("arguments[0].style.outline
-		// = 'blue dotted 4px'", element);
-		// }
-		//
-		//
 		String outlineStyleOriginal = "";
 		String outlineStyle = "";
+		Logger.getInstance().add("objJsonObjectStepHighlightArea.getLowerCase(\"strStatus\") " + objJsonObjectStepHighlightArea.getLowerCase("strStatus"));
 		switch (objJsonObjectStepHighlightArea.getLowerCase("strStatus")) {
 		case "pass":
 			if (objJsonObjectStepHighlightArea.verifyEquals("strAction", "set") && objJsonObjectStepHighlightArea.verifyEquals("strAssert", "off")) {
@@ -43,15 +36,19 @@ class CoordinateHighlightScreenshot {
 		case "info":
 			outlineStyle = "magenta solid 4px"; //  Color.MAGENTA;
 			break;
+		default:
+			outlineStyle = "orange solid 4px";
 		}
 		if (Element.getInstance().element != null) {
-			JavascriptExecutor objJavascriptExecutor = null;
-			objJavascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
-			//objJavascriptExecutor.executeScript("arguments[0].style.outline = 'magenta solid 4px'", Element.getInstance().element);
-			outlineStyleOriginal = (String) objJavascriptExecutor.executeScript("return arguments[0].style.outline", Element.getInstance().element);
+			Logger.getInstance().add("Element.getInstance().element) " + Element.getInstance().element.getTagName());
+		} else {
+			Logger.getInstance().add("Element.getInstance().element null ");
+		}
+		if (Element.getInstance().element != null) {
+			JavascriptExecutor javascriptExecutor = (JavascriptExecutor) BrowserDriver.getInstance().browserDriver;
+			outlineStyleOriginal = (String) javascriptExecutor.executeScript("return arguments[0].style.outline", Element.getInstance().element);
 			System.out.println("outlineStyleOriginal = " + outlineStyleOriginal);
-			objJavascriptExecutor.executeScript("arguments[0].style.outline = '" + outlineStyle + "'", Element.getInstance().element);
-			//objJavascriptExecutor.executeScript("arguments[0].style.outline = 'red solid 4px'",
+			javascriptExecutor.executeScript("arguments[0].style.outline = '" + outlineStyle + "'", Element.getInstance().element);
 		}
 		//
 		//
