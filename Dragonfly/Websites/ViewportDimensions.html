@@ -1,14 +1,65 @@
 <html>
 <head>
 <script type="text/javascript">
+	window.addEventListener('mousemove', function(e) {
+		document.getElementById('x-value').textContent = e.x;
+		document.getElementById('y-value').textContent = e.y;
+		document.getElementById('screenX-value').textContent = e.screenX;
+		document.getElementById('screenY-value').textContent = e.screenY;
+		document.getElementById('clientX-value').textContent = e.clientX;
+		document.getElementById('clientY-value').textContent = e.clientY;
+		document.getElementById('windowScreenLeft-value').textContent = window.screenLeft;
+		document.getElementById('windowScreenTop-value').textContent = window.screenTop;
+		document.getElementById('boundingClientRectX-value').textContent = document.getElementById('buttonCoordinates').getBoundingClientRect().left;
+		document.getElementById('boundingClientRectY-value').textContent = document.getElementById('buttonCoordinates').getBoundingClientRect().top;
+
+		document.getElementById('screenElementX-value').textContent = (Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio)) + document.getElementById('buttonCoordinates').getBoundingClientRect().left;
+		document.getElementById('screenElementY-value').textContent = (Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio)) + document.getElementById('buttonCoordinates').getBoundingClientRect().top;
+
+		document.getElementById('screenToViewportX-value').textContent = Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);
+		document.getElementById('screenToViewportY-value').textContent = Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);
+	});
+
+	var txt = "";
+	txt += "<p>Total width/height: " + screen.width + "*" + screen.height + "</p>";
+	txt += "<p>Available width/height: " + screen.availWidth + "*" + screen.availHeight + "</p>";
+	txt += "<p>Color depth: " + screen.colorDepth + "</p>";
+	txt += "<p>Color resolution: " + screen.pixelDepth + "</p>";
+
+	document.getElementById("demo").innerHTML = txt;
+
+	function GetScreenCordinates(obj) {
+		document.getElementById('windowScreenX-value').textContent = document.getElementById('buttonCoordinates').offset().left + window.screenX;
+		document.getElementById('windowScreenY-value').textContent = document.getElementById('buttonCoordinates').offset().top + window.screenY;
+
+		var p = {};
+		p.x = obj.offsetLeft;
+		p.y = obj.offsetTop;
+		while (obj.offsetParent) {
+			p.x = p.x + obj.offsetParent.offsetLeft;
+			p.y = p.y + obj.offsetParent.offsetTop;
+			if (obj == document.getElementsByTagName("body")[0]) {
+				break;
+			} else {
+				obj = obj.offsetParent;
+			}
+		}
+		return p;
+	}
+
+	function GetTextboxCordinates() {
+		var txt = document.getElementById("txtText");
+		var p = GetScreenCordinates(txt);
+		alert("X:" + p.x + " Y:" + p.y);
+	}
 	function onAfterLoad() {
-		
+
 		document.write('<button onclick="onAfterLoad();" id="generateCoordinates">generateCoordinates</button>');
 		document.write('<p>ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg</p>');
-		
+
 		document.write('<p>Your viewport window.mozInnerScreenX is ' + Math.round(window.mozInnerScreenX * window.devicePixelRatio) + '</p>');
 		document.write('<p>Your viewport window.mozInnerScreenY is ' + Math.round(window.mozInnerScreenY * window.devicePixelRatio) + '</p>');
-		
+
 		document.write('<p>Your viewport window.innerWidth is ' + window.innerWidth + '</p>');
 		document.write('<p>Your viewport window.innerHeight is ' + window.innerHeight + '</p>');
 		document.write('<p>Your viewport window.outerWidth is ' + window.outerWidth + '</p>');
@@ -75,7 +126,54 @@
 	}
 </script>
 </head>
-<body onload="onAfterLoad();">
-     <a id="generateCoordinates">generateCoordinates</a>
+<body">
+     <p>
+          mouse X: <span id="x-value"></span>
+     </p>
+     <p>
+          mouse Y: <span id="y-value"></span>
+     </p>
+     <p>
+          >>>>>>>>>>>>>mouse screen X: <span id="screenX-value"></span>
+     </p>
+     <p>
+          >>>>>>>>>>>>>mouse screen Y: <span id="screenY-value"></span>
+     </p>
+     <p>
+          mouse client X: <span id="clientX-value"></span>
+     </p>
+     <p>
+          mouse client Y: <span id="clientY-value"></span>
+     </p>
+     <p>
+          window.screenLeft: <span id="windowScreenLeft-value"></span>
+     </p>
+     <p>
+          window.screenTop: <span id="windowScreenTop-value"></span>
+     </p>
+     <p>
+          boundingClientRect X: <span id="boundingClientRectX-value"></span>
+     </p>
+     <p>
+          boundingClientRect Y: <span id="boundingClientRectY-value"></span>
+     </p>
+     <p>
+          >>>>>>>>>>>>>screenElement X: <span id="screenElementX-value"></span>
+     </p>
+     <p>
+          >>>>>>>>>>>>>screenElement Y: <span id="screenElementY-value"></span>
+     </p>
+     <p>
+          screenToViewport X: <span id="screenToViewportX-value"></span>
+     </p>
+     <p>
+          screenToViewport Y: <span id="screenToViewportY-value"> </span>
+     </p>
+     <form id="form1">
+          <input id="txtText" type="text" /> <input id="buttonCoordinates" value="Get Coordinates" type="button" onclick="GetTextboxCordinates()" />
+     </form>
+     <h3>Your Screen:</h3>
+     <div id="demo"></div>
+     <a href="javascript:onAfterLoad()" id="generateCoordinates">generateCoordinates</a>
 </body>
 </html>

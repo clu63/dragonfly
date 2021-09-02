@@ -11,6 +11,44 @@
 }
 </style>
 <script>
+function createEvent(typeOfEvent) {
+	var event = document.createEvent("CustomEvent");
+	event.initCustomEvent(typeOfEvent, true, true, null);
+	   event.dataTransfer = {
+	       data: {},
+	       setData: function (key, value) {
+	           this.data[key] = value;
+	       },
+	       getData: function (key) {
+	           return this.data[key];
+	       }
+	   };
+	   return event;
+	}
+
+	function dispatchEvent(element, event, transferData) {
+	   if (transferData !== undefined) {
+	       event.dataTransfer = transferData;
+	   }
+	   if (element.dispatchEvent) {
+	       element.dispatchEvent(event);
+	   } else if (element.fireEvent) {
+	       element.fireEvent("on" + event.type, event);
+	   }
+	}
+
+	function simulateHTML5DragAndDrop(element, target) {
+	   var dragStartEvent = createEvent('dragstart');
+	   dispatchEvent(element, dragStartEvent);
+	   var dropEvent = createEvent('drop');
+	   dispatchEvent(target, dropEvent, dragStartEvent.dataTransfer);
+	   var dragEndEvent = createEvent('dragend');
+	   dispatchEvent(element, dragEndEvent, dropEvent.dataTransfer);
+	}
+	function startSimulateHTML5DragAndDrop() {
+		simulateHTML5DragAndDrop(document.getElementById('drag2'), document.getElementById('div3'));
+	}
+
 	function clearContent() {
 		document.getElementById('dragstartID').textContent = "";
 		document.getElementById('ondragoverID').textContent = "";
@@ -83,7 +121,7 @@
           ondrop: <span id="dropID"></span>
      </p>
      <br>
-     <font face="Verdana,Tahoma,Helvetica,sans-serif"> <font size="+1"><b>Drag and Drop</b></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:clearContent()">Clear Events</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:history.go(-1)"> Go Back </a><br> <br>
+     <font face="Verdana,Tahoma,Helvetica,sans-serif"> <font size="+1"><b>Drag and Drop</b></font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:clearContent()">Clear Events</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:startSimulateHTML5DragAndDrop()">Simulate DragAndDrop</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:history.go(-1)"> Go Back </a><br> <br>
           <p>Drag the flower image back and forth in the rectangles:</p>
           <div id="div1" ondrop="drop(event, 'purple flower')" ondragover="allowDrop(event, 'purple flower')">
                <img onmousedown="mouseDown('purple flower')" onmouseup="mouseUp('purple flower')" onclick="myClick('purple flower')" id="drag1" src="flower2.jpg" draggable="true" ondragstart="drag(event,'purple flower')" width="88" height="31"></img>
