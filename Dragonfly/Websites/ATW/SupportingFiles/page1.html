@@ -3,16 +3,375 @@
 <head>
 <title>Page1</title>
 <meta content="IE=7.0000" http-equiv="X-UA-Compatible">
-
 <meta content="text/html; charset=windows-1252" http-equiv="Content-Type">
 <meta name="GENERATOR" content="MSHTML 10.00.9200.17183">
+<style>
+form {
+     border-style: solid; border-color: coral;
+}
+
+<
+style>* {
+     box-sizing: border-box;
+}
+
+/* Create three equal columns that floats next to each other */
+.column {
+     float: left; width: 19.00%; padding: 2px; height: 420px; /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+     content: ""; display: table; clear: both;
+}
+
+p {
+     margin: 5px 0;
+}
+</style>
+<script type="text/javascript">
+	window.addEventListener('mousemove', function(e) {
+		document.getElementById('x-value').textContent = e.x;
+		document.getElementById('y-value').textContent = e.y;
+		document.getElementById('pageX-value').textContent = e.pageX;
+		document.getElementById('pageY-value').textContent = e.pageY;
+		document.getElementById('clientX-value').textContent = e.clientX;
+		document.getElementById('clientY-value').textContent = e.clientY;
+		document.getElementById('screenX-value').textContent = e.screenX;
+		document.getElementById('screenY-value').textContent = e.screenY;
+
+		document.getElementById('offsetX-value').textContent = e.offsetX;
+		document.getElementById('offsetY-value').textContent = e.offsetY;
+
+		document.getElementById('windowInnerWidth-value').textContent = window.innerWidth;
+		document.getElementById('windowInnerHeight-value').textContent = window.innerHeight;
+		document.getElementById('windowOuterWidth-value').textContent = window.outerWidth;
+		document.getElementById('windowOuterHeight-value').textContent = window.outerHeight;
+		document.getElementById('windowMozInnerScreenX-value').textContent = window.mozInnerScreenX;
+		document.getElementById('windowMozInnerScreenY-value').textContent = window.mozInnerScreenY;
+		document.getElementById('windowScreenX-value').textContent = window.screenX;
+		document.getElementById('windowScreenY-value').textContent = window.screenY;
+		document.getElementById('windowScreenLeft-value').textContent = window.screenLeft;
+		document.getElementById('windowScreenTop-value').textContent = window.screenTop;
+		document.getElementById('windowDevicePixelRatio-value').textContent = window.devicePixelRatio;
+
+		document.getElementById('screenWidth-value').textContent = screen.width;
+		document.getElementById('screenHeight-value').textContent = screen.height;
+		document.getElementById('screenAvailWidth-value').textContent = screen.availWidth;
+		document.getElementById('screenAvailHeight-value').textContent = screen.availHeight;
+		document.getElementById('screenColorDepth-value').textContent = screen.colorDepth;
+		document.getElementById('screenPixelDepth-value').textContent = screen.pixelDepth;
+
+		document.getElementById('boundingClientRectX-value').textContent = document.getElementById('buttonCoordinates').getBoundingClientRect().left;
+		document.getElementById('boundingClientRectY-value').textContent = document.getElementById('buttonCoordinates').getBoundingClientRect().top;
+		document.getElementById('screenElementX-value').textContent = (Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio)) + document.getElementById('buttonCoordinates').getBoundingClientRect().left;
+		document.getElementById('screenElementY-value').textContent = (Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio)) + document.getElementById('buttonCoordinates').getBoundingClientRect().top;
+		document.getElementById('screenToViewportY-value').textContent = Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);
+		document.getElementById('GetScreenCordinatesX-value').textContent = GetScreenCordinates(document.getElementById('buttonCoordinates')).x;
+		document.getElementById('GetScreenCordinatesY-value').textContent = GetScreenCordinates(document.getElementById('buttonCoordinates')).y;
+
+	});
+
+	function GetScreenCordinates(obj) {
+		var p = {};
+
+		return p;
+	}
+
+	function GetScreenCordinates(obj) {
+		var p = {};
+		p.x = obj.offsetLeft;
+		p.y = obj.offsetTop;
+		while (obj.offsetParent) {
+			p.x = p.x + obj.offsetParent.offsetLeft;
+			p.y = p.y + obj.offsetParent.offsetTop;
+			if (obj == document.getElementsByTagName("body")[0]) {
+				break;
+			} else {
+				obj = obj.offsetParent;
+			}
+		}
+		return p;
+	}
+</script>
 </head>
 <body>
-	<h1 id="page1_title">Page 1, its the big page!</h1>
-	<td><input type="checkbox" value="check1" name="check1">check1</td>
-	<br>
-	<br>
-	<br>
-	<a id="GoBack1" href="javascript:history.go(-1)">Go Back</a>	
+     <h1 id="page1_title">Page 1, its the big page!</h1>
+     <a id="GoBack1" href="javascript:history.go(-1)">Go Back</a>
+     <br>
+     <br>
+     <td><input type="checkbox" value="check1" name="check1">check1</td>
+     <br>
+     <br>
+     <div class="row">
+          <div class="column" style="background-color: #aaa;">
+               <h2>Mouse event</h2>
+               <hr>
+               <p>
+                    .x: <span id="x-value"></span>
+               </p>
+               <p>
+                    .y: <span id="y-value"></span>
+               </p>
+               <hr>
+               <p>
+                    .pageX: <span id="pageX-value"></span>
+               </p>
+               <p>
+                    .pageY: <span id="pageY-value"></span>
+               </p>
+               <hr>
+               <p>
+                    .clientX: <span id="clientX-value"></span>
+               </p>
+               <p>
+                    .clientY: <span id="clientY-value"></span>
+               </p>
+               <hr>
+               <p>
+                    .offsetX: <span id="offsetX-value"></span>
+               </p>
+               <p>
+                    .offsetY: <span id="offsetY-value"></span>
+               </p>
+               <hr>
+               <p style="background-color: yellow">
+                    .screenX: <span id="screenX-value"></span>
+               </p>
+               <p style="background-color: yellow">
+                    .screenY: <span id="screenY-value"></span>
+               </p>
+               <hr>
+          </div>
+          <div class="column" style="background-color: #bbb;">
+               <h2>Window</h2>
+               <hr>
+               <p>
+                    .screenLeft: <span id="windowScreenLeft-value"></span>
+               </p>
+               <p>
+                    .screenTop: <span id="windowScreenTop-value"></span>
+               </p>
+               <hr>
+               <p>
+                    .innerWidth: <span id="windowInnerWidth-value"></span>
+               </p>
+               <p>
+                    .innerHeight: <span id="windowInnerHeight-value"></span>
+               </p>
+               <hr>
+               <p>
+                    .outerWidth: <span id="windowOuterWidth-value"></span>
+               </p>
+               <p>
+                    .outerHeight: <span id="windowOuterHeight-value"></span>
+               </p>
+               <hr>
+               <p>
+                    .mozInnerScreenX: <span id="windowMozInnerScreenX-value"></span>
+               </p>
+               <p>
+                    .mozInnerScreenY: <span id="windowMozInnerScreenY-value"></span>
+               </p>
+               <hr>
+               <p>
+                    .screenX: <span id="windowScreenX-value"></span>
+               </p>
+               <p>
+                    .screenY: <span id="windowScreenY-value"></span>
+               </p>
+               <hr>
+               <p>
+                    .devicePixelRatio: <span id="windowDevicePixelRatio-value"></span>
+               </p>
+               <hr>
+          </div>
+          <div class="column" style="background-color: #ccc;">
+               <h2>Screen</h2>
+               <hr>
+               <p>
+                    .width: <span id="screenWidth-value"></span>
+               </p>
+               <p>
+                    .height: <span id="screenHeight-value"></span>
+               </p>
+               <hr>
+               <p>
+                    .availWidth: <span id="screenAvailWidth-value"></span>
+               </p>
+               <p>
+                    .availHeight: <span id="screenAvailHeight-value"></span>
+               </p>
+               <hr>
+               <p>
+                    .colorDepth: <span id="screenColorDepth-value"></span>
+               </p>
+               <hr>
+               <p>
+                    .pixelDepth: <span id="screenPixelDepth-value"></span>
+               </p>
+               <hr>
+          </div>
+          <div class="column" style="background-color: #ddd;">
+               <h2>Element</h2>
+               <hr>
+               <p>
+                    .getBoundingClientRect().left: <span id="boundingClientRectX-value"></span>
+               </p>
+               <p>
+                    .getBoundingClientRect().top: <span id="boundingClientRectY-value"></span>
+               </p>
+               <hr>
+          </div>
+          <div class="column" style="background-color: #eee;">
+               <h2>Math</h2>
+               <hr>
+               <p style="background-color: yellow">
+                    screenElement X: <span id="screenElementX-value"></span>
+               </p>
+               <p style="background-color: yellow">
+                    screenElement Y: <span id="screenElementY-value"></span>
+               </p>
+               <hr>
+               <p>
+                    screenToViewport X: <span id="screenToViewportX-value"></span>
+               </p>
+               <p>
+                    screenToViewport Y: <span id="screenToViewportY-value"> </span>
+               </p>
+               <hr>
+               <p>
+                    GetScreenCordinates X: <span id="GetScreenCordinatesX-value"> </span>
+               </p>
+               <p>
+                    GetScreenCordinates Y: <span id="GetScreenCordinatesY-value"> </span>
+               </p>
+               <hr>
+          </div>
+     </div>
+     <br>
+     <br>
+     <form id="form1"padding: 2px;>
+          <br> <input id="txtText" type="text"></input> <input id="buttonCoordinates" value="Get Coordinates" type="button" onclick="GetTextboxCordinates()"></input> <br>
+     </form>
+     <br>
+     <br>
+     <div>
+          <h1>Screen Object</h1>
+          <p>The screen object contains information about the visitor's screen.</p>
+          <p>
+               <b>Note:</b> There is no public standard that applies to the screen object, but all major browsers support it.
+          </p>
+          <table class="ws-table-all notranslate">
+               <tbody>
+                    <tr>
+                         <th style="width: 20%">Property</th>
+                         <th>Description</th>
+                    </tr>
+                    <hr>
+                    <tr>
+                         <td><a>availHeight</a></td>
+                         <td>Returns the height of the screen (excluding the Windows Taskbar)</td>
+                    </tr>
+                    <tr>
+                         <td><a>availWidth</a></td>
+                         <td>Returns the width of the screen (excluding the Windows Taskbar)</td>
+                    </tr>
+                    <tr>
+                         <td><a>colorDepth</a></td>
+                         <td>Returns the bit depth of the color palette for displaying images</td>
+                    </tr>
+                    <tr>
+                         <td><a>height</a></td>
+                         <td>Returns the total height of the screen</td>
+                    </tr>
+                    <tr>
+                         <td><a>pixelDepth</a></td>
+                         <td>Returns the color resolution (in bits per pixel) of the screen</td>
+                    </tr>
+                    <tr>
+                         <td><a>width</a></td>
+                         <td>Returns the total width of the screen</td>
+                    </tr>
+               </tbody>
+          </table>
+          <hr>
+     </div>
+     <br>
+     <br>
+     <div>
+          <h2>Window Object</h2>
+          <p>The window object represents an open window in a browser.</p>
+          <p>If a document contain frames (&lt;iframe&gt; tags), the browser creates one window object for the HTML document, and one additional window object for each frame.</p>
+          <p>
+               <b>Note:</b> There is no public standard that applies to the Window object, but all major browsers support it.
+          </p>
+          <hr>
+          <table>
+               <tbody>
+                    <tr>
+                         <th style="width: 20%">Property</th>
+                         <th>Description</th>
+                    </tr>
+                    <tr>
+                         <td><a>innerHeight</a></td>
+                         <td>Returns the height of the window's content area (viewport) including scrollbars</td>
+                    </tr>
+                    <tr>
+                         <td><a>innerWidth</a></td>
+                         <td>Returns the width of a window's content area (viewport) including scrollbars</td>
+                    </tr>
+                    <tr>
+                         <td><a>outerHeight</a></td>
+                         <td>Returns the height of the browser window, including toolbars/scrollbars</td>
+                    </tr>
+                    <tr>
+                         <td><a>outerWidth</a></td>
+                         <td>Returns the width of the browser window, including toolbars/scrollbars</td>
+                    </tr>
+                    <tr>
+                         <td><a>pageXOffset</a></td>
+                         <td>Returns the pixels the current document has been scrolled (horizontally) from the upper left corner of the window</td>
+                    </tr>
+                    <tr>
+                         <td><a>pageYOffset</a></td>
+                         <td>Returns the pixels the current document has been scrolled (vertically) from the upper left corner of the window</td>
+                    </tr>
+                    <tr>
+                         <td><a>screen</a></td>
+                         <td>Returns the Screen object for the window</td>
+                    </tr>
+                    <tr>
+                         <td><a>screenLeft</a></td>
+                         <td>Returns the horizontal coordinate of the window relative to the screen</td>
+                    </tr>
+                    <tr>
+                         <td><a>screenTop</a></td>
+                         <td>Returns the vertical coordinate of the window relative to the screen</td>
+                    </tr>
+                    <tr>
+                         <td><a">screenX</a></td>
+                         <td>Returns the horizontal coordinate of the window relative to the screen</td>
+                    </tr>
+                    <tr>
+                         <td><a>screenY</a></td>
+                         <td>Returns the vertical coordinate of the window relative to the screen</td>
+                    </tr>
+                    <tr>
+                         <td><a>sessionStorage</a></td>
+                         <td>Allows to save key/value pairs in a web browser. Stores the data for one session</td>
+                    </tr>
+                    <tr>
+                         <td>scrollX</td>
+                         <td>An alias of pageXOffset</a></td>
+                    </tr>
+                    <tr>
+                         <td>scrollY</td>
+                         <td>An alias of pageYOffset</a></td>
+                    </tr>
+               </tbody>
+          </table>
+          <hr>
+          <div>
 </body>
 </html>
