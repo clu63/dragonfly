@@ -30,111 +30,6 @@ p {
 }
 </style>
 <script type="text/javascript">
-	// 	function addEvent(evnt, elem, func) {
-	// 		if (elem.addEventListener) // W3C DOM
-	// 			elem.addEventListener(evnt, func, false);
-	// 		else if (elem.attachEvent) { // IE DOM
-	// 			elem.attachEvent("on" + evnt, func);
-	// 		} else { // No much to do
-	// 			elem["on" + evnt] = func;
-	// 		}
-	// 	}
-
-	// 	function addEventListener(obj, evt, func) {
-	// 		if ('addEventListener' in window) {
-	// 			obj.addEventListener(evt, func, false);
-	// 		} else if ('attachEvent' in window) {//IE
-	// 			obj.attachEvent('on' + evt, func);
-	// 		}
-	// 	}
-	// 	function createElementEvent() {
-	// 		var element = document.getElementById('hiddenSpanScreenXY');
-	// 		if (element == null) {
-	// 			var element = document.createElement('span');
-	// 			element.textContent = '';
-	// 			element.id = 'hiddenSpanScreenXY';
-	// 			element.style = 'display: none';
-	// 			document.body.appendChild(element);
-	// 			document.addEventListener('mousemove', captureScreenXY);
-	// 		}
-	// 	}
-
-	// 	function captureScreenXY(event) {
-	// 		document.getElementById('hiddenSpanScreenXY').textContent = event.screenX + '|' + event.screenY;
-	// 	}
-
-	// 	function removeElementEvent() {
-	// 		var spanValue = '';
-	// 		var element = document.getElementById('hiddenSpanScreenXY');
-	// 		if (element != null) {
-	// 			spanValue = element.innerHTML;
-	// 			document.removeEventListener('mousemove', captureScreenXY);
-	// 			element.remove();
-	// 		}
-	// 		return spanValue;
-	// 	}
-
-	// 	function createListenerScreenXY2() {
-	// 		window.elementScreenXY = '';
-	// 		document.addEventListener('mousemove', captureScreenXY2);
-	// 	}
-
-	// 	function captureScreenXY2(event) {
-	// 		window.elementScreenXY = event.screenX + '|' + event.screenY;
-	// 	}
-
-	// 	function removeListenerScreenXY2() {
-	// 		document.removeEventListener('mousemove', captureScreenXY2);
-	//	}
-	//var elementScreenXY = ''
-
-	// 	window.captureScreenXY23 = function(event) {
-	// 		window.elementScreenXY = event.screenX + '|' + event.screenY;
-
-	// 	}
-	// //
-	// //working
-	// 	function createEventListener(obj, evt, func) {
-	// 		if ('addEventListener' in window) {
-	// 			obj.addEventListener(evt, func, false);
-	// 		} else if ('attachEvent' in window) {
-	// 			obj.attachEvent('on' + evt, func);
-	// 		}
-	// 	}
-
-	// 	function createCaptureScreenXY2() {
-	// 		if (window.elementScreenXY == undefined) {
-	// 			window.captureScreenXY2 = function(event) {
-	// 				window.elementScreenXY = event.screenX + '|' + event.screenY;
-	// 			}
-	// 		}
-	// 	}
-
-	// 	function screenXY2(createRemove) {
-	// 		if (createRemove == 'create') {
-	// 			createCaptureScreenXY2();
-	// 			if (window.elementScreenXY == undefined) {
-	// 				window.elementScreenXY = null
-	// 				//window.addEventListener('mousemove', window.captureScreenXY2);
-	// 				createAddEventListener(document, 'mousemove', window.captureScreenXY2)
-	// 			}
-	// 		} else {
-	// 			//window.removeEventListener('mousemove', window.captureScreenXY2);
-	// 			console.log(window.elementScreenXY);
-	// 			return window.elementScreenXY;
-	// 		}
-	// 	}
-	// //
-	// //
-
-	// 	function createEventListener(obj, evt, func) {
-	// 		if ('addEventListener' in window) {
-	// 			obj.addEventListener(evt, func, false);
-	// 		} else if ('attachEvent' in window) {
-	// 			obj.attachEvent('on' + evt, func);
-	// 		}
-	// 	}
-
 	function createCaptureScreenXY2() {
 		if (window.elementScreenXY == undefined) {
 			window.captureScreenXY2 = function(event) {
@@ -161,245 +56,115 @@ p {
 				document.detachEvent('onmousemove', window.captureScreenXY2);
 			}
 			console.log(window.elementScreenXY);
+			alert(window.elementScreenXY);
 			return window.elementScreenXY;
-		                 }
+		}
 	}
 
-	// 	function InitMouseDown(event) {
-	// 		if (event.initMouseEvent) { // all browsers except IE before version 9
-	// 			var mousedownEvent = document.createEvent("MouseEvent");
-	// 			mousedownEvent.initMouseEvent("mousedown", true, true, window, 0, event.screenX, event.screenY, event.clientX, event.clientY, event.ctrlKey, event.altKey, event.shiftKey, event.metaKey, 0, null);
-	// 			event.target.dispatchEvent(mousedownEvent);
-	// 		} else {
-	// 			if (document.createEventObject) { // IE before version 9
-	// 				var mousedownEvent = document.createEventObject(window.event);
-	// 				mousedownEvent.button = 1; // left button is down
-	// 				event.srcElement.fireEvent("onmousedown", mousedownEvent);
-	// 			}
-	// 		}
-	// 	}
-
-	// 	function createEvent(typeOfEvent) {
-	// 		var event = document.createEvent("CustomEvent");
-	// 		event.initCustomEvent(typeOfEvent, true, true, null);
-	// 		event.dataTransfer = {
-	// 			data : {},
-	// 			setData : function(key, value) {
-	// 				this.data[key] = value;
-	// 			},
-	// 			getData : function(key) {
-	// 				return this.data[key];
-	// 			}
-	// 		};
-	// 		return event;
-	// 	}
-
-	// 	function dispatchEvent(element, event, transferData) {
-	// 		if (transferData !== undefined) {
-	// 			event.dataTransfer = transferData;
-	// 		}
-	// 		if (element.dispatchEvent) {
-	// 			element.dispatchEvent(event);
-	// 		} else if (element.fireEvent) {
-	// 			element.fireEvent("on" + event.type, event);
-	// 		}
-	// 	}
-
-// 	function chromeScreenX() {
-// 		createElementEvent();
-		//setTimeout(function(){ alert("hey"); }, 3000);
-		//removeElement();
-		//removeHandler();
-		// 		// 		var screenToViewportLeft = window.outerWidth - window.innerWidth;
-		// 		// 		var borderWidth = (window.outerWidth - window.innerWidth) / 2
-		// 		// 		var screenToOuterLeft = window.screenX
-
-		// 		// 		//Math.round((((window.outerWidth - window.innerWidth) + 
-
-		// 		// 		//		((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio)+ 
-
-		// 		// 		//		obj.getBoundingClientRect().left
-
-		// 		// 		// This will return the width of the viewport
-		// 		//	var intFrameWidth = window.innerWidth;
-
-		// 		// 		// This will return the width of the frame viewport within a frameset
-		// 		//var intFrameWidth = window.self.innerWidth;
-
-		// 		// 		// This will return the width of the viewport of the closest frameset
-		// 		//var intFramesetWidth = window.parent.innerWidth;
-
-		// 		// 		// This will return the width of the viewport of the outermost frameset
-		// 		//var intOuterFramesetWidth = window.top.innerWidth;
-
-		// 		//var obj = document.getElementsByTagName("body")[0];
-		// 		var obj = document.body;
-		// 		//var theTop = obj.getBoundingClientRect().left;
-		// 		//alert(theTop);
-		// 		// var event = createEvent("mousemove")
-
-		// 		// 		obj.addEventListenter('mousemove', function() {
-		// 		// 			// Mousemove event callback
-		// 		// 			alert(event.screenX)
-		// 		// 		}, 0);
-		// 		window.addEventListener('mousemove', consoleEvent(mouseMoveEvent));
-
-		// 		var mouseMoveEvent = new Event('mousemove'); // (*)
-		// 		window.dispatchEvent(mouseMoveEvent);
-
-		// 		//var event = createEvent('mousemove')
-		// 		//  var mouseMoveEvent = createEvent('mousemove');
-		// 		// dispatchEvent(window, mouseMoveEvent, mouseMoveEvent.dataTransfer);
-		// 		//alert(event.screenX)
-		// 		//console.log(obj.getBoundingClientRect());
-		// 		//console.log(event);
-		// 		//console.log(mouseMoveEvent.dataTransfer);
-		// 		window.removeEventListener('mousemove', consoleEvent(mouseMoveEvent));
-
-		// 		// 		  if (window.top != window.self) {
-		// 		// 			    alert( "This window is NOT the topmost window!");
-		// 		// 			  } else {
-		// 		// 				  alert(  "This window is the topmost window!");
-		// 		// 			  }
-		// 		var frames = window.top.frames;
-		// 		for (var f = 0; f < frames.length; f++) {
-		// 			console.log(f.getAttribute("attribute name"))
-		// 		}
-
-		// 		// 		  var topWindow = window.top;
-		// 		// 		console.log(topWindow);
-		// 		var frames = window.frames;
-		// 		var i;
-		// 		console.log(frames.length);
-		// 		for (i = 0; i < frames.length; i++) {
-		// 			//frames[i].location = "https://www.w3schools.com";
-		// 			//console.log(frames);
-		// 		}
-		// 		console.log(frames);
-		// 		//console.log( parent.document.body.offsetWidth);
-		// 		//  console.log( parent.document.body.offsetHeight);
-// 	}
-
-// 	function consoleEvent(e) {
-// 		///console.log(e);
-// 		//console.log(e.screenX);
-// 	}
-
-	
-	function Init(){
-		     if ('addEventListener' in window) {
-      document.addEventListener('mousemove',captureCoordinates);
-       } else if ('attachEvent' in window) {
-         document.attachEvent('onmousemove', captureCoordinates);
-      }
-	  }
-	
-// 	document.attachEvent('onmousemove', function(e) {
-// 		document.getElementById('screenX-value').textContent = e.screenX;
-// 		document.getElementById('screenY-value').textContent = e.screenY;
-// 	});
-
-	// 		document.addEventListener('mousemove', function(e) {
-	// 		//	document.getElementById('hiddenSpanScreenXY').textContent = e.screenX + "|" + e.screenY;
-	
-	function captureCoordinates(e){
-			document.getElementById('x-value').textContent = e.x;
-			document.getElementById('y-value').textContent = e.y;
-
-			if ('pageX' in event) { // all browsers except IE before version 9
-				document.getElementById('pageX-value').textContent = e.pageX;
-				document.getElementById('pageY-value').textContent = e.pageY;
-			} else { // IE before version 9
-				document.getElementById('pageX-value').textContent = e.clientX + document.documentElement.scrollLeft;
-				document.getElementById('pageY-value').textContent = e.clientY + document.documentElement.scrollTop;
+	function GetScreenCordinates(obj) {
+		var p = {};
+		p.x = obj.offsetLeft;
+		p.y = obj.offsetTop;
+		while (obj.offsetParent) {
+			p.x = p.x + obj.offsetParent.offsetLeft;
+			p.y = p.y + obj.offsetParent.offsetTop;
+			if (obj == document.getElementsByTagName("body")[0]) {
+				break;
+			} else {
+				obj = obj.offsetParent;
 			}
+		}
+		return p;
+	}
 
-			document.getElementById('clientX-value').textContent = e.clientX;
-			document.getElementById('clientY-value').textContent = e.clientY;
-			document.getElementById('screenX-value').textContent = e.screenX;
-			document.getElementById('screenY-value').textContent = e.screenY;
+	function Init() {
+		if ('addEventListener' in window) {
+			document.addEventListener('mousemove', captureCoordinates);
+			document.addEventListener('click', captureClickCoordinates);
+		} else if ('attachEvent' in window) {
+			alert('attachEvent');
+			document.attachEvent('onmousemove', captureCoordinates);
+			document.attachEvent('onclick', captureClickCoordinates);
+		}
+	}
 
-			document.getElementById('offsetX-value').textContent = e.offsetX;
-			document.getElementById('offsetY-value').textContent = e.offsetY;
+	function captureClickCoordinates(event) {
+		document.getElementById('clickScreenX-value').innerHTML = event.screenX;
+		document.getElementById('clickScreenY-value').innerHTML = event.screenY;
+	}
 
-			document.getElementById('windowInnerWidth-value').textContent = window.innerWidth;
-			document.getElementById('windowInnerHeight-value').textContent = window.innerHeight;
-			document.getElementById('windowOuterWidth-value').textContent = window.outerWidth;
-			document.getElementById('windowOuterHeight-value').textContent = window.outerHeight;
-			document.getElementById('windowMozInnerScreenX-value').textContent = window.mozInnerScreenX;
-			document.getElementById('windowMozInnerScreenY-value').textContent = window.mozInnerScreenY;
-			document.getElementById('windowScreenX-value').textContent = window.screenX;
-			document.getElementById('windowScreenY-value').textContent = window.screenY;
-			document.getElementById('windowScreenLeft-value').textContent = window.screenLeft;
-			document.getElementById('windowScreenTop-value').textContent = window.screenTop;
-			document.getElementById('windowDevicePixelRatio-value').textContent = window.devicePixelRatio;
+	function captureCoordinates(event) {
+		document.getElementById('x-value').innerHTML = event.x;
+		document.getElementById('y-value').innerHTML = event.y;
 
-			document.getElementById('screenWidth-value').textContent = screen.width;
-			document.getElementById('screenHeight-value').textContent = screen.height;
-			document.getElementById('screenAvailWidth-value').textContent = screen.availWidth;
-			document.getElementById('screenAvailHeight-value').textContent = screen.availHeight;
-			document.getElementById('screenColorDepth-value').textContent = screen.colorDepth;
-			document.getElementById('screenPixelDepth-value').textContent = screen.pixelDepth;
-
-			//var obj = document.getElementsByTagName("body")[1];
-			var obj = document.body.getBoundingClientRect();
-			//var obj = document.getElementById('buttonCoordinates').getBoundingClientRect();
-			document.getElementById('boundingClientRectX-value').textContent = obj.x;
-			document.getElementById('boundingClientRectY-value').textContent = obj.y;
-			document.getElementById('boundingClientRectLeft-value').textContent = obj.left;
-			document.getElementById('boundingClientRectTop-value').textContent = obj.top;
-			document.getElementById('boundingClientRectRight-value').textContent = obj.right;
-			document.getElementById('boundingClientRectBottom-value').textContent = obj.bottom;
-			document.getElementById('boundingClientRectWidth-value').textContent = obj.width;
-			document.getElementById('boundingClientRectHeight-value').textContent = obj.height;
-			document.getElementById('boundingClientRectMiddleWidth-value').textContent = obj.width / 2;
-			document.getElementById('boundingClientRectMiddleHeight-value').textContent = obj.height / 2;
-			document.getElementById('boundingClientRectLeftMiddleWidth-value').textContent = (obj.left + (obj.width / 2));
-			document.getElementById('boundingClientRectTopMiddleHeight-value').textContent = (obj.top + (obj.height / 2));
-			document.getElementById('boundingClientRectLeftCornerWidth-value').textContent = ((-1 * (obj.width / 2)) - obj.left);
-			document.getElementById('boundingClientRectTopCornerHeight-value').textContent = ((-1 * (obj.height / 2)) - obj.top);
-
-			document.getElementById('chromeScreenElementX-value').textContent = Math.round(((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio) + document.getElementById('buttonCoordinates').getBoundingClientRect().left);
-			document.getElementById('chromeScreenElementY-value').textContent = (Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio)) + document.getElementById('buttonCoordinates').getBoundingClientRect().top;
-
-			document.getElementById('mozillaScreenElementX-value').textContent = Math.round((window.mozInnerScreenX * window.devicePixelRatio) + document.getElementById('buttonCoordinates').getBoundingClientRect().left);
-			document.getElementById('mozillaScreenElementY-value').textContent = Math.round((window.mozInnerScreenY * window.devicePixelRatio) + document.getElementById('buttonCoordinates').getBoundingClientRect().top);
-
-			document.getElementById('screenToViewportX-value').textContent = Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);
-			document.getElementById('screenToViewportY-value').textContent = Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);
-
-			document.getElementById('GetScreenCordinatesX-value').textContent = GetScreenCordinates(document.getElementById('buttonCoordinates')).x;
-			document.getElementById('GetScreenCordinatesY-value').textContent = GetScreenCordinates(document.getElementById('buttonCoordinates')).y;
-			//console.log(e);
+		if ('pageX' in event) { // all browsers except IE before version 9
+			document.getElementById('pageX-value').innerHTML = event.pageX;
+			document.getElementById('pageY-value').innerHTML = event.pageY;
+		} else { // IE before version 9
+			document.getElementById('pageX-value').innerHTML = event.clientX + document.documentElement.scrollLeft;
+			document.getElementById('pageY-value').innerHTML = event.clientY + document.documentElement.scrollTop;
 		}
 
-	// 	function GetScreenCordinates2(obj) {
-	// 		var p = {};
+		document.getElementById('clientX-value').innerHTML = event.clientX;
+		document.getElementById('clientY-value').innerHTML = event.clientY;
+		document.getElementById('screenX-value').innerHTML = event.screenX;
+		document.getElementById('screenY-value').innerHTML = event.screenY;
+		document.getElementById('offsetX-value').innerHTML = event.offsetX;
+		document.getElementById('offsetY-value').innerHTML = event.offsetY;
 
-	// 		return p;
-	// 	}
+		document.getElementById('windowInnerWidth-value').innerHTML = window.innerWidth;
+		document.getElementById('windowInnerHeight-value').innerHTML = window.innerHeight;
+		document.getElementById('windowOuterWidth-value').innerHTML = window.outerWidth;
+		document.getElementById('windowOuterHeight-value').innerHTML = window.outerHeight;
+		document.getElementById('windowMozInnerScreenX-value').innerHTML = window.mozInnerScreenX;
+		document.getElementById('windowMozInnerScreenY-value').innerHTML = window.mozInnerScreenY;
+		document.getElementById('windowScreenX-value').innerHTML = window.screenX;
+		document.getElementById('windowScreenY-value').innerHTML = window.screenY;
+		document.getElementById('windowScreenLeft-value').innerHTML = window.screenLeft;
+		document.getElementById('windowScreenTop-value').innerHTML = window.screenTop;
+		document.getElementById('windowDevicePixelRatio-value').innerHTML = window.devicePixelRatio;
 
-	// 	function GetScreenCordinates(obj) {
-	// 		var p = {};
-	// 		p.x = obj.offsetLeft;
-	// 		p.y = obj.offsetTop;
-	// 		while (obj.offsetParent) {
-	// 			p.x = p.x + obj.offsetParent.offsetLeft;
-	// 			p.y = p.y + obj.offsetParent.offsetTop;
-	// 			if (obj == document.getElementsByTagName("body")[0]) {
-	// 				break;
-	// 			} else {
-	// 				obj = obj.offsetParent;
-	// 			}
-	// 		}
-	// 		return p;
-	// 	}
+		document.getElementById('screenWidth-value').innerHTML = screen.width;
+		document.getElementById('screenHeight-value').innerHTML = screen.height;
+		document.getElementById('screenAvailWidth-value').innerHTML = screen.availWidth;
+		document.getElementById('screenAvailHeight-value').innerHTML = screen.availHeight;
+		document.getElementById('screenColorDepth-value').innerHTML = screen.colorDepth;
+		document.getElementById('screenPixelDepth-value').innerHTML = screen.pixelDepth;
+
+		//var obj = document.getElementsByTagName("body")[1];
+		var obj = document.body.getBoundingClientRect();
+		//var obj = document.getElementById('buttonCoordinates').getBoundingClientRect();
+		document.getElementById('boundingClientRectX-value').innerHTML = obj.x;
+		document.getElementById('boundingClientRectY-value').innerHTML = obj.y;
+		document.getElementById('boundingClientRectLeft-value').innerHTML = obj.left;
+		document.getElementById('boundingClientRectTop-value').innerHTML = obj.top;
+		document.getElementById('boundingClientRectRight-value').innerHTML = obj.right;
+		document.getElementById('boundingClientRectBottom-value').innerHTML = obj.bottom;
+		document.getElementById('boundingClientRectWidth-value').innerHTML = obj.width;
+		document.getElementById('boundingClientRectHeight-value').innerHTML = obj.height;
+		document.getElementById('boundingClientRectMiddleWidth-value').innerHTML = obj.width / 2;
+		document.getElementById('boundingClientRectMiddleHeight-value').innerHTML = obj.height / 2;
+		document.getElementById('boundingClientRectLeftMiddleWidth-value').innerHTML = (obj.left + (obj.width / 2));
+		document.getElementById('boundingClientRectTopMiddleHeight-value').innerHTML = (obj.top + (obj.height / 2));
+		document.getElementById('boundingClientRectLeftCornerWidth-value').innerHTML = ((-1 * (obj.width / 2)) - obj.left);
+		document.getElementById('boundingClientRectTopCornerHeight-value').innerHTML = ((-1 * (obj.height / 2)) - obj.top);
+
+		document.getElementById('chromeScreenElementX-value').innerHTML = Math.round(((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio) + document.getElementById('buttonCoordinates').getBoundingClientRect().left);
+		document.getElementById('chromeScreenElementY-value').innerHTML = (Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio)) + document.getElementById('buttonCoordinates').getBoundingClientRect().top;
+
+		document.getElementById('mozillaScreenElementX-value').innerHTML = Math.round((window.mozInnerScreenX * window.devicePixelRatio) + document.getElementById('buttonCoordinates').getBoundingClientRect().left);
+		document.getElementById('mozillaScreenElementY-value').innerHTML = Math.round((window.mozInnerScreenY * window.devicePixelRatio) + document.getElementById('buttonCoordinates').getBoundingClientRect().top);
+
+		document.getElementById('screenToViewportX-value').innerHTML = Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);
+		document.getElementById('screenToViewportY-value').innerHTML = Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);
+
+		document.getElementById('GetScreenCordinatesX-value').innerHTML = GetScreenCordinates(document.getElementById('buttonCoordinates')).x;
+		document.getElementById('GetScreenCordinatesY-value').innerHTML = GetScreenCordinates(document.getElementById('buttonCoordinates')).y;
+		//console.log(event);
+	}
 </script>
 </head>
-<body onload="Init();>
-     <!-- <span id=" hiddenSpanScreenXY" style="display: none">
-     Appropriate style in this tag
-     </span> -->
+<body onload="Init();">
      <h1 id="page1_title">Page 1, its the big page!</h1>
      <a id="GoBack1" href="javascript:history.go(-1)">Go Back</a>
      <br>
@@ -444,6 +209,13 @@ p {
                </p>
                <p style="background-color: yellow">
                     .screenY: <span id="screenY-value"></span>
+               </p>
+               <hr>
+               <p>
+                    click.screenX: <span id="clickScreenX-value"></span>
+               </p>
+               <p>
+                    click.screenY: <span id="clickScreenY-value"></span>
                </p>
                <hr>
           </div>
