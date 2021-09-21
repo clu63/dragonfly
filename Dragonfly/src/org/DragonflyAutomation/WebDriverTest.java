@@ -33,6 +33,7 @@ class WebDriverTest {
 	static void WebDriverTestRun() {
 		WebDriver webDriver = null;
 		WebElement webElement = null;
+		JavascriptExecutor javascriptExecutor = null;
 		InternetExplorerOptions internetExplorerOptions = null;
 		String browser = "chrome";
 		String driverPath = "C:\\workspace-joseph\\dragonfly\\Dragonfly\\Drivers\\";
@@ -124,23 +125,30 @@ class WebDriverTest {
 		webDriver.manage().window().maximize();
 		webDriver.manage().deleteAllCookies();
 		String localWebsiteFilePath = "file:///C:/workspace-joseph/dragonfly/Dragonfly/Websites/ATW/Automation_Test_Website.html";
+		//String localWebsiteFilePath = "file:///C:/workspace-joseph/dragonfly/Dragonfly/Websites/ATW/SupportingFiles/page1.html";
 		webDriver.get(localWebsiteFilePath);
 		ThreadSleep(2000);
+		//		webElement = webDriver.findElement(By.id("page1_title"));
+		//		System.out.println(webElement.getAttribute("outerHTML"));
+		//		getScreenXY(webDriver, webElement, browser);
+		//		javascriptExecutor = (JavascriptExecutor) webDriver;
+		//		javascriptExecutor.executeScript("arguments[0].style.outline = '" + "purple solid 4px" + "'", webElement);
+		//		System.exit(0);
 		String windowHandle = webDriver.getWindowHandle();
 		System.out.println(webDriver.getWindowHandle());
-		webElement = webDriver.findElement(By.id("frame_link"));
-		webElement.click();
+		webElement = webDriver.findElement(By.id("link"));
+		System.out.println(webElement.getAttribute("outerHTML"));
+		getScreenXY(webDriver, webElement, browser);
+		//webElement.click();
 		ThreadSleep(2000);
+		System.exit(0);
+		//
 		webDriver.switchTo().frame(0);
 		System.out.println(webDriver.getWindowHandle());
 		webElement = webDriver.findElement(By.id("page2_title"));
-		System.out.println(webElement.getText());
-		//String outlineStyle = "green solid 4px";
-		JavascriptExecutor javascriptExecutor = null;
-		//
+		System.out.println(webElement.getAttribute("outerHTML"));
+		getScreenXY(webDriver, webElement, browser);
 		javascriptExecutor = (JavascriptExecutor) webDriver;
-		//outlineStyleOriginal = (String) javascriptExecutor.executeScript("return arguments[0].style.outline", Element.getInstance().element);
-		//System.out.println("outlineStyleOriginal = " + outlineStyleOriginal);
 		javascriptExecutor.executeScript("arguments[0].style.outline = '" + "orange solid 4px" + "'", webElement);
 		System.out.println((String) javascriptExecutor.executeScript("return arguments[0].outerHTML", webElement));
 		//
@@ -148,8 +156,8 @@ class WebDriverTest {
 		webDriver.switchTo().frame(1);
 		System.out.println(webDriver.getWindowHandle());
 		webElement = webDriver.findElement(By.id("page3_title"));
-		getScreenXY(webDriver, webElement);
-		System.out.println(webElement.getText());
+		System.out.println(webElement.getAttribute("outerHTML"));
+		getScreenXY(webDriver, webElement, browser);
 		javascriptExecutor = (JavascriptExecutor) webDriver;
 		javascriptExecutor.executeScript("arguments[0].style.outline = '" + "green solid 4px" + "'", webElement);
 		System.out.println((String) javascriptExecutor.executeScript("return arguments[0].outerHTML", webElement));
@@ -157,43 +165,44 @@ class WebDriverTest {
 		webDriver.switchTo().defaultContent();
 		webDriver.switchTo().frame(2);
 		System.out.println(webDriver.getWindowHandle());
-		webElement = webDriver.findElement(By.id("page1_title"));
-		System.out.println(webElement.getText());
-		//javascriptExecutor = (JavascriptExecutor) webDriver;
-		//javascriptExecutor.executeScript("arguments[0].style.outline = '" + "purple solid 4px" + "'", webElement);
-		System.out.println((String) javascriptExecutor.executeScript("return arguments[0].outerHTML", webElement));
+		webElement = webDriver.findElement(By.id("submitted_title"));
+		System.out.println(webElement.getAttribute("outerHTML"));
+		getScreenXY(webDriver, webElement, browser);
+		javascriptExecutor = (JavascriptExecutor) webDriver;
+		javascriptExecutor.executeScript("arguments[0].style.outline = '" + "violet solid 4px" + "'", webElement);
 		//
-		//webDriver.switchTo().defaultContent();
-		//webDriver.switchTo().frame(2);
-		webElement = webDriver.findElement(By.name("check1"));
-		System.out.println(webElement.getText());
-		//webDriver.switchTo().defaultContent();
+		webDriver.switchTo().defaultContent();
+		webDriver.switchTo().frame(3);
 		System.out.println(webDriver.getWindowHandle());
-		getScreenXY(webDriver, webElement);
+		webElement = webDriver.findElement(By.id("page1_title"));
+		System.out.println(webElement.getAttribute("outerHTML"));
+		getScreenXY(webDriver, webElement, browser);
+		javascriptExecutor = (JavascriptExecutor) webDriver;
+		javascriptExecutor.executeScript("arguments[0].style.outline = '" + "purple solid 4px" + "'", webElement);
+		//System.out.println((String) javascriptExecutor.executeScript("return arguments[0].outerHTML", webElement));
+		//
+		webElement = webDriver.findElement(By.name("check1"));
+		System.out.println(webElement.getAttribute("outerHTML"));
+		getScreenXY(webDriver, webElement, browser);
+		System.out.println(webDriver.getWindowHandle());
 		javascriptExecutor = (JavascriptExecutor) webDriver;
 		javascriptExecutor.executeScript("arguments[0].style.outline = '" + "red solid 4px" + "'", webElement);
 		System.out.println((String) javascriptExecutor.executeScript("return arguments[0].outerHTML", webElement));
-		//ThreadSleep(15000);
-		//Actions actions = new Actions(webDriver);
-		//actions.moveToElement(webElement, -1, -1).perform();
-		//actions.moveToElement(webElement).perform();
+		//
 		ThreadSleep(5000);
 		webElement = webDriver.findElement(By.id("buttonCoordinates"));
 		javascriptExecutor = (JavascriptExecutor) webDriver;
 		javascriptExecutor.executeScript("arguments[0].style.outline = '" + "blue solid 4px" + "'", webElement);
-		//actions = new Actions(webDriver);
-		//actions.moveToElement(webElement, -1, -1).perform();
-		//actions.moveToElement(webElement).perform();
-		//ThreadSleep(15000);
-		//actions.moveToElement(webElement, -1, -1).perform();
-		//ThreadSleep(15000);
+		System.out.println(webElement.getAttribute("outerHTML"));
+		getScreenXY(webDriver, webElement, browser);
+		//
 		webElement = webDriver.findElement(By.xpath("/html/body"));
 		javascriptExecutor = (JavascriptExecutor) webDriver;
 		javascriptExecutor.executeScript("arguments[0].style.outline = '" + "yellow solid 4px" + "'", webElement);
-		//actions = new Actions(webDriver);
-		//actions.moveToElement(webElement, -1, -1).perform();
-		//actions.moveToElement(webElement).perform();
+		//System.out.println(webElement.getAttribute("outerHTML"));
+		getScreenXY(webDriver, webElement, browser);
 		ThreadSleep(10000);
+		//
 		webElement = webDriver.findElement(By.id("buttonRemoveElement"));
 		Integer webElementX = webElement.getLocation().getX();
 		Integer webElementY = webElement.getLocation().getY();
@@ -217,18 +226,15 @@ class WebDriverTest {
 		Integer webElementOffsetY = ((-1 * (webElementHeight / 2)) - 1);
 		System.out.println("webElementOffsetX " + webElementOffsetX);
 		System.out.println("webElementOffsetY " + webElementOffsetY);
-		//actions.moveToElement(webElement, webElementOffsetX, webElementOffsetY).perform();
-		//////ThreadSleep(10000);
-		getScreenXY(webDriver, webElement);
+		System.out.println(webElement.getAttribute("outerHTML"));
+		getScreenXY(webDriver, webElement, browser);
+		//
 		Actions actions = new Actions(webDriver);
-		//webDriver.manage().window().getSize().
 		Long lngBrowserInnerWidth = (Long) ((JavascriptExecutor) webDriver).executeScript("return (window.outerWidth - window.innerWidth);");
 		Long lngBrowserInnerHeight = (Long) ((JavascriptExecutor) webDriver).executeScript("return (window.outerHeight - window.innerHeight);");
 		System.out.println("lngBrowserInnerWidth " + lngBrowserInnerWidth);
 		System.out.println("lngBrowserInnerHeight " + lngBrowserInnerHeight);
-		//Integer yOffset =  Integer.parseUnsignedInt(-1*lngBrowserInnerHeight);
 		Integer yOffsetValue = (lngBrowserInnerHeight).intValue();
-		
 		//actions.moveToElement(webElement).perform();
 		//actions.moveToElement(webElement, 0, yOffsetValue).perform();
 		actions.moveToElement(webElement, 0, 0).perform();
@@ -238,6 +244,7 @@ class WebDriverTest {
 		//actions.click(webElement).perform();
 		//actions.click(webElement).perform();
 		//actions.moveToElement(webElement).perform();
+		//
 		//
 		//parent.frames[0].fAlert() 
 		//parent.leftframe.document.getElementById("information");
@@ -267,57 +274,30 @@ class WebDriverTest {
 		//		//toolTip1.moveByOffset(0, 0);
 	}
 
-	static void getScreenXY(WebDriver webDriver, WebElement webElement) {
+	static void getScreenXY(WebDriver webDriver, WebElement webElement, String browser) {
 		JavascriptExecutor javascriptExecutor = (JavascriptExecutor) webDriver;
-		//
-		Integer webElementOffsetX = ((-1 * (webElement.getSize().width / 2)) - 1);
-		Integer webElementOffsetY = ((-1 * (webElement.getSize().height / 2)) - 1);
+		Actions actions = new Actions(webDriver);
+		String screenXY = null;
+		int webElementOffsetXNew = 0;
+		int webElementOffsetYNew = 0;
+		//		Integer webElementOffsetX = ((-1 * (webElement.getSize().width / 2)) - 1);
+		//		Integer webElementOffsetY = ((-1 * (webElement.getSize().height / 2)) - 1);
+		//		
+		javascriptExecutor.executeScript("arguments[0].scrollIntoView(false);", webElement);
+		Integer webElementOffsetX = ((-1 * (webElement.getSize().width / 2)));
+		Integer webElementOffsetY = ((-1 * (webElement.getSize().height / 2)));
 		System.out.println("getScreenXY start method ");
+		System.out.println("webElementSizeWidth " + webElement.getSize().width);
+		System.out.println("webElementSizeHeight " + webElement.getSize().height);
+		System.out.println("webElement.getLocation().getX() " + webElement.getLocation().getX());
+		System.out.println("webElement.getLocation().getY() " + webElement.getLocation().getY());
+		long getBoundingClientRectLeft = (long) javascriptExecutor.executeScript("return arguments[0].getBoundingClientRect().left", webElement);
+		double getBoundingClientRectTop = (double) javascriptExecutor.executeScript("return arguments[0].getBoundingClientRect().top", webElement);
+		System.out.println("getBoundingClientRect().left " + getBoundingClientRectLeft);
+		System.out.println("getBoundingClientRect().top " + getBoundingClientRectTop);
 		System.out.println("webElementOffsetX " + webElementOffsetX);
 		System.out.println("webElementOffsetY " + webElementOffsetY);
 		//@formatter:off
-		
-		
-//		"function screenXY(createRemove) {\n"
-//		+ "	if (createRemove == 'create') {\n"
-//		+ "		window.elementScreenXY = '';\n"
-//		+ "		window.addEventListener('mousemove', captureScreenXY);\n"
-//		+ "	} else {\n"
-//		+ "		window.removeEventListener('mousemove', captureScreenXY);\n"
-//		//+ "		console.log(window.elementScreenXY);\n"
-//		+ "		return window.elementScreenXY;\n"
-//		+ "	}\n"
-//		+ "}\n"
-//		+ "\n"
-//		+ "function captureScreenXY(event) {\n"
-//		+ "	window.elementScreenXY = event.screenX + '|' + event.screenY;\n"
-//		+ "}\n"
-//		+ "\n"
-//		+ "return screenXY(arguments[0]);";
-		
-		
-//		"function createCaptureScreenXY() {\n"
-//		+ "	if (window.elementScreenXY == undefined) {\n"
-//		+ "		window.captureScreenXY = function(event) {\n"
-//		+ "			window.elementScreenXY = event.screenX + '|' + event.screenY;\n"
-//		+ "		}\n"
-//		+ "	}\n"
-//		+ "}\n"
-//		+ "\n"
-//		+ "function screenXY(createRemove) {\n"
-//		+ "		createCaptureScreenXY();\n"
-//		+ "		if (window.elementScreenXY == undefined) {\n"
-//		+ "			window.elementScreenXY = null\n"
-//		+ "			window.addEventListener('mousemove', window.captureScreenXY2);\n"
-//		+ "		}\n"
-//		+ "	} else {\n"
-//		//+ "		window.removeEventListener('mousemove', window.captureScreenXY2);\n"
-//		+ "		return window.elementScreenXY;\n"
-//		+ "	}\n"
-//		+ "}\n"
-//		+ "return screenXY(arguments[0]);";		
-		
-		
 		String javaScript =
 		"function createCaptureScreenXY() {\n"
 		+ "	if (window.elementScreenXY == undefined) {\n"
@@ -350,103 +330,46 @@ class WebDriverTest {
 		+ "	}\n"
 		+ "}\n"
 		+ "return screenXY(arguments[0]);";	
-		
-		
-
-//		String javaScriptCreate =
-//		  "function createElementEvent() {\n"
-//		+ "	window.elementScreenXY = '';\n"
-//		+ "	document.addEventListener('mousemove', captureScreenXY);\n"
-//		+ "}\n"
-//		+ "\n"
-//		+ "function captureScreenXY(event) {\n"
-//		+ "	window.elementScreenXY = event.screenX + '|' + event.screenY;\n"
-//		+ "}\n"
-//		+ "\n" 
-//		+ "createElementEvent();"
-//		+ "\n" 
-//		+ "function removeElementEvent() {\n"
-//		+ "	return window.elementScreenXY\n"
-//		+ "}\n"
-//		+ "\n" 	;	
-//		//+ "return removeElementEvent();";
-				
-
-	
-//		"function createElementEvent() {\n"
-//		+ "		var element = document.getElementById('hiddenSpanScreenXY');\n"
-//		+ "		if (element == null) {\n"
-//		+ "			var element = document.createElement('span');\n"
-//		+ "			element.textContent = '';\n"
-//		+ "			element.id = 'hiddenSpanScreenXY';\n"
-//		+ "			element.style = 'display: none';\n"
-//		+ "			document.body.appendChild(element);\n"
-//		+ "			document.addEventListener('mousemove', captureScreenXY);\n"
-//		+ "		}\n"
-//		+ "	}\n"
-//		+ "\n"
-//		+ "\n" 
-//		+ "	function captureScreenXY(event) {\n"
-//		+ "		document.getElementById('hiddenSpanScreenXY').textContent = event.screenX + '|' + event.screenY;\n"
-//		+ "	}\n"
-//		+ "\n" 
-//		+ "createElementEvent();";
 		//@formatter:on
-		//System.out.println(javaScriptCreate);
-		//javascriptExecutor.executeScript(javaScriptCreate);
-		javascriptExecutor.executeScript(javaScript, "create");
-		//ThreadSleep(10000);
-		
-		
-		Long lngBrowserInnerWidth = (Long) ((JavascriptExecutor) webDriver).executeScript("return (window.outerWidth - window.innerWidth);");
-		Long lngBrowserInnerHeight = (Long) ((JavascriptExecutor) webDriver).executeScript("return (window.outerHeight - window.innerHeight);");
-		System.out.println("lngBrowserInnerWidth " + lngBrowserInnerWidth);
-		System.out.println("lngBrowserInnerHeight " + lngBrowserInnerHeight);
-		//Integer yOffset =  Integer.parseUnsignedInt(-1*lngBrowserInnerHeight);
-		Integer yOffsetValue = (lngBrowserInnerHeight).intValue();
-		
-		Actions actions = new Actions(webDriver);
-		//actions.moveToElement(webElement, webElementOffsetX, webElementOffsetY).perform();
-		actions.moveToElement(webElement, 0, yOffsetValue).perform();
-		//actions.moveToElement(webElement).perform();
-		System.out.println("actions.moveToElement");
-		//ThreadSleep(10000);
-		//@formatter:off
-//		String javaScriptRemove = 
-//		  "function removeElementEvent() {\n"
-//		+ "	document.removeEventListener('mousemove', captureScreenXY);\n"
-//		+ "	return window.elementScreenXY\n"
-//		+ "}\n"
-//		+ "\n"
-//		+ "function captureScreenXY(event) {\n"
-//		+ "	window.elementScreenXY = event.screenX + '|' + event.screenY;\n"
-//		+ "}\n"
-//		+ "\n" 
-//		+ "return removeElementEvent();";
-//		"function removeElementEvent() {\n"
-//		+ "	var spanValue = 'getIt';\n"
-//		+ "	var element = document.getElementById('hiddenSpanScreenXY');\n"
-//		+ "	if (element != null) {\n"
-//		+ "		spanValue = element.innerHTML;\n"
-//		+ "		document.removeEventListener('mousemove', captureScreenXY);\n"
-//		//+ "		element.remove();\n"
-//		+ "	}\n"
-//		+ "	return spanValue;\n"
-//		+ "}\n"
-//		+ "\n"
-//		+ "\n"
-//		+ "\n" 
-//		+ "	function captureScreenXY(event) {\n"
-//		+ "		document.getElementById('hiddenSpanScreenXY').textContent = event.screenX + '|' + event.screenY;\n"
-//		+ "	}\n"
-//		+ "\n" 		
-//		+ "return removeElementEvent();";			
-		//@formatter:on
-		//System.out.println(javaScriptRemove);
-		//String screenXY = (String) javascriptExecutor.executeScript(javaScriptRemove);
-		//String screenXY = (String) javascriptExecutor.executeScript("return removeElementEvent();");
-		String screenXY = (String) javascriptExecutor.executeScript(javaScript, "remove");
-		System.out.println("screenXY " + screenXY);
+		switch (browser) {
+		case "edge":
+		case "chrome":
+			javascriptExecutor.executeScript(javaScript, "create");
+			long browserInnerWidth = (long) ((JavascriptExecutor) webDriver).executeScript("return (window.outerWidth - window.innerWidth);");
+			long browserInnerHeight = (long) ((JavascriptExecutor) webDriver).executeScript("return (window.outerHeight - window.innerHeight);");
+			int yOffsetValue = (int) browserInnerHeight;
+			webElementOffsetYNew = webElementOffsetY + yOffsetValue;
+			System.out.println("browserInnerWidth " + browserInnerWidth);
+			System.out.println("browserInnerHeight " + browserInnerHeight);
+			System.out.println("yOffsetValue " + yOffsetValue);
+			System.out.println("webElementOffsetX " + webElementOffsetX);
+			System.out.println("webElementOffsetY " + webElementOffsetY);
+			webElementOffsetXNew = (int) (webElementOffsetX + (-1 * getBoundingClientRectLeft));
+			System.out.println("webElementOffsetX " + webElementOffsetX);
+			actions.moveToElement(webElement, webElementOffsetXNew, 0).perform();
+			//actions.moveToElement(webElement).perform();
+			//actions.moveToElement(webElement, webElementOffsetX, webElementOffsetY).perform();
+			screenXY = (String) javascriptExecutor.executeScript(javaScript, "remove");
+			break;
+		case "firefox":
+			String javaScriptFirefox = "return (Math.round((window.mozInnerScreenX * window.devicePixelRatio) + arguments[0].getBoundingClientRect().left)) + '|' + (Math.round((window.mozInnerScreenY * window.devicePixelRatio) + arguments[0].getBoundingClientRect().top));";
+			screenXY = (String) javascriptExecutor.executeScript(javaScriptFirefox, webElement);
+			break;
+		case "ie":
+		case "internet explorer":
+			javascriptExecutor.executeScript(javaScript, "create");
+			actions.moveToElement(webElement, webElementOffsetX, webElementOffsetY).perform();
+			screenXY = (String) javascriptExecutor.executeScript(javaScript, "remove");
+			break;
+		}
+		System.out.println(">>>>>>>>>>>>>>>>>>>screenXY " + screenXY);
+		String[] arrScreen = screenXY.split("\\|");
+		int screenX = Integer.parseInt(arrScreen[0]);
+		int screenY = Integer.parseInt(arrScreen[1]);
+		screenX = (int) (screenX + getBoundingClientRectLeft);
+		screenY = (screenY + webElementOffsetYNew);
+		System.out.println(">>>>>>>>>>>>>>>>>>>screenX " + screenX);
+		System.out.println(">>>>>>>>>>>>>>>>>>>screenY " + screenY);
 	}
 
 	private static void ThreadSleep(Integer millisecondsToWait) {

@@ -3,22 +3,61 @@
 <head>
 <title>Page2</title>
 <script type="text/javascript">
-	function clickIt() {
-		alert('test');
+	function clickIt2() {
+		alert('page2');
 		document.getElementById('page2_title').style.outline = 'green solid 4px';
+	}
+	function Init2() {
+		if ('addEventListener' in window) {
+			document.addEventListener('mousemove', captureCoordinates2);
+			document.addEventListener('click', captureClickCoordinates2);
+		} else if ('attachEvent' in window) {
+			alert('attachEvent');
+			document.attachEvent('onmousemove', captureCoordinates2);
+			document.attachEvent('onclick', captureClickCoordinates2);
+		}
+	}
+
+	function captureClickCoordinates2(event) {
+		document.getElementById('clickScreenX-value2').innerHTML = event.screenX;
+		document.getElementById('clickScreenY-value2').innerHTML = event.screenY;
+	}
+
+	function captureCoordinates2(event) {
+		document.getElementById('screenX-value2').innerHTML = event.screenX;
+		document.getElementById('screenY-value2').innerHTML = event.screenY;
 	}
 </script>
 <style>
 .button {
      background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;
 }
+
+p {
+     margin: 5px 0;
+}
 </style>
 </head>
-<body>
+<body onload="Init2();">
      <h1 id="page2_title">Page 2, you made it!!!</h1>
      <a id="GoBack2" href="javascript:history.go(-1)">Go Back</a>
      <br>
      <br>
-     <button class="button" onclick="clickIt()">outline</button>
+     <button class="button" onclick="clickIt2()">alert page 2</button>
+     <hr>
+     <p>
+          move.screenX: <span id="screenX-value2"></span>
+     </p>
+     <p>
+          move.screenY: <span id="screenY-value2"></span>
+     </p>
+     <hr>
+     <p>
+          click.screenX: <span id="clickScreenX-value2"></span>
+     </p>
+     <p>
+          click.screenY: <span id="clickScreenY-value2"></span>
+     </p>
+     <hr>
 </body>
 </html>

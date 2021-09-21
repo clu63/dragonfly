@@ -77,6 +77,25 @@ p {
 		return p;
 	}
 
+	function GetIeScreenCordinates(obj) {
+		var p = {};
+		p.x = Math.round(window.screenLeft + obj.getBoundingClientRect().left);
+		p.y = Math.round(window.screenTop + obj.getBoundingClientRect().top);
+		return p;
+	}
+	
+	function getFrameSize(frameID) {
+	    var result = {height:0, width:0};
+	    if (document.getElementById) {
+	        var frame = parent.document.getElementById(frameID);
+	        if (frame.scrollWidth) {
+	            result.height = frame.scrollHeight;
+	            result.width = frame.scrollWidth;
+	        }
+	    }
+	    return result;
+	}
+	
 	function Init() {
 		if ('addEventListener' in window) {
 			document.addEventListener('mousemove', captureCoordinates);
@@ -132,8 +151,10 @@ p {
 		document.getElementById('screenPixelDepth-value').innerHTML = screen.pixelDepth;
 
 		//var obj = document.getElementsByTagName("body")[1];
-		var obj = document.body.getBoundingClientRect();
-		//var obj = document.getElementById('buttonCoordinates').getBoundingClientRect();
+		//var obj = document.body.getBoundingClientRect();
+		var obj = document.getElementById('buttonCoordinates').getBoundingClientRect();
+	//	var obj = document.getElementById('page1_title').getBoundingClientRect();
+		var obj2 = document.getElementById('page1_title');
 		document.getElementById('boundingClientRectX-value').innerHTML = obj.x;
 		document.getElementById('boundingClientRectY-value').innerHTML = obj.y;
 		document.getElementById('boundingClientRectLeft-value').innerHTML = obj.left;
@@ -149,17 +170,20 @@ p {
 		document.getElementById('boundingClientRectLeftCornerWidth-value').innerHTML = ((-1 * (obj.width / 2)) - obj.left);
 		document.getElementById('boundingClientRectTopCornerHeight-value').innerHTML = ((-1 * (obj.height / 2)) - obj.top);
 
-		document.getElementById('chromeScreenElementX-value').innerHTML = Math.round(((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio) + document.getElementById('buttonCoordinates').getBoundingClientRect().left);
-		document.getElementById('chromeScreenElementY-value').innerHTML = (Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio)) + document.getElementById('buttonCoordinates').getBoundingClientRect().top;
+		document.getElementById('chromeScreenElementX-value').innerHTML = Math.round(((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio) + obj.left);
+		document.getElementById('chromeScreenElementY-value').innerHTML = (Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio)) + obj.top;
 
 		document.getElementById('mozillaScreenElementX-value').innerHTML = Math.round((window.mozInnerScreenX * window.devicePixelRatio) + document.getElementById('buttonCoordinates').getBoundingClientRect().left);
 		document.getElementById('mozillaScreenElementY-value').innerHTML = Math.round((window.mozInnerScreenY * window.devicePixelRatio) + document.getElementById('buttonCoordinates').getBoundingClientRect().top);
 
+		document.getElementById('ieScreenElementX-value').innerHTML = GetIeScreenCordinates(obj2).x;
+		document.getElementById('ieScreenElementY-value').innerHTML = GetIeScreenCordinates(obj2).y;
+
 		document.getElementById('screenToViewportX-value').innerHTML = Math.round((((window.outerWidth - window.innerWidth) / 2) + window.screenX) * window.devicePixelRatio);
 		document.getElementById('screenToViewportY-value').innerHTML = Math.round(((window.outerHeight - window.innerHeight) - ((window.outerWidth - window.innerWidth) / 2) + window.screenY) * window.devicePixelRatio);
 
-		document.getElementById('GetScreenCordinatesX-value').innerHTML = GetScreenCordinates(document.getElementById('buttonCoordinates')).x;
-		document.getElementById('GetScreenCordinatesY-value').innerHTML = GetScreenCordinates(document.getElementById('buttonCoordinates')).y;
+		document.getElementById('GetScreenCordinatesX-value').innerHTML = GetScreenCordinates(obj2).x;
+		document.getElementById('GetScreenCordinatesY-value').innerHTML = GetScreenCordinates(obj2).y;
 		//console.log(event);
 	}
 </script>
@@ -356,6 +380,13 @@ p {
                </p>
                <p style="background-color: yellow">
                     MozillaScreenElement Y: <span id="mozillaScreenElementY-value"></span>
+               </p>
+               <hr>
+               <p style="background-color: yellow">
+                    IeScreenElement X: <span id="ieScreenElementX-value"></span>
+               </p>
+               <p style="background-color: yellow">
+                    IeScreenElement Y: <span id="ieScreenElementY-value"></span>
                </p>
                <hr>
                <p>

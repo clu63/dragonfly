@@ -18,6 +18,29 @@
 		document.getElementById("select3").selectedIndex = -1;
 		document.getElementById("select4").selectedIndex = -1;
 		document.getElementById("select5").selectedIndex = -1;
+
+		if ('addEventListener' in window) {
+			document.addEventListener('mousemove', captureCoordinatesMain);
+			document.addEventListener('click', captureClickCoordinatesMain);
+		} else if ('attachEvent' in window) {
+			alert('attachEvent');
+			document.attachEvent('onmousemove', captureCoordinatesMain);
+			document.attachEvent('onclick', captureClickCoordinatesMain);
+		}
+
+	}
+
+	function captureClickCoordinatesMain(event) {
+		document.getElementById('clickScreenX-valueMain').innerHTML = event.screenX;
+		document.getElementById('clickScreenY-valueMain').innerHTML = event.screenY;
+		//document.getElementById('frame_link').scrollIntoView(false);
+	}
+
+	function captureCoordinatesMain(event) {
+		document.getElementById('screenX-valueMain').innerHTML = event.screenX;
+		document.getElementById('screenY-valueMain').innerHTML = event.screenY;
+		document.getElementById('ClientRectLeft-valueMain').innerHTML = document.getElementById('link').getBoundingClientRect().left;
+		document.getElementById('ClientRectTop-valueMain').innerHTML = document.getElementById('link').getBoundingClientRect().top;
 	}
 
 	function show_alert() {
@@ -175,7 +198,9 @@
 </head>
 <body onload="load_year_select()">
      <h1>
-         <center> <img id="dragonfly" src="./SupportingFiles/dragonfly.jpg" width="127" height="127" border="0" alt=""> <span style="color: blue">Test Automation Website</span></center>
+          <center>
+               <img id="dragonfly" src="./SupportingFiles/dragonfly.jpg" width="127" height="127" border="0" alt=""> <span style="color: blue">Test Automation Website</span>
+          </center>
      </h1>
      <br>
      <br>
@@ -223,6 +248,24 @@
      <input type="button" name="b2" value="WOW"></input>
      <hr>
      <br>
+     <p style="margin: 5px 0">
+          move.screenX: <span id="screenX-valueMain"></span>
+     </p>
+     <p style="margin: 5px 0">
+          move.screenY: <span id="screenY-valueMain"></span>
+     </p>
+     <p style="margin: 5px 0">
+          click.screenX: <span id="clickScreenX-valueMain"></span>
+     </p>
+     <p style="margin: 5px 0">
+          click.screenY: <span id="clickScreenY-valueMain"></span>
+     </p>
+     <p style="margin: 5px 0">
+          .getBoundingClientRect().left: <span id="ClientRectLeft-valueMain"></span>
+     </p>
+     <p style="margin: 5px 0">
+          .getBoundingClientRect().top: <span id="ClientRectTop-valueMain"></span>
+     </p>
      <h2>
           html <span style="color: green">&lt;a&gt;</span> tag
      </h2>

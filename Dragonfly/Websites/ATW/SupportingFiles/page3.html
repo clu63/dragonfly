@@ -3,12 +3,64 @@
 <head>
 <title>Page3</title>
 <meta content="IE=7.0000" http-equiv="X-UA-Compatible">
-
 <meta content="text/html; charset=windows-1252" http-equiv="Content-Type">
 <meta name="GENERATOR" content="MSHTML 10.00.9200.17183">
+<style>
+.button {
+     background-color: purple; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; margin: 4px 2px; cursor: pointer;
+}
+
+p {
+     margin: 5px 0;
+}
+</style>
+<script type="text/javascript">
+	function clickIt3() {
+		alert('page3');
+		document.getElementById('page2_title').style.outline = 'green solid 4px';
+	}
+	function Init3() {
+		if ('addEventListener' in window) {
+			document.addEventListener('mousemove', captureCoordinates3);
+			document.addEventListener('click', captureClickCoordinates3);
+		} else if ('attachEvent' in window) {
+			alert('attachEvent');
+			document.attachEvent('onmousemove', captureCoordinates3);
+			document.attachEvent('onclick', captureClickCoordinates3);
+		}
+	}
+
+	function captureClickCoordinates3(event) {
+		document.getElementById('clickScreenX-value3').innerHTML = event.screenX;
+		document.getElementById('clickScreenY-value3').innerHTML = event.screenY;
+	}
+
+	function captureCoordinates3(event) {
+		document.getElementById('screenX-value3').innerHTML = event.screenX;
+		document.getElementById('screenY-value3').innerHTML = event.screenY;
+	}
+</script>
 </head>
-<body>
-	<h1 id="page3_title">Page 3, its a new.</h1>
-	<a  id="GoBack3" href="javascript:history.go(-1)">Go Back</a>
+<body onload="Init3();">
+     <h1 id="page3_title">Page 3, its a new.</h1>
+     <a id="GoBack3" href="javascript:history.go(-1)">Go Back</a>
+     <br>
+     <br>
+     <button class="button" onclick="clickIt3()">alert page 3</button>
+     <hr>
+     <p>
+          move.screenX: <span id="screenX-value3"></span>
+     </p>
+     <p>
+          move.screenY: <span id="screenY-value3"></span>
+     </p>
+     <hr>
+     <p>
+          click.screenX: <span id="clickScreenX-value3"></span>
+     </p>
+     <p>
+          click.screenY: <span id="clickScreenY-value3"></span>
+     </p>
+     <hr>
 </body>
 </html>
