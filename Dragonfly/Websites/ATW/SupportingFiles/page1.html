@@ -30,6 +30,32 @@ p {
 }
 </style>
 <script type="text/javascript">
+	function getPosition(element) {
+		var xPosition = 0;
+		var yPosition = 0;
+		var borderWidth = 0;
+		var borderMenu = 0;
+		var windowLeft = 0;
+		var windowTop = 0;
+		while (element) {
+			xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+			yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+			element = element.offsetParent;
+		}
+		borderWidth = ((window.outerHeight - window.innerHeight) / 2);
+		borderMenu = ((window.outerWidth - window.innerWidth) - borderWidth);
+		windowLeft = window.screenLeft;
+		windowTop = window.screenTop;
+		return {
+			x : xPosition,
+			y : yPosition,
+			borderWidth : borderWidth,
+			borderMenu : borderMenu,
+			windowLeft : windowLeft,
+			windowTop : windowTop
+		};
+	}
+
 	function createCaptureScreenXY2() {
 		if (window.elementScreenXY == undefined) {
 			window.captureScreenXY2 = function(event) {
@@ -57,6 +83,9 @@ p {
 			}
 			console.log(window.elementScreenXY);
 			alert(window.elementScreenXY);
+			alert(window.top.innerHeight);
+			alert(window.top.outerHeight);
+
 			return window.elementScreenXY;
 		}
 	}
@@ -83,19 +112,22 @@ p {
 		p.y = Math.round(window.screenTop + obj.getBoundingClientRect().top);
 		return p;
 	}
-	
+
 	function getFrameSize(frameID) {
-	    var result = {height:0, width:0};
-	    if (document.getElementById) {
-	        var frame = parent.document.getElementById(frameID);
-	        if (frame.scrollWidth) {
-	            result.height = frame.scrollHeight;
-	            result.width = frame.scrollWidth;
-	        }
-	    }
-	    return result;
+		var result = {
+			height : 0,
+			width : 0
+		};
+		if (document.getElementById) {
+			var frame = parent.document.getElementById(frameID);
+			if (frame.scrollWidth) {
+				result.height = frame.scrollHeight;
+				result.width = frame.scrollWidth;
+			}
+		}
+		return result;
 	}
-	
+
 	function Init() {
 		if ('addEventListener' in window) {
 			document.addEventListener('mousemove', captureCoordinates);
@@ -110,6 +142,18 @@ p {
 	function captureClickCoordinates(event) {
 		document.getElementById('clickScreenX-value').innerHTML = event.screenX;
 		document.getElementById('clickScreenY-value').innerHTML = event.screenY;
+	}
+
+	function GetBrowserBorder() {
+		var result = {
+			y : 0,
+			x : 0
+		};
+
+		result.y = Math.floor(1.6);
+		//result.x = Math.floor(window.parent.document.getElementsByTagName('frame')[1].innerWidth);
+
+		return result;
 	}
 
 	function captureCoordinates(event) {
@@ -153,7 +197,7 @@ p {
 		//var obj = document.getElementsByTagName("body")[1];
 		//var obj = document.body.getBoundingClientRect();
 		var obj = document.getElementById('buttonCoordinates').getBoundingClientRect();
-	//	var obj = document.getElementById('page1_title').getBoundingClientRect();
+		//	var obj = document.getElementById('page1_title').getBoundingClientRect();
 		var obj2 = document.getElementById('page1_title');
 		document.getElementById('boundingClientRectX-value').innerHTML = obj.x;
 		document.getElementById('boundingClientRectY-value').innerHTML = obj.y;
@@ -184,6 +228,9 @@ p {
 
 		document.getElementById('GetScreenCordinatesX-value').innerHTML = GetScreenCordinates(obj2).x;
 		document.getElementById('GetScreenCordinatesY-value').innerHTML = GetScreenCordinates(obj2).y;
+		document.getElementById('browserBorder-value').innerHTML = GetBrowserBorder().x;
+		document.getElementById('browserMenu-value').innerHTML = GetBrowserBorder().y;
+
 		//console.log(event);
 	}
 </script>
@@ -401,6 +448,14 @@ p {
                </p>
                <p>
                     GetScreenCordinates Y: <span id="GetScreenCordinatesY-value"> </span>
+               </p>
+               <hr>
+               <hr>
+               <p>
+                    browser border: <span id="browserBorder-value"> </span>
+               </p>
+               <p>
+                    browser menu: <span id="browserMenu-value"> </span>
                </p>
                <hr>
           </div>

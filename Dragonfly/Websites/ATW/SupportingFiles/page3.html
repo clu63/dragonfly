@@ -23,6 +23,7 @@ p {
 		if ('addEventListener' in window) {
 			document.addEventListener('mousemove', captureCoordinates3);
 			document.addEventListener('click', captureClickCoordinates3);
+			document.addEventListener('mouseup', captureClickCoordinates3);
 		} else if ('attachEvent' in window) {
 			alert('attachEvent');
 			document.attachEvent('onmousemove', captureCoordinates3);
@@ -38,6 +39,8 @@ p {
 	function captureCoordinates3(event) {
 		document.getElementById('screenX-value3').innerHTML = event.screenX;
 		document.getElementById('screenY-value3').innerHTML = event.screenY;
+		document.getElementById('windowOuterHeight-value3').innerHTML = window.outerHeight;
+		document.getElementById('windowInnerHeight-value3').innerHTML = window.innerHeight;
 	}
 </script>
 </head>
@@ -60,6 +63,13 @@ p {
      </p>
      <p>
           click.screenY: <span id="clickScreenY-value3"></span>
+     </p>
+     <hr>
+     <p>
+          window.outerHeight: <span id="windowOuterHeight-value3"></span>
+     </p>
+     <p>
+          window.innerHeight: <span id="windowInnerHeight-value3"></span>
      </p>
      <hr>
 </body>

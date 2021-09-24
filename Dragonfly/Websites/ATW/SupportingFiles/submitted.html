@@ -4,13 +4,65 @@
 <title>Submitted</title>
 <a href="javascript:history.go(-1)"> Go Back </a>
 <meta content="IE=7.0000" http-equiv="X-UA-Compatible">
-
 <meta content="text/html; charset=windows-1252" http-equiv="Content-Type">
 <meta name="GENERATOR" content="MSHTML 10.00.9200.17183">
+<script type="text/javascript">
+	function clickItSub() {
+		alert('submitted');
+		document.getElementById('page2_title').style.outline = 'green solid 4px';
+	}
+	function InitSub() {
+		if ('addEventListener' in window) {
+			document.addEventListener('mousemove', captureCoordinatesSub);
+			document.addEventListener('click', captureClickCoordinatesSub);
+		} else if ('attachEvent' in window) {
+			alert('attachEvent');
+			document.attachEvent('onmousemove', captureCoordinatesSub);
+			document.attachEvent('onclick', captureClickCoordinatesSub);
+		}
+	}
+
+	function captureClickCoordinatesSub(event) {
+		document.getElementById('clickScreenX-valueSub').innerHTML = event.screenX;
+		document.getElementById('clickScreenY-valueSub').innerHTML = event.screenY;
+	}
+
+	function captureCoordinatesSub(event) {
+		document.getElementById('screenX-valueSub').innerHTML = event.screenX;
+		document.getElementById('screenY-valueSub').innerHTML = event.screenY;
+		document.getElementById('windowOuterHeight-valueSub').innerHTML = window.outerHeight;
+		document.getElementById('windowInnerHeight-valueSub').innerHTML = window.innerHeight;
+	}
+</script>
 </head>
-<body>
-	<a id="form_submitted_home" href="./frames.html">Home</a>
-	<h1 id="submitted_title">Form submitted!</h1>
-	<a href="javascript:history.go(-1)"> Go Back </a>
+<body onload="InitSub();">
+     <a id="form_submitted_home" href="./frames.html">Home</a>
+     <h1 id="submitted_title">Form submitted!</h1>
+     <a href="javascript:history.go(-1)"> Go Back </a>
+     <br>
+     <br>
+     <button class="button" onclick="clickItSub()">alert page submitted</button>
+     <hr>
+     <p>
+          move.screenX: <span id="screenX-valueSub"></span>
+     </p>
+     <p>
+          move.screenY: <span id="screenY-valueSub"></span>
+     </p>
+     <hr>
+     <p>
+          click.screenX: <span id="clickScreenX-valueSub"></span>
+     </p>
+     <p>
+          click.screenY: <span id="clickScreenY-valueSub"></span>
+     </p>
+     <hr>
+     <p>
+          window.outerHeight: <span id="windowOuterHeight-valueSub"></span>
+     </p>
+     <p>
+          window.innerHeight: <span id="windowInnerHeight-valueSub"></span>
+     </p>
+     <hr>
 </body>
 </html>
