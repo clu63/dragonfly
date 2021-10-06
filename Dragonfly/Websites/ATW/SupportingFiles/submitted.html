@@ -32,6 +32,10 @@
 		document.getElementById('screenY-valueSub').innerHTML = event.screenY;
 		document.getElementById('windowOuterHeight-valueSub').innerHTML = window.outerHeight;
 		document.getElementById('windowInnerHeight-valueSub').innerHTML = window.innerHeight;
+		document.getElementById('windowOuterWidth-valueSub').innerHTML = window.outerWidth;
+		document.getElementById('windowInnerWidth-valueSub').innerHTML = window.innerWidth;
+		document.getElementById('windowScreenLeft-valueSub').innerHTML = window.screenLeft;
+		document.getElementById('windowScreenTop-valueSub').innerHTML = window.screenTop;
 	}
 </script>
 </head>
@@ -62,6 +66,19 @@
      </p>
      <p>
           window.innerHeight: <span id="windowInnerHeight-valueSub"></span>
+     </p>
+     <p>
+          window.outerWidth: <span id="windowOuterWidth-valueSub"></span>
+     </p>
+     <p>
+          window.innerWidth: <span id="windowInnerWidth-valueSub"></span>
+     </p>
+     <hr>
+     <p>
+          .screenLeft: <span id="windowScreenLeft-valueSub"></span>
+     </p>
+     <p>
+          .screenTop: <span id="windowScreenTop-valueSub"></span>
      </p>
      <hr>
 </body>

@@ -30,6 +30,149 @@ p {
 }
 </style>
 <script type="text/javascript">
+	function getScreenToDocument(theframe) {
+		var frameBorderWidth = 0;
+		var screenX = 0;
+		var borderWidth = 0;
+		var screenLeft = 0;
+		var frameRight = 0;
+		var screenToDocumentLeft = 0;
+		var frameClientWidth = 0;
+		var theframeIf = '';
+		var browserOuterWidth = 0;
+		var browserInnerWidth = 0;
+		browserOuterWidth = window.top.window.outerWidth;
+		browserInnerWidth = window.top.window.innerWidth;
+		frameClientWidth = theframe.getBoundingClientRect().width;
+		frameBorderWidth = (theframe.getBoundingClientRect().width - theframe.contentWindow.innerWidth);
+		screenX = window.screenX;
+		borderWidth = (browserOuterWidth - browserInnerWidth) / 2;
+		screenLeft = theframe.contentWindow.screenLeft;
+		frameRight = theframe.getBoundingClientRect().right;
+		//alert('frameClientWidth ' + frameClientWidth + '  frameBorderWidth ' + frameBorderWidth + '  screenX ' + screenX + '  borderWidth ' + borderWidth + '  screenLeft ' + screenLeft + '  frameRight ' + frameRight);
+		//alert('browserOuterWidth ' + browserOuterWidth);
+		//alert('math ' + (frameRight + (borderWidth * 2)));
+		if (screenX + borderWidth == screenLeft) {
+			theframeIf = 'if';
+			screenToDocumentLeft = screenLeft;
+		} else if (browserOuterWidth == (frameRight + (borderWidth * 2))) {
+			theframeIf = 'else if';
+			screenToDocumentLeft = screenLeft + frameBorderWidth;
+		} else {
+			theframeIf = 'else';
+			screenToDocumentLeft = screenLeft + (frameBorderWidth / 2);
+		}
+		alert(theframeIf + ' screenToDocumentLeft ' + screenToDocumentLeft);
+	}
+
+	function getFrameOffsetParent(element) {
+		var xPosition = 0;
+		var yPosition = 0;
+		element = element.contentWindow.document.documentElement
+		while (element) {
+			xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+			yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+			element = element.offsetParent;
+		}
+
+		alert("xPosition " + xPosition + " yPosition " + yPosition);
+	}
+
+	function getChromeOffset() {
+		var xPosition = 0;
+		var yPosition = 0;
+		var element;
+		element = window.frames[3];
+		//element = window.top.window.document.getElementsByTagName("frame")[3];
+		while (element) {
+			xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+			yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+			element = element.offsetParent;
+		}
+		var theframe = window.top.window.document.getElementsByTagName("frame")[3];
+		//var theframe = top.frames[3];
+		console.log(theframe.contentWindow.document.documentElement);
+		console.log(theframe.contentWindow);
+		console.log(theframe);
+		//console.log(theframe.getElementsByTagName("html")[0]);
+		console.log(window);
+
+		//alert('theframe.contentWindow.offsetLeft'+theframe.frameElement.contentWindow.offsetLeft);
+		// alert('theframe.contentWindow.offsetTop'+theframe.frameElement.contentWindow.offsetTop);		
+		theframe.contentWindow.document.getElementsByTagName('body')[0].style.outline = 'green solid 4px';
+		//alert('clientLeft ' + theframe.contentWindow.document.getElementsByTagName('body')[0].clientLeft);
+		//alert('theframe.contentWindow.innerWidth ' + theframe.contentWindow.innerWidth);
+		//alert('theframe.contentWindow.outerWidth ' + theframe.contentWindow.outerWidth);
+		//alert('frameBorder ' + theframe.frameBorder);
+		//alert('clientLeft ' + theframe.contentWindow.document.documentElement.clientLeft);
+		//console.log(theframe.window.document);
+		//alert("innerWidth " + theframe.window.innerWidth)
+
+		// 		alert("height " + theframe.getBoundingClientRect().height);
+		// 		alert("width " + theframe.getBoundingClientRect().width)
+		// 		alert(top.frames.length);
+		// 		alert('xPosition ' + xPosition + '   yPosition ' + yPosition);
+	}
+
+	function GetFrameBorderWidths() {
+		var iframes = window.top.window.document.getElementsByTagName("frame");
+		for (var i = 0; i < iframes.length; i++) {
+			var frame = iframes[i];
+			if (window.getComputedStyle) { // all browsers, except IE before version 9
+				getScreenToDocument(frame);
+				//alert('window.getComputedStyle');
+				//alert('clientLeft' + frame.contentWindow.document.documentElement.clientLeft);
+				//alert('clientTop' + frame.contentWindow.document.documentElement.clientTop);
+				//getFrameOffsetParent(frame);
+				// 				alert('frame.getBoundingClientRect().right ' + frame.getBoundingClientRect().right);
+				// 				alert('frame.getBoundingClientRect().width ' + frame.getBoundingClientRect().width);
+				// 				alert('frame.contentWindow.innerWidth ' + frame.contentWindow.innerWidth);
+				// 				alert('frame.getBoundingClientRect().bottom ' + frame.getBoundingClientRect().bottom);
+				// 				alert('frame.getBoundingClientRect().height ' + frame.getBoundingClientRect().height);
+				// 				alert('frame.contentWindow.innerHeight ' + frame.contentWindow.innerHeight);
+
+				//alert('frame.border ' + frame.border);
+				//alert('frame.clientLeft ' + frame.clientLeft);
+				//alert('frame.currentStyle.borderLeftWidth ' + frame.border.borderLeftWidth);
+				var style = window.getComputedStyle(frame, null);
+				var leftBorder = style.borderLeftWidth;
+				var topBorder = style.borderTopWidth;
+			} else { // Internet Explorer before version 9
+				var docElem = frame.contentWindow.document.documentElement;
+				var leftBorder = docElem.clientLeft + "px";
+				var topBorder = docElem.clientTop + "px";
+			}
+
+			//		alert("The left and top borders of the " + (i + 1) + ". frame are: " + leftBorder + ", " + topBorder);
+		}
+	}
+
+	function windowTopFunction() {
+		getChromeOffset();
+		GetFrameBorderWidths();
+
+		if (window.top != window.self) {
+			//alert("This window is NOT the topmost window!");
+			var topWindowOuter = window.top.window.outerWidth;
+			//alert(topWindowOuter);
+			//alert(window.top.window.innerWidth);
+			//alert(window.top.window.outerWidth - window.top.window.innerWidth);
+			//alert(window.top.window.frames.length);
+			//alert(window.top.window.frames.self.outerWidth);
+			//	alert(window.frames.self.outerWidth);
+
+			//alert( window.top.window.document.getElementsByTagName("frame")[2].window.outerWidth);
+
+			//alert( window.top.window.document.getElementsByTagName("frame")[2].getBoundingClientRect().height);
+			//alert(	window.top.window.document.getElementsByTagName("frame")[2].getBoundingClientRect().width);
+			//alert(top.frames[2].outerWidth);
+			//alert(window.top.window.document.getElementsByTagName("frame")[1].contentWindow.document.documentElement.clientTop);
+		} else {
+			alert("This window is the topmost window!");
+
+		}
+	}
+
 	function getPosition(element) {
 		var xPosition = 0;
 		var yPosition = 0;
@@ -65,6 +208,7 @@ p {
 	}
 
 	function screenXY2(createRemove) {
+		windowTopFunction();
 		if (createRemove == 'create') {
 			createCaptureScreenXY2();
 			if (window.elementScreenXY == undefined) {
@@ -108,8 +252,10 @@ p {
 
 	function GetIeScreenCordinates(obj) {
 		var p = {};
-		p.x = Math.round(window.screenLeft + obj.getBoundingClientRect().left);
+		//p.x = Math.round(window.screenLeft + obj.getBoundingClientRect().left);
 		p.y = Math.round(window.screenTop + obj.getBoundingClientRect().top);
+		var boderWidth = (window.top.window.outerWidth - window.top.window.innerWidth) / 2;
+		p.x = ((window.outerWidth - ((window.screenLeft - window.screenX) + window.innerWidth + boderWidth)) + window.screenLeft) + obj.getBoundingClientRect().left;
 		return p;
 	}
 
@@ -194,9 +340,9 @@ p {
 		document.getElementById('screenColorDepth-value').innerHTML = screen.colorDepth;
 		document.getElementById('screenPixelDepth-value').innerHTML = screen.pixelDepth;
 
-		//var obj = document.getElementsByTagName("body")[1];
+		var obj = document.getElementsByTagName("html")[0].getBoundingClientRect();
 		//var obj = document.body.getBoundingClientRect();
-		var obj = document.getElementById('buttonCoordinates').getBoundingClientRect();
+		//var obj = document.getElementById('buttonCoordinates').getBoundingClientRect();
 		//	var obj = document.getElementById('page1_title').getBoundingClientRect();
 		var obj2 = document.getElementById('page1_title');
 		document.getElementById('boundingClientRectX-value').innerHTML = obj.x;

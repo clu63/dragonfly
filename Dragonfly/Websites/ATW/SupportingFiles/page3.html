@@ -15,6 +15,14 @@ p {
 }
 </style>
 <script type="text/javascript">
+	function GetIeScreenCordinates(obj) {
+		var p = {};
+		//p.x = Math.round(window.screenLeft + obj.getBoundingClientRect().left);
+		p.y = Math.round(window.screenTop + obj.getBoundingClientRect().top);
+		var boderWidth = (window.top.window.outerWidth - window.top.window.innerWidth) / 2;
+		p.x = ((window.outerWidth - ((window.screenLeft - window.screenX) + window.innerWidth + boderWidth)) + window.screenLeft) + obj.getBoundingClientRect().left;
+		return p;
+	}
 	function clickIt3() {
 		alert('page3');
 		document.getElementById('page2_title').style.outline = 'green solid 4px';
@@ -41,6 +49,20 @@ p {
 		document.getElementById('screenY-value3').innerHTML = event.screenY;
 		document.getElementById('windowOuterHeight-value3').innerHTML = window.outerHeight;
 		document.getElementById('windowInnerHeight-value3').innerHTML = window.innerHeight;
+		document.getElementById('windowScreenLeft-value3').innerHTML = window.screenLeft;
+		document.getElementById('windowScreenTop-value3').innerHTML = window.screenTop;
+	    document.getElementById('windowOuterWidth-value3').innerHTML = window.outerWidth;
+	    document.getElementById('windowInnerWidth-value3').innerHTML = window.innerWidth;
+	      document.getElementById('windowScreenX-value3').innerHTML = window.screenX;
+	      document.getElementById('windowScreenY-value3').innerHTML = window.screenY;
+	       document.getElementById('windowTopOuterWidth-value3').innerHTML =  window.top.window.outerWidth;
+	        document.getElementById('windowTopInnerWidth-value3').innerHTML = window.top.window.innerWidth;
+	     
+	      
+		
+		var obj2 = document.getElementById('page3_title');
+		document.getElementById('ieScreenElementX-value3').innerHTML = GetIeScreenCordinates(obj2).x;
+		document.getElementById('ieScreenElementY-value3').innerHTML = GetIeScreenCordinates(obj2).y;
 	}
 </script>
 </head>
@@ -65,11 +87,43 @@ p {
           click.screenY: <span id="clickScreenY-value3"></span>
      </p>
      <hr>
+     <p>window</p>
      <p>
-          window.outerHeight: <span id="windowOuterHeight-value3"></span>
+          .outerHeight: <span id="windowOuterHeight-value3"></span>
      </p>
      <p>
-          window.innerHeight: <span id="windowInnerHeight-value3"></span>
+          .innerHeight: <span id="windowInnerHeight-value3"></span>
+     </p>
+     <p>
+          .outerWidth: <span id="windowOuterWidth-value3"></span>
+     </p>
+     <p>
+          .innerWidth: <span id="windowInnerWidth-value3"></span>
+     </p>
+     <p>
+          .screenLeft: <span id="windowScreenLeft-value3"></span>
+     </p>
+     <p>
+          .screenTop: <span id="windowScreenTop-value3"></span>
+     </p>
+     <p>
+          .screenX: <span id="windowScreenX-value3"></span>
+     </p>
+     <p>
+          .screenY: <span id="windowScreenY-value3"></span>
+     </p>
+          <p>
+          TopOuterWidth: <span id="windowTopOuterWidth-value3"></span>
+     </p>
+     <p>
+          TopInnerWidth: <span id="windowTopInnerWidth-value3"></span>
+     </p>
+     <hr>
+     <p style="background-color: yellow">
+          IeScreenElement X: <span id="ieScreenElementX-value3"></span>
+     </p>
+     <p style="background-color: yellow">
+          IeScreenElement Y: <span id="ieScreenElementY-value3"></span>
      </p>
      <hr>
 </body>
